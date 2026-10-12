@@ -13,7 +13,7 @@ import {
   wallIndex,
 } from '../../engine';
 import type { Action, Coord, GameState, Orientation, PlayerId, WallAction } from '../../engine';
-import { PLAYER_COLOR, PLAYER_LABEL, WALL_COLOR, WALL_RESULT_TEXT } from '../theme';
+import { BOARD_COLORS, PLAYER_COLOR, PLAYER_LABEL, WALL_COLOR, WALL_RESULT_TEXT } from '../theme';
 import {
   BOARD_PX,
   CELL,
@@ -33,7 +33,7 @@ import type { BoardOverlay } from './overlay';
 
 interface QuoridorBoardProps {
   state: GameState;
-  /** Rotate 180° so Player 1 (engine seat 1) is drawn at the bottom. */
+  /** Rotate 180° so Player 2 (engine seat 1) is drawn at the bottom. */
   flipped: boolean;
   /** Whether the player to move may act via the mouse. */
   interactive: boolean;
@@ -50,6 +50,10 @@ interface QuoridorBoardProps {
 
 const FILES = 'abcdefghi';
 
+/**
+ * The board. Its box is a fixed square (aspect-ratio) and the hint line below has a fixed
+ * height, so nothing on the page moves when the position, the hint or the overlay changes.
+ */
 export function QuoridorBoard(props: QuoridorBoardProps) {
   const { flipped, showPaths, overlay, onAction } = props;
   const state = overlay?.state ?? props.state;
@@ -134,22 +138,22 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
   let hint = '';
   if (overlay) hint = '분석 미리보기 중 — 패널에서 마우스를 떼면 실제 보드로 돌아갑니다';
   else if (candidate) hint = candidate.hint;
-  else if (interactive) hint = '칸을 클릭해 이동하거나, 칸 사이 홈을 클릭해 벽을 설치하세요';
+  else if (interactive) hint = '칸을 눌러 이동하거나, 칸 사이 홈을 눌러 벽을 놓으세요';
   else hint = props.idleHint ?? '';
 
   return (
     <div className="flex w-full flex-col items-center gap-2">
-      <div className="relative w-full max-w-[640px]">
+      <div className="relative aspect-square w-full">
         {overlay && (
-          <div className="absolute inset-x-0 top-0 z-10 flex justify-center">
-            <span className="mt-1.5 rounded-full border border-amber-400/40 bg-slate-950/90 px-3 py-1 text-xs text-amber-200 shadow">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex justify-center">
+            <span className="mt-2 max-w-[90%] truncate rounded-full border border-warn/30 bg-card/95 px-3 py-1 text-xs text-warn shadow-[var(--shadow-soft)]">
               {overlay.title}
             </span>
           </div>
         )}
         <svg
           viewBox={`0 0 ${VIEW_PX} ${VIEW_PX}`}
-          className={`w-full touch-none select-none ${interactive ? 'cursor-pointer' : 'cursor-default'}`}
+          className={`absolute inset-0 h-full w-full touch-none select-none ${interactive ? 'cursor-pointer' : 'cursor-default'}`}
           onPointerMove={handlePointerMove}
           onPointerLeave={() => setHover(null)}
           onPointerUp={handlePointerUp}
@@ -161,32 +165,23 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             y={0}
             width={VIEW_PX}
             height={VIEW_PX}
-            rx={18}
-            className="fill-slate-900"
-            stroke={overlay ? '#fbbf24' : 'none'}
-            strokeOpacity={0.5}
-            strokeWidth={2}
+            rx={22}
+            fill={BOARD_COLORS.frame}
+            stroke={overlay ? BOARD_COLORS.preview : 'none'}
+            strokeOpacity={0.55}
+            strokeWidth={3}
           />
+          <rect x={PAD - 6} y={PAD - 6} width={BOARD_PX + 12} height={BOARD_PX + 12} rx={14} fill={BOARD_COLORS.groove} />
+          {/* Goal markers: a bar in each player's colour along the edge that player must reach. */}
+          {([0, 1] as const).map((p) => {
+            const atTop = cellToView({ row: goalRow(p), col: 0 }, flipped).row === 0;
+            return <rect key={p} x={PAD + 8} y={atTop ? PAD - 12 : PAD + BOARD_PX + 8} width={BOARD_PX - 16} height={4} rx={2} fill={PLAYER_COLOR[p]} fillOpacity={0.55} pointerEvents="none" />;
+          })}
           <CoordinateLabels flipped={flipped} />
           <g transform={`translate(${PAD} ${PAD})`}>
-            {/* Cells, outlined on each player's goal row. */}
-            {Array.from({ length: BOARD_SIZE * BOARD_SIZE }, (_, i) => {
-              const view = { row: Math.floor(i / BOARD_SIZE), col: i % BOARD_SIZE };
-              const cell = cellFromView(view, flipped);
-              const goalOf: PlayerId | null =
-                cell.row === goalRow(0) ? 0 : cell.row === goalRow(1) ? 1 : null;
-              return (
-                <rect
-                  key={i}
-                  {...cellRect(view)}
-                  rx={6}
-                  className="fill-slate-800"
-                  stroke={goalOf === null ? 'none' : PLAYER_COLOR[goalOf]}
-                  strokeOpacity={0.45}
-                  strokeWidth={goalOf === null ? 0 : 1.5}
-                />
-              );
-            })}
+            {Array.from({ length: BOARD_SIZE * BOARD_SIZE }, (_, i) => (
+              <rect key={i} {...cellRect({ row: Math.floor(i / BOARD_SIZE), col: i % BOARD_SIZE })} rx={8} fill={BOARD_COLORS.cell} />
+            ))}
 
             {/* Shortest paths: live BFS (dashed) or the AI's evaluated paths (solid). */}
             {paths.map(({ player, path }) =>
@@ -199,9 +194,9 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
                     .join(' ')}
                   fill="none"
                   stroke={PLAYER_COLOR[player]}
-                  strokeOpacity={overlay ? 0.9 : 0.6}
-                  strokeWidth={overlay ? 4 : 3}
-                  strokeDasharray={overlay ? undefined : '6 6'}
+                  strokeOpacity={overlay ? 0.85 : 0.4}
+                  strokeWidth={overlay ? 3.5 : 2.5}
+                  strokeDasharray={overlay ? undefined : '5 7'}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   pointerEvents="none"
@@ -216,8 +211,8 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
               const hovered = hoverCell !== null && sameCoord(hoverCell, view);
               return (
                 <g key={`${m.row},${m.col}`} pointerEvents="none">
-                  {hovered && <rect {...cellRect(view)} rx={6} fill={PLAYER_COLOR[mover]} fillOpacity={0.2} />}
-                  <circle cx={x} cy={y} r={hovered ? 9 : 6} fill={PLAYER_COLOR[mover]} fillOpacity={hovered ? 0.95 : 0.55} />
+                  {hovered && <rect {...cellRect(view)} rx={8} fill={PLAYER_COLOR[mover]} fillOpacity={0.14} />}
+                  <circle cx={x} cy={y} r={hovered ? 8 : 5.5} fill={PLAYER_COLOR[mover]} fillOpacity={hovered ? 0.8 : 0.35} />
                 </g>
               );
             })}
@@ -227,7 +222,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
               <rect
                 key={`${w.orientation}${w.row},${w.col}`}
                 {...wallRect(w.orientation, wallAnchorToView(w.row, w.col, flipped))}
-                rx={3}
+                rx={4}
                 fill={WALL_COLOR}
                 pointerEvents="none"
               />
@@ -237,17 +232,15 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             {overlay?.marks?.map((m, i) => (
               <ActionHighlight key={i} {...m} flipped={flipped} variant="mark" />
             ))}
-            {highlight && (
-              <ActionHighlight {...highlight} flipped={flipped} variant={overlay ? 'strong' : 'last'} />
-            )}
+            {highlight && <ActionHighlight {...highlight} flipped={flipped} variant={overlay ? 'strong' : 'last'} />}
 
             {/* Wall placement preview. */}
             {candidate && candidate.action.type === 'wall' && hover?.kind === 'wall' && (
               <rect
                 {...wallRect(hover.orientation, hover.view)}
-                rx={3}
-                fill={candidate.ok ? PLAYER_COLOR[mover] : '#ef4444'}
-                fillOpacity={candidate.ok ? 0.8 : 0.45}
+                rx={4}
+                fill={candidate.ok ? WALL_COLOR : BOARD_COLORS.invalid}
+                fillOpacity={candidate.ok ? 0.55 : 0.35}
                 pointerEvents="none"
               />
             )}
@@ -258,11 +251,10 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
               const active = state.winner === null && p === mover;
               return (
                 <g key={p} pointerEvents="none">
-                  {active && (
-                    <circle cx={x} cy={y} r={CELL * 0.4} fill="none" stroke={PLAYER_COLOR[p]} strokeOpacity={0.6} strokeWidth={2} />
-                  )}
-                  <circle cx={x} cy={y} r={CELL * 0.32} fill={PLAYER_COLOR[p]} stroke="#0f172a" strokeWidth={2} />
-                  <text x={x} y={y} textAnchor="middle" dominantBaseline="central" className="fill-white text-[15px] font-bold">
+                  {active && <circle cx={x} cy={y} r={CELL * 0.43} fill="none" stroke={PLAYER_COLOR[p]} strokeOpacity={0.35} strokeWidth={2.5} />}
+                  <circle cx={x} cy={y + 1.5} r={CELL * 0.31} fill={BOARD_COLORS.ink} fillOpacity={0.12} />
+                  <circle cx={x} cy={y} r={CELL * 0.31} fill={PLAYER_COLOR[p]} stroke={BOARD_COLORS.cell} strokeWidth={2.5} />
+                  <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fill="#fbf9f5" className="text-[14px] font-semibold">
                     {PLAYER_LABEL[p]}
                   </text>
                 </g>
@@ -271,14 +263,16 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
           </g>
         </svg>
       </div>
-      <p className="min-h-5 text-center font-mono text-xs text-slate-400">{hint}</p>
+      <p className="h-5 w-full truncate text-center text-xs leading-5 text-muted" title={hint}>
+        {hint}
+      </p>
     </div>
   );
 }
 
 /**
  * Outline of an action: 'last' = previous move (dashed, player colour), 'strong' = previewed
- * action (solid white), 'mark' = other step of a previewed line (translucent, dashed, numbered).
+ * action (solid ink), 'mark' = other step of a previewed line (translucent, dashed, numbered).
  */
 function ActionHighlight({
   action,
@@ -293,7 +287,7 @@ function ActionHighlight({
   flipped: boolean;
   variant: 'last' | 'strong' | 'mark';
 }) {
-  const stroke = variant === 'strong' ? '#ffffff' : PLAYER_COLOR[player];
+  const stroke = variant === 'strong' ? BOARD_COLORS.ink : PLAYER_COLOR[player];
   const dash = variant === 'strong' ? undefined : '4 3';
   let shape;
   let badge: { x: number; y: number };
@@ -305,10 +299,11 @@ function ActionHighlight({
         y={r.y - 3}
         width={r.width + 6}
         height={r.height + 6}
-        rx={5}
+        rx={6}
         fill={variant === 'mark' ? PLAYER_COLOR[player] : 'none'}
-        fillOpacity={0.35}
+        fillOpacity={0.25}
         stroke={stroke}
+        strokeOpacity={variant === 'last' ? 0.7 : 1}
         strokeWidth={variant === 'strong' ? 2.5 : 2}
         strokeDasharray={dash}
       />
@@ -322,10 +317,11 @@ function ActionHighlight({
         y={r.y + 2}
         width={r.width - 4}
         height={r.height - 4}
-        rx={6}
+        rx={8}
         fill={variant === 'mark' ? PLAYER_COLOR[player] : 'none'}
-        fillOpacity={0.15}
+        fillOpacity={0.12}
         stroke={stroke}
+        strokeOpacity={variant === 'last' ? 0.7 : 1}
         strokeWidth={2}
         strokeDasharray={dash}
       />
@@ -337,8 +333,8 @@ function ActionHighlight({
       {shape}
       {label && (
         <g>
-          <circle cx={badge.x} cy={badge.y} r={9} fill="#0f172a" stroke={PLAYER_COLOR[player]} strokeWidth={1.5} />
-          <text x={badge.x} y={badge.y} textAnchor="middle" dominantBaseline="central" className="fill-white font-mono text-[10px] font-bold">
+          <circle cx={badge.x} cy={badge.y} r={9} fill={BOARD_COLORS.cell} stroke={PLAYER_COLOR[player]} strokeWidth={1.5} />
+          <text x={badge.x} y={badge.y} textAnchor="middle" dominantBaseline="central" fill={BOARD_COLORS.ink} className="font-mono text-[10px] font-bold">
             {label}
           </text>
         </g>
@@ -359,10 +355,10 @@ function CoordinateLabels({ flipped }: { flipped: boolean }) {
     const engine: Coord = cellFromView({ row: i, col: i }, flipped);
     const { x, y } = cellCenter({ row: i, col: i });
     labels.push(
-      <text key={`f${i}`} x={PAD + x} y={PAD + BOARD_PX + PAD / 2 + 1} textAnchor="middle" dominantBaseline="central" className="fill-slate-500 font-mono text-[11px]">
+      <text key={`f${i}`} x={PAD + x} y={PAD + BOARD_PX + 20} textAnchor="middle" dominantBaseline="central" fill={BOARD_COLORS.label} className="font-mono text-[11px]">
         {FILES[engine.col]}
       </text>,
-      <text key={`r${i}`} x={PAD / 2} y={PAD + y} textAnchor="middle" dominantBaseline="central" className="fill-slate-500 font-mono text-[11px]">
+      <text key={`r${i}`} x={PAD / 2 - 3} y={PAD + y} textAnchor="middle" dominantBaseline="central" fill={BOARD_COLORS.label} className="font-mono text-[11px]">
         {BOARD_SIZE - engine.row}
       </text>,
     );

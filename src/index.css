@@ -1,13 +1,93 @@
 @import 'tailwindcss';
 
+/*
+ * Design tokens — warm, low-saturation, light. Components use these names only
+ * (bg-paper, text-ink, border-line, bg-accent, text-p1 …), never raw palette colours.
+ *
+ *   surfaces   paper (page) · card (panels) · inset (inputs, wells) · inset-strong
+ *   lines      line-soft · line · line-strong
+ *   text       ink · ink-soft · muted · faint
+ *   accents    accent (links, focus, primary buttons) · p1 / p2 (players) · wall (wood)
+ *   states     warn (halted, previews) · danger (errors) · good · think (AI thinking)
+ */
+@theme {
+  --color-paper: #f4f0e8;
+  --color-card: #fbf9f5;
+  --color-inset: #efe9df;
+  --color-inset-strong: #e5ddd0;
+
+  --color-line-soft: #ebe4d9;
+  --color-line: #ddd4c6;
+  --color-line-strong: #c4b9a8;
+
+  --color-ink: #2e2a25;
+  --color-ink-soft: #4a443c;
+  --color-muted: #6e665c;
+  --color-faint: #958b7f;
+
+  --color-accent: #4e6876;
+  --color-accent-strong: #3d5562;
+
+  --color-p1: #3c6a8a;
+  --color-p1-strong: #2f5874;
+  --color-p2: #ad5646;
+  --color-p2-strong: #924536;
+
+  --color-wall: #8a6a4b;
+  --color-wall-strong: #6f533a;
+
+  --color-warn: #9a6d24;
+  --color-warn-strong: #7f5a1d;
+  --color-danger: #a4473d;
+  --color-danger-strong: #883a32;
+  --color-good: #58784f;
+  --color-good-strong: #476341;
+  --color-think: #76618c;
+  --color-think-strong: #604f73;
+
+  --font-sans: 'Pretendard', 'Inter', system-ui, -apple-system, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --radius-card: 1rem;
+  --shadow-soft: 0 1px 2px rgb(46 42 37 / 0.04), 0 2px 8px rgb(46 42 37 / 0.04);
+}
+
 :root {
-  color-scheme: dark;
-  font-family:
-    'Inter', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Malgun Gothic', sans-serif;
+  color-scheme: light;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  /* Keep the page width stable when the page scrollbar appears or disappears. */
+  scrollbar-gutter: stable;
 }
 
 body {
   margin: 0;
-  background: #020617;
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+::selection {
+  background: rgb(78 104 118 / 0.18);
+}
+
+/* Quiet, thin scrollbars inside panels. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+input[type='range'] {
+  accent-color: var(--color-accent);
+}
+
+/* Scroll container whose scrollbar never changes the content width. */
+.scroll-stable {
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
 }

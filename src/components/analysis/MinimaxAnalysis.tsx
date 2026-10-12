@@ -92,26 +92,26 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
       <div
         role="button"
         {...bind('chosen', candidateOverlay(best))}
-        className="block w-full cursor-pointer rounded-lg border border-slate-700 bg-slate-950/60 p-3 text-left transition-colors hover:border-amber-400/50 aria-pressed:border-amber-400/70"
+        className="block w-full cursor-pointer rounded-lg border border-line bg-paper/60 p-3 text-left transition-colors hover:border-warn/50 aria-pressed:border-warn/70"
       >
-        <span className="text-[11px] text-slate-500">
+        <span className="text-[11px] text-faint">
           선택한 행동 · {algo} · 마우스를 올리면 예상 응수까지 표시, 클릭하면 고정
         </span>
         <span className="mt-1 flex items-baseline justify-between gap-2">
           <span className="flex items-baseline gap-2">
-            <span className="font-mono text-2xl font-semibold text-white">{best.notation}</span>
+            <span className="font-mono text-2xl font-semibold text-ink">{best.notation}</span>
             {best.replyNotation && (
-              <span className="text-xs text-slate-400">
-                예상 응수 <span className="font-mono text-slate-200">{best.replyNotation}</span>
+              <span className="text-xs text-muted">
+                예상 응수 <span className="font-mono text-ink">{best.replyNotation}</span>
               </span>
             )}
           </span>
-          <span className="font-mono text-sm text-slate-200">{formatSearchScore(trace.score)}</span>
+          <span className="font-mono text-sm text-ink">{formatSearchScore(trace.score)}</span>
         </span>
-        <ul className="mt-2 space-y-1 text-xs leading-relaxed text-slate-300">
+        <ul className="mt-2 space-y-1 text-xs leading-relaxed text-ink-soft">
           {trace.rationale.map((line, i) => (
             <li key={i} className="flex gap-1.5">
-              <span className="text-slate-600">›</span>
+              <span className="text-faint">›</span>
               <span>{line}</span>
             </li>
           ))}
@@ -120,31 +120,31 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
 
       {/* Principal variation */}
       <div>
-        <h3 className="mb-1.5 text-xs text-slate-400">
-          주 변화 (Principal Variation){!trace.pvComplete && <span className="ml-1 text-slate-500">· TT로 일부 생략</span>}
+        <h3 className="mb-1.5 text-xs text-muted">
+          주 변화 (Principal Variation){!trace.pvComplete && <span className="ml-1 text-faint">· TT로 일부 생략</span>}
         </h3>
         <div className="flex flex-wrap items-center gap-1">
           {trace.pvNotation.map((step, i) => (
             <span key={i} className="flex items-center gap-1">
-              {i > 0 && <span className="text-slate-600">→</span>}
+              {i > 0 && <span className="text-faint">→</span>}
               <span
                 {...bind(`pv-${i}`, pvOverlay(i + 1))}
-                className="cursor-pointer rounded border border-slate-700 bg-slate-800/70 px-1.5 py-0.5 font-mono text-[11px] text-slate-100 outline-none hover:border-amber-400/60 aria-pressed:border-amber-400/80"
+                className="cursor-pointer rounded border border-line bg-inset/70 px-1.5 py-0.5 font-mono text-[11px] text-ink outline-none hover:border-warn/60 aria-pressed:border-warn/80"
               >
-                <span className="mr-1 text-slate-500">{i + 1}</span>
-                <span className={i % 2 === 0 ? 'text-slate-100' : 'text-slate-300'}>{step}</span>
+                <span className="mr-1 text-faint">{i + 1}</span>
+                <span className={i % 2 === 0 ? 'text-ink' : 'text-ink-soft'}>{step}</span>
               </span>
             </span>
           ))}
         </div>
         {trace.pvLeaf.terminal === null && trace.pvComplete && (
-          <p className="mt-1.5 font-mono text-[11px] leading-relaxed text-slate-400">
+          <p className="mt-1.5 font-mono text-[11px] leading-relaxed text-muted">
             PV 끝 평가: d내 {trace.pvLeaf.selfDistance} · d상대 {trace.pvLeaf.opponentDistance} · 벽 {trace.pvLeaf.selfWalls}:
             {trace.pvLeaf.opponentWalls} · {trace.pvLeaf.toMove === me ? '내 차례' : '상대 차례'} → {trace.pvLeaf.score.toFixed(2)}
             {trace.pvLeaf.matchesScore ? ' ✓ 탐색 점수와 일치' : ''}
           </p>
         )}
-        <p className="mt-1 font-mono text-[11px] text-slate-500">
+        <p className="mt-1 font-mono text-[11px] text-faint">
           평가식: −{settings.evaluation.selfDistance}·d내 + {settings.evaluation.opponentDistance}·d상대 +{' '}
           {settings.evaluation.wallDifference}·(벽내 − 벽상대) ± {settings.evaluation.tempo}(차례) · 점수는 {PLAYER_LABEL[me]} 관점
         </p>
@@ -152,10 +152,10 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
 
       {/* Iterative deepening */}
       <div>
-        <h3 className="mb-1.5 text-xs text-slate-400">반복 심화 (Iterative Deepening)</h3>
+        <h3 className="mb-1.5 text-xs text-muted">반복 심화 (Iterative Deepening)</h3>
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[11px] text-slate-500">
+            <tr className="text-[11px] text-faint">
               <th className="py-1 text-left font-normal">깊이</th>
               <th className="py-1 text-left font-normal">최선</th>
               <th className="py-1 text-right font-normal">점수</th>
@@ -166,24 +166,24 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
           <tbody className="font-mono">
             {trace.iterations.map((it) => (
               <tr key={it.depth}>
-                <td className="py-0.5 text-slate-400">{it.depth}</td>
-                <td className="py-0.5 text-slate-100">{it.best}</td>
-                <td className="py-0.5 text-right text-slate-200">{formatSearchScore(it.score)}</td>
+                <td className="py-0.5 text-muted">{it.depth}</td>
+                <td className="py-0.5 text-ink">{it.best}</td>
+                <td className="py-0.5 text-right text-ink">{formatSearchScore(it.score)}</td>
                 <td className="py-0.5 pl-2">
                   <div className="flex items-center justify-end gap-2">
-                    <div className="h-1.5 flex-1 rounded-sm bg-slate-800">
-                      <div className="h-1.5 rounded-sm bg-violet-400" style={{ width: `${Math.max(3, (100 * it.nodes) / maxIterNodes)}%` }} />
+                    <div className="h-1.5 flex-1 rounded-sm bg-inset">
+                      <div className="h-1.5 rounded-sm bg-think-strong" style={{ width: `${Math.max(3, (100 * it.nodes) / maxIterNodes)}%` }} />
                     </div>
-                    <span className="w-12 text-right text-slate-300">{n(it.nodes)}</span>
+                    <span className="w-12 text-right text-ink-soft">{n(it.nodes)}</span>
                   </div>
                 </td>
-                <td className="py-0.5 text-right text-slate-400">{it.elapsedMs.toFixed(0)}</td>
+                <td className="py-0.5 text-right text-muted">{it.elapsedMs.toFixed(0)}</td>
               </tr>
             ))}
             {trace.timedOut && (
               <tr>
-                <td className="py-0.5 text-amber-300">{trace.completedDepth + 1}</td>
-                <td colSpan={4} className="py-0.5 font-sans text-[11px] text-amber-300/80">
+                <td className="py-0.5 text-warn">{trace.completedDepth + 1}</td>
+                <td colSpan={4} className="py-0.5 font-sans text-[11px] text-warn/80">
                   시간 제한으로 중단 — 결과를 버리고 깊이 {trace.completedDepth}의 수를 사용
                 </td>
               </tr>
@@ -195,14 +195,14 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
       {/* Root candidates */}
       <div>
         <div className="mb-1.5 flex items-baseline justify-between">
-          <h3 className="text-xs text-slate-400">후보 행동 평가 (깊이 {trace.completedDepth})</h3>
-          <span className="text-[11px] text-slate-500">
+          <h3 className="text-xs text-muted">후보 행동 평가 (깊이 {trace.completedDepth})</h3>
+          <span className="text-[11px] text-faint">
             상위 {Math.min(CANDIDATE_LIMIT, trace.rootCandidates.length)} / {trace.rootCandidates.length}
           </span>
         </div>
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[11px] text-slate-500">
+            <tr className="text-[11px] text-faint">
               <th className="w-6 py-1 text-left font-normal">#</th>
               <th className="py-1 text-left font-normal">행동</th>
               <th className="py-1 text-left font-normal">상대 응수</th>
@@ -214,25 +214,25 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
               <tr
                 key={c.notation}
                 {...bind(`cand-${c.rank}`, candidateOverlay(c))}
-                className={`cursor-pointer font-mono outline-none hover:bg-slate-800/70 focus:bg-slate-800/70 aria-pressed:bg-amber-400/10 ${
-                  c.rank === 1 ? 'bg-slate-800/40' : ''
+                className={`cursor-pointer font-mono outline-none hover:bg-inset/70 focus:bg-inset/70 aria-pressed:bg-warn/10 ${
+                  c.rank === 1 ? 'bg-inset/40' : ''
                 }`}
               >
-                <td className="py-1 text-slate-500">{c.rank}</td>
-                <td className="py-1 text-slate-100">{c.notation}</td>
-                <td className="py-1 text-slate-400">
+                <td className="py-1 text-faint">{c.rank}</td>
+                <td className="py-1 text-ink">{c.notation}</td>
+                <td className="py-1 text-muted">
                   {c.replyNotation ?? '–'}
-                  {c.replyNotation && c.bound === 'upper' && <span className="ml-1 font-sans text-[10px] text-violet-300">반박</span>}
+                  {c.replyNotation && c.bound === 'upper' && <span className="ml-1 font-sans text-[10px] text-think">반박</span>}
                 </td>
                 <td className="py-1 pl-2">
                   <div className="flex items-center justify-end gap-2">
-                    <div className="h-2 flex-1 rounded-sm bg-slate-800">
+                    <div className="h-2 flex-1 rounded-sm bg-inset">
                       <div
-                        className={`h-2 rounded-sm ${c.bound === 'exact' ? 'bg-violet-400' : 'bg-violet-400/35'}`}
+                        className={`h-2 rounded-sm ${c.bound === 'exact' ? 'bg-think-strong' : 'bg-think/35'}`}
                         style={{ width: `${barWidth(c)}%` }}
                       />
                     </div>
-                    <span className="w-[4.5rem] text-right text-slate-200">
+                    <span className="w-[4.5rem] text-right text-ink">
                       {boundPrefix(c.bound)}
                       {formatSearchScore(c.score)}
                     </span>
@@ -242,7 +242,7 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
             ))}
           </tbody>
         </table>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+        <p className="mt-1.5 text-[11px] leading-relaxed text-faint">
           ≤ 표시는 Alpha-Beta가 &lsquo;이 값보다 좋을 수 없음&rsquo;만 증명하고 잘라낸 후보입니다(연한 막대). &lsquo;반박&rsquo;은 그 증명에 쓰인
           상대의 수입니다. 행에 마우스를 올리면 후보와 응수가 보드에 번호로 표시됩니다.
         </p>
@@ -250,9 +250,9 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
 
       {/* Search tree */}
       <div>
-        <h3 className="mb-1.5 text-xs text-slate-400">탐색 트리 (주요 분기)</h3>
+        <h3 className="mb-1.5 text-xs text-muted">탐색 트리 (주요 분기)</h3>
         <SearchTreeView key={`${entry.stateBefore.ply}`} trace={trace} stateBefore={entry.stateBefore} bind={bind} />
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+        <p className="mt-1.5 text-[11px] leading-relaxed text-faint">
           주황 = 주 변화, 점선 = 경계값(≤/≥), ■ = 종료 포지션. 루트의 자식과 손자까지만 기록하며 각 단계의 상위 노드만 표시하고
           나머지는 요약합니다. 상대 응수는 {PLAYER_LABEL[me]}에게 가장 불리한 수부터 정렬됩니다.
         </p>
@@ -263,10 +263,10 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
 
 function Tile({ label, value, note, tone }: { label: string; value: string; note: string; tone?: 'warn' }) {
   return (
-    <div className="rounded-lg bg-slate-950/60 px-2.5 py-2">
-      <div className="text-[10.5px] text-slate-500">{label}</div>
-      <div className="font-mono text-sm font-semibold text-slate-100">{value}</div>
-      <div className={`truncate text-[10px] ${tone === 'warn' ? 'text-amber-300' : 'text-slate-500'}`} title={note}>
+    <div className="rounded-lg bg-paper/60 px-2.5 py-2">
+      <div className="text-[10.5px] text-faint">{label}</div>
+      <div className="font-mono text-sm font-semibold text-ink">{value}</div>
+      <div className={`truncate text-[10px] ${tone === 'warn' ? 'text-warn' : 'text-faint'}`} title={note}>
         {note}
       </div>
     </div>

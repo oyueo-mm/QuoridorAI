@@ -7,7 +7,7 @@ interface Props {
 }
 
 const numberClass =
-  'w-20 rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-right font-mono text-slate-200 focus:border-sky-500 focus:outline-none';
+  'w-20 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-ink focus:border-accent focus:outline-none';
 
 const EVAL_FIELDS: { key: keyof MinimaxEvalWeights; label: string }[] = [
   { key: 'selfDistance', label: '내 거리 가중치' },
@@ -21,15 +21,15 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
   const alphabeta = value.algorithm === 'alphabeta';
 
   return (
-    <div className="space-y-3 rounded-lg border border-slate-800 bg-slate-950/50 p-3">
-      <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-950 p-1">
+    <div className="space-y-3 rounded-lg border border-line-soft bg-paper/50 p-3">
+      <div className="grid grid-cols-2 gap-1 rounded-xl bg-inset p-1">
         {(['alphabeta', 'minimax'] as const).map((algo) => (
           <button
             key={algo}
             type="button"
             onClick={() => set({ algorithm: algo })}
             className={`rounded-md px-2 py-1.5 text-xs transition-colors ${
-              value.algorithm === algo ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-slate-200'
+              value.algorithm === algo ? 'bg-card font-medium text-ink shadow-[var(--shadow-soft)]' : 'text-muted hover:text-ink'
             }`}
           >
             {algo === 'alphabeta' ? 'Alpha-Beta' : 'Minimax (가지치기 없음)'}
@@ -37,7 +37,7 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
         ))}
       </div>
 
-      <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+      <label className="flex items-center justify-between gap-3 text-xs text-muted">
         최대 탐색 깊이 (ply)
         <input
           type="number"
@@ -48,9 +48,9 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
           className={numberClass}
         />
       </label>
-      <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+      <label className="flex items-center justify-between gap-3 text-xs text-muted">
         <span>
-          시간 제한 (ms) <span className="text-slate-500">0 = 없음</span>
+          시간 제한 (ms) <span className="text-faint">0 = 없음</span>
         </span>
         <input
           type="number"
@@ -61,25 +61,25 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
           className={numberClass}
         />
       </label>
-      <label className="block text-xs text-slate-400">
+      <label className="block text-xs text-muted">
         <span className="mb-1 block">벽 후보</span>
         <select
           value={value.wallFilter}
           onChange={(e) => set({ wallFilter: e.target.value as MinimaxSettings['wallFilter'] })}
-          className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-slate-200 focus:border-sky-500 focus:outline-none"
+          className="w-full rounded-lg border border-line bg-card px-2 py-1.5 text-xs text-ink focus:border-accent focus:outline-none"
         >
           <option value="opponent-path">상대 최단 경로를 끊는 벽만 (빠름)</option>
           <option value="all">모든 합법 벽 (느림)</option>
         </select>
       </label>
-      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
         <label className={`flex items-center gap-1.5 ${alphabeta ? '' : 'opacity-40'}`}>
           <input
             type="checkbox"
             disabled={!alphabeta}
             checked={value.moveOrdering}
             onChange={(e) => set({ moveOrdering: e.target.checked })}
-            className="accent-sky-500"
+            className="accent-accent"
           />
           이동 정렬
         </label>
@@ -89,20 +89,20 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
             disabled={!alphabeta}
             checked={value.transpositionTable}
             onChange={(e) => set({ transpositionTable: e.target.checked })}
-            className="accent-sky-500"
+            className="accent-accent"
           />
           전치표 (TT)
         </label>
       </div>
       {!alphabeta && (
-        <p className="text-[11px] text-amber-300/80">Minimax는 모든 노드를 탐색하므로 깊이 3 이상에서 매우 느려질 수 있습니다.</p>
+        <p className="text-[11px] text-warn/80">Minimax는 모든 노드를 탐색하므로 깊이 3 이상에서 매우 느려질 수 있습니다.</p>
       )}
 
       <details>
-        <summary className="cursor-pointer text-xs text-slate-400">평가 함수 가중치</summary>
+        <summary className="cursor-pointer text-xs text-muted">평가 함수 가중치</summary>
         <div className="mt-2 space-y-2">
           {EVAL_FIELDS.map((f) => (
-            <label key={f.key} className="flex items-center justify-between gap-3 text-xs text-slate-400">
+            <label key={f.key} className="flex items-center justify-between gap-3 text-xs text-muted">
               {f.label}
               <input
                 type="number"
@@ -121,7 +121,7 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
       <button
         type="button"
         onClick={() => onChange({ ...DEFAULT_MINIMAX_SETTINGS, evaluation: { ...DEFAULT_MINIMAX_SETTINGS.evaluation } })}
-        className="text-[11px] text-sky-400 hover:underline"
+        className="text-[11px] text-accent hover:underline"
       >
         기본값으로
       </button>

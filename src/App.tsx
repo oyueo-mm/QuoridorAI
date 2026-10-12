@@ -5,90 +5,97 @@ import { ArenaView } from './views/ArenaView';
 import { CompareView } from './views/CompareView';
 import type { CompareSource } from './views/CompareView';
 import { ExperimentsView } from './views/ExperimentsView';
+import { HomeView } from './views/HomeView';
 import { PlayView } from './views/PlayView';
+import { SECTIONS } from './sections';
+import type { SectionId } from './sections';
 
-const TABS = [
-  { id: 'play', label: 'Play', hint: '사람 vs AI' },
-  { id: 'arena', label: 'Arena', hint: 'AI vs AI 관전' },
-  { id: 'compare', label: 'Compare', hint: '같은 포지션 의사결정 비교' },
-  { id: 'experiments', label: 'Experiments', hint: '자동 대국·통계' },
-] as const;
-type TabId = (typeof TABS)[number]['id'];
+type RouteId = 'home' | SectionId;
 
-const tabFromHash = (): TabId => {
+const routeFromHash = (): RouteId => {
   const h = window.location.hash.replace(/^#\/?/, '');
-  return (TABS.find((t) => t.id === h)?.id ?? 'play') as TabId;
+  return (SECTIONS.find((t) => t.id === h)?.id ?? 'home') as RouteId;
 };
 
 /**
- * Shell with four views. Views stay mounted while hidden, so a running Play game, Arena match
- * or experiment keeps going when you switch tabs.
+ * Shell: Home plus four views. Views stay mounted while hidden, so a running Play game, Arena
+ * match or experiment keeps going when you switch.
  */
 export default function App() {
   const session = useGameSession();
-  const [tab, setTab] = useState<TabId>(tabFromHash);
+  const [route, setRoute] = useState<RouteId>(routeFromHash);
   const [compareSource, setCompareSource] = useState<CompareSource | null>(null);
 
   useEffect(() => {
-    const onHash = () => setTab(tabFromHash());
+    const onHash = () => setRoute(routeFromHash());
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
-  const go = (id: TabId) => {
-    window.location.hash = `/${id}`;
-    setTab(id);
-  };
+  const go = useCallback((id: RouteId) => {
+    window.location.hash = id === 'home' ? '/' : `/${id}`;
+    setRoute(id);
+    window.scrollTo({ top: 0 });
+  }, []);
 
   const sendToCompare = useCallback((state: GameState, label: string) => {
     setCompareSource({ state, label, sentAt: Date.now() });
     window.location.hash = '/compare';
-    setTab('compare');
+    setRoute('compare');
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-200">
-      <header className="border-b border-slate-800/80 px-4 py-3 sm:px-6">
-        <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-x-4 gap-y-2">
-          <div className="flex items-baseline gap-3">
-            <h1 className="text-lg font-semibold tracking-tight text-white">
-              Quoridor<span className="text-sky-400">AI</span> Lab
-            </h1>
-            <span className="hidden text-xs text-slate-500 md:inline">게임 AI 의사결정 시각화 실험실</span>
-          </div>
-          <nav className="flex gap-1 rounded-lg bg-slate-900 p-1" aria-label="보기 선택">
-            {TABS.map((t) => (
+    <div className="min-h-screen bg-paper text-ink">
+      <header className="sticky top-0 z-20 border-b border-line-soft bg-paper/90 backdrop-blur">
+        <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6">
+          <button type="button" onClick={() => go('home')} className="flex items-center gap-2 text-ink" aria-label="홈으로">
+            <Logo />
+            <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">QuoridorAI</span>
+          </button>
+          <nav className="flex gap-0.5 overflow-x-auto" aria-label="보기 선택">
+            {SECTIONS.map((t) => (
               <button
                 key={t.id}
                 type="button"
                 onClick={() => go(t.id)}
                 title={t.hint}
-                aria-current={tab === t.id ? 'page' : undefined}
-                className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-                  tab === t.id ? 'bg-slate-700 text-white' : 'text-slate-400 hover:text-slate-200'
+                aria-current={route === t.id ? 'page' : undefined}
+                className={`rounded-lg px-2.5 py-1.5 text-sm whitespace-nowrap transition-colors sm:px-3 ${
+                  route === t.id ? 'bg-inset font-medium text-ink' : 'text-muted hover:text-ink'
                 }`}
               >
                 {t.label}
               </button>
             ))}
           </nav>
-          <span className="hidden rounded-full border border-slate-700 px-2.5 py-0.5 font-mono text-[11px] text-slate-400 lg:inline">
-            stage 5 · arena
-          </span>
         </div>
       </header>
 
-      <div hidden={tab !== 'play'}>
+      <div hidden={route !== 'home'}>
+        <HomeView onOpen={go} />
+      </div>
+      <div hidden={route !== 'play'}>
         <PlayView session={session} onCompare={sendToCompare} />
       </div>
-      <div hidden={tab !== 'arena'}>
+      <div hidden={route !== 'arena'}>
         <ArenaView onCompare={sendToCompare} />
       </div>
-      <div hidden={tab !== 'compare'}>
+      <div hidden={route !== 'compare'}>
         <CompareView source={compareSource} playState={session.game} />
       </div>
-      <div hidden={tab !== 'experiments'}>
+      <div hidden={route !== 'experiments'}>
         <ExperimentsView />
       </div>
     </div>
+  );
+}
+
+function Logo() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
+      <rect x="1" y="1" width="22" height="22" rx="6" fill="#e7dccb" />
+      <rect x="5" y="11" width="14" height="2.4" rx="1.2" fill="#8a6a4b" />
+      <circle cx="12" cy="6.8" r="2.6" fill="#ad5646" />
+      <circle cx="12" cy="17.2" r="2.6" fill="#3c6a8a" />
+    </svg>
   );
 }

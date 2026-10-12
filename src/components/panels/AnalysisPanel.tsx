@@ -7,6 +7,7 @@ import { TraceDetail, traceAgentName } from '../analysis/TraceDetail';
 import { usePreviewBinder } from '../analysis/usePreviewBinder';
 import type { BoardOverlay } from '../board/overlay';
 import { PLAYER_LABEL } from '../theme';
+import { Collapsible } from '../ui';
 import { Panel } from './Panel';
 
 interface AnalysisPanelProps {
@@ -37,10 +38,11 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
   return (
     <div className="space-y-4">
       <Panel
+        plain
         title="AI 분석"
         aside={
           decision && (
-            <div className="flex items-center gap-1 font-mono text-[11px] text-slate-400">
+            <div className="flex items-center gap-1 font-mono text-[11px] text-muted">
               <NavButton label="이전 결정" disabled={position <= 0} onClick={() => setSelected(position - 1)}>
                 ◀
               </NavButton>
@@ -55,7 +57,7 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
                 ▶
               </NavButton>
               {selected !== null && (
-                <button type="button" onClick={() => setSelected(null)} className="ml-1 text-sky-400 hover:underline">
+                <button type="button" onClick={() => setSelected(null)} className="ml-1 text-accent hover:underline">
                   최신
                 </button>
               )}
@@ -74,12 +76,12 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
         ) : (
           <div className="space-y-3">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-xs">
-              <span className="font-semibold text-slate-200">
+              <span className="font-semibold text-ink">
                 {traceAgentName(decision.trace)} · {PLAYER_LABEL[decision.trace.player]}
               </span>
-              <span className="font-mono text-[11px] text-slate-500">
+              <span className="font-mono text-[11px] text-faint">
                 ply {decision.index + 1} · {decision.trace.elapsedMs.toFixed(1)} ms
-                {thinking && selected === null && <span className="ml-2 text-violet-300">다음 수 계산 중…</span>}
+                {thinking && selected === null && <span className="ml-2 text-think">다음 수 계산 중…</span>}
               </span>
             </div>
             <TraceDetail key={decision.index} entry={decision.entry} bind={bind} showHeader={false} />
@@ -99,7 +101,7 @@ function NavButton(props: { label: string; disabled: boolean; onClick: () => voi
       aria-label={props.label}
       disabled={props.disabled}
       onClick={props.onClick}
-      className="rounded px-1.5 py-0.5 hover:bg-slate-800 disabled:opacity-30 disabled:hover:bg-transparent"
+      className="rounded px-1.5 py-0.5 hover:bg-inset disabled:opacity-30 disabled:hover:bg-transparent"
     >
       {props.children}
     </button>
@@ -108,7 +110,7 @@ function NavButton(props: { label: string; disabled: boolean; onClick: () => voi
 
 function Placeholder({ children }: { children: ReactNode }) {
   return (
-    <div className="rounded-lg border border-dashed border-slate-700 p-4 text-center text-xs leading-relaxed text-slate-500">
+    <div className="rounded-lg border border-dashed border-line p-4 text-center text-xs leading-relaxed text-faint">
       {children}
     </div>
   );
@@ -132,15 +134,15 @@ function PositionMetrics({ state }: { state: GameState }) {
   ];
 
   return (
-    <Panel title="현재 포지션 지표">
+    <Collapsible title="현재 포지션 지표">
       <dl className="space-y-1.5 text-xs">
         {rows.map(([label, value]) => (
           <div key={label} className="flex justify-between">
-            <dt className="text-slate-400">{label}</dt>
-            <dd className="font-mono text-slate-200">{value}</dd>
+            <dt className="text-muted">{label}</dt>
+            <dd className="font-mono text-ink">{value}</dd>
           </div>
         ))}
       </dl>
-    </Panel>
+    </Collapsible>
   );
 }

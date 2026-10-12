@@ -96,29 +96,29 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
       <div
         role="button"
         {...bind('chosen', candidateOverlay(best))}
-        className="block w-full cursor-pointer rounded-lg border border-slate-700 bg-slate-950/60 p-3 text-left transition-colors hover:border-amber-400/50 aria-pressed:border-amber-400/70"
+        className="block w-full cursor-pointer rounded-lg border border-line bg-paper/60 p-3 text-left transition-colors hover:border-warn/50 aria-pressed:border-warn/70"
       >
-        <span className="text-[11px] text-slate-500">
+        <span className="text-[11px] text-faint">
           최종 선택 · {trace.selectionRule === 'proven-win' ? '승리 증명 수' : '최다 방문 수'} · 마우스를 올리면 최다 응수까지 표시
         </span>
         <span className="mt-1 flex items-baseline justify-between gap-2">
           <span className="flex items-baseline gap-2">
-            <span className="font-mono text-2xl font-semibold text-white">{best.notation}</span>
+            <span className="font-mono text-2xl font-semibold text-ink">{best.notation}</span>
             {best.reply && (
-              <span className="text-xs text-slate-400">
-                최다 응수 <span className="font-mono text-slate-200">{best.reply.notation}</span>
+              <span className="text-xs text-muted">
+                최다 응수 <span className="font-mono text-ink">{best.reply.notation}</span>
               </span>
             )}
           </span>
-          <span className="text-right font-mono text-xs text-slate-200">
+          <span className="text-right font-mono text-xs text-ink">
             N {n(best.visits)} ({pct(best.share)})
             <br />Q {q(best.q)}
           </span>
         </span>
-        <ul className="mt-2 space-y-1 text-xs leading-relaxed text-slate-300">
+        <ul className="mt-2 space-y-1 text-xs leading-relaxed text-ink-soft">
           {trace.rationale.map((line, i) => (
             <li key={i} className="flex gap-1.5">
-              <span className="text-slate-600">›</span>
+              <span className="text-faint">›</span>
               <span>{line}</span>
             </li>
           ))}
@@ -128,14 +128,14 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
       {/* Visit distribution */}
       <div>
         <div className="mb-1.5 flex items-baseline justify-between">
-          <h3 className="text-xs text-slate-400">탐색 분포 (후보별 방문 횟수 N)</h3>
-          <span className="text-[11px] text-slate-500">
+          <h3 className="text-xs text-muted">탐색 분포 (후보별 방문 횟수 N)</h3>
+          <span className="text-[11px] text-faint">
             상위 {top.length} / 탐색 후보 {trace.searchedActionCount} (합법 {trace.legalActionCount})
           </span>
         </div>
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[11px] text-slate-500">
+            <tr className="text-[11px] text-faint">
               <th className="w-6 py-1 text-left font-normal">#</th>
               <th className="py-1 text-left font-normal">행동</th>
               <th className="w-[36%] py-1 text-left font-normal">N</th>
@@ -150,17 +150,17 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
               <tr
                 key={c.notation}
                 {...bind(`cand-${c.rank}`, candidateOverlay(c))}
-                className={`cursor-pointer font-mono outline-none hover:bg-slate-800/70 focus:bg-slate-800/70 aria-pressed:bg-amber-400/10 ${
-                  c.rank === 1 ? 'bg-slate-800/40' : ''
+                className={`cursor-pointer font-mono outline-none hover:bg-inset/70 focus:bg-inset/70 aria-pressed:bg-warn/10 ${
+                  c.rank === 1 ? 'bg-inset/40' : ''
                 }`}
               >
-                <td className="py-1 text-slate-500">{c.rank}</td>
-                <td className="py-1 text-slate-100">
+                <td className="py-1 text-faint">{c.rank}</td>
+                <td className="py-1 text-ink">
                   {c.notation}
                   {c.proven && (
                     <span
                       className={`ml-1 rounded px-1 font-sans text-[10px] ${
-                        c.proven === 'win' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-red-500/15 text-red-300'
+                        c.proven === 'win' ? 'bg-good/15 text-good' : 'bg-danger/15 text-danger'
                       }`}
                     >
                       {c.proven === 'win' ? '✓ 승리' : '✗ 패배'}
@@ -169,21 +169,21 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
                 </td>
                 <td className="py-1">
                   <div className="flex items-center gap-1.5">
-                    <div className="h-2 flex-1 rounded-sm bg-slate-800">
-                      <div className="h-2 rounded-sm bg-sky-500" style={{ width: `${Math.max(2, (100 * c.visits) / maxVisits)}%` }} />
+                    <div className="h-2 flex-1 rounded-sm bg-inset">
+                      <div className="h-2 rounded-sm bg-accent" style={{ width: `${Math.max(2, (100 * c.visits) / maxVisits)}%` }} />
                     </div>
-                    <span className="w-10 text-right text-slate-300">{n(c.visits)}</span>
+                    <span className="w-10 text-right text-ink-soft">{n(c.visits)}</span>
                   </div>
                 </td>
-                <td className="py-1 text-right text-slate-200">{q(c.q)}</td>
-                {puctMode && <td className="py-1 text-right text-slate-400">{c.prior === undefined ? '–' : c.prior.toFixed(2)}</td>}
-                <td className="py-1 text-right text-slate-400">{c.uct === null ? '–' : c.uct.toFixed(3)}</td>
-                <td className="py-1 pl-2 text-slate-400">{c.reply?.notation ?? '–'}</td>
+                <td className="py-1 text-right text-ink">{q(c.q)}</td>
+                {puctMode && <td className="py-1 text-right text-muted">{c.prior === undefined ? '–' : c.prior.toFixed(2)}</td>}
+                <td className="py-1 text-right text-muted">{c.uct === null ? '–' : c.uct.toFixed(3)}</td>
+                <td className="py-1 pl-2 text-muted">{c.reply?.notation ?? '–'}</td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+        <p className="mt-1.5 text-[11px] leading-relaxed text-faint">
           Q = 이 수를 거친 시뮬레이션의 평균 가치({PLAYER_LABEL[trace.player]} 관점, −1~+1).{' '}
           {puctMode
             ? `PUCT = Q + ${settings.puctConstant}·P·√N부모 / (1 + N), P = 1수 평가의 softmax(τ = ${settings.priorTemperature}). 사전 확률이 낮은 수는 확장되지 않을 수 있습니다.`
@@ -195,15 +195,15 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
       {/* Replay */}
       <div>
         <div className="mb-1.5 flex items-center justify-between gap-2">
-          <h3 className="text-xs text-slate-400">탐색 재생 (방문 비율 변화)</h3>
-          <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400">
+          <h3 className="text-xs text-muted">탐색 재생 (방문 비율 변화)</h3>
+          <div className="flex items-center gap-2 font-mono text-[11px] text-muted">
             <button
               type="button"
               onClick={() => {
                 if (!playing && frame >= trace.snapshots.length - 1) setFrame(0);
                 setPlaying(!playing);
               }}
-              className="rounded border border-slate-700 px-2 py-0.5 text-slate-200 hover:border-sky-500"
+              className="rounded border border-line px-2 py-0.5 text-ink hover:border-accent"
             >
               {playing ? '❚❚ 정지' : '▶ 재생'}
             </button>
@@ -221,7 +221,7 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
             setPlaying(false);
             setFrame(Number(e.target.value));
           }}
-          className="w-full accent-sky-500"
+          className="w-full accent-accent"
           aria-label="탐색 스냅샷"
         />
         <MctsVisitChart
@@ -237,48 +237,48 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
           <div className="mt-2 space-y-1">
             {snap.top.map((t) => (
               <div key={t.notation} className="flex items-center gap-2 font-mono text-[11px]">
-                <span className="w-10 text-slate-100">{t.notation}</span>
-                <div className="h-2 flex-1 rounded-sm bg-slate-800">
+                <span className="w-10 text-ink">{t.notation}</span>
+                <div className="h-2 flex-1 rounded-sm bg-inset">
                   <div
-                    className="h-2 rounded-sm bg-sky-500 transition-[width] duration-100"
+                    className="h-2 rounded-sm bg-accent transition-[width] duration-100"
                     style={{ width: `${Math.max(1, (100 * t.visits) / Math.max(1, snap.simulations))}%` }}
                   />
                 </div>
-                <span className="w-24 text-right text-slate-400">
+                <span className="w-24 text-right text-muted">
                   {n(t.visits)} · Q {q(t.q)}
                 </span>
               </div>
             ))}
           </div>
         )}
-        <p className="mt-1.5 text-[11px] leading-relaxed text-slate-500">
+        <p className="mt-1.5 text-[11px] leading-relaxed text-faint">
           스냅샷 {trace.snapshots.length}개 (각 시점의 상위 {Math.max(0, ...trace.snapshots.map((s) => s.top.length))}개 후보만 기록, 개수가 넘치면 간격을 두 배로 늘려 메모리를 제한).
         </p>
       </div>
 
       {/* Most visited line */}
       <div>
-        <h3 className="mb-1.5 text-xs text-slate-400">최다 방문 경로</h3>
+        <h3 className="mb-1.5 text-xs text-muted">최다 방문 경로</h3>
         <div className="flex flex-wrap items-center gap-1">
           {trace.pv.map((step, i) => (
             <span key={i} className="flex items-center gap-1">
-              {i > 0 && <span className="text-slate-600">→</span>}
+              {i > 0 && <span className="text-faint">→</span>}
               <span
                 {...bind(`pv-${i}`, pvOverlay(i + 1))}
-                className="cursor-pointer rounded border border-slate-700 bg-slate-800/70 px-1.5 py-0.5 font-mono text-[11px] text-slate-100 outline-none hover:border-amber-400/60 aria-pressed:border-amber-400/80"
+                className="cursor-pointer rounded border border-line bg-inset/70 px-1.5 py-0.5 font-mono text-[11px] text-ink outline-none hover:border-warn/60 aria-pressed:border-warn/80"
                 title={`N ${step.visits}, Q ${q(step.q)} (두는 쪽 관점)`}
               >
-                <span className="mr-1 text-slate-500">{i + 1}</span>
+                <span className="mr-1 text-faint">{i + 1}</span>
                 {step.notation}
-                <span className="ml-1 text-slate-500">{n(step.visits)}</span>
+                <span className="ml-1 text-faint">{n(step.visits)}</span>
               </span>
             </span>
           ))}
         </div>
       </div>
 
-      <p className="rounded-lg bg-slate-950/60 px-3 py-2 text-[11px] leading-relaxed text-slate-400">
-        <span className="text-slate-300">가치 규칙:</span> {trace.valueRule}
+      <p className="rounded-lg bg-paper/60 px-3 py-2 text-[11px] leading-relaxed text-muted">
+        <span className="text-ink-soft">가치 규칙:</span> {trace.valueRule}
       </p>
     </div>
   );
@@ -286,12 +286,12 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
 
 function Tile({ label, value, note, tone }: { label: string; value: string; note: string; tone?: 'warn' }) {
   return (
-    <div className="rounded-lg bg-slate-950/60 px-2.5 py-2">
-      <div className="text-[10.5px] text-slate-500">{label}</div>
-      <div className="truncate font-mono text-sm font-semibold text-slate-100" title={value}>
+    <div className="rounded-lg bg-paper/60 px-2.5 py-2">
+      <div className="text-[10.5px] text-faint">{label}</div>
+      <div className="truncate font-mono text-sm font-semibold text-ink" title={value}>
         {value}
       </div>
-      <div className={`truncate text-[10px] ${tone === 'warn' ? 'text-amber-300' : 'text-slate-500'}`} title={note}>
+      <div className={`truncate text-[10px] ${tone === 'warn' ? 'text-warn' : 'text-faint'}`} title={note}>
         {note}
       </div>
     </div>

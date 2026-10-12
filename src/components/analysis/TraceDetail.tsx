@@ -24,15 +24,15 @@ export function traceAgentName(trace: DecisionTrace): string {
 /** The algorithm-specific DecisionTrace view (same components as the Play analysis panel). */
 export function TraceDetail({ entry, bind, showHeader = true }: { entry: TraceEntry; bind: PreviewBinder; showHeader?: boolean }) {
   const trace = entry.trace;
-  if (!trace) return <p className="text-xs text-slate-500">이 수에는 AI 계산 기록이 없습니다 (사람이 둔 수).</p>;
+  if (!trace) return <p className="text-xs text-faint">이 수에는 AI 계산 기록이 없습니다 (사람이 둔 수).</p>;
   return (
     <div className="space-y-3">
       {showHeader && (
         <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-xs">
-          <span className="font-semibold text-slate-200">
+          <span className="font-semibold text-ink">
             {traceAgentName(trace)} · {PLAYER_LABEL[trace.player]}
           </span>
-          <span className="font-mono text-[11px] text-slate-500">
+          <span className="font-mono text-[11px] text-faint">
             ply {trace.ply + 1} · {trace.elapsedMs.toFixed(1)} ms
           </span>
         </div>

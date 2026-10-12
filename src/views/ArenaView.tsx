@@ -8,11 +8,15 @@ import { TraceDetail, traceAgentName } from '../components/analysis/TraceDetail'
 import { usePreviewBinder } from '../components/analysis/usePreviewBinder';
 import { AgentPicker, BudgetBadge, BudgetPicker } from '../components/arena/AgentPicker';
 import { QuoridorBoard } from '../components/board/QuoridorBoard';
+import { boardColumnStyle } from '../components/board/layout';
 import type { BoardOverlay } from '../components/board/overlay';
 import { Panel } from '../components/panels/Panel';
+import { PlayerStrip } from '../components/panels/PlayerStrip';
 import { SearchProgressBar } from '../components/panels/SearchProgressBar';
 import { PLAYER_COLOR, PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
-import type { GameState } from '../engine';
+import { Collapsible, Segmented, Tabs, buttonClass, cardClass, inputClass, useBoardOrientation } from '../components/ui';
+import { distanceToRow, goalRow, opponentOf } from '../engine';
+import type { GameState, PlayerId } from '../engine';
 import { describeHalt } from '../match/outcome';
 import type { MatchStatus } from '../match/outcome';
 
@@ -66,13 +70,12 @@ interface ArchivedMatch {
 }
 
 const MAX_ARCHIVE = 10;
-const numberClass =
-  'w-20 rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-right font-mono text-sm text-slate-200 focus:border-sky-500 focus:outline-none';
+const numberClass = 'w-20 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-sm text-ink focus:border-accent focus:outline-none';
 
 function resultText(status: MatchStatus, labels: [string, string]): { text: string; tone: string } {
   if (status.kind === 'win') return { text: `${PLAYER_LABEL[status.winner]} ${labels[status.winner]} 승리`, tone: PLAYER_TEXT_CLASS[status.winner] };
-  if (status.kind === 'halted') return { text: `실험 중단 — ${describeHalt(status)} (승패 없음)`, tone: 'text-amber-300' };
-  return { text: '진행 중', tone: 'text-slate-300' };
+  if (status.kind === 'halted') return { text: `실험 중단 — ${describeHalt(status)} (승패 없음)`, tone: 'text-warn' };
+  return { text: '진행 중', tone: 'text-ink-soft' };
 }
 
 /** AI vs AI: live viewing with play / pause / step / stop, replays and per-move DecisionTraces. */
@@ -87,6 +90,9 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
   const [overlay, setOverlay] = useState<BoardOverlay | null>(null);
   const [series, setSeries] = useState({ total: 4, swap: true, active: false, played: 0 });
   const archived = useRef(new Set<number>());
+  const [tab, setTab] = useState<'moves' | 'trace' | 'setup' | 'archive'>('moves');
+  // Spectating: P1 at the bottom unless the viewer turns the board.
+  const orientation = useBoardOrientation('arena', 0);
 
   useEffect(() => () => session.dispose(), [session]);
   useEffect(() => session.setDelay(delay), [session, delay]);
@@ -146,249 +152,280 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
   const result = resultText(shownStatus, shownLabels);
   const live = viewing === null;
   const running = live && snap.phase === 'running';
+  const thinkingNow = live && snap.thinking && cursor === null;
+  const distances = [0, 1].map((p) => distanceToRow(boardState, boardState.pawns[p], goalRow(p as PlayerId)));
+  const strip = (p: PlayerId) => (
+    <PlayerStrip
+      player={p}
+      name={shownLabels[p]}
+      isAi
+      wallsRemaining={boardState.wallsRemaining[p]}
+      distance={distances[p]}
+      active={shownStatus.kind === 'playing' && boardState.winner === null && boardState.currentPlayer === p}
+      thinking={thinkingNow && boardState.currentPlayer === p}
+      winner={ply === moves.length && shownStatus.kind === 'win' && shownStatus.winner === p}
+    />
+  );
 
   return (
-    <main className="mx-auto grid max-w-[1440px] gap-4 p-4 sm:p-6 lg:grid-cols-[280px_minmax(0,1fr)_380px] xl:grid-cols-[300px_minmax(0,1fr)_420px]">
-      {/* ------------------------------------------------ setup */}
-      <aside className="order-2 space-y-4 lg:order-1">
-        <Panel title="대국 설정" aside={<BudgetBadge budget={draft.budget} />}>
-          <div className="space-y-4">
-            <AgentPicker label="P1 (선공)" accent={PLAYER_COLOR[0]} value={draft.agents[0]} budget={draft.budget} onChange={(a) => setDraft({ ...draft, agents: [a, draft.agents[1]] })} />
-            <button
-              type="button"
-              onClick={() => setDraft({ ...draft, agents: [draft.agents[1], draft.agents[0]] })}
-              className="w-full rounded-md border border-slate-700 py-1 text-xs text-slate-300 hover:border-sky-500"
-            >
-              ⇅ 선공·후공 교환
-            </button>
-            <AgentPicker label="P2 (후공)" accent={PLAYER_COLOR[1]} value={draft.agents[1]} budget={draft.budget} onChange={(a) => setDraft({ ...draft, agents: [draft.agents[0], a] })} />
-            <BudgetPicker value={draft.budget} onChange={(budget) => setDraft({ ...draft, budget })} />
+    <main className="mx-auto grid max-w-[1280px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-5 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+      {/* ------------------------------------------------ board (fixed geometry) */}
+      <section className="flex flex-col items-center">
+        <div className="flex flex-col gap-2" style={boardColumnStyle(25)}>
+          {strip(opponentOf(orientation.bottomSeat))}
 
-            <div className="space-y-2 border-t border-slate-800 pt-3">
-              <span className="block text-xs text-slate-400">시작 포지션</span>
-              <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-950 p-1">
-                {(['random', 'moves'] as const).map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setDraft({ ...draft, openingMode: m })}
-                    className={`rounded-md px-2 py-1 text-xs ${draft.openingMode === m ? 'bg-slate-700 text-white' : 'text-slate-400'}`}
-                  >
-                    {m === 'random' ? '랜덤 오프닝' : '기보 입력'}
+          <div className="h-10">
+            {live && snap.error ? (
+              <p className="flex h-10 items-center truncate rounded-xl bg-danger/8 px-3 text-xs text-danger" title={snap.error}>
+                {snap.error}
+              </p>
+            ) : thinkingNow && snap.progress ? (
+              <SearchProgressBar progress={snap.progress} timeLimitMs={snap.config.budget.mode === 'equal-time' ? snap.config.budget.timeMs : 0} maxDepth={snap.config.budget.mode === 'equal-time' ? 30 : snap.config.agents[snap.game.currentPlayer].depth} />
+            ) : (
+              <div className="flex h-10 items-center justify-between gap-3 px-1 text-sm">
+                <span className={`truncate ${live ? result.tone : 'text-warn'}`}>
+                  {!live ? `리플레이 #${viewing} · ${result.text}` : shownStatus.kind === 'playing' ? `${PLAYER_LABEL[snap.game.currentPlayer]} ${snap.thinking ? '생각 중…' : snap.phase === 'running' ? '차례' : '대기 중'}` : result.text}
+                </span>
+                {!live && (
+                  <button type="button" onClick={() => (setViewing(null), setCursor(null))} className={`${buttonClass.ghost} shrink-0 text-accent`}>
+                    실시간으로
                   </button>
-                ))}
+                )}
               </div>
-              {draft.openingMode === 'random' ? (
-                <>
-                  <NumberRow label="오프닝 무작위 수 (0 = 기본 시작)" value={draft.openingPlies} min={0} max={12} onChange={(v) => setDraft({ ...draft, openingPlies: v })} />
-                  <NumberRow label="오프닝 시드" value={draft.openingSeed} min={0} onChange={(v) => setDraft({ ...draft, openingSeed: v })} />
-                </>
-              ) : (
-                <>
-                  <textarea
-                    value={draft.moveText}
-                    onChange={(e) => setDraft({ ...draft, moveText: e.target.value })}
-                    placeholder="예: e2 e8 e3 e7 d6h"
-                    rows={2}
-                    className="w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1 font-mono text-xs text-slate-200 focus:border-sky-500 focus:outline-none"
-                  />
-                  {parsed?.error && <p className="text-[11px] text-red-300">{parsed.error.index + 1}번째 수 &lsquo;{parsed.error.notation}&rsquo;가 합법이 아닙니다.</p>}
-                </>
-              )}
-            </div>
-
-            <div className="space-y-2 border-t border-slate-800 pt-3">
-              <span className="block text-xs text-slate-400">실험 중단 조건 (승패 아님)</span>
-              <NumberRow label="최대 ply" value={draft.maxPlies} min={10} onChange={(v) => setDraft({ ...draft, maxPlies: v })} />
-              <NumberRow label="반복 포지션 횟수 (0 = 끔)" value={draft.repetitionLimit} min={0} onChange={(v) => setDraft({ ...draft, repetitionLimit: v })} />
-              <NumberRow label="총 생각 시간 제한 (초, 0 = 끔)" value={draft.maxComputeS} min={0} onChange={(v) => setDraft({ ...draft, maxComputeS: v })} />
-              <NumberRow label="AI 시드" value={draft.seed} min={0} onChange={(v) => setDraft({ ...draft, seed: v })} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <button type="button" disabled={draftInvalid} onClick={() => apply(false)} className="rounded-lg border border-slate-600 px-3 py-2 text-sm text-slate-200 hover:border-sky-500 disabled:opacity-40">
-                새 대국 준비
-              </button>
-              <button type="button" disabled={draftInvalid} onClick={() => apply(true)} className="rounded-lg bg-sky-500 px-3 py-2 text-sm font-semibold text-slate-950 hover:bg-sky-400 disabled:opacity-40">
-                새 대국 시작
-              </button>
-            </div>
-          </div>
-        </Panel>
-
-        <Panel title="연속 대국" aside={series.active ? <span className="font-mono text-[11px] text-sky-300">{series.played}/{series.total}</span> : undefined}>
-          <div className="space-y-2">
-            <NumberRow label="대국 수" value={series.total} min={1} max={20} onChange={(v) => setSeries({ ...series, total: v })} />
-            <label className="flex items-center justify-between text-xs text-slate-400">
-              대국마다 선공·후공 교환
-              <input type="checkbox" checked={series.swap} onChange={(e) => setSeries({ ...series, swap: e.target.checked })} className="accent-sky-500" />
-            </label>
-            <button
-              type="button"
-              disabled={draftInvalid || series.active}
-              onClick={() => apply(true, true)}
-              className="w-full rounded-lg border border-slate-600 px-3 py-1.5 text-xs text-slate-200 hover:border-sky-500 disabled:opacity-40"
-            >
-              연속 대국 시작 (최대 20판)
-            </button>
-            {series.active && (
-              <button type="button" onClick={() => setSeries({ ...series, active: false })} className="w-full text-[11px] text-amber-300 hover:underline">
-                현재 대국 후 연속 대국 멈추기
-              </button>
             )}
-            <p className="text-[11px] text-slate-500">통계적 비교는 Experiments 탭의 Paired Matches를 사용하세요.</p>
           </div>
-        </Panel>
-      </aside>
 
-      {/* ------------------------------------------------ board */}
-      <section className="order-1 flex flex-col items-center gap-3 lg:order-2">
-        <div className="w-full max-w-[640px] space-y-2 rounded-xl border border-slate-800 bg-slate-900/70 px-4 py-2.5">
-          <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-            <span className="flex items-center gap-2">
-              <span className={PLAYER_TEXT_CLASS[0]}>{shownLabels[0]}</span>
-              <span className="text-slate-500">vs</span>
-              <span className={PLAYER_TEXT_CLASS[1]}>{shownLabels[1]}</span>
-            </span>
-            <span className={`text-xs ${result.tone}`}>
-              {shownStatus.kind === 'playing'
-                ? `${PLAYER_LABEL[snap.game.currentPlayer]} ${snap.thinking ? '생각 중…' : '차례'}`
-                : result.text}
-            </span>
+          <QuoridorBoard
+            state={boardState}
+            flipped={orientation.flipped}
+            interactive={false}
+            showPaths={false}
+            lastAction={selectedMove && { action: selectedMove.action, player: selectedMove.player }}
+            overlay={overlay}
+            idleHint={cursor !== null || !live ? `${ply}수 후의 포지션` : ''}
+            onAction={() => {}}
+          />
+
+          {strip(orientation.bottomSeat)}
+
+          {/* Playback controls (live) — one fixed row. */}
+          <div className="flex h-10 items-center gap-1.5 overflow-x-auto px-1 whitespace-nowrap">
+            {live ? (
+              <>
+                {running ? (
+                  <ControlButton onClick={() => session.pause()} label="❚❚ 일시 정지" />
+                ) : (
+                  <ControlButton onClick={() => (setCursor(null), session.play())} label="▶ 진행" disabled={snap.phase === 'finished'} primary />
+                )}
+                <ControlButton onClick={() => (setCursor(null), session.step())} label="⏭ 한 수" disabled={running || snap.phase === 'finished' || snap.thinking} />
+                <ControlButton onClick={() => (setSeries((s) => ({ ...s, active: false })), session.stop())} label="■ 중단" disabled={snap.phase === 'finished'} />
+                <ControlButton onClick={() => (setCursor(null), session.restart(), setSeries((s) => ({ ...s, active: false })))} label="↺ 재시작" />
+                <label className="ml-auto flex items-center gap-2 pl-2 text-[11px] text-muted">
+                  속도
+                  <input type="range" min={0} max={2000} step={100} value={2000 - delay} onChange={(e) => setDelay(2000 - Number(e.target.value))} className="w-20" aria-label="대국 속도" />
+                  <span className="w-12 font-mono">{delay}ms</span>
+                </label>
+              </>
+            ) : (
+              <span className="px-1 text-xs text-muted">완료한 대국을 보는 중입니다 — 타임라인으로 수를 오갈 수 있습니다.</span>
+            )}
           </div>
-          {live ? (
-            <div className="flex flex-wrap items-center gap-2">
-              {running ? (
-                <ControlButton onClick={() => session.pause()} label="❚❚ 일시 정지" />
-              ) : (
-                <ControlButton onClick={() => (setCursor(null), session.play())} label="▶ 진행" disabled={snap.phase === 'finished'} primary />
-              )}
-              <ControlButton onClick={() => (setCursor(null), session.step())} label="⏭ 한 수" disabled={running || snap.phase === 'finished' || snap.thinking} />
-              <ControlButton onClick={() => (setSeries((s) => ({ ...s, active: false })), session.stop())} label="■ 중단" disabled={snap.phase === 'finished'} />
-              <ControlButton onClick={() => (setCursor(null), session.restart(), setSeries((s) => ({ ...s, active: false })))} label="↺ 재시작" />
-              <label className="ml-auto flex items-center gap-2 text-[11px] text-slate-400">
-                속도
-                <input type="range" min={0} max={2000} step={100} value={2000 - delay} onChange={(e) => setDelay(2000 - Number(e.target.value))} className="w-24 accent-sky-500" aria-label="대국 속도" />
-                <span className="w-14 font-mono">{delay} ms</span>
-              </label>
-            </div>
-          ) : (
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-amber-200">리플레이: 대국 #{viewing}</span>
-              <button type="button" onClick={() => (setViewing(null), setCursor(null))} className="text-sky-400 hover:underline">
-                실시간 대국으로 돌아가기
-              </button>
-            </div>
-          )}
-          <div className="flex items-center gap-2 font-mono text-[11px] text-slate-400">
-            <button type="button" onClick={() => setCursor(0)} aria-label="처음">⏮</button>
-            <button type="button" onClick={() => setCursor(Math.max(0, ply - 1))} aria-label="이전 수">◀</button>
-            <input
-              type="range"
-              min={0}
-              max={moves.length}
-              value={ply}
-              onChange={(e) => setCursor(Number(e.target.value) >= moves.length ? null : Number(e.target.value))}
-              className="flex-1 accent-sky-500"
-              aria-label="수 이동"
-            />
-            <button type="button" onClick={() => setCursor(ply + 1 >= moves.length ? null : ply + 1)} aria-label="다음 수">▶</button>
-            <button type="button" onClick={() => setCursor(null)} aria-label="마지막">⏭</button>
-            <span className="w-20 text-right">
-              {ply}/{moves.length} 수
+
+          {/* Timeline + orientation — one fixed row. */}
+          <div className="flex h-9 items-center gap-1 px-1 font-mono text-[11px] text-muted">
+            <button type="button" className={buttonClass.ghost} onClick={() => setCursor(0)} aria-label="처음">⏮</button>
+            <button type="button" className={buttonClass.ghost} onClick={() => setCursor(Math.max(0, ply - 1))} aria-label="이전 수">◀</button>
+            <input type="range" min={0} max={moves.length} value={ply} onChange={(e) => setCursor(Number(e.target.value) >= moves.length ? null : Number(e.target.value))} className="min-w-0 flex-1" aria-label="수 이동" />
+            <button type="button" className={buttonClass.ghost} onClick={() => setCursor(ply + 1 >= moves.length ? null : ply + 1)} aria-label="다음 수">▶</button>
+            <button type="button" className={buttonClass.ghost} onClick={() => setCursor(null)} aria-label="마지막">⏭</button>
+            <span className="w-14 shrink-0 text-right">
+              {ply}/{moves.length}
             </span>
+            <Segmented label="보드 방향" options={ARENA_ORIENTATION} value={orientation.mode === 'p2' ? 'p2' : 'p1'} onChange={orientation.setMode} />
           </div>
         </div>
-        {live && snap.thinking && snap.progress && <SearchProgressBar progress={snap.progress} timeLimitMs={snap.config.budget.mode === 'equal-time' ? snap.config.budget.timeMs : 0} maxDepth={snap.config.budget.mode === 'equal-time' ? 30 : snap.config.agents[snap.game.currentPlayer].depth} />}
-        {live && snap.error && <p className="w-full max-w-[640px] rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-300">{snap.error}</p>}
-        <QuoridorBoard
-          state={boardState}
-          flipped={false}
-          interactive={false}
-          showPaths={false}
-          lastAction={selectedMove && { action: selectedMove.action, player: selectedMove.player }}
-          overlay={overlay}
-          idleHint={cursor !== null || !live ? `${ply}수 후의 포지션` : ''}
-          onAction={() => {}}
-        />
       </section>
 
-      {/* ------------------------------------------------ moves + trace */}
-      <aside className="order-3 space-y-4">
-        <Panel
-          title="기보"
-          aside={
-            selectedMove && (
-              <button
-                type="button"
-                onClick={() => onCompare(selectedMove.stateBefore, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`)}
-                className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-300 hover:border-sky-500"
-                title="이 수를 두기 직전 포지션을 Compare로 보냅니다"
-              >
-                Compare
-              </button>
-            )
-          }
-        >
-          {moves.length === 0 ? (
-            <p className="text-xs text-slate-500">{live && snap.phase === 'idle' ? '▶ 진행 또는 ⏭ 한 수로 대국을 시작하세요.' : '아직 둔 수가 없습니다.'}</p>
-          ) : (
-            <ol ref={moveListRef} className="max-h-56 space-y-0.5 overflow-y-auto pr-1 font-mono text-xs">
-              {moves.map((m, i) => (
-                <li key={i}>
+      {/* ------------------------------------------------ side tabs (fixed height, inner scroll) */}
+      <aside className={`${cardClass} flex h-[34rem] min-w-0 flex-col gap-3 p-3 lg:sticky lg:top-[4.75rem] lg:h-[calc(100svh-6.25rem)]`}>
+        <Tabs
+          label="Arena 패널"
+          value={tab}
+          onChange={setTab}
+          items={[
+            { id: 'moves', label: '기보', badge: moves.length },
+            { id: 'trace', label: '분석' },
+            { id: 'setup', label: '설정' },
+            { id: 'archive', label: '리플레이', badge: archive.length || undefined },
+          ]}
+        />
+        <div className={`min-h-0 flex-1 px-2 ${tab === 'moves' ? 'flex flex-col' : 'scroll-stable'}`}>
+          <div hidden={tab !== 'moves'} className="min-h-0 flex-1">
+            <div className="flex h-full flex-col gap-2">
+              <div className="flex min-h-7 items-center justify-between gap-2">
+                <span className="text-sm text-ink-soft">대국 #{shown ? shown.matchId : snap.matchId}</span>
+                {selectedMove && (
                   <button
                     type="button"
-                    onClick={() => setCursor(i + 1 >= moves.length ? null : i + 1)}
-                    className={`flex w-full gap-3 rounded px-2 py-0.5 text-left hover:bg-slate-800 ${i === ply - 1 ? 'bg-amber-400/10 ring-1 ring-amber-400/40' : 'odd:bg-slate-800/40'}`}
+                    onClick={() => onCompare(selectedMove.stateBefore, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`)}
+                    className={buttonClass.small}
+                    title="이 수를 두기 직전 포지션을 Compare로 보냅니다"
                   >
-                    <span className="w-6 text-right text-slate-500">{m.ply}</span>
-                    <span className={`w-6 ${PLAYER_TEXT_CLASS[m.player]}`}>{PLAYER_LABEL[m.player]}</span>
-                    <span className="w-10 text-slate-200">{m.notation}</span>
-                    <span className="flex-1 truncate text-slate-500">{traceAgentName(m.trace)}</span>
-                    <span className="text-slate-500">{m.elapsedMs.toFixed(0)}ms</span>
+                    이 포지션 비교
                   </button>
-                </li>
-              ))}
-            </ol>
-          )}
-        </Panel>
+                )}
+              </div>
+              {moves.length === 0 ? (
+                <p className="py-6 text-center text-sm text-faint">{live && snap.phase === 'idle' ? '▶ 진행 또는 한 수로 대국을 시작하세요.' : '아직 둔 수가 없습니다.'}</p>
+              ) : (
+                <ol ref={moveListRef} className="scroll-stable min-h-0 flex-1 space-y-0.5 pr-1 font-mono text-[13px]">
+                  {moves.map((m, i) => (
+                    <li key={i}>
+                      <button
+                        type="button"
+                        onClick={() => setCursor(i + 1 >= moves.length ? null : i + 1)}
+                        className={`flex w-full gap-3 rounded-lg px-2.5 py-1 text-left hover:bg-inset ${i === ply - 1 ? 'bg-warn/10 ring-1 ring-warn/30' : 'odd:bg-inset/60'}`}
+                      >
+                        <span className="w-7 text-right text-faint">{m.ply}</span>
+                        <span className={`w-7 ${PLAYER_TEXT_CLASS[m.player]}`}>{PLAYER_LABEL[m.player]}</span>
+                        <span className="w-12 text-ink">{m.notation}</span>
+                        <span className="min-w-0 flex-1 truncate text-faint">{traceAgentName(m.trace)}</span>
+                        <span className="text-faint">{m.elapsedMs.toFixed(0)}ms</span>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          </div>
 
-        <Panel title={selectedMove ? `${selectedMove.ply}수 DecisionTrace` : 'DecisionTrace'}>
-          {selectedMove ? <TraceDetail entry={selectedMove} bind={bind} /> : <p className="text-xs text-slate-500">수를 선택하면 그 수를 고른 AI의 실제 계산 기록이 표시됩니다.</p>}
-        </Panel>
+          <div hidden={tab !== 'trace'}>
+            <Panel plain title={selectedMove ? `${selectedMove.ply}수 DecisionTrace` : 'DecisionTrace'}>
+              {selectedMove ? <TraceDetail entry={selectedMove} bind={bind} /> : <p className="py-6 text-center text-sm text-faint">기보에서 수를 고르면 그 수를 둔 AI의 실제 계산 기록이 여기에 표시됩니다.</p>}
+            </Panel>
+          </div>
 
-        <Panel title="완료한 대국 (리플레이)">
-          {archive.length === 0 ? (
-            <p className="text-xs text-slate-500">끝난 대국이 여기에 보관됩니다 (최근 {MAX_ARCHIVE}개).</p>
-          ) : (
-            <ul className="space-y-1 text-xs">
-              {archive.map((m) => {
-                const r = resultText(m.status, m.labels);
-                return (
-                  <li key={m.matchId}>
-                    <button
-                      type="button"
-                      onClick={() => (setViewing(m.matchId), setCursor(null))}
-                      className={`w-full rounded px-2 py-1 text-left hover:bg-slate-800 ${viewing === m.matchId ? 'bg-slate-800' : ''}`}
-                    >
-                      <span className="font-mono text-slate-500">#{m.matchId}</span> {m.labels[0]} vs {m.labels[1]}
-                      <span className={`ml-1 ${r.tone}`}>· {r.text}</span>
-                      <span className="ml-1 text-slate-500">· {m.moves.length}수</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </Panel>
+          <div hidden={tab !== 'setup'} className="space-y-6">
+            <Panel plain title="대국 설정" aside={<BudgetBadge budget={draft.budget} />}>
+              <div className="space-y-4">
+                <AgentPicker label="P1 (선공)" accent={PLAYER_COLOR[0]} value={draft.agents[0]} budget={draft.budget} onChange={(a) => setDraft({ ...draft, agents: [a, draft.agents[1]] })} />
+                <button type="button" onClick={() => setDraft({ ...draft, agents: [draft.agents[1], draft.agents[0]] })} className={`${buttonClass.small} w-full`}>
+                  ⇅ 선공·후공 교환
+                </button>
+                <AgentPicker label="P2 (후공)" accent={PLAYER_COLOR[1]} value={draft.agents[1]} budget={draft.budget} onChange={(a) => setDraft({ ...draft, agents: [draft.agents[0], a] })} />
+                <BudgetPicker value={draft.budget} onChange={(budget) => setDraft({ ...draft, budget })} />
+
+                <Collapsible title="시작 포지션">
+                  <div className="space-y-2">
+                    <Segmented
+                      label="시작 포지션"
+                      options={[
+                        { value: 'random' as const, label: '랜덤 오프닝' },
+                        { value: 'moves' as const, label: '기보 입력' },
+                      ]}
+                      value={draft.openingMode}
+                      onChange={(m) => setDraft({ ...draft, openingMode: m })}
+                    />
+                    {draft.openingMode === 'random' ? (
+                      <>
+                        <NumberRow label="오프닝 무작위 수 (0 = 기본 시작)" value={draft.openingPlies} min={0} max={12} onChange={(v) => setDraft({ ...draft, openingPlies: v })} />
+                        <NumberRow label="오프닝 시드" value={draft.openingSeed} min={0} onChange={(v) => setDraft({ ...draft, openingSeed: v })} />
+                      </>
+                    ) : (
+                      <>
+                        <textarea
+                          value={draft.moveText}
+                          onChange={(e) => setDraft({ ...draft, moveText: e.target.value })}
+                          placeholder="예: e2 e8 e3 e7 d6h"
+                          rows={2}
+                          className={`${inputClass} font-mono text-xs`}
+                        />
+                        {parsed?.error && <p className="text-[11px] text-danger">{parsed.error.index + 1}번째 수 &lsquo;{parsed.error.notation}&rsquo;가 합법이 아닙니다.</p>}
+                      </>
+                    )}
+                  </div>
+                </Collapsible>
+
+                <Collapsible title="실험 중단 조건 · 시드">
+                  <div className="space-y-2">
+                    <NumberRow label="최대 ply" value={draft.maxPlies} min={10} onChange={(v) => setDraft({ ...draft, maxPlies: v })} />
+                    <NumberRow label="반복 포지션 횟수 (0 = 끔)" value={draft.repetitionLimit} min={0} onChange={(v) => setDraft({ ...draft, repetitionLimit: v })} />
+                    <NumberRow label="총 생각 시간 제한 (초, 0 = 끔)" value={draft.maxComputeS} min={0} onChange={(v) => setDraft({ ...draft, maxComputeS: v })} />
+                    <NumberRow label="AI 시드" value={draft.seed} min={0} onChange={(v) => setDraft({ ...draft, seed: v })} />
+                  </div>
+                </Collapsible>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" disabled={draftInvalid} onClick={() => apply(false)} className={buttonClass.secondary}>
+                    새 대국 준비
+                  </button>
+                  <button type="button" disabled={draftInvalid} onClick={() => (apply(true), setTab('moves'))} className={buttonClass.primary}>
+                    새 대국 시작
+                  </button>
+                </div>
+              </div>
+            </Panel>
+
+            <Panel plain title="연속 대국" aside={series.active ? <span className="font-mono text-[11px] text-accent">{series.played}/{series.total}</span> : undefined}>
+              <div className="space-y-2">
+                <NumberRow label="대국 수" value={series.total} min={1} max={20} onChange={(v) => setSeries({ ...series, total: v })} />
+                <label className="flex items-center justify-between text-xs text-muted">
+                  대국마다 선공·후공 교환
+                  <input type="checkbox" checked={series.swap} onChange={(e) => setSeries({ ...series, swap: e.target.checked })} className="accent-accent" />
+                </label>
+                <button type="button" disabled={draftInvalid || series.active} onClick={() => (apply(true, true), setTab('moves'))} className={`${buttonClass.secondary} w-full text-xs`}>
+                  연속 대국 시작 (최대 20판)
+                </button>
+                {series.active && (
+                  <button type="button" onClick={() => setSeries({ ...series, active: false })} className="w-full text-[11px] text-warn hover:underline">
+                    현재 대국 후 연속 대국 멈추기
+                  </button>
+                )}
+                <p className="text-[11px] text-faint">통계적 비교는 Experiments의 Paired Matches를 사용하세요.</p>
+              </div>
+            </Panel>
+          </div>
+
+          <div hidden={tab !== 'archive'}>
+            <Panel plain title="완료한 대국">
+              {archive.length === 0 ? (
+                <p className="py-6 text-center text-sm text-faint">끝난 대국이 여기에 보관됩니다 (최근 {MAX_ARCHIVE}개).</p>
+              ) : (
+                <ul className="space-y-1 text-xs">
+                  {archive.map((m) => {
+                    const r = resultText(m.status, m.labels);
+                    return (
+                      <li key={m.matchId}>
+                        <button
+                          type="button"
+                          onClick={() => (setViewing(m.matchId), setCursor(null), setTab('moves'))}
+                          className={`w-full rounded-lg px-2.5 py-2 text-left hover:bg-inset ${viewing === m.matchId ? 'bg-inset' : ''}`}
+                        >
+                          <span className="font-mono text-faint">#{m.matchId}</span> {m.labels[0]} vs {m.labels[1]}
+                          <span className={`ml-1 ${r.tone}`}>· {r.text}</span>
+                          <span className="ml-1 text-faint">· {m.moves.length}수</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </Panel>
+          </div>
+        </div>
       </aside>
     </main>
   );
 }
 
+const ARENA_ORIENTATION = [
+  { value: 'p1' as const, label: 'P1 아래', title: 'P1(선공)이 아래쪽' },
+  { value: 'p2' as const, label: 'P2 아래', title: 'P2(후공)가 아래쪽' },
+];
+
 function NumberRow({ label, value, onChange, min, max }: { label: string; value: number; onChange: (v: number) => void; min?: number; max?: number }) {
   return (
-    <label className="flex items-center justify-between gap-2 text-xs text-slate-400">
+    <label className="flex items-center justify-between gap-2 text-xs text-muted">
       {label}
       <input
         type="number"
@@ -409,14 +446,7 @@ function NumberRow({ label, value, onChange, min, max }: { label: string; value:
 
 function ControlButton({ label, onClick, disabled, primary }: { label: string; onClick: () => void; disabled?: boolean; primary?: boolean }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      className={`rounded-md px-2.5 py-1 text-xs disabled:opacity-40 ${
-        primary ? 'bg-sky-500 font-semibold text-slate-950 hover:bg-sky-400' : 'border border-slate-700 text-slate-200 hover:border-sky-500'
-      }`}
-    >
+    <button type="button" onClick={onClick} disabled={disabled} className={`${primary ? buttonClass.primary : buttonClass.secondary} shrink-0 px-3 py-1.5 text-xs`}>
       {label}
     </button>
   );

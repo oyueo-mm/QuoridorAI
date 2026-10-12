@@ -73,17 +73,17 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
         width={w}
         height={NODE_H}
         rx={4}
-        className={opts.selected ? 'fill-slate-700' : 'fill-slate-800'}
-        stroke={opts.pv ? '#fbbf24' : '#475569'}
+        className={opts.selected ? 'fill-inset-strong' : 'fill-inset'}
+        stroke={opts.pv ? '#9a6d24' : '#c4b9a8'}
         strokeWidth={opts.pv ? 1.5 : 1}
         strokeDasharray={n.bound === 'exact' ? undefined : '3 2'}
       />
       <circle cx={x + 8} cy={y + NODE_H / 2} r={3} fill={PLAYER_COLOR[n.mover]} />
-      <text x={x + 15} y={y + NODE_H / 2} dominantBaseline="central" className="fill-slate-100 font-mono text-[10px]">
+      <text x={x + 15} y={y + NODE_H / 2} dominantBaseline="central" className="fill-ink font-mono text-[10px]">
         {n.notation}
         {n.terminal ? ' ■' : ''}
       </text>
-      <text x={x + w - 5} y={y + NODE_H / 2} dominantBaseline="central" textAnchor="end" className="fill-slate-300 font-mono text-[10px]">
+      <text x={x + w - 5} y={y + NODE_H / 2} dominantBaseline="central" textAnchor="end" className="fill-ink-soft font-mono text-[10px]">
         {boundPrefix(n.bound)}
         {formatSearchScore(n.score)}
       </text>
@@ -97,7 +97,7 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
         key={key}
         d={`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`}
         fill="none"
-        stroke={pv ? '#fbbf24' : '#334155'}
+        stroke={pv ? '#9a6d24' : '#ddd4c6'}
         strokeWidth={pv ? 1.8 : 1}
       />
     );
@@ -109,11 +109,11 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
   return (
     <div>
       <svg viewBox={`0 0 ${W} ${height}`} className="w-full" role="img" aria-label="탐색 트리">
-        <text x={COL_X[0]} y={10} className="fill-slate-500 text-[9px]">루트</text>
-        <text x={COL_X[1]} y={10} className="fill-slate-500 text-[9px]">
+        <text x={COL_X[0]} y={10} className="fill-faint text-[9px]">루트</text>
+        <text x={COL_X[1]} y={10} className="fill-faint text-[9px]">
           {PLAYER_LABEL[ai]} 후보 (ply 1) · 클릭해 펼치기
         </text>
-        <text x={COL_X[2]} y={10} className="fill-slate-500 text-[9px]">
+        <text x={COL_X[2]} y={10} className="fill-faint text-[9px]">
           {sel ? `${sel.notation}에 대한 상대 응수 (ply 2)` : ''}
         </text>
 
@@ -139,8 +139,8 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
 
         {/* Root */}
         <g>
-          <rect x={COL_X[0]} y={rootY} width={COL_W[0]} height={NODE_H} rx={4} className="fill-slate-700" stroke="#fbbf24" strokeWidth={1.5} />
-          <text x={COL_X[0] + COL_W[0] / 2} y={rootY + NODE_H / 2} textAnchor="middle" dominantBaseline="central" className="fill-white font-mono text-[10px]">
+          <rect x={COL_X[0]} y={rootY} width={COL_W[0]} height={NODE_H} rx={4} className="fill-inset-strong" stroke="#9a6d24" strokeWidth={1.5} />
+          <text x={COL_X[0] + COL_W[0] / 2} y={rootY + NODE_H / 2} textAnchor="middle" dominantBaseline="central" className="fill-ink font-mono text-[10px]">
             {formatSearchScore(root.score)}
           </text>
         </g>
@@ -160,7 +160,7 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
               })}
             </g>
           ) : (
-            <text key={`c1-${i}`} x={COL_X[1] + 4} y={rowY(i) + NODE_H / 2} dominantBaseline="central" className="fill-slate-500 text-[9.5px]">
+            <text key={`c1-${i}`} x={COL_X[1] + 4} y={rowY(i) + NODE_H / 2} dominantBaseline="central" className="fill-faint text-[9.5px]">
               {r.text}
             </text>
           ),
@@ -182,20 +182,20 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
                 x={COL_X[2] + 4}
                 y={rowY(i) + NODE_H / 2}
                 dominantBaseline="central"
-                className={`text-[9.5px] ${r.kind === 'cutoff' ? 'fill-violet-300' : 'fill-slate-500'}`}
+                className={`text-[9.5px] ${r.kind === 'cutoff' ? 'fill-think' : 'fill-faint'}`}
               >
                 {r.text}
               </text>
             ),
           )}
         {sel && col2.length === 0 && (
-          <text x={COL_X[2] + 4} y={rowY(0) + NODE_H / 2} dominantBaseline="central" className="fill-slate-500 text-[9.5px]">
+          <text x={COL_X[2] + 4} y={rowY(0) + NODE_H / 2} dominantBaseline="central" className="fill-faint text-[9.5px]">
             {sel.terminal ? '종료 포지션 (승패 확정)' : '하위 노드 기록 없음 (깊이 1)'}
           </text>
         )}
       </svg>
       {sel && (
-        <p className="mt-1 font-mono text-[10.5px] text-slate-500">
+        <p className="mt-1 font-mono text-[10.5px] text-faint">
           {sel.notation}: 하위 {sel.nodes.toLocaleString()} 노드 · 자식 {sel.searchedChildren}/{sel.totalChildren} 탐색
           {sel.cutoff ? ' · β 컷 발생' : ''}
         </p>

@@ -27,30 +27,30 @@ export function RandomAnalysis({ entry, trace, bind }: Props) {
       <div
         role="button"
         {...chosen}
-        className="block w-full cursor-pointer rounded-lg border border-slate-700 bg-slate-950/60 p-3 text-left transition-colors hover:border-amber-400/50 aria-pressed:border-amber-400/70"
+        className="block w-full cursor-pointer rounded-lg border border-line bg-paper/60 p-3 text-left transition-colors hover:border-warn/50 aria-pressed:border-warn/70"
       >
-        <span className="text-[11px] text-slate-500">선택한 행동 · 마우스를 올리면 보드에 표시</span>
+        <span className="text-[11px] text-faint">선택한 행동 · 마우스를 올리면 보드에 표시</span>
         <span className="mt-1 flex items-baseline gap-2">
-          <span className="font-mono text-2xl font-semibold text-white">{notation}</span>
-          <span className="text-xs text-slate-400">{trace.chosenAction.type === 'move' ? '말 이동' : '벽 설치'}</span>
+          <span className="font-mono text-2xl font-semibold text-ink">{notation}</span>
+          <span className="text-xs text-muted">{trace.chosenAction.type === 'move' ? '말 이동' : '벽 설치'}</span>
         </span>
       </div>
 
       <div>
-        <div className="mb-1.5 flex justify-between text-xs text-slate-400">
+        <div className="mb-1.5 flex justify-between text-xs text-muted">
           <span>후보 행동 (합법 행동 전체)</span>
-          <span className="font-mono text-slate-200">{n}</span>
+          <span className="font-mono text-ink">{n}</span>
         </div>
         <div className="flex h-2.5 gap-0.5 overflow-hidden rounded" aria-hidden>
-          <span className="rounded-l bg-slate-300" style={{ width: `${movePct}%` }} />
-          <span className="flex-1 rounded-r bg-amber-500" />
+          <span className="rounded-l bg-line" style={{ width: `${movePct}%` }} />
+          <span className="flex-1 rounded-r bg-wall" />
         </div>
-        <div className="mt-1.5 flex justify-between text-[11px] text-slate-400">
+        <div className="mt-1.5 flex justify-between text-[11px] text-muted">
           <span>
-            <span className="mr-1 inline-block h-2 w-2 rounded-sm bg-slate-300" />말 이동 {trace.pawnMoveCount}
+            <span className="mr-1 inline-block h-2 w-2 rounded-sm bg-line" />말 이동 {trace.pawnMoveCount}
           </span>
           <span>
-            <span className="mr-1 inline-block h-2 w-2 rounded-sm bg-amber-500" />벽 설치 {trace.wallCount}
+            <span className="mr-1 inline-block h-2 w-2 rounded-sm bg-wall" />벽 설치 {trace.wallCount}
           </span>
         </div>
       </div>
@@ -64,7 +64,7 @@ export function RandomAnalysis({ entry, trace, bind }: Props) {
         <Stat label="결정 순번" value={`#${trace.decisionIndex + 1}`} />
       </dl>
 
-      <p className="text-[11px] leading-relaxed text-slate-500">
+      <p className="text-[11px] leading-relaxed text-faint">
         Random AI는 행동을 평가하지 않습니다. {PLAYER_LABEL[trace.player]}의 합법 행동 {n}개를 엔진 순서(말 이동 →
         가로벽 → 세로벽)로 나열한 뒤, 시드 {trace.seed}의 난수열에서 뽑은 r로 하나를 고릅니다.
       </p>
@@ -75,8 +75,8 @@ export function RandomAnalysis({ entry, trace, bind }: Props) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="font-mono text-slate-200">{value}</dd>
+      <dt className="text-faint">{label}</dt>
+      <dd className="font-mono text-ink">{value}</dd>
     </div>
   );
 }

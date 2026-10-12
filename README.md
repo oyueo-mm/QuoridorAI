@@ -38,14 +38,51 @@ GitHub Pages 배포를 수행합니다. PR에서는 검증만 실행합니다.
 
 ## 화면 구성
 
-| 탭 | 내용 |
-|---|---|
-| **Play** | 사람 vs 사람 / 사람 vs AI (1–4단계 기능 그대로) |
-| **Arena** | AI 두 개를 골라 관전. 진행 / 일시 정지 / 한 수씩 / 중단 / 재시작, 속도 조절, 선공·후공 교환, 연속 대국(최대 20판), 기보에서 수를 골라 그 수의 DecisionTrace 보기, 끝난 대국 리플레이(최근 10개) |
-| **Compare** | 같은 GameState를 AI 2–3개에 입력해 추천 수·계산 결과·시간·노드 수를 나란히 비교. 포지션은 Play/Arena에서 보내거나, 기보의 특정 턴, 랜덤 오프닝에서 선택 |
-| **Experiments** | 두 AI의 Paired Matches 토너먼트(오프닝마다 선후공 교환), 진행률, 승률 + 95% Wilson 신뢰구간, 중단 사유별 집계, 결정 시간 평균·중앙값, 벽 사용, 탐색 통계, JSON/CSV 내보내기, 브라우저 자동 저장 |
+사이트는 **Home**에서 시작합니다(`#/`). 제목·짧은 설명과 Play / Arena / Compare / Experiments 진입 카드가 있습니다.
 
-URL 해시(`#/arena` 등)로 탭을 바로 열 수 있습니다. 숨겨진 탭도 계속 동작하므로 대국을 관전하다 다른 탭으로 옮겨도 진행이 유지됩니다.
+| 화면 | 구성 |
+|---|---|
+| **Play** | 보드 중심. 보드 위·아래에 플레이어 줄(이름·남은 벽·거리·차례), 상태 줄(상태 / AI 탐색 진행 / 오류가 같은 자리에 표시), 보드 아래 도구(보드 방향, 최단 경로, 이 포지션 비교). 오른쪽 패널 탭: **분석**(DecisionTrace, 포지션 지표는 접기) · **기보** · **새 게임**(대전 모드·순서·AI 설정) |
+| **Arena** | 관전 중심. 보드 + 재생 컨트롤(진행 / 일시 정지 / 한 수 / 중단 / 재시작 / 속도) + 타임라인. 오른쪽 탭: **기보** · **분석**(선택한 수의 DecisionTrace) · **설정**(AI·예산, 시작 포지션·중단 조건은 접기, 연속 대국) · **리플레이**(최근 10판) |
+| **Compare** | 같은 GameState를 AI 2–3개에 입력해 추천 수·계산 결과·시간·노드 수를 카드로 나란히 비교. 포지션은 Play/Arena에서 보내거나, 기보의 특정 턴, 랜덤 오프닝에서 선택. 오른쪽에 선택한 카드의 DecisionTrace |
+| **Experiments** | Paired Matches 토너먼트. 결과 상단에 핵심 수치 4개(A 승률, 결판/전체, 선공 승률, 평균 길이), 아래에 세부 통계·대국별 결과, JSON/CSV 내보내기, 브라우저 자동 저장 |
+
+URL 해시(`#/arena` 등)로 화면을 바로 열 수 있습니다. 숨겨진 화면도 계속 동작하므로 대국을 관전하다 다른 화면으로 옮겨도 진행이 유지됩니다.
+
+### 보드 방향
+
+Play에서는 **자동 / P1 시점 / P2 시점**을 고를 수 있습니다. 자동은 내 말이 항상 아래쪽에 오도록 돌립니다(후공이면 P2가 아래).
+Arena·Compare에는 P1 아래 / P2 아래 전환이 있습니다. 선택은 화면별로 브라우저에 기억됩니다(저장소를 쓸 수 없으면 기억하지 않을 뿐 동작은 같음).
+
+### 레이아웃 안정성
+
+AI가 수를 둘 때 화면이 흔들리지 않도록:
+- 보드 열의 폭은 뷰포트 크기로만 정해지고(`boardColumnStyle`), 보드는 고정 정사각형 상자 안에 그립니다.
+- 상태·AI 진행·오류는 높이가 고정된 한 줄을 번갈아 씁니다. 플레이어 줄, 컨트롤, 힌트 줄도 높이가 고정이고 한 줄로 잘립니다.
+- 오른쪽 패널은 고정 높이(데스크톱에서는 화면 높이에 맞춤, sticky) + 내부 스크롤이며, 기보 자동 스크롤은 목록 자신의 scrollTop만 바꿉니다.
+- 스크롤바가 생겨도 폭이 바뀌지 않도록 `scrollbar-gutter: stable`.
+
+측정(Edge headless, Play 5수·Arena 20초 동안 100 ms마다 보드 위치 기록 + Layout Shift API):
+
+| | 이전 Arena CLS | 이후 Arena CLS | 이전 보드 이동 | 이후 보드 이동 |
+|---|---:|---:|---:|---:|
+| 데스크톱 1440×900 | 0.81 | 0 | 57 px | 0 px |
+| 모바일 390×844 | 3.12 | 0.0002 | 77–94 px | 0 px |
+
+### 디자인 시스템
+
+색은 `src/index.css`의 `@theme` 토큰만 사용합니다(컴포넌트에 팔레트 색을 직접 쓰지 않음).
+
+| 역할 | 토큰 |
+|---|---|
+| 면 | `paper`(바탕, 웜 베이지) · `card`(패널) · `inset`(입력·우물) |
+| 선 | `line-soft` · `line` · `line-strong` |
+| 글자 | `ink` · `ink-soft` · `muted` · `faint` |
+| 강조 | `accent`(링크·포커스·주 버튼, 채도 낮은 블루그레이) · `p1`(뮤트 블루) · `p2`(테라코타) · `wall`(나무색) |
+| 상태 | `warn`(실험 중단·미리보기) · `danger` · `good` · `think`(AI 생각 중) |
+
+카드는 `rounded-2xl` + 얇은 테두리 + 아주 옅은 그림자, 버튼은 primary / secondary / ghost / small 네 종류(`components/ui.tsx`),
+탭·세그먼트 컨트롤·접기(`<details>`)를 공통으로 씁니다. 차트 계열 색은 밝은 배경 기준으로 색각 이상 분리를 검증했습니다.
 
 ### 비교 방식 (섞지 않음)
 
@@ -178,7 +215,7 @@ src/
     notation.ts    기보 표기 (e2, e3h …)
   arena/         에이전트 명세·예산 매핑, MatchSession(관전), 토너먼트 실행기, 통계, 내보내기
   compare/       같은 포지션 의사결정 비교
-  views/         Play / Arena / Compare / Experiments 화면
+  views/         Home / Play / Arena / Compare / Experiments 화면
   ai/            Agent 계약·DecisionTrace 타입, Random/BFS/Minimax 에이전트, 시드 RNG, 레지스트리
     search/        Minimax/Alpha-Beta 탐색, 평가 함수, 후보 생성
     mcts/          MCTS 코어(게임 독립), Quoridor 어댑터, 롤아웃 전략
@@ -186,9 +223,10 @@ src/
   match/         MatchStatus(승리/실험 중단 구분), 헤드리스 대국 러너 runMatch
   session/       GameController(턴 관리·AI 자동 진행·취소), React 훅, 게임 설정
   components/
-    board/         SVG 보드, 히트 테스트, 분석 오버레이
+    ui.tsx         공통 UI(카드, 버튼, 탭, 세그먼트, 접기, 보드 방향 훅)
+    board/         SVG 보드, 히트 테스트, 분석 오버레이, 보드 열 폭
     analysis/      Random/BFS/Minimax/MCTS DecisionTrace 시각화, 탐색 트리, 방문 비율 그래프
-    panels/        설정, 플레이어 카드, 분석 패널, 기보
+    panels/        설정, 플레이어 줄, 분석 패널, 기보, AI 진행 표시
 bench/           탐색 벤치마크·대국 평가 (npm run bench:*) 및 결과
 scripts/         교차 언어 Fixture 생성(engineFixtures.ts), Colab 번들(make-colab-bundle.mjs)
 training/        AlphaZero 학습 인프라: Python 엔진 포팅·Neural MCTS·Self-Play·학습·체크포인트, Colab 노트북
@@ -214,4 +252,4 @@ training/        AlphaZero 학습 인프라: Python 엔진 포팅·Neural MCTS·
 
 - 이동: 차례인 말의 합법 이동 칸에 점이 표시됩니다. 칸 중앙을 클릭하면 이동합니다.
 - 벽: 칸 사이 홈에 마우스를 올리면 미리보기가 나타납니다(설치 불가 시 빨간색 + 사유 표시). 클릭하면 설치됩니다.
-- 후공을 선택하면 보드가 180° 회전해 사용자의 말이 항상 아래쪽에 놓입니다.
+- 보드 방향이 "자동"이면 후공을 선택했을 때 보드가 180° 회전해 사용자의 말이 아래쪽에 놓입니다. "P1 시점" / "P2 시점"으로 고정할 수도 있습니다.

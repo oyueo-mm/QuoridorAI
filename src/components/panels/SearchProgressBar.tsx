@@ -43,16 +43,16 @@ export function SearchProgressBar({ progress, timeLimitMs, maxDepth }: Props) {
   }
 
   return (
-    <div className="w-full max-w-[640px] rounded-xl border border-violet-500/30 bg-violet-500/5 px-4 py-2" role="status" aria-live="polite">
-      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 font-mono text-[11px] text-violet-200">
-        <span>
-          <span className="mr-1.5 inline-block h-2 w-2 animate-pulse rounded-full bg-violet-400 align-middle" />
+    <div className="flex h-10 w-full flex-col justify-center gap-1.5 rounded-xl bg-think/5 px-3" role="status" aria-live="polite">
+      <div className="flex min-w-0 items-center gap-3 font-mono text-[11px] text-think">
+        <span className="flex w-52 shrink-0 items-center gap-1.5 truncate tabular-nums">
+          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-think" />
           {headline}
         </span>
-        {detail && <span className="text-violet-300/80">{detail}</span>}
+        {detail && <span className="min-w-0 truncate text-think/75" title={detail}>{detail}</span>}
       </div>
-      <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-slate-800">
-        <div className="h-1 rounded-full bg-violet-400 transition-[width] duration-150" style={{ width: `${Math.max(2, frac * 100)}%` }} />
+      <div className="h-0.5 overflow-hidden rounded-full bg-think/10">
+        <div className="h-0.5 rounded-full bg-think/70 transition-[width] duration-150" style={{ width: `${Math.max(2, frac * 100)}%` }} />
       </div>
     </div>
   );

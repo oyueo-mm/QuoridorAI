@@ -60,22 +60,22 @@ export function BfsAnalysis({ entry, trace, bind }: Props) {
       <div
         role="button"
         {...bind('chosen', afterOverlay(best))}
-        className="block w-full cursor-pointer rounded-lg border border-slate-700 bg-slate-950/60 p-3 text-left transition-colors hover:border-amber-400/50 aria-pressed:border-amber-400/70"
+        className="block w-full cursor-pointer rounded-lg border border-line bg-paper/60 p-3 text-left transition-colors hover:border-warn/50 aria-pressed:border-warn/70"
       >
-        <span className="text-[11px] text-slate-500">선택한 행동 · 마우스를 올리면 평가 경로 표시, 클릭하면 고정</span>
+        <span className="text-[11px] text-faint">선택한 행동 · 마우스를 올리면 평가 경로 표시, 클릭하면 고정</span>
         <span className="mt-1 flex items-baseline justify-between gap-2">
           <span className="flex items-baseline gap-2">
-            <span className="font-mono text-2xl font-semibold text-white">{best.notation}</span>
-            <span className="text-xs text-slate-400">{best.action.type === 'move' ? '말 이동' : '벽 설치'}</span>
+            <span className="font-mono text-2xl font-semibold text-ink">{best.notation}</span>
+            <span className="text-xs text-muted">{best.action.type === 'move' ? '말 이동' : '벽 설치'}</span>
           </span>
-          <span className="font-mono text-sm text-slate-200">
+          <span className="font-mono text-sm text-ink">
             {best.immediateWin ? '즉시 승리' : `점수 ${fmtScore(best.score)}`}
           </span>
         </span>
-        <ul className="mt-2 space-y-1 text-xs leading-relaxed text-slate-300">
+        <ul className="mt-2 space-y-1 text-xs leading-relaxed text-ink-soft">
           {trace.rationale.map((line, i) => (
             <li key={i} className="flex gap-1.5">
-              <span className="text-slate-600">›</span>
+              <span className="text-faint">›</span>
               <span>{line}</span>
             </li>
           ))}
@@ -85,25 +85,25 @@ export function BfsAnalysis({ entry, trace, bind }: Props) {
       {/* Path lengths before / after */}
       <div>
         <div className="mb-1.5 flex items-center justify-between">
-          <h3 className="text-xs text-slate-400">최단 경로 길이 (BFS, 말 무시)</h3>
+          <h3 className="text-xs text-muted">최단 경로 길이 (BFS, 말 무시)</h3>
           <button
             type="button"
             {...bind('before', beforeOverlay)}
-            className="rounded border border-slate-700 px-2 py-0.5 text-[11px] text-slate-400 hover:border-amber-400/50 hover:text-slate-200 aria-pressed:border-amber-400/70"
+            className="rounded border border-line px-2 py-0.5 text-[11px] text-muted hover:border-warn/50 hover:text-ink aria-pressed:border-warn/70"
           >
             결정 직전 경로 보기
           </button>
         </div>
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[11px] text-slate-500">
+            <tr className="text-[11px] text-faint">
               <th className="py-1 text-left font-normal">경로</th>
               <th className="py-1 text-right font-normal">평가 전</th>
               <th className="py-1 text-right font-normal">선택 후</th>
               <th className="py-1 text-right font-normal">변화</th>
             </tr>
           </thead>
-          <tbody className="font-mono text-slate-200">
+          <tbody className="font-mono text-ink">
             <DistanceRow player={me} label="내 경로" before={best.selfBefore} after={best.selfAfter} />
             <DistanceRow player={opp} label="상대 경로" before={best.opponentBefore} after={best.opponentAfter} />
           </tbody>
@@ -111,7 +111,7 @@ export function BfsAnalysis({ entry, trace, bind }: Props) {
       </div>
 
       {/* Score formula with the weights actually used */}
-      <div className="rounded-lg bg-slate-950/60 px-3 py-2 font-mono text-[11px] leading-relaxed text-slate-400">
+      <div className="rounded-lg bg-paper/60 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
         점수 = −{trace.weights.selfDistance}·d<sub>내</sub> + {trace.weights.opponentDistance}·d<sub>상대</sub>
         {' '}− 벽비용({wallCost.toFixed(2)}) − {trace.weights.opponentWinThreat}·[상대 즉시승리]
         <br />
@@ -121,14 +121,14 @@ export function BfsAnalysis({ entry, trace, bind }: Props) {
       {/* Top candidates */}
       <div>
         <div className="mb-1.5 flex items-baseline justify-between">
-          <h3 className="text-xs text-slate-400">상위 후보 비교</h3>
-          <span className="text-[11px] text-slate-500">
+          <h3 className="text-xs text-muted">상위 후보 비교</h3>
+          <span className="text-[11px] text-faint">
             상위 {top.length} / 전체 {trace.candidates.length}
           </span>
         </div>
         <table className="w-full text-xs">
           <thead>
-            <tr className="text-[11px] text-slate-500">
+            <tr className="text-[11px] text-faint">
               <th className="w-6 py-1 text-left font-normal">#</th>
               <th className="py-1 text-left font-normal">행동</th>
               <th className="py-1 text-right font-normal">내Δ</th>
@@ -142,32 +142,32 @@ export function BfsAnalysis({ entry, trace, bind }: Props) {
               <tr
                 key={c.notation}
                 {...bind(`cand-${c.rank}`, afterOverlay(c))}
-                className={`cursor-pointer font-mono outline-none hover:bg-slate-800/70 focus:bg-slate-800/70 aria-pressed:bg-amber-400/10 ${
-                  c.rank === 1 ? 'bg-slate-800/40' : ''
+                className={`cursor-pointer font-mono outline-none hover:bg-inset/70 focus:bg-inset/70 aria-pressed:bg-warn/10 ${
+                  c.rank === 1 ? 'bg-inset/40' : ''
                 }`}
               >
-                <td className="py-1 text-slate-500">{c.rank}</td>
-                <td className="py-1 text-slate-100">
+                <td className="py-1 text-faint">{c.rank}</td>
+                <td className="py-1 text-ink">
                   {c.notation}
                   {c.immediateWin && <Badge tone="win">WIN</Badge>}
                   {c.opponentWinsNext && <Badge tone="threat">⚠ 위협</Badge>}
                 </td>
-                <td className="py-1 text-right text-slate-300">{signed(c.selfAfter - c.selfBefore)}</td>
-                <td className="py-1 text-right text-slate-300">{signed(c.opponentAfter - c.opponentBefore)}</td>
-                <td className="py-1 text-right text-slate-400">{c.terms.wall ? fmtScore(c.terms.wall) : '–'}</td>
+                <td className="py-1 text-right text-ink-soft">{signed(c.selfAfter - c.selfBefore)}</td>
+                <td className="py-1 text-right text-ink-soft">{signed(c.opponentAfter - c.opponentBefore)}</td>
+                <td className="py-1 text-right text-muted">{c.terms.wall ? fmtScore(c.terms.wall) : '–'}</td>
                 <td className="py-1 pl-2">
                   <div className="flex items-center justify-end gap-2">
-                    <div className="h-2 flex-1 rounded-sm bg-slate-800">
-                      <div className="h-2 rounded-sm bg-violet-400" style={{ width: `${barWidth(c)}%` }} />
+                    <div className="h-2 flex-1 rounded-sm bg-inset">
+                      <div className="h-2 rounded-sm bg-think-strong" style={{ width: `${barWidth(c)}%` }} />
                     </div>
-                    <span className="w-12 text-right text-slate-200">{c.immediateWin ? 'WIN' : fmtScore(c.score)}</span>
+                    <span className="w-12 text-right text-ink">{c.immediateWin ? 'WIN' : fmtScore(c.score)}</span>
                   </div>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="mt-1.5 text-[11px] text-slate-500">
+        <p className="mt-1.5 text-[11px] text-faint">
           행에 마우스를 올리면 해당 후보를 둔 뒤의 보드와 AI가 계산한 두 경로가 표시됩니다.
         </p>
       </div>
@@ -186,13 +186,13 @@ export function BfsAnalysis({ entry, trace, bind }: Props) {
 function DistanceRow({ player, label, before, after }: { player: PlayerId; label: string; before: number; after: number }) {
   return (
     <tr>
-      <td className="py-1 font-sans text-slate-300">
+      <td className="py-1 font-sans text-ink-soft">
         <span className={`mr-1.5 inline-block h-2 w-2 rounded-full ${PLAYER_BG_CLASS[player]}`} />
-        {label} <span className="text-slate-500">({PLAYER_LABEL[player]})</span>
+        {label} <span className="text-faint">({PLAYER_LABEL[player]})</span>
       </td>
       <td className="py-1 text-right">{before}</td>
       <td className="py-1 text-right">{after}</td>
-      <td className="py-1 text-right text-slate-400">{signed(after - before)}</td>
+      <td className="py-1 text-right text-muted">{signed(after - before)}</td>
     </tr>
   );
 }
@@ -201,7 +201,7 @@ function Badge({ tone, children }: { tone: 'win' | 'threat'; children: string })
   return (
     <span
       className={`ml-1.5 rounded px-1 py-px font-sans text-[10px] ${
-        tone === 'win' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-red-500/15 text-red-300'
+        tone === 'win' ? 'bg-good/15 text-good' : 'bg-danger/15 text-danger'
       }`}
     >
       {children}
@@ -212,8 +212,8 @@ function Badge({ tone, children }: { tone: 'win' | 'threat'; children: string })
 function SummaryStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex justify-between">
-      <dt className="text-slate-500">{label}</dt>
-      <dd className="font-mono text-slate-200">{value}</dd>
+      <dt className="text-faint">{label}</dt>
+      <dd className="font-mono text-ink">{value}</dd>
     </div>
   );
 }

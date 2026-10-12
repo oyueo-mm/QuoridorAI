@@ -2,8 +2,10 @@ import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import type { MctsSnapshot } from '../../ai/types';
 
-/** Dark-surface categorical slots 1–4 (validated for CVD separation on #0f172a). */
-export const SERIES_COLORS = ['#3987e5', '#d95926', '#199e70', '#c98500'];
+/** Light-surface categorical slots 1–4 (validated on #fbf9f5: adjacent pairs pass CVD / normal-vision
+ * checks; blue and purple are close for protan vision, so slot 3 is also dashed). */
+export const SERIES_COLORS = ['#2b6aa3', '#d0612b', '#8f6bb5', '#3a8f5a'];
+export const SERIES_DASH: (string | undefined)[] = [undefined, undefined, '5 3', undefined];
 
 interface Props {
   snapshots: MctsSnapshot[];
@@ -78,7 +80,7 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
 
   return (
     <div>
-      <div className="mb-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-slate-300">
+      <div className="mb-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-ink-soft">
         {series.map((name, i) => (
           <span key={name} className="flex items-center gap-1">
             <span className="inline-block h-0.5 w-3 rounded" style={{ background: SERIES_COLORS[i] }} />
@@ -98,31 +100,31 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
         >
           {[0, 0.25, 0.5, 0.75, 1].map((g) => (
             <g key={g}>
-              <line x1={M.left} x2={M.left + IW} y1={y(g)} y2={y(g)} stroke="#1e293b" strokeWidth={1} />
-              <text x={M.left - 4} y={y(g)} textAnchor="end" dominantBaseline="central" className="fill-slate-500 font-mono text-[9px]">
+              <line x1={M.left} x2={M.left + IW} y1={y(g)} y2={y(g)} stroke="#ebe4d9" strokeWidth={1} />
+              <text x={M.left - 4} y={y(g)} textAnchor="end" dominantBaseline="central" className="fill-faint font-mono text-[9px]">
                 {g * 100}%
               </text>
             </g>
           ))}
-          <text x={M.left} y={H - 6} className="fill-slate-500 font-mono text-[9px]">0</text>
-          <text x={M.left + IW} y={H - 6} textAnchor="end" className="fill-slate-500 font-mono text-[9px]">
+          <text x={M.left} y={H - 6} className="fill-faint font-mono text-[9px]">0</text>
+          <text x={M.left + IW} y={H - 6} textAnchor="end" className="fill-faint font-mono text-[9px]">
             {maxSims.toLocaleString()} 시뮬레이션
           </text>
 
           {focusSnap && (
-            <line x1={x(focusSnap.simulations)} x2={x(focusSnap.simulations)} y1={M.top} y2={M.top + IH} stroke="#64748b" strokeDasharray="3 3" />
+            <line x1={x(focusSnap.simulations)} x2={x(focusSnap.simulations)} y1={M.top} y2={M.top + IH} stroke="#958b7f" strokeDasharray="3 3" />
           )}
           {lines.map((segs, i) =>
             segs.map((d, j) => (
-              <path key={`${i}-${j}`} d={d} fill="none" stroke={SERIES_COLORS[i]} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+              <path key={`${i}-${j}`} d={d} fill="none" stroke={SERIES_COLORS[i]} strokeDasharray={SERIES_DASH[i]} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
             )),
           )}
           {/* Direct labels at the last point of each line (text in neutral ink, nudged apart). */}
           {endLabels.map((l) => (
             <g key={l.name}>
-              <circle cx={l.x} cy={l.y} r={3} fill={SERIES_COLORS[l.i]} stroke="#0f172a" strokeWidth={2} />
-              {Math.abs(l.labelY - l.y) > 1 && <line x1={l.x + 3} y1={l.y} x2={l.x + 6} y2={l.labelY} stroke="#475569" strokeWidth={1} />}
-              <text x={l.x + 7} y={l.labelY} dominantBaseline="central" className="fill-slate-300 font-mono text-[9.5px]">
+              <circle cx={l.x} cy={l.y} r={3} fill={SERIES_COLORS[l.i]} stroke="#fbf9f5" strokeWidth={2} />
+              {Math.abs(l.labelY - l.y) > 1 && <line x1={l.x + 3} y1={l.y} x2={l.x + 6} y2={l.labelY} stroke="#c4b9a8" strokeWidth={1} />}
+              <text x={l.x + 7} y={l.labelY} dominantBaseline="central" className="fill-ink-soft font-mono text-[9.5px]">
                 {l.name}
               </text>
             </g>
@@ -131,13 +133,13 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
             series.map((name, i) => {
               const v = shareAt(focusSnap, name);
               return v === null ? null : (
-                <circle key={name} cx={x(focusSnap.simulations)} cy={y(v)} r={4} fill={SERIES_COLORS[i]} stroke="#0f172a" strokeWidth={2} />
+                <circle key={name} cx={x(focusSnap.simulations)} cy={y(v)} r={4} fill={SERIES_COLORS[i]} stroke="#fbf9f5" strokeWidth={2} />
               );
             })}
         </svg>
         {hover !== null && focusSnap && (
-          <div className="pointer-events-none absolute top-1 left-10 rounded-md border border-slate-700 bg-slate-950/95 px-2 py-1 font-mono text-[10.5px] text-slate-200 shadow">
-            <div className="text-slate-400">{focusSnap.simulations.toLocaleString()}회 시점</div>
+          <div className="pointer-events-none absolute top-1 left-10 rounded-md border border-line bg-paper/95 px-2 py-1 font-mono text-[10.5px] text-ink shadow">
+            <div className="text-muted">{focusSnap.simulations.toLocaleString()}회 시점</div>
             {series.map((name, i) => {
               const v = shareAt(focusSnap, name);
               return (

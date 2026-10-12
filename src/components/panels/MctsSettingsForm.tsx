@@ -7,9 +7,9 @@ interface Props {
 }
 
 const numberClass =
-  'w-24 rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-right font-mono text-slate-200 focus:border-sky-500 focus:outline-none';
+  'w-24 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-ink focus:border-accent focus:outline-none';
 const selectClass =
-  'w-full rounded-md border border-slate-700 bg-slate-950 px-2 py-1.5 text-xs text-slate-200 focus:border-sky-500 focus:outline-none';
+  'w-full rounded-lg border border-line bg-card px-2 py-1.5 text-xs text-ink focus:border-accent focus:outline-none';
 
 const ROLLOUTS: { value: RolloutPolicy; label: string }[] = [
   { value: 'heuristic', label: 'BFS 휴리스틱 (최단 경로 + 벽, 권장)' },
@@ -23,8 +23,8 @@ export function MctsSettingsForm({ value, onChange }: Props) {
   const set = (patch: Partial<MctsSettings>) => onChange({ ...value, ...patch });
 
   return (
-    <div className="space-y-3 rounded-lg border border-slate-800 bg-slate-950/50 p-3">
-      <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+    <div className="space-y-3 rounded-lg border border-line-soft bg-paper/50 p-3">
+      <label className="flex items-center justify-between gap-3 text-xs text-muted">
         시뮬레이션 횟수
         <input
           type="number"
@@ -35,9 +35,9 @@ export function MctsSettingsForm({ value, onChange }: Props) {
           className={numberClass}
         />
       </label>
-      <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+      <label className="flex items-center justify-between gap-3 text-xs text-muted">
         <span>
-          시간 제한 (ms) <span className="text-slate-500">0 = 없음</span>
+          시간 제한 (ms) <span className="text-faint">0 = 없음</span>
         </span>
         <input
           type="number"
@@ -48,7 +48,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
           className={numberClass}
         />
       </label>
-      <label className="block text-xs text-slate-400">
+      <label className="block text-xs text-muted">
         <span className="mb-1 block">롤아웃 전략</span>
         <select value={value.rollout} onChange={(e) => set({ rollout: e.target.value as RolloutPolicy })} className={selectClass}>
           {ROLLOUTS.map((r) => (
@@ -59,7 +59,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
         </select>
       </label>
       {value.rollout === 'balanced' && (
-        <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+        <label className="flex items-center justify-between gap-3 text-xs text-muted">
           말 이동 확률
           <input
             type="number"
@@ -72,7 +72,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
           />
         </label>
       )}
-      <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+      <label className="flex items-center justify-between gap-3 text-xs text-muted">
         롤아웃 최대 길이 (ply)
         <input
           type="number"
@@ -83,7 +83,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
           className={numberClass}
         />
       </label>
-      <label className="block text-xs text-slate-400">
+      <label className="block text-xs text-muted">
         <span className="mb-1 block">최대 길이 도달 시 가치</span>
         <select
           value={value.rolloutCutoff}
@@ -96,17 +96,17 @@ export function MctsSettingsForm({ value, onChange }: Props) {
         </select>
       </label>
 
-      <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+      <label className="flex items-center justify-between gap-3 text-xs text-muted">
         <span>
-          가치 포화 완화 <span className="text-slate-500">(추정값 |v| &lt; 0.9)</span>
+          가치 포화 완화 <span className="text-faint">(추정값 |v| &lt; 0.9)</span>
         </span>
-        <input type="checkbox" checked={value.valueShaping} onChange={(e) => set({ valueShaping: e.target.checked })} className="accent-sky-500" />
+        <input type="checkbox" checked={value.valueShaping} onChange={(e) => set({ valueShaping: e.target.checked })} className="accent-accent" />
       </label>
 
       <details>
-        <summary className="cursor-pointer text-xs text-slate-400">고급</summary>
+        <summary className="cursor-pointer text-xs text-muted">고급</summary>
         <div className="mt-2 space-y-2">
-          <label className="block text-xs text-slate-400">
+          <label className="block text-xs text-muted">
             <span className="mb-1 block">선택 규칙</span>
             <select value={value.selection} onChange={(e) => set({ selection: e.target.value as MctsSettings['selection'] })} className={selectClass}>
               <option value="uct">UCT (모든 수를 한 번씩 확장)</option>
@@ -115,7 +115,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
           </label>
           {value.selection === 'puct' && (
             <>
-              <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+              <label className="flex items-center justify-between gap-3 text-xs text-muted">
                 PUCT 상수 c
                 <input
                   type="number"
@@ -126,7 +126,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
                   className={numberClass}
                 />
               </label>
-              <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+              <label className="flex items-center justify-between gap-3 text-xs text-muted">
                 사전 확률 온도 τ
                 <input
                   type="number"
@@ -139,7 +139,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
               </label>
             </>
           )}
-          <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+          <label className="flex items-center justify-between gap-3 text-xs text-muted">
             탐색 상수 C (UCT)
             <input
               type="number"
@@ -150,7 +150,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
               className={numberClass}
             />
           </label>
-          <label className="block text-xs text-slate-400">
+          <label className="block text-xs text-muted">
             <span className="mb-1 block">벽 후보</span>
             <select
               value={value.wallFilter}
@@ -161,7 +161,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
               <option value="all">모든 합법 벽</option>
             </select>
           </label>
-          <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+          <label className="flex items-center justify-between gap-3 text-xs text-muted">
             트리 노드 상한
             <input
               type="number"
@@ -177,7 +177,7 @@ export function MctsSettingsForm({ value, onChange }: Props) {
       <button
         type="button"
         onClick={() => onChange({ ...(value.variant === 'guided' ? DEFAULT_GUIDED_MCTS_SETTINGS : DEFAULT_MCTS_SETTINGS) })}
-        className="text-[11px] text-sky-400 hover:underline"
+        className="text-[11px] text-accent hover:underline"
       >
         기본값으로
       </button>

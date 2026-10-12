@@ -3,17 +3,30 @@ import type { PlayerId, WallPlacementResult } from '../engine';
 /** Display names: engine player 0/1 are shown as P1/P2. */
 export const PLAYER_LABEL: Record<PlayerId, string> = { 0: 'P1', 1: 'P2' };
 
-// Validated for CVD separation and lightness on the dark board surface (#0f172a).
-export const PLAYER_COLOR: Record<PlayerId, string> = { 0: '#0b98d8', 1: '#f43f5e' };
+// Muted blue / terracotta on the light board (#efe6d8): separable under deuteranopia and
+// protanopia (different lightness and hue), never used as the only cue (labels P1 / P2).
+export const PLAYER_COLOR: Record<PlayerId, string> = { 0: '#3c6a8a', 1: '#ad5646' };
 
-export const PLAYER_TEXT_CLASS: Record<PlayerId, string> = { 0: 'text-sky-400', 1: 'text-rose-400' };
-export const PLAYER_BG_CLASS: Record<PlayerId, string> = { 0: 'bg-sky-400', 1: 'bg-rose-400' };
+export const PLAYER_TEXT_CLASS: Record<PlayerId, string> = { 0: 'text-p1', 1: 'text-p2' };
+export const PLAYER_BG_CLASS: Record<PlayerId, string> = { 0: 'bg-p1', 1: 'bg-p2' };
 export const PLAYER_RING_CLASS: Record<PlayerId, string> = {
-  0: 'ring-sky-400/60',
-  1: 'ring-rose-400/60',
+  0: 'ring-p1/45',
+  1: 'ring-p2/45',
 };
 
-export const WALL_COLOR = '#f59e0b';
+/** Placed walls: dark wood. */
+export const WALL_COLOR = '#8a6a4b';
+
+/** Board surfaces (SVG). */
+export const BOARD_COLORS = {
+  frame: '#e7dccb',
+  groove: '#d9ccb8',
+  cell: '#f6f0e6',
+  label: '#9a8f81',
+  preview: '#9a6d24',
+  invalid: '#a4473d',
+  ink: '#2e2a25',
+};
 
 export const WALL_RESULT_TEXT: Record<WallPlacementResult, string> = {
   ok: '클릭하여 벽 설치',
