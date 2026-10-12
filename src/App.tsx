@@ -5,6 +5,7 @@ import type { BoardOverlay } from './components/board/overlay';
 import { AnalysisPanel } from './components/panels/AnalysisPanel';
 import { MoveLog } from './components/panels/MoveLog';
 import { PlayerCard } from './components/panels/PlayerCard';
+import { SearchProgressBar } from './components/panels/SearchProgressBar';
 import { SetupPanel } from './components/panels/SetupPanel';
 import { PLAYER_LABEL, PLAYER_TEXT_CLASS } from './components/theme';
 import { distanceToRow, goalRow, opponentOf } from './engine';
@@ -44,7 +45,7 @@ export default function App() {
             <span className="hidden text-xs text-slate-500 sm:inline">게임 AI 의사결정 시각화 실험실</span>
           </div>
           <span className="rounded-full border border-slate-700 px-2.5 py-0.5 font-mono text-[11px] text-slate-400">
-            stage 2 · random + bfs
+            stage 3 · minimax + alpha-beta
           </span>
         </div>
       </header>
@@ -91,6 +92,13 @@ export default function App() {
               )}
             </div>
           </div>
+          {session.thinking && controllers[game.currentPlayer].kind === 'ai' && config.opponent === 'minimax' && (
+            <SearchProgressBar
+              progress={session.progress}
+              timeLimitMs={config.minimax.timeLimitMs}
+              maxDepth={config.minimax.maxDepth}
+            />
+          )}
           {session.error && (
             <p className="w-full max-w-[640px] rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-xs text-red-300">
               {session.error}

@@ -5,6 +5,7 @@ import { distanceToRow, goalRow, legalPawnMoves, legalWallPlacements } from '../
 import type { GameState } from '../../engine';
 import type { HistoryEntry } from '../../session/useGameSession';
 import { BfsAnalysis } from '../analysis/BfsAnalysis';
+import { MinimaxAnalysis } from '../analysis/MinimaxAnalysis';
 import type { PreviewBinder } from '../analysis/preview';
 import { RandomAnalysis } from '../analysis/RandomAnalysis';
 import type { BoardOverlay } from '../board/overlay';
@@ -119,8 +120,10 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
             </div>
             {decision.trace.algorithm === 'random' ? (
               <RandomAnalysis entry={decision.entry} trace={decision.trace} bind={bind} />
-            ) : (
+            ) : decision.trace.algorithm === 'bfs' ? (
               <BfsAnalysis entry={decision.entry} trace={decision.trace} bind={bind} />
+            ) : (
+              <MinimaxAnalysis key={decision.index} entry={decision.entry} trace={decision.trace} bind={bind} />
             )}
           </div>
         )}

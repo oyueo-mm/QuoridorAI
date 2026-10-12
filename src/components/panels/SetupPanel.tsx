@@ -6,6 +6,7 @@ import type { BfsWeights } from '../../ai/types';
 import type { PlayerId } from '../../engine';
 import type { GameConfig, Opponent } from '../../session/config';
 import { PLAYER_LABEL } from '../theme';
+import { MinimaxSettingsForm } from './MinimaxSettingsForm';
 import { Panel } from './Panel';
 
 interface SetupPanelProps {
@@ -17,6 +18,7 @@ const MODES: { value: Opponent; label: string }[] = [
   { value: 'human', label: 'Human vs Human' },
   { value: 'random', label: 'Human vs Random AI' },
   { value: 'bfs', label: 'Human vs BFS AI' },
+  { value: 'minimax', label: 'Human vs Minimax AI' },
 ];
 
 const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = [
@@ -100,6 +102,10 @@ export function SetupPanel({ current, onStart }: SetupPanelProps) {
             </div>
             <span className="mt-1 block text-[11px] text-slate-500">같은 시드와 같은 진행이면 같은 수를 둡니다.</span>
           </label>
+        )}
+
+        {draft.opponent === 'minimax' && (
+          <MinimaxSettingsForm value={draft.minimax} onChange={(minimax) => setDraft({ ...draft, minimax })} />
         )}
 
         {draft.opponent === 'bfs' && (

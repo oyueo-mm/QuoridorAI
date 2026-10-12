@@ -1,5 +1,5 @@
 import { createAgent } from '../ai/registry';
-import type { Agent, DecisionTrace } from '../ai/types';
+import type { Agent, AgentProgress, DecisionTrace } from '../ai/types';
 import { applyAction, createInitialState, isLegalAction } from '../engine';
 import type { Action, GameState, PlayerId } from '../engine';
 import { isMatchOver, matchStatus } from '../match/outcome';
@@ -26,6 +26,8 @@ export interface SessionSnapshot {
   history: readonly HistoryEntry[];
   /** An AI is computing its move. */
   thinking: boolean;
+  /** Latest progress report of the AI that is thinking (search agents only). */
+  progress: AgentProgress | null;
   /** The player to move is a person on this device and the game is not over. */
   humanToMove: boolean;
   error: string | null;
@@ -90,6 +92,12 @@ export class GameController {
     this.cancelAi();
   }
 
+  /** Cancels the AI computation and releases agent resources (workers). */
+  dispose(): void {
+    this.deactivate();
+    for (const agent of this.agents) agent?.dispose?.();
+  }
+
   /** Resolves once no AI turn is pending (AI seats keep playing until a human is to move). */
   async idle(): Promise<void> {
     while (this.aiRun) await this.aiRun.done;
@@ -116,8 +124,11 @@ export class GameController {
   // ------------------------------------------------------------ internals
   private freshSnapshot(config: GameConfig, gameId: number): SessionSnapshot {
     const controllers = seatControllers(config);
+    for (const old of this.agents) old?.dispose?.();
     this.agents = controllers.map((c) =>
-      c.kind === 'ai' ? this.agentFactory(c.agentId, { seed: config.seed, bfsWeights: config.bfsWeights }) : null,
+      c.kind === 'ai'
+        ? this.agentFactory(c.agentId, { seed: config.seed, bfsWeights: config.bfsWeights, minimax: config.minimax })
+        : null,
     ) as [Agent | null, Agent | null];
     const game = createInitialState();
     return this.derive({
@@ -127,6 +138,7 @@ export class GameController {
       game,
       history: [],
       thinking: false,
+      progress: null,
       error: null,
     });
   }
@@ -159,7 +171,7 @@ export class GameController {
     if (!this.aiRun) return;
     this.aiRun.abort.abort();
     this.aiRun = null;
-    if (this.snapshot.thinking) this.update({ thinking: false });
+    if (this.snapshot.thinking) this.update({ thinking: false, progress: null });
   }
 
   private scheduleAi(): void {
@@ -181,19 +193,23 @@ export class GameController {
   }
 
   private async runAiTurn(agent: Agent, state: GameState, signal: AbortSignal): Promise<void> {
-    this.update({ thinking: true });
+    this.update({ thinking: true, progress: null });
+    // Progress from a cancelled or superseded search must never reach the current game.
+    const onProgress = (progress: AgentProgress) => {
+      if (!signal.aborted && this.snapshot.game === state) this.update({ progress });
+    };
     try {
-      const [decision] = await Promise.all([agent.decide(state, { signal }), sleep(this.aiDelayMs, signal)]);
+      const [decision] = await Promise.all([agent.decide(state, { signal, onProgress }), sleep(this.aiDelayMs, signal)]);
       if (signal.aborted || this.snapshot.game !== state) return;
       if (!isLegalAction(state, decision.action)) {
-        this.update({ thinking: false, error: `AI(${agent.id})가 불법 행동을 선택했습니다: ${JSON.stringify(decision.action)}` });
+        this.update({ thinking: false, progress: null, error: `AI(${agent.id})가 불법 행동을 선택했습니다: ${JSON.stringify(decision.action)}` });
         return;
       }
-      this.snapshot = { ...this.snapshot, thinking: false };
+      this.snapshot = { ...this.snapshot, thinking: false, progress: null };
       this.commit(decision.action, decision.trace);
     } catch (err) {
       if (signal.aborted) return;
-      this.update({ thinking: false, error: `AI(${agent.id}) 오류: ${err instanceof Error ? err.message : String(err)}` });
+      this.update({ thinking: false, progress: null, error: `AI(${agent.id}) 오류: ${err instanceof Error ? err.message : String(err)}` });
     }
   }
 }

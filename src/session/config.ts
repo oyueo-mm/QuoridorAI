@@ -1,7 +1,8 @@
 import { DEFAULT_BFS_WEIGHTS } from '../ai/bfsAgent';
+import { resolveMinimaxSettings } from '../ai/minimaxAgent';
 import { randomSeed } from '../ai/rng';
 import type { AgentId } from '../ai/registry';
-import type { BfsWeights } from '../ai/types';
+import type { BfsWeights, MinimaxSettings } from '../ai/types';
 import type { PlayerId } from '../engine';
 import { DEFAULT_MAX_PLIES } from '../match/outcome';
 
@@ -18,6 +19,7 @@ export interface GameConfig {
   /** Seed for stochastic agents (Random AI). */
   seed: number;
   bfsWeights: BfsWeights;
+  minimax: MinimaxSettings;
   /** Experimental ply budget; reaching it halts the game without a winner. null = unlimited. */
   maxPlies: number | null;
 }
@@ -25,9 +27,10 @@ export interface GameConfig {
 export function defaultConfig(): GameConfig {
   return {
     userSeat: 0,
-    opponent: 'bfs',
+    opponent: 'minimax',
     seed: randomSeed(),
     bfsWeights: { ...DEFAULT_BFS_WEIGHTS },
+    minimax: resolveMinimaxSettings(),
     maxPlies: DEFAULT_MAX_PLIES,
   };
 }

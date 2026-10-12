@@ -234,7 +234,12 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             ))}
 
             {/* Highlighted action (last move, or the previewed candidate). */}
-            {highlight && <ActionHighlight {...highlight} flipped={flipped} strong={Boolean(overlay)} />}
+            {overlay?.marks?.map((m, i) => (
+              <ActionHighlight key={i} {...m} flipped={flipped} variant="mark" />
+            ))}
+            {highlight && (
+              <ActionHighlight {...highlight} flipped={flipped} variant={overlay ? 'strong' : 'last'} />
+            )}
 
             {/* Wall placement preview. */}
             {candidate && candidate.action.type === 'wall' && hover?.kind === 'wall' && (
@@ -271,49 +276,74 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
   );
 }
 
+/**
+ * Outline of an action: 'last' = previous move (dashed, player colour), 'strong' = previewed
+ * action (solid white), 'mark' = other step of a previewed line (translucent, dashed, numbered).
+ */
 function ActionHighlight({
   action,
   player,
+  label,
   flipped,
-  strong,
+  variant,
 }: {
   action: Action;
   player: PlayerId;
+  label?: string;
   flipped: boolean;
-  strong: boolean;
+  variant: 'last' | 'strong' | 'mark';
 }) {
+  const stroke = variant === 'strong' ? '#ffffff' : PLAYER_COLOR[player];
+  const dash = variant === 'strong' ? undefined : '4 3';
+  let shape;
+  let badge: { x: number; y: number };
   if (action.type === 'wall') {
     const r = wallRect(action.orientation, wallAnchorToView(action.row, action.col, flipped));
-    return (
+    shape = (
       <rect
         x={r.x - 3}
         y={r.y - 3}
         width={r.width + 6}
         height={r.height + 6}
         rx={5}
-        fill="none"
-        stroke={strong ? '#ffffff' : PLAYER_COLOR[player]}
-        strokeWidth={strong ? 2.5 : 2}
-        strokeDasharray={strong ? undefined : '4 3'}
-        pointerEvents="none"
+        fill={variant === 'mark' ? PLAYER_COLOR[player] : 'none'}
+        fillOpacity={0.35}
+        stroke={stroke}
+        strokeWidth={variant === 'strong' ? 2.5 : 2}
+        strokeDasharray={dash}
       />
     );
+    badge = { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+  } else {
+    const r = cellRect(cellToView(action.to, flipped));
+    shape = (
+      <rect
+        x={r.x + 2}
+        y={r.y + 2}
+        width={r.width - 4}
+        height={r.height - 4}
+        rx={6}
+        fill={variant === 'mark' ? PLAYER_COLOR[player] : 'none'}
+        fillOpacity={0.15}
+        stroke={stroke}
+        strokeWidth={2}
+        strokeDasharray={dash}
+      />
+    );
+    badge = { x: r.x + 11, y: r.y + 11 };
   }
-  const view = cellToView(action.to, flipped);
-  const r = cellRect(view);
   return (
-    <rect
-      x={r.x + 2}
-      y={r.y + 2}
-      width={r.width - 4}
-      height={r.height - 4}
-      rx={6}
-      fill="none"
-      stroke={strong ? '#ffffff' : PLAYER_COLOR[player]}
-      strokeWidth={2}
-      strokeDasharray={strong ? undefined : '4 3'}
-      pointerEvents="none"
-    />
+    <g pointerEvents="none">
+      {shape}
+      {label && (
+        <g>
+          <circle cx={badge.x} cy={badge.y} r={9} fill="#0f172a" stroke={PLAYER_COLOR[player]} strokeWidth={1.5} />
+          <text x={badge.x} y={badge.y} textAnchor="middle" dominantBaseline="central" className="fill-white font-mono text-[10px] font-bold">
+            {label}
+          </text>
+        </g>
+      )}
+    </g>
   );
 }
 

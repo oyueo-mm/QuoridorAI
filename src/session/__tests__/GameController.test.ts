@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { DEFAULT_BFS_WEIGHTS } from '../../ai/bfsAgent';
+import { resolveMinimaxSettings } from '../../ai/minimaxAgent';
 import { createAgent } from '../../ai/registry';
 import type { Agent } from '../../ai/types';
 import type { Action } from '../../engine';
@@ -11,6 +12,7 @@ const config = (patch: Partial<GameConfig> = {}): GameConfig => ({
   opponent: 'bfs',
   seed: 1,
   bfsWeights: { ...DEFAULT_BFS_WEIGHTS },
+  minimax: resolveMinimaxSettings({ maxDepth: 2, timeLimitMs: 0 }),
   maxPlies: 400,
   ...patch,
 });
@@ -161,5 +163,72 @@ describe('GameController', () => {
     controllers.push(ctl);
     await ctl.idle();
     expect(ctl.getSnapshot().history).toHaveLength(1);
+  });
+});
+
+describe('GameController with Minimax', () => {
+  it('plays a Minimax reply with a full search trace and progress cleared afterwards', async () => {
+    const ctl = make(config({ opponent: 'minimax' }));
+    ctl.playHuman(move(7, 4));
+    await ctl.idle();
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(2);
+    const trace = s.history[1].trace!;
+    expect(trace.algorithm).toBe('minimax');
+    if (trace.algorithm === 'minimax') {
+      expect(trace.completedDepth).toBe(2);
+      expect(trace.pv[0]).toEqual(s.history[1].action);
+    }
+    expect(s.thinking).toBe(false);
+    expect(s.progress).toBeNull();
+  });
+
+  it('Minimax moves first when the user plays second', async () => {
+    const ctl = make(config({ userSeat: 1, opponent: 'minimax' }));
+    await ctl.idle();
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(1);
+    expect(s.history[0].player).toBe(0);
+    expect(s.humanToMove).toBe(true);
+  });
+
+  it('a search interrupted by restart or agent change never reaches the new game', async () => {
+    // A slow fake search agent that answers only when released, and reports progress.
+    const pending: (() => void)[] = [];
+    const progressSeen: number[] = [];
+    const slow: Agent = {
+      id: 'minimax',
+      decide: (state, ctx) =>
+        new Promise((resolve) => {
+          ctx?.onProgress?.({ depth: 1, completedDepth: 0, nodes: 1, elapsedMs: 0 });
+          pending.push(() => {
+            ctx?.onProgress?.({ depth: 9, completedDepth: 9, nodes: 999, elapsedMs: 0 });
+            resolve({
+              action: move(7, 4),
+              trace: { algorithm: 'random', player: state.currentPlayer, ply: state.ply, elapsedMs: 0, seed: 0,
+                decisionIndex: 0, candidateCount: 3, pawnMoveCount: 3, wallCount: 0, roll: 0, chosenIndex: 0, chosenAction: move(7, 4) },
+            });
+          });
+        }),
+    };
+    const factory: typeof createAgent = (id, settings) => (id === 'minimax' ? slow : createAgent(id, settings));
+    const ctl = make(config({ userSeat: 1, opponent: 'minimax' }), { agentFactory: factory });
+    ctl.subscribe(() => {
+      const p = ctl.getSnapshot().progress;
+      if (p) progressSeen.push(p.nodes);
+    });
+    expect(ctl.getSnapshot().thinking).toBe(true);
+
+    // Restart (same agent type) while thinking, then switch to BFS while the next search runs.
+    ctl.restart();
+    ctl.restart(config({ userSeat: 1, opponent: 'bfs' }));
+    pending.forEach((release) => release()); // both stale searches finish now
+    await ctl.idle();
+
+    const s = ctl.getSnapshot();
+    expect(s.gameId).toBe(2);
+    expect(s.history).toHaveLength(1);
+    expect(s.history[0].trace?.algorithm).toBe('bfs');
+    expect(progressSeen).not.toContain(999);
   });
 });

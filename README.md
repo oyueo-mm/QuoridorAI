@@ -3,7 +3,7 @@
 
 대상 알고리즘: Random, BFS, Minimax, Alpha-Beta, MCTS, AlphaZero 계열.
 
-> 현재 단계: **2단계 — Random AI · BFS 휴리스틱 AI · 분석 패널**
+> 현재 단계: **3단계 — Minimax / Alpha-Beta 탐색 AI (Web Worker) · 탐색 시각화**
 
 ## 실행
 
@@ -14,6 +14,7 @@ npm test           # 단위 테스트 (Vitest)
 npm run typecheck  # 타입 검사
 npm run build      # 타입 검사 + 프로덕션 빌드 (dist/)
 npm run preview    # 빌드 결과 미리보기 → http://localhost:4173/QuoridorAI/
+npm run bench      # 탐색 벤치마크 → bench/results/search-benchmark.md (약 1분)
 ```
 
 ## 배포 (GitHub Pages)
@@ -31,6 +32,7 @@ GitHub Pages 배포를 수행합니다. PR에서는 검증만 실행합니다.
 | Human vs Human | 같은 기기에서 두 사람이 번갈아 둡니다. |
 | Human vs Random AI | 합법 행동 중 균등 무작위 선택. 시드를 지정하면 같은 진행에서 같은 수를 둡니다. |
 | Human vs BFS AI | 모든 합법 행동(말 이동 + 벽)을 BFS 최단 거리로 평가하는 1수 휴리스틱. |
+| Human vs Minimax AI | 양측 대응을 고려하는 Minimax / Alpha-Beta 탐색. Web Worker에서 실행되어 UI가 멈추지 않습니다. |
 
 선공/후공을 선택할 수 있고, 후공이면 AI가 첫 수를 둡니다. AI 차례에는 보드 조작이 막힙니다.
 
@@ -46,12 +48,27 @@ GitHub Pages 배포를 수행합니다. PR에서는 검증만 실행합니다.
 - 기본 가중치: `selfDistance 1`, `opponentDistance 1`, `wallCost 0.5`, `wallScarcity 0.5`, `opponentWinThreat 100`.
   게임 설정 패널에서 조정할 수 있습니다.
 
+### Minimax AI
+
+- **알고리즘**: Negamax 형태의 Minimax, 선택적으로 Alpha-Beta 가지치기 (fail-soft).
+- **반복 심화**: 깊이 1부터 최대 깊이까지 탐색. 시간 제한에 걸리면 진행 중이던 깊이를 버리고 마지막으로 완료한 깊이의 최선 수를 둡니다(깊이 1은 항상 완료).
+- **종단 평가**: 승리 = `10000 − ply`, 패배 = `−(10000 − ply)` → 빠른 승리·늦은 패배를 선호. 승패가 확정되면 탐색을 조기 종료합니다.
+- **평가 함수** (`Evaluator` 인터페이스로 교체 가능, 항상 AI 관점):
+  `−w_self·d_self + w_opp·d_opp + w_wall·(남은 벽 차이) ± tempo` · 기본 `1, 1, 1.0, 0.5`.
+  벽 가치 0.4 → 1.0 조정으로 BFS AI 상대 전적이 3승 9패 → 11승 1패로 바뀌었습니다(벤치마크 5절).
+- **후보 생성**: 기본은 "상대 최단 경로를 끊는 벽 + 모든 말 이동"(상대 거리를 즉시 늘릴 수 있는 벽은 이것뿐), 설정에서 모든 합법 벽으로 바꿀 수 있습니다.
+- **최적화**: 정적 평가 기반 이동 정렬(남은 깊이 ≥ 3), 킬러 무브, Zobrist 전치표(같은 남은 깊이에서만 값 재사용 → Minimax와 점수 동일 보장), 벽 합법성 지연 검사, 부모 기준 증분 평가.
+- **취소 안전성**: 요청 id + 중단 시 Worker 종료 + 컨트롤러의 상태 일치 검사의 3중 장치로, 재시작·에이전트 변경 후 이전 탐색 결과·진행 상황이 반영되지 않습니다.
+- 기본 설정: Alpha-Beta, 최대 깊이 5, 시간 제한 2000 ms, 이동 정렬·TT 사용. 설정 패널에서 조정할 수 있습니다.
+
 ### 분석 패널
 
 AI가 실제로 계산해 `DecisionTrace`에 기록한 값만 표시합니다.
 
 - **Random**: 후보 행동 수(이동/벽), 개별 선택 확률, 난수 r과 선택 인덱스, 시드, 결정 순번.
 - **BFS**: 선택 행동과 근거 문장, 평가 전/후 내·상대 경로 길이, 실제 가중치가 들어간 점수식, 상위 10개 후보 비교표.
+- **Minimax**: 도달 깊이, 방문 노드, β 컷 횟수, TT 적중, 소요 시간, 반복 심화 깊이별 결과, 후보별 점수(Alpha-Beta가 상한만 증명한 후보는 `≤`와 반박 수로 표시),
+  예상 상대 응수, Principal Variation(단계별 보드 미리보기, PV 끝 정적 평가가 탐색 점수와 일치하는지 표시), 탐색 트리(루트 → 내 후보 → 상대 응수, 주 변화 강조·나머지 요약).
 - 후보 행·선택 카드에 마우스를 올리면 해당 행동을 둔 뒤의 보드와 AI가 계산한 두 경로가 표시되고, 클릭하면 고정됩니다.
 - ◀ ▶로 이전 AI 결정을 다시 볼 수 있습니다.
 
@@ -73,13 +90,16 @@ src/
     game.ts        초기 상태, 임의 상태 생성, 행동 적용, 승리 판정
     encoding.ts    신경망용 행동 인덱스(0..208) 인코딩
     notation.ts    기보 표기 (e2, e3h …)
-  ai/            Agent 계약·DecisionTrace 타입, Random/BFS 에이전트, 시드 RNG, 레지스트리
+  ai/            Agent 계약·DecisionTrace 타입, Random/BFS/Minimax 에이전트, 시드 RNG, 레지스트리
+    search/        Minimax/Alpha-Beta 탐색, 평가 함수, 후보 생성
+    worker/        Web Worker 진입점·프로토콜·WorkerAgent
   match/         MatchStatus(승리/실험 중단 구분), 헤드리스 대국 러너 runMatch
   session/       GameController(턴 관리·AI 자동 진행·취소), React 훅, 게임 설정
   components/
     board/         SVG 보드, 히트 테스트, 분석 오버레이
-    analysis/      Random/BFS DecisionTrace 시각화
+    analysis/      Random/BFS/Minimax DecisionTrace 시각화, 탐색 트리
     panels/        설정, 플레이어 카드, 분석 패널, 기보
+bench/           탐색 벤치마크 (npm run bench) 및 결과
 training/        Python/PyTorch 학습 코드 (Colab, 추후)
 ```
 

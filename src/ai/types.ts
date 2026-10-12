@@ -25,12 +25,28 @@ export interface DecisionTraceBase {
 
 export interface AgentContext {
   signal?: AbortSignal;
+  /** Periodic progress for long-running agents (search). */
+  onProgress?: (progress: AgentProgress) => void;
+}
+
+export interface AgentProgress {
+  /** Depth currently being searched. */
+  depth: number;
+  /** Deepest fully completed iteration (0 = none yet). */
+  completedDepth: number;
+  nodes: number;
+  elapsedMs: number;
+  /** Best move of the last completed iteration. */
+  bestNotation?: string;
+  score?: number;
 }
 
 export interface Agent<T extends DecisionTraceBase = DecisionTrace> {
   readonly id: string;
   /** Rejects if the state is terminal or the signal is aborted. */
   decide(state: GameState, context?: AgentContext): Promise<AgentDecision<T>>;
+  /** Releases resources (e.g. a Web Worker) when the agent is no longer used. */
+  dispose?(): void;
 }
 
 // ---------------------------------------------------------------- Random
@@ -101,4 +117,141 @@ export interface BfsTrace extends DecisionTraceBase {
   rationale: string[];
 }
 
-export type DecisionTrace = RandomTrace | BfsTrace;
+// ---------------------------------------------------------------- Minimax / Alpha-Beta
+
+export interface MinimaxEvalWeights {
+  /** Penalty per step of the evaluated player's shortest path. */
+  selfDistance: number;
+  /** Reward per step of the opponent's shortest path. */
+  opponentDistance: number;
+  /** Value of each wall in hand, relative to the opponent's (own − opponent's). */
+  wallDifference: number;
+  /** Bonus for being the side to move (worth roughly half a step in a race). */
+  tempo: number;
+}
+
+export interface MinimaxSettings {
+  algorithm: 'minimax' | 'alphabeta';
+  /** Maximum iterative-deepening depth (plies). */
+  maxDepth: number;
+  /** Wall-clock budget per decision in ms; 0 = unlimited. Depth 1 always completes. */
+  timeLimitMs: number;
+  moveOrdering: boolean;
+  /** Only used by alpha-beta. */
+  transpositionTable: boolean;
+  /**
+   * Wall candidates searched at every node: all legal walls, or only legal walls that cut the
+   * opponent's current shortest path (the only walls that can lengthen it immediately).
+   */
+  wallFilter: 'all' | 'opponent-path';
+  evaluation: MinimaxEvalWeights;
+}
+
+/** How a score relates to the true minimax value (alpha-beta may only prove a bound). */
+export type ScoreBound = 'exact' | 'lower' | 'upper';
+
+export interface SearchStats {
+  /** Search nodes visited (interior + leaves + terminals). */
+  nodes: number;
+  /** Depth-0 static evaluations. */
+  leaves: number;
+  terminals: number;
+  /** Extra static evaluations spent on move ordering. */
+  orderingEvals: number;
+  /** Beta cutoffs (alpha ≥ beta). */
+  cutoffs: number;
+  /** Sibling moves skipped because of cutoffs. */
+  prunedMoves: number;
+  ttProbes: number;
+  ttHits: number;
+  ttCutoffs: number;
+  elapsedMs: number;
+}
+
+export interface SearchIteration {
+  depth: number;
+  score: number;
+  best: string;
+  pv: string[];
+  nodes: number;
+  cutoffs: number;
+  elapsedMs: number;
+}
+
+export interface RootCandidate {
+  action: Action;
+  notation: string;
+  /** From the deciding player's perspective. */
+  score: number;
+  bound: ScoreBound;
+  /**
+   * Opponent's answer found by the search: the expected reply for exactly scored moves,
+   * or the refutation that proved the bound for pruned (upper-bound) moves.
+   */
+  reply?: Action;
+  replyNotation?: string;
+  nodes: number;
+  rank: number;
+}
+
+/** Recorded part of the search tree (root, its children and grandchildren; trimmed). */
+export interface SearchTreeNode {
+  action?: Action;
+  notation: string;
+  /** Player who made `action` (for the root: the deciding player). */
+  mover: PlayerId;
+  /** From the deciding player's perspective. */
+  score: number;
+  bound: ScoreBound;
+  /** Nodes searched in this subtree. */
+  nodes: number;
+  /** Remaining depth when this node was searched. */
+  depth: number;
+  terminal: boolean;
+  /** A beta cutoff happened at this node (some children were never searched). */
+  cutoff: boolean;
+  searchedChildren: number;
+  totalChildren: number;
+  children?: SearchTreeNode[];
+  /** Searched children dropped from the recording to keep the trace small. */
+  omitted?: { count: number; minScore: number; maxScore: number };
+}
+
+export interface EvalBreakdown {
+  perspective: PlayerId;
+  terminal: 'win' | 'loss' | null;
+  selfDistance: number;
+  opponentDistance: number;
+  selfWalls: number;
+  opponentWalls: number;
+  toMove: PlayerId;
+  terms: { self: number; opponent: number; walls: number; tempo: number };
+  score: number;
+}
+
+export interface MinimaxTrace extends DecisionTraceBase {
+  algorithm: 'minimax';
+  settings: MinimaxSettings;
+  completedDepth: number;
+  timedOut: boolean;
+  /** Search stopped early because a forced result was found. */
+  decided: boolean;
+  score: number;
+  pv: Action[];
+  pvNotation: string[];
+  /** PV was extended from the transposition table / truncated by it. */
+  pvComplete: boolean;
+  rootCandidates: RootCandidate[];
+  /** Number of legal actions vs. actions actually searched at the root (wall filter). */
+  legalActionCount: number;
+  searchedActionCount: number;
+  iterations: SearchIteration[];
+  stats: SearchStats;
+  tree: SearchTreeNode;
+  rootEval: EvalBreakdown;
+  /** Static evaluation at the end of the PV, with the BFS paths it used. */
+  pvLeaf: EvalBreakdown & { selfPath: Coord[]; opponentPath: Coord[]; matchesScore: boolean };
+  rationale: string[];
+}
+
+export type DecisionTrace = RandomTrace | BfsTrace | MinimaxTrace;

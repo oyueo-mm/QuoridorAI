@@ -19,7 +19,7 @@ export function useGameSession(initialConfig?: GameConfig): GameSession {
   );
   useEffect(() => {
     controller.activate();
-    return () => controller.deactivate();
+    return () => controller.dispose();
   }, [controller]);
   const snapshot = useSyncExternalStore(controller.subscribe, controller.getSnapshot);
   return { ...snapshot, controller };
