@@ -16,12 +16,16 @@ import { PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
 import { Collapsible, Segmented, buttonClass, cardClass, inputClass, useBoardOrientation } from '../components/ui';
 import { createInitialState, distanceToRow, goalRow } from '../engine';
 import type { GameState } from '../engine';
+import { NO_WALL_OWNERS, wallOwnersFromMoves } from '../match/wallOwners';
+import type { WallOwners } from '../match/wallOwners';
 import { NumberRow } from './ArenaView';
 
 export interface CompareSource {
   state: GameState;
   label: string;
   sentAt: number;
+  /** Wall owners of `state` from the sender's game record. */
+  wallOwners: WallOwners;
 }
 
 type SourceMode = 'sent' | 'play' | 'moves' | 'opening';
@@ -29,7 +33,7 @@ type SourceMode = 'sent' | 'play' | 'moves' | 'opening';
 const SLOT_COLORS = ['#2b6aa3', '#d0612b', '#3a8f5a'];
 
 /** Same GameState → several AIs → their real decisions side by side. */
-export function CompareView({ source, playState }: { source: CompareSource | null; playState: GameState }) {
+export function CompareView({ source, playState, playOwners }: { source: CompareSource | null; playState: GameState; playOwners: WallOwners }) {
   const [mode, setMode] = useState<SourceMode>('opening');
   const [moveText, setMoveText] = useState('e2 e8 e3 e7');
   const [moveIndex, setMoveIndex] = useState<number | null>(null);
@@ -39,6 +43,7 @@ export function CompareView({ source, playState }: { source: CompareSource | nul
   const [seed, setSeed] = useState(1);
   const [results, setResults] = useState<CompareResult[]>([]);
   const [resultState, setResultState] = useState<GameState | null>(null);
+  const [resultOwners, setResultOwners] = useState<WallOwners>(NO_WALL_OWNERS);
   const [running, setRunning] = useState(false);
   const [detail, setDetail] = useState(0);
   const [overlay, setOverlay] = useState<BoardOverlay | null>(null);
@@ -53,23 +58,25 @@ export function CompareView({ source, playState }: { source: CompareSource | nul
   useEffect(() => () => abort.current?.abort(), []);
 
   const parsed = useMemo(() => parseMoveList(moveText), [moveText]);
-  const state: GameState | null = useMemo(() => {
+  // The position and its wall owners (from the record it came from; random openings have no walls).
+  const { state, owners } = useMemo((): { state: GameState | null; owners: WallOwners } => {
     switch (mode) {
       case 'sent':
-        return source?.state ?? null;
+        return { state: source?.state ?? null, owners: source?.wallOwners ?? NO_WALL_OWNERS };
       case 'play':
-        return playState;
+        return { state: playState, owners: playOwners };
       case 'moves': {
         const k = moveIndex === null ? parsed.positions.length - 1 : Math.min(moveIndex, parsed.positions.length - 1);
-        return parsed.positions[k];
+        return { state: parsed.positions[k], owners: wallOwnersFromMoves(parsed.actions.slice(0, k)) };
       }
       case 'opening':
-        return randomOpening(opening).state;
+        return { state: randomOpening(opening).state, owners: NO_WALL_OWNERS };
     }
-  }, [mode, source, playState, parsed, moveIndex, opening]);
+  }, [mode, source, playState, playOwners, parsed, moveIndex, opening]);
 
   const invalid = !state || state.winner !== null;
   const shownState = resultState ?? state ?? createInitialState();
+  const shownOwners = resultState ? resultOwners : owners;
   const bind = usePreviewBinder(setOverlay, `${detail}:${results.map((r) => r.status).join()}`);
 
   const run = async () => {
@@ -80,6 +87,7 @@ export function CompareView({ source, playState }: { source: CompareSource | nul
     const id = ++runId.current;
     setRunning(true);
     setResultState(state);
+    setResultOwners(owners);
     setDetail(0);
     try {
       await runComparison(state, specs, budget, seed, workerFactory, {
@@ -196,7 +204,7 @@ export function CompareView({ source, playState }: { source: CompareSource | nul
 
       <section className="flex min-w-0 flex-col items-center gap-4">
         <div className="flex flex-col gap-2" style={boardColumnStyle(12)}>
-          <QuoridorBoard state={shownState} flipped={orientation.flipped} interactive={false} showPaths={false} overlay={overlay} idleHint={`${PLAYER_LABEL[shownState.currentPlayer]} 차례 · 결과 카드에 마우스를 올리면 각 AI의 선택이 보드에 표시됩니다`} onAction={() => {}} />
+          <QuoridorBoard state={shownState} flipped={orientation.flipped} interactive={false} showPaths={false} overlay={overlay} wallOwners={shownOwners} idleHint={`${PLAYER_LABEL[shownState.currentPlayer]} 차례 · 결과 카드에 마우스를 올리면 각 AI의 선택이 보드에 표시됩니다`} onAction={() => {}} />
           <div className="flex h-9 items-center justify-between gap-2 px-1">
             <span className="text-xs text-muted">
               {PLAYER_LABEL[shownState.currentPlayer]} 차례 · ply {shownState.ply} · 벽 {shownState.wallsRemaining[0]}:{shownState.wallsRemaining[1]}

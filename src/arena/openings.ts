@@ -1,6 +1,7 @@
 import { createRng } from '../ai/rng';
 import { applyAction, createInitialState, formatAction, legalPawnMoves, parseAction } from '../engine';
 import type { GameState } from '../engine';
+import type { RecordedAction } from '../match/wallOwners';
 
 /** A start position: `plies` random pawn moves (no walls) drawn with `seed`. plies 0 = standard start. */
 export interface OpeningSpec {
@@ -25,6 +26,8 @@ export interface ParsedGame {
   /** Positions after 0..k moves (positions[0] = start). */
   positions: GameState[];
   moves: string[];
+  /** The parsed actions with the player who made each (the game record, e.g. for wall owners). */
+  actions: RecordedAction[];
   /** First move that could not be parsed or is illegal. */
   error?: { index: number; notation: string };
 }
@@ -37,14 +40,21 @@ export function parseMoveList(text: string, start: GameState = createInitialStat
     .filter((t) => t.length > 0 && !/^\d+\.?$/.test(t));
   const positions = [start];
   const moves: string[] = [];
+  const actions: RecordedAction[] = [];
   let state = start;
   for (const [index, token] of tokens.entries()) {
-    if (state.winner !== null) return { positions, moves, error: { index, notation: token } };
+    if (state.winner !== null) return { positions, moves, actions, error: { index, notation: token } };
     const action = parseAction(state, token);
-    if (!action) return { positions, moves, error: { index, notation: token } };
+    if (!action) return { positions, moves, actions, error: { index, notation: token } };
+    actions.push({ action, player: state.currentPlayer });
     state = applyAction(state, action);
     positions.push(state);
     moves.push(formatAction(action));
   }
-  return { positions, moves };
+  return { positions, moves, actions };
+}
+
+/** The record of an Arena opening: the parsed move list, or none (random openings move pawns only). */
+export function openingRecord(opening: OpeningSpec | { moves: string }): RecordedAction[] {
+  return 'moves' in opening ? parseMoveList(opening.moves).actions : [];
 }

@@ -133,15 +133,15 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
             상위 {top.length} / 탐색 후보 {trace.searchedActionCount} (합법 {trace.legalActionCount})
           </span>
         </div>
-        <table className="w-full text-xs">
+        <table className="w-full text-xs tabular-nums">
           <thead>
             <tr className="text-[11px] text-faint">
               <th className="w-6 py-1 text-left font-normal">#</th>
               <th className="py-1 text-left font-normal">행동</th>
-              <th className="w-[36%] py-1 text-left font-normal">N</th>
-              <th className="py-1 text-right font-normal">Q</th>
-              {puctMode && <th className="py-1 text-right font-normal">P</th>}
-              <th className="py-1 text-right font-normal">{puctMode ? 'PUCT' : 'UCT'}</th>
+              <th className="w-[32%] py-1 text-left font-normal">N</th>
+              <th className="py-1 pl-2 text-right font-normal">Q</th>
+              {puctMode && <th className="py-1 pl-2 text-right font-normal">P</th>}
+              <th className="py-1 pl-2 text-right font-normal">{puctMode ? 'PUCT' : 'UCT'}</th>
               <th className="py-1 pl-2 text-left font-normal">최다 응수</th>
             </tr>
           </thead>
@@ -175,9 +175,9 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
                     <span className="w-10 text-right text-ink-soft">{n(c.visits)}</span>
                   </div>
                 </td>
-                <td className="py-1 text-right text-ink">{q(c.q)}</td>
-                {puctMode && <td className="py-1 text-right text-muted">{c.prior === undefined ? '–' : c.prior.toFixed(2)}</td>}
-                <td className="py-1 text-right text-muted">{c.uct === null ? '–' : c.uct.toFixed(3)}</td>
+                <td className="py-1 pl-2 text-right text-ink">{q(c.q)}</td>
+                {puctMode && <td className="py-1 pl-2 text-right text-muted">{c.prior === undefined ? '–' : c.prior.toFixed(2)}</td>}
+                <td className="py-1 pl-2 text-right text-muted">{c.uct === null ? '–' : c.uct.toFixed(3)}</td>
                 <td className="py-1 pl-2 text-muted">{c.reply?.notation ?? '–'}</td>
               </tr>
             ))}

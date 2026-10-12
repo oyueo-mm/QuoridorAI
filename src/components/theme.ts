@@ -14,8 +14,14 @@ export const PLAYER_RING_CLASS: Record<PlayerId, string> = {
   1: 'ring-p2/45',
 };
 
-/** Placed walls: dark wood. */
-export const WALL_COLOR = '#8a6a4b';
+/**
+ * Walls take the colour of the player who placed them (the P1 / P2 tokens: muted blue-grey and
+ * terracotta). Colour is never the only cue: P2 walls also carry faint diagonal stripes, walls
+ * without a recorded owner are drawn hollow (light fill, grey outline), and hovering a wall
+ * names its owner. Validated on the board (#e7dccb): P1 vs P2 CVD ΔE 10.6, normal ΔE 19.1.
+ */
+export const WALL_COLORS: Record<PlayerId, string> = PLAYER_COLOR;
+export const NEUTRAL_WALL = { fill: '#e2d9cc', stroke: '#8b8178' };
 
 /** Board surfaces (SVG). */
 export const BOARD_COLORS = {

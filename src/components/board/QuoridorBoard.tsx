@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import type { PointerEvent } from 'react';
 import {
   BOARD_SIZE,
@@ -13,7 +13,9 @@ import {
   wallIndex,
 } from '../../engine';
 import type { Action, Coord, GameState, Orientation, PlayerId, WallAction } from '../../engine';
-import { BOARD_COLORS, PLAYER_COLOR, PLAYER_LABEL, WALL_COLOR, WALL_RESULT_TEXT } from '../theme';
+import { wallKey } from '../../match/wallOwners';
+import type { WallOwners } from '../../match/wallOwners';
+import { BOARD_COLORS, NEUTRAL_WALL, PLAYER_COLOR, PLAYER_LABEL, WALL_COLORS, WALL_RESULT_TEXT } from '../theme';
 import {
   BOARD_PX,
   CELL,
@@ -45,6 +47,8 @@ interface QuoridorBoardProps {
   overlay?: BoardOverlay | null;
   /** Shown under the board when idle (e.g. "AI is thinking"). */
   idleHint?: string;
+  /** Who placed each wall of `state` (from the game record). Walls without an entry are neutral. */
+  wallOwners?: WallOwners;
   onAction: (action: Action) => void;
 }
 
@@ -59,6 +63,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
   const state = overlay?.state ?? props.state;
   const interactive = props.interactive && !overlay;
   const [hover, setHover] = useState<HitTarget | null>(null);
+  const stripesId = `qz-stripes-${useId().replace(/:/g, '')}`;
 
   const legalMoves = useMemo(() => (interactive ? legalPawnMoves(state) : []), [state, interactive]);
   const livePaths = useMemo(
@@ -72,16 +77,40 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
     [state, showPaths, overlay],
   );
 
+  // Walls of the drawn position. Only walls that exist in the real position (props.state) are
+  // confirmed; walls that appear only in an analysis overlay are hypothetical and drawn as such.
   const placedWalls = useMemo(() => {
-    const walls: { orientation: Orientation; row: number; col: number }[] = [];
+    const real = props.state;
+    const previewOwner = new Map<string, PlayerId>();
+    for (const m of [...(overlay?.marks ?? []), ...(overlay?.highlight ? [overlay.highlight] : [])]) {
+      if (m.action.type === 'wall') previewOwner.set(wallKey(m.action.orientation, m.action.row, m.action.col), m.player);
+    }
+    const walls: PlacedWall[] = [];
     for (let row = 0; row < WALL_GRID; row++) {
       for (let col = 0; col < WALL_GRID; col++) {
-        if (state.hWalls[wallIndex(row, col)]) walls.push({ orientation: 'h', row, col });
-        if (state.vWalls[wallIndex(row, col)]) walls.push({ orientation: 'v', row, col });
+        const i = wallIndex(row, col);
+        for (const orientation of ['h', 'v'] as const) {
+          if (!(orientation === 'h' ? state.hWalls[i] : state.vWalls[i])) continue;
+          const key = wallKey(orientation, row, col);
+          const confirmed = (orientation === 'h' ? real.hWalls[i] : real.vWalls[i]) !== 0;
+          const owner = confirmed ? (props.wallOwners?.get(key) ?? null) : (previewOwner.get(key) ?? null);
+          walls.push({ orientation, row, col, key, confirmed, owner });
+        }
       }
     }
     return walls;
-  }, [state]);
+  }, [state, props.state, props.wallOwners, overlay]);
+
+  // Hovering a placed wall names its owner (also when the board is read-only).
+  const wallInfo = useMemo(() => {
+    if (!hover || hover.kind !== 'wall') return null;
+    const anchor = wallAnchorFromView(hover.view.row, hover.view.col, flipped);
+    const w = placedWalls.find((x) => x.orientation === hover.orientation && x.row === anchor.row && x.col === anchor.col);
+    if (!w) return null;
+    const name = formatAction({ type: 'wall', orientation: w.orientation, row: w.row, col: w.col });
+    if (!w.confirmed) return `벽 ${name} — 분석 미리보기의 가상 벽 (실제로 놓이지 않음)`;
+    return `벽 ${name} — ${w.owner === null ? '설치한 플레이어 기록 없음' : `${PLAYER_LABEL[w.owner]}가 설치`}`;
+  }, [hover, flipped, placedWalls]);
 
   // Resolve the hovered target into an engine-level candidate action (if any).
   const candidate = useMemo(() => {
@@ -136,7 +165,8 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
   const paths = overlay ? overlay.paths : livePaths;
 
   let hint = '';
-  if (overlay) hint = '분석 미리보기 중 — 패널에서 마우스를 떼면 실제 보드로 돌아갑니다';
+  if (wallInfo) hint = wallInfo;
+  else if (overlay) hint = '분석 미리보기 중 — 패널에서 마우스를 떼면 실제 보드로 돌아갑니다';
   else if (candidate) hint = candidate.hint;
   else if (interactive) hint = '칸을 눌러 이동하거나, 칸 사이 홈을 눌러 벽을 놓으세요';
   else hint = props.idleHint ?? '';
@@ -160,6 +190,12 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
           role="img"
           aria-label="쿼리도 보드"
         >
+          <defs>
+            {/* Texture for P2 walls (unique id: several boards are mounted at once). */}
+            <pattern id={stripesId} patternUnits="userSpaceOnUse" width={6} height={6} patternTransform="rotate(45)">
+              <rect width={2.2} height={6} fill="#fbf9f5" fillOpacity={0.35} />
+            </pattern>
+          </defs>
           <rect
             x={0}
             y={0}
@@ -217,15 +253,9 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
               );
             })}
 
-            {/* Placed walls. */}
+            {/* Placed walls in their owner's colour (hypothetical ones from previews are see-through). */}
             {placedWalls.map((w) => (
-              <rect
-                key={`${w.orientation}${w.row},${w.col}`}
-                {...wallRect(w.orientation, wallAnchorToView(w.row, w.col, flipped))}
-                rx={4}
-                fill={WALL_COLOR}
-                pointerEvents="none"
-              />
+              <WallShape key={w.key} wall={w} rect={wallRect(w.orientation, wallAnchorToView(w.row, w.col, flipped))} stripesId={stripesId} />
             ))}
 
             {/* Highlighted action (last move, or the previewed candidate). */}
@@ -239,7 +269,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
               <rect
                 {...wallRect(hover.orientation, hover.view)}
                 rx={4}
-                fill={candidate.ok ? WALL_COLOR : BOARD_COLORS.invalid}
+                fill={candidate.ok ? WALL_COLORS[mover] : BOARD_COLORS.invalid}
                 fillOpacity={candidate.ok ? 0.55 : 0.35}
                 pointerEvents="none"
               />
@@ -339,6 +369,37 @@ function ActionHighlight({
           </text>
         </g>
       )}
+    </g>
+  );
+}
+
+interface PlacedWall {
+  orientation: Orientation;
+  row: number;
+  col: number;
+  key: string;
+  /** Present in the real position (false = only in an analysis preview). */
+  confirmed: boolean;
+  /** Who placed it; null = not recorded (drawn neutral). */
+  owner: PlayerId | null;
+}
+
+/**
+ * One wall: owner colour (P2 with faint stripes), hollow neutral when the owner is unknown,
+ * and see-through with a dashed outline when it exists only in a preview.
+ */
+function WallShape({ wall, rect, stripesId }: { wall: PlacedWall; rect: { x: number; y: number; width: number; height: number }; stripesId: string }) {
+  const colour = wall.owner === null ? NEUTRAL_WALL.stroke : WALL_COLORS[wall.owner];
+  if (!wall.confirmed) {
+    return <rect {...rect} rx={4} fill={colour} fillOpacity={0.28} stroke={colour} strokeWidth={1.5} strokeDasharray="4 3" pointerEvents="none" data-wall={wall.key} data-wall-kind="preview" />;
+  }
+  if (wall.owner === null) {
+    return <rect x={rect.x + 0.75} y={rect.y + 0.75} width={rect.width - 1.5} height={rect.height - 1.5} rx={4} fill={NEUTRAL_WALL.fill} stroke={NEUTRAL_WALL.stroke} strokeWidth={1.5} pointerEvents="none" data-wall={wall.key} data-wall-kind="neutral" />;
+  }
+  return (
+    <g pointerEvents="none" data-wall={wall.key} data-wall-kind={`p${wall.owner + 1}`}>
+      <rect {...rect} rx={4} fill={colour} />
+      {wall.owner === 1 && <rect {...rect} rx={4} fill={`url(#${stripesId})`} />}
     </g>
   );
 }

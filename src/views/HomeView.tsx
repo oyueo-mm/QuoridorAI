@@ -1,4 +1,4 @@
-import { BOARD_COLORS, PLAYER_COLOR, WALL_COLOR } from '../components/theme';
+import { BOARD_COLORS, PLAYER_COLOR, WALL_COLORS } from '../components/theme';
 import { SECTIONS } from '../sections';
 import type { SectionId } from '../sections';
 
@@ -69,9 +69,9 @@ function MiniBoard() {
       {Array.from({ length: n * n }, (_, i) => (
         <rect key={i} x={pos(i % n)} y={pos(Math.floor(i / n))} width={cell} height={cell} rx={8} fill={BOARD_COLORS.cell} />
       ))}
-      <rect x={pos(1)} y={pos(2) - gap} width={2 * cell + gap} height={gap} rx={4} fill={WALL_COLOR} />
-      <rect x={pos(3) - gap} y={pos(0)} width={gap} height={2 * cell + gap} rx={4} fill={WALL_COLOR} />
-      <rect x={pos(2)} y={pos(4) - gap} width={2 * cell + gap} height={gap} rx={4} fill={WALL_COLOR} />
+      <rect x={pos(1)} y={pos(2) - gap} width={2 * cell + gap} height={gap} rx={4} fill={WALL_COLORS[0]} />
+      <rect x={pos(3) - gap} y={pos(0)} width={gap} height={2 * cell + gap} rx={4} fill={WALL_COLORS[1]} />
+      <rect x={pos(2)} y={pos(4) - gap} width={2 * cell + gap} height={gap} rx={4} fill={WALL_COLORS[0]} />
       <circle cx={pos(2) + cell / 2} cy={pos(1) + cell / 2} r={14} fill={PLAYER_COLOR[1]} stroke={BOARD_COLORS.cell} strokeWidth={2.5} />
       <circle cx={pos(1) + cell / 2} cy={pos(3) + cell / 2} r={14} fill={PLAYER_COLOR[0]} stroke={BOARD_COLORS.cell} strokeWidth={2.5} />
     </svg>

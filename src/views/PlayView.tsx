@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { agentName } from '../ai/catalog';
+import { useMoveSounds } from '../audio/moveSounds';
 import { QuoridorBoard } from '../components/board/QuoridorBoard';
 import { boardColumnStyle } from '../components/board/layout';
 import type { BoardOverlay } from '../components/board/overlay';
@@ -13,12 +14,14 @@ import { ORIENTATION_OPTIONS, Segmented, Tabs, buttonClass, cardClass, useBoardO
 import { distanceToRow, goalRow, opponentOf } from '../engine';
 import type { GameState, PlayerId } from '../engine';
 import { describeHalt } from '../match/outcome';
+import { wallOwnersFromMoves } from '../match/wallOwners';
+import type { WallOwners } from '../match/wallOwners';
 import type { GameSession } from '../session/useGameSession';
 
 type PlayTab = 'analysis' | 'moves' | 'setup';
 
 /** Play: human vs AI / human vs human. Board in the middle; details live in the side tabs. */
-export function PlayView({ session, onCompare }: { session: GameSession; onCompare: (state: GameState, label: string) => void }) {
+export function PlayView({ session, onCompare }: { session: GameSession; onCompare: (state: GameState, label: string, wallOwners: WallOwners) => void }) {
   const { game, config, controllers, status, history, controller } = session;
   const [showPaths, setShowPaths] = useState(false);
   const [overlay, setOverlay] = useState<BoardOverlay | null>(null);
@@ -27,6 +30,10 @@ export function PlayView({ session, onCompare }: { session: GameSession; onCompa
   // 'auto' keeps the user's own pawn at the bottom (also when playing second).
   const orientation = useBoardOrientation('play', config.userSeat);
 
+  // Wall owners come from the game record (the engine stores walls without an owner).
+  const wallOwners = useMemo(() => wallOwnersFromMoves(history), [history]);
+  // A sound for every completed move of either side (human or AI); restarts are silent.
+  useMoveSounds(session.gameId, history, 'play');
   const distances = useMemo(() => [0, 1].map((p) => distanceToRow(game, game.pawns[p], goalRow(p as PlayerId))), [game]);
 
   const userSeat = config.userSeat;
@@ -90,6 +97,7 @@ export function PlayView({ session, onCompare }: { session: GameSession; onCompa
             showPaths={showPaths}
             lastAction={last && { action: last.action, player: last.player }}
             overlay={overlay}
+            wallOwners={wallOwners}
             idleHint={aiToMove ? 'AI 차례입니다' : ''}
             onAction={(a) => controller.playHuman(a)}
           />
@@ -102,7 +110,7 @@ export function PlayView({ session, onCompare }: { session: GameSession; onCompa
               최단 경로
             </button>
             {game.winner === null && (
-              <button type="button" onClick={() => onCompare(game, `Play · ply ${game.ply}`)} className={buttonClass.ghost} title="이 포지션에서 여러 AI의 선택을 비교합니다">
+              <button type="button" onClick={() => onCompare(game, `Play · ply ${game.ply}`, wallOwners)} className={buttonClass.ghost} title="이 포지션에서 여러 AI의 선택을 비교합니다">
                 <span className="sm:hidden">비교</span>
                 <span className="hidden sm:inline">이 포지션 비교</span>
               </button>

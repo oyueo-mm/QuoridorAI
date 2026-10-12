@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
+import { useMoveSounds } from '../audio/moveSounds';
+import { soundEngine } from '../audio/sound';
 import { DEFAULT_BUDGET, agentLabel, defaultSpec, workerFactory } from '../arena/agentSpec';
 import type { AgentSpec, Budget } from '../arena/agentSpec';
 import { MatchSession } from '../arena/MatchSession';
 import type { ArenaConfig, ArenaMove } from '../arena/MatchSession';
-import { parseMoveList } from '../arena/openings';
+import { openingRecord, parseMoveList } from '../arena/openings';
 import { TraceDetail, traceAgentName } from '../components/analysis/TraceDetail';
 import { usePreviewBinder } from '../components/analysis/usePreviewBinder';
 import { AgentPicker, BudgetBadge, BudgetPicker } from '../components/arena/AgentPicker';
@@ -18,6 +20,8 @@ import { Collapsible, Segmented, Tabs, buttonClass, cardClass, inputClass, useBo
 import { distanceToRow, goalRow, opponentOf } from '../engine';
 import type { GameState, PlayerId } from '../engine';
 import { describeHalt } from '../match/outcome';
+import { wallOwnersFromMoves } from '../match/wallOwners';
+import type { WallOwners } from '../match/wallOwners';
 import type { MatchStatus } from '../match/outcome';
 
 interface Draft {
@@ -67,6 +71,8 @@ interface ArchivedMatch {
   final: GameState;
   moves: readonly ArenaMove[];
   budget: Budget;
+  /** Owners of walls already on the board at the start (from the opening move list). */
+  startOwners: WallOwners;
 }
 
 const MAX_ARCHIVE = 10;
@@ -79,7 +85,7 @@ function resultText(status: MatchStatus, labels: [string, string]): { text: stri
 }
 
 /** AI vs AI: live viewing with play / pause / step / stop, replays and per-move DecisionTraces. */
-export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: string) => void }) {
+export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: string, wallOwners: WallOwners) => void }) {
   const [draft, setDraft] = useState<Draft>(INITIAL);
   const [delay, setDelay] = useState(400);
   const [session] = useState(() => new MatchSession(toConfig(INITIAL), workerFactory, 400));
@@ -97,13 +103,14 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
   useEffect(() => () => session.dispose(), [session]);
   useEffect(() => session.setDelay(delay), [session, delay]);
 
+  const liveStartOwners = useMemo(() => wallOwnersFromMoves(openingRecord(snap.config.opening)), [snap.config.opening]);
   const labels: [string, string] = [agentLabel(snap.config.agents[0], snap.config.budget), agentLabel(snap.config.agents[1], snap.config.budget)];
 
   // Archive finished matches (bounded) and drive an automatic series.
   useEffect(() => {
     if (snap.phase !== 'finished' || archived.current.has(snap.matchId)) return;
     archived.current.add(snap.matchId);
-    setArchive((a) => [{ matchId: snap.matchId, labels, status: snap.status, start: snap.start, final: snap.game, moves: snap.moves, budget: snap.config.budget }, ...a].slice(0, MAX_ARCHIVE));
+    setArchive((a) => [{ matchId: snap.matchId, labels, status: snap.status, start: snap.start, final: snap.game, moves: snap.moves, budget: snap.config.budget, startOwners: liveStartOwners }, ...a].slice(0, MAX_ARCHIVE));
     if (series.active) {
       const played = series.played + 1;
       if (played >= series.total) {
@@ -131,6 +138,11 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
   const ply = cursor === null ? moves.length : Math.min(cursor, moves.length);
   const boardState = ply === 0 ? start : ply < moves.length ? moves[ply].stateBefore : final;
   const selectedMove = ply > 0 ? moves[ply - 1] : undefined;
+  const wallOwners = useMemo(() => wallOwnersFromMoves(moves, shown ? shown.startOwners : liveStartOwners), [moves, shown, liveStartOwners]);
+  // Sounds only for new live moves while the live position is shown (replay browsing is silent).
+  // 'limited' thins out fast games to at most about three sounds per second.
+  const soundSettings = useSyncExternalStore(soundEngine.subscribe, soundEngine.getSettings);
+  useMoveSounds(snap.matchId, snap.moves, 'arena', viewing === null && cursor === null, soundSettings.arena === 'limited' && delay < 300 ? 350 : 0);
   const bind = usePreviewBinder(setOverlay, `${viewing}:${ply}:${moves.length}`);
 
   const moveListRef = useRef<HTMLOListElement>(null);
@@ -202,6 +214,7 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
             showPaths={false}
             lastAction={selectedMove && { action: selectedMove.action, player: selectedMove.player }}
             overlay={overlay}
+            wallOwners={wallOwners}
             idleHint={cursor !== null || !live ? `${ply}수 후의 포지션` : ''}
             onAction={() => {}}
           />
@@ -267,7 +280,7 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
                 {selectedMove && (
                   <button
                     type="button"
-                    onClick={() => onCompare(selectedMove.stateBefore, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`)}
+                    onClick={() => onCompare(selectedMove.stateBefore, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`, wallOwners)}
                     className={buttonClass.small}
                     title="이 수를 두기 직전 포지션을 Compare로 보냅니다"
                   >

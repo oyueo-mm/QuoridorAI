@@ -1,5 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GameState } from './engine';
+import { wallOwnersFromMoves } from './match/wallOwners';
+import type { WallOwners } from './match/wallOwners';
+import { SoundControl } from './components/SoundControl';
 import { useGameSession } from './session/useGameSession';
 import { ArenaView } from './views/ArenaView';
 import { CompareView } from './views/CompareView';
@@ -37,8 +40,10 @@ export default function App() {
     window.scrollTo({ top: 0 });
   }, []);
 
-  const sendToCompare = useCallback((state: GameState, label: string) => {
-    setCompareSource({ state, label, sentAt: Date.now() });
+  const playOwners = useMemo(() => wallOwnersFromMoves(session.history), [session.history]);
+
+  const sendToCompare = useCallback((state: GameState, label: string, wallOwners: WallOwners) => {
+    setCompareSource({ state, label, sentAt: Date.now(), wallOwners });
     window.location.hash = '/compare';
     setRoute('compare');
   }, []);
@@ -51,22 +56,25 @@ export default function App() {
             <Logo />
             <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">QuoridorAI</span>
           </button>
-          <nav className="flex gap-0.5 overflow-x-auto" aria-label="보기 선택">
-            {SECTIONS.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => go(t.id)}
-                title={t.hint}
-                aria-current={route === t.id ? 'page' : undefined}
-                className={`rounded-lg px-2.5 py-1.5 text-sm whitespace-nowrap transition-colors sm:px-3 ${
-                  route === t.id ? 'bg-inset font-medium text-ink' : 'text-muted hover:text-ink'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </nav>
+          <div className="flex min-w-0 items-center gap-1">
+            <nav className="flex gap-0.5 overflow-x-auto" aria-label="보기 선택">
+              {SECTIONS.map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => go(t.id)}
+                  title={t.hint}
+                  aria-current={route === t.id ? 'page' : undefined}
+                  className={`rounded-lg px-2.5 py-1.5 text-sm whitespace-nowrap transition-colors sm:px-3 ${
+                    route === t.id ? 'bg-inset font-medium text-ink' : 'text-muted hover:text-ink'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </nav>
+            <SoundControl />
+          </div>
         </div>
       </header>
 
@@ -80,7 +88,7 @@ export default function App() {
         <ArenaView onCompare={sendToCompare} />
       </div>
       <div hidden={route !== 'compare'}>
-        <CompareView source={compareSource} playState={session.game} />
+        <CompareView source={compareSource} playState={session.game} playOwners={playOwners} />
       </div>
       <div hidden={route !== 'experiments'}>
         <ExperimentsView />
