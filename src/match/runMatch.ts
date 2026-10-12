@@ -1,6 +1,6 @@
 import { applyAction, createInitialState, hashState, isLegalAction } from '../engine';
 import type { Action, GameState, PlayerId } from '../engine';
-import type { Agent, DecisionTrace } from '../ai/types';
+import type { Agent, AgentProgress, DecisionTrace } from '../ai/types';
 import { DEFAULT_MAX_PLIES, isMatchOver, matchStatus } from './outcome';
 import type { MatchStatus } from './outcome';
 
@@ -44,6 +44,8 @@ export interface RunMatchOptions {
   signal?: AbortSignal;
   /** Called after every move (progress logging). */
   onMove?: (move: MatchMove, state: GameState) => void;
+  /** Forwarded to the agents (search progress). */
+  onProgress?: (progress: AgentProgress) => void;
   clock?: () => number;
 }
 
@@ -59,6 +61,7 @@ export async function runMatch(
     initialState,
     signal,
     onMove,
+    onProgress,
     clock = now,
   }: RunMatchOptions = {},
 ): Promise<MatchRecord> {
@@ -81,9 +84,24 @@ export async function runMatch(
       status = { kind: 'halted', reason: 'time-limit', limitMs: maxGameMs };
       break;
     }
+    if (signal?.aborted) {
+      status = { kind: 'halted', reason: 'user-stopped' };
+      break;
+    }
     const player = state.currentPlayer;
     const agent = agents[player];
-    const { action, trace } = await agent.decide(state, { signal });
+    let decision;
+    try {
+      decision = await agent.decide(state, { signal, onProgress });
+    } catch (err) {
+      // An aborted decision is a user stop, not an error of the agent.
+      if (signal?.aborted) {
+        status = { kind: 'halted', reason: 'user-stopped' };
+        break;
+      }
+      throw err;
+    }
+    const { action, trace } = decision;
     if (!isLegalAction(state, action)) throw new IllegalAgentActionError(agent.id, action);
     state = applyAction(state, action);
     const move = { player, action, trace };

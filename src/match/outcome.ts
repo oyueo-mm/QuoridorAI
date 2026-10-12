@@ -9,7 +9,8 @@ import type { GameState, PlayerId } from '../engine';
 export type HaltReason =
   | { reason: 'max-plies'; maxPlies: number }
   | { reason: 'time-limit'; limitMs: number }
-  | { reason: 'repetition'; repeats: number };
+  | { reason: 'repetition'; repeats: number }
+  | { reason: 'user-stopped' };
 
 export type MatchStatus = { kind: 'playing' } | { kind: 'win'; winner: PlayerId } | ({ kind: 'halted' } & HaltReason);
 
@@ -34,5 +35,7 @@ export function describeHalt(status: { kind: 'halted' } & HaltReason): string {
       return `대국 시간 제한 ${Math.round(status.limitMs / 1000)}초 초과`;
     case 'repetition':
       return `같은 포지션 ${status.repeats}회 반복`;
+    case 'user-stopped':
+      return '사용자 중단';
   }
 }

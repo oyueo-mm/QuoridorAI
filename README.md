@@ -3,7 +3,7 @@
 
 대상 알고리즘: Random, BFS, Minimax, Alpha-Beta, MCTS, AlphaZero 계열.
 
-> 현재 단계: **4단계 — Pure MCTS / Heuristic-Guided MCTS (PUCT) · 탐색 재생 시각화**
+> 현재 단계: **5단계 — AI Arena · Decision Comparison · Experiments**
 
 ## 실행
 
@@ -15,6 +15,7 @@ npm run typecheck  # 타입 검사
 npm run build      # 타입 검사 + 프로덕션 빌드 (dist/)
 npm run preview    # 빌드 결과 미리보기 → http://localhost:4173/QuoridorAI/
 npm run bench:search  # Minimax 탐색 벤치마크 → bench/results/search-benchmark.md (약 1분)
+npm run bench:arena       # Stage 5 Arena 실험 (소규모, 약 10–15분) → bench/results/arena/
 npm run bench:mcts-steps  # Guided MCTS 단계별 소규모 평가 (BENCH_STEP=A|B|C) → bench/results/mcts-improvement/
 npm run bench:mcts    # MCTS 대국 평가 (장시간) → bench/results/mcts-benchmark.{md,jsonl,progress.log}
                       #   BENCH_BUDGET_MIN(전체, 기본 40) · BENCH_GAME_LIMIT_S(대국당, 기본 90) · BENCH_ROWS(행 선택·순서)
@@ -27,6 +28,38 @@ GitHub Pages 배포를 수행합니다. PR에서는 검증만 실행합니다.
 
 - Vite `base`는 `/QuoridorAI/`이므로 모든 자산이 `https://<user>.github.io/QuoridorAI/` 아래에서 로드됩니다.
 - 최초 1회: 저장소 **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 설정해야 합니다.
+
+## 화면 구성
+
+| 탭 | 내용 |
+|---|---|
+| **Play** | 사람 vs 사람 / 사람 vs AI (1–4단계 기능 그대로) |
+| **Arena** | AI 두 개를 골라 관전. 진행 / 일시 정지 / 한 수씩 / 중단 / 재시작, 속도 조절, 선공·후공 교환, 연속 대국(최대 20판), 기보에서 수를 골라 그 수의 DecisionTrace 보기, 끝난 대국 리플레이(최근 10개) |
+| **Compare** | 같은 GameState를 AI 2–3개에 입력해 추천 수·계산 결과·시간·노드 수를 나란히 비교. 포지션은 Play/Arena에서 보내거나, 기보의 특정 턴, 랜덤 오프닝에서 선택 |
+| **Experiments** | 두 AI의 Paired Matches 토너먼트(오프닝마다 선후공 교환), 진행률, 승률 + 95% Wilson 신뢰구간, 중단 사유별 집계, 결정 시간 평균·중앙값, 벽 사용, 탐색 통계, JSON/CSV 내보내기, 브라우저 자동 저장 |
+
+URL 해시(`#/arena` 등)로 탭을 바로 열 수 있습니다. 숨겨진 탭도 계속 동작하므로 대국을 관전하다 다른 탭으로 옮겨도 진행이 유지됩니다.
+
+### 비교 방식 (섞지 않음)
+
+- **Equal Time**: 모든 탐색 AI에 같은 수당 시간(깊이·시뮬레이션 무제한). 기계와 부하에 따라 결과가 달라질 수 있음.
+- **Fixed Budget**: 알고리즘별 깊이(Minimax/Alpha-Beta)·시뮬레이션 수(MCTS) 고정, 시간 제한 없음. 같은 시드면 재현됨.
+- Random·BFS는 탐색하지 않으므로 예산이 적용되지 않습니다. 실험 결과·내보내기 파일에는 항상 방식이 기록되고, 두 방식의 결과는 한 요약에 합쳐지지 않습니다.
+
+### 결과 분류
+
+규칙상 승리와 실험 중단을 구분합니다. 중단 사유는 **반복 포지션 / 최대 ply / 시간 제한 / 사용자 중단**으로 따로 기록되며, 무승부나 패배로 세지 않고 승률의 분모(결판난 대국)에서도 제외합니다.
+
+### Decision Comparison 원칙
+
+- 모든 AI에 **같은 GameState 객체**를 순서대로 입력합니다(병렬 실행으로 시간 예산이 왜곡되지 않도록).
+- 점수는 알고리즘마다 의미와 척도가 다르므로(Minimax 평가 = 걸음 단위, MCTS Q = −1~+1, BFS = 1수 휴리스틱) 하나의 지표로 합치지 않습니다. 공통으로 보여 주는 것은 엔진이 계산한 '둔 후 최단 거리'뿐입니다.
+- 선택 이유는 각 AI의 DecisionTrace(실제 계산 결과)만 사용합니다.
+
+### 브라우저 Arena vs Node 벤치마크
+
+브라우저 실험은 관찰·소규모 확인용입니다(동시 대국 최대 2, 대국당·전체 상한, 끝난 대국마다 localStorage 저장, 탭을 닫거나 절전하면 중단될 수 있음).
+재현 가능한 평가는 같은 토너먼트 코어를 Node에서 실행하는 `npm run bench:arena`를 사용합니다.
 
 ## 대전 모드
 
@@ -135,6 +168,9 @@ src/
     game.ts        초기 상태, 임의 상태 생성, 행동 적용, 승리 판정
     encoding.ts    신경망용 행동 인덱스(0..208) 인코딩
     notation.ts    기보 표기 (e2, e3h …)
+  arena/         에이전트 명세·예산 매핑, MatchSession(관전), 토너먼트 실행기, 통계, 내보내기
+  compare/       같은 포지션 의사결정 비교
+  views/         Play / Arena / Compare / Experiments 화면
   ai/            Agent 계약·DecisionTrace 타입, Random/BFS/Minimax 에이전트, 시드 RNG, 레지스트리
     search/        Minimax/Alpha-Beta 탐색, 평가 함수, 후보 생성
     mcts/          MCTS 코어(게임 독립), Quoridor 어댑터, 롤아웃 전략

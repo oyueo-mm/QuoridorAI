@@ -14,7 +14,8 @@
     "bench:search": "vitest run --config vitest.bench.config.ts bench/search.bench.test.ts",
     "bench:mcts": "vitest run --config vitest.bench.config.ts bench/mcts.bench.test.ts",
     "bench:mcts-steps": "vitest run --config vitest.bench.config.ts bench/mcts-improvement.test.ts",
-    "bench:mcts-diagnosis": "vitest run --config vitest.bench.config.ts bench/mcts-diagnosis.test.ts"
+    "bench:mcts-diagnosis": "vitest run --config vitest.bench.config.ts bench/mcts-diagnosis.test.ts",
+    "bench:arena": "vitest run --config vitest.bench.config.ts bench/arena.bench.test.ts"
   },
   "dependencies": {
     "react": "^19.3.0",

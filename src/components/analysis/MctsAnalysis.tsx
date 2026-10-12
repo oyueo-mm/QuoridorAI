@@ -14,6 +14,8 @@ interface Props {
 }
 
 const CANDIDATE_LIMIT = 12;
+/** Iteration caps this large mean "bounded by time only" (equal-time budgets). */
+const UNLIMITED = 1e8;
 const n = (x: number) => x.toLocaleString();
 const q = (x: number) => (x < 0 ? '−' : '+') + Math.abs(x).toFixed(3);
 const pct = (x: number) => `${(x * 100).toFixed(1)}%`;
@@ -73,7 +75,7 @@ export function MctsAnalysis({ entry, trace, bind }: Props) {
     <div className="space-y-4">
       {/* Budget / statistics */}
       <div className="grid grid-cols-3 gap-2">
-        <Tile label="시뮬레이션" value={n(trace.simulations)} note={`한도 ${n(settings.iterations)} · ${n(sps)}/s`} />
+        <Tile label="시뮬레이션" value={n(trace.simulations)} note={`한도 ${settings.iterations >= UNLIMITED ? '없음 (시간 제한)' : n(settings.iterations)} · ${n(sps)}/s`} />
         <Tile label="소요 시간" value={`${trace.elapsedMs.toFixed(0)} ms`} note={settings.timeLimitMs ? `제한 ${n(settings.timeLimitMs)} ms` : '제한 없음'} />
         <Tile label="종료 사유" value={STOP_LABEL[trace.stopReason]} note={`seed ${trace.seed}`} tone={trace.stopReason === 'time' ? 'warn' : undefined} />
         <Tile label="트리 노드" value={n(trace.treeNodes)} note={`최대 깊이 ${trace.maxTreeDepth} · 상한 ${n(settings.maxNodes)}`} />

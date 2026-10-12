@@ -1,0 +1,4252 @@
+{
+ "format": "quoridor-ai-tournament/1",
+ "exportedAt": "2026-10-12T10:38:38.883Z",
+ "experiment": "E4-alphabeta-vs-guided-fixed",
+ "question": "Alpha-Beta (depth 4) vs Guided MCTS (3000 simulations) — fixed budget",
+ "suspectDecisions": 0,
+ "reproducibility": "identical replay of game 1 ✓",
+ "config": {
+  "maxPlies": 200,
+  "repetitionLimit": 3,
+  "maxGameMs": 120000,
+  "openingPlies": 4,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 3000
+   },
+   {
+    "kind": "mcts-guided",
+    "depth": 4,
+    "simulations": 3000
+   }
+  ],
+  "budget": {
+   "mode": "fixed",
+   "timeMs": 0
+  },
+  "pairs": 4,
+  "seed": 7004
+ },
+ "labels": [
+  "Alpha-Beta (깊이 4)",
+  "Guided MCTS (3000회)"
+ ],
+ "summary": {
+  "budgetMode": "fixed",
+  "games": 8,
+  "decisive": 8,
+  "halted": {
+   "repetition": 0,
+   "max-plies": 0,
+   "time-limit": 0,
+   "user-stopped": 0
+  },
+  "aWinRate": {
+   "successes": 2,
+   "trials": 8,
+   "p": 0.25,
+   "low": 0.07147921209795555,
+   "high": 0.5907245720727483
+  },
+  "firstMoverWinRate": {
+   "successes": 4,
+   "trials": 8,
+   "p": 0.5,
+   "low": 0.21521606069626764,
+   "high": 0.7847839393037324
+  },
+  "pairs": {
+   "complete": 4,
+   "aSweeps": 0,
+   "bSweeps": 2,
+   "split": 2,
+   "withHalt": 0
+  },
+  "avgPlies": 69,
+  "medianPlies": 69.5,
+  "agents": [
+   {
+    "label": "Alpha-Beta (깊이 4)",
+    "wins": 2,
+    "winsAsFirst": 1,
+    "winsAsSecond": 1,
+    "decisionMsMean": 17.554619636361444,
+    "decisionMsMedian": 11.81219999998575,
+    "wallsUsedMean": 7,
+    "nodesMean": 622.5927272727273,
+    "simulationsMean": null,
+    "depthMean": 3.9272727272727272,
+    "moves": 275
+   },
+   {
+    "label": "Guided MCTS (3000회)",
+    "wins": 6,
+    "winsAsFirst": 3,
+    "winsAsSecond": 3,
+    "decisionMsMean": 688.5886848375454,
+    "decisionMsMedian": 638.9276000000536,
+    "wallsUsedMean": 10,
+    "nodesMean": 2505.664259927798,
+    "simulationsMean": 2574.1191335740073,
+    "depthMean": 14.173285198555957,
+    "moves": 277
+   }
+  ]
+ },
+ "games": [
+  {
+   "index": 0,
+   "pair": 0,
+   "aSeat": 0,
+   "opening": {
+    "seed": 223722470,
+    "plies": 4,
+    "moves": [
+     "f1",
+     "e8",
+     "g1",
+     "f8"
+    ]
+   },
+   "agentSeeds": [
+    274027695,
+    257273536
+   ],
+   "outcome": "b-win",
+   "plies": 60,
+   "durationMs": 15587.15459999998,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 46.82420000000275,
+       "nodes": 1326,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 38.8521999999939,
+       "nodes": 1131,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 28.060299999982817,
+       "nodes": 880,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.140499999979511,
+       "nodes": 653,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.2445000000006985,
+       "nodes": 472,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 12.152400000020862,
+       "nodes": 829,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 24.26829999999609,
+       "nodes": 1046,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 14.025299999979325,
+       "nodes": 676,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.900200000032783,
+       "nodes": 919,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.048300000024028,
+       "nodes": 704,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.022100000001956,
+       "nodes": 560,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.36109999998007,
+       "nodes": 393,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 12.574900000006892,
+       "nodes": 592,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 14.19049999996787,
+       "nodes": 441,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.853100000007544,
+       "nodes": 295,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.341199999966193,
+       "nodes": 418,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 6.831000000005588,
+       "nodes": 251,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 8.200200000021141,
+       "nodes": 222,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 8.345700000005309,
+       "nodes": 251,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.3280999999842606,
+       "nodes": 88,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.5755000000353903,
+       "nodes": 89,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.1974000000045635,
+       "nodes": 81,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.114899999985937,
+       "nodes": 76,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.9013999999733642,
+       "nodes": 58,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.8903999999747612,
+       "nodes": 56,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.9184000000241213,
+       "nodes": 63,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.7833999999566004,
+       "nodes": 65,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.9451000000117347,
+       "nodes": 42,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5170999999972992,
+       "nodes": 38,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.2043000000412576,
+       "nodes": 10,
+       "simulations": null,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 7
+    },
+    {
+     "moves": [
+      {
+       "ms": 1753.6872000000149,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1322.424399999989,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1149.240300000005,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 762.2176000000036,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 751.902299999987,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 810.5360999999684,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 686.7531999999774,
+       "nodes": 2991,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 705.4307000000263,
+       "nodes": 2997,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 687.0035999999964,
+       "nodes": 2995,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 604.5714999999618,
+       "nodes": 2997,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 623.0113000000129,
+       "nodes": 2994,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 582.209600000002,
+       "nodes": 2997,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 601.436400000006,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 501.61290000000736,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 507.54720000003,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 497.1247999999905,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 479.5509000000311,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 465.46710000000894,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 442.80300000001444,
+       "nodes": 2952,
+       "simulations": 3000,
+       "depth": 23
+      },
+      {
+       "ms": 373.40830000001006,
+       "nodes": 2838,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 362.0153000000282,
+       "nodes": 2727,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 283.4059000000125,
+       "nodes": 2440,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 191.41300000000047,
+       "nodes": 1867,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 68.44719999999506,
+       "nodes": 779,
+       "simulations": 1300,
+       "depth": 13
+      },
+      {
+       "ms": 28.98579999996582,
+       "nodes": 269,
+       "simulations": 413,
+       "depth": 11
+      },
+      {
+       "ms": 6.34529999998631,
+       "nodes": 95,
+       "simulations": 150,
+       "depth": 9
+      },
+      {
+       "ms": 1.4848999999812804,
+       "nodes": 25,
+       "simulations": 38,
+       "depth": 7
+      },
+      {
+       "ms": 0.9241999999503605,
+       "nodes": 17,
+       "simulations": 30,
+       "depth": 5
+      },
+      {
+       "ms": 0.27620000002207235,
+       "nodes": 7,
+       "simulations": 13,
+       "depth": 3
+      },
+      {
+       "ms": 0.028999999980442226,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "g2",
+    "f7",
+    "g3",
+    "f6",
+    "g4",
+    "f5",
+    "g5",
+    "f4",
+    "g6",
+    "f6h",
+    "f6",
+    "e5v",
+    "f5",
+    "h6h",
+    "f3",
+    "d4h",
+    "e3",
+    "f3",
+    "d3",
+    "b4h",
+    "c3",
+    "a3v",
+    "c2",
+    "b2v",
+    "f2h",
+    "a1h",
+    "e3v",
+    "c3h",
+    "f3v",
+    "f4",
+    "g4h",
+    "f5",
+    "h3h",
+    "g5",
+    "d2",
+    "h5",
+    "h1h",
+    "d2v",
+    "d1",
+    "i5",
+    "e1",
+    "i4",
+    "e2",
+    "h4",
+    "e3",
+    "g4",
+    "e4",
+    "g3",
+    "d4",
+    "h3",
+    "c4",
+    "h2",
+    "b4",
+    "g2",
+    "f1h",
+    "f2",
+    "b3",
+    "e2",
+    "b2",
+    "e1"
+   ]
+  },
+  {
+   "index": 1,
+   "pair": 0,
+   "aSeat": 1,
+   "opening": {
+    "seed": 223722470,
+    "plies": 4,
+    "moves": [
+     "f1",
+     "e8",
+     "g1",
+     "f8"
+    ]
+   },
+   "agentSeeds": [
+    274653803,
+    291432664
+   ],
+   "outcome": "b-win",
+   "plies": 67,
+   "durationMs": 18890.34010000003,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 42.46510000003036,
+       "nodes": 1349,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 37.48530000000028,
+       "nodes": 1072,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 19.612699999997858,
+       "nodes": 826,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.019100000034086,
+       "nodes": 622,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.01400000002468,
+       "nodes": 629,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 30.6076999999932,
+       "nodes": 1036,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 31.449900000006892,
+       "nodes": 1173,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 22.097000000008848,
+       "nodes": 738,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 35.69980000000214,
+       "nodes": 837,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 16.537300000025425,
+       "nodes": 613,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.163800000038464,
+       "nodes": 545,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.891199999954551,
+       "nodes": 448,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.40700000000652,
+       "nodes": 295,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.5908000000054017,
+       "nodes": 128,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.6097000000299886,
+       "nodes": 161,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.5226000000257045,
+       "nodes": 132,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.444200000027195,
+       "nodes": 155,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.475800000014715,
+       "nodes": 160,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.9976000000024214,
+       "nodes": 158,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.4341000000131316,
+       "nodes": 128,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.5129999999771826,
+       "nodes": 170,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.39089999999851,
+       "nodes": 198,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.807399999990594,
+       "nodes": 233,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.6683999999659136,
+       "nodes": 163,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.9091999999945983,
+       "nodes": 100,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.2364999999990687,
+       "nodes": 88,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.4076999999815598,
+       "nodes": 109,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.1032999999588355,
+       "nodes": 87,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.0592000000178814,
+       "nodes": 82,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.8973000000114553,
+       "nodes": 81,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.49819999997271225,
+       "nodes": 41,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5852000000304542,
+       "nodes": 42,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.16879999998491257,
+       "nodes": 12,
+       "simulations": null,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 5
+    },
+    {
+     "moves": [
+      {
+       "ms": 1724.4217000000062,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1388.5014000000083,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1124.7159000000102,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 940.0042999999714,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 823.5625,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 894.8331999999937,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 881.2229000000516,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 901.0533000000287,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 899.1767000000109,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 822.1845000000321,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 778.3555000000051,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 808.0935000000172,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 638.156799999997,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 542.2033999999985,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 28
+      },
+      {
+       "ms": 484.9212000000407,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 31
+      },
+      {
+       "ms": 457.3899000000092,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 31
+      },
+      {
+       "ms": 480.3923000000068,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 31
+      },
+      {
+       "ms": 448.51519999996526,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 30
+      },
+      {
+       "ms": 403.202399999951,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 31
+      },
+      {
+       "ms": 407.5717000000295,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 27
+      },
+      {
+       "ms": 393.49810000002617,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 25
+      },
+      {
+       "ms": 392.0732999999891,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 390.9224000000395,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 356.69069999997737,
+       "nodes": 2998,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 306.8554999999469,
+       "nodes": 2979,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 319.906399999978,
+       "nodes": 2959,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 280.9258999999729,
+       "nodes": 2860,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 155.63569999998435,
+       "nodes": 2221,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 68.82640000001993,
+       "nodes": 1299,
+       "simulations": 2654,
+       "depth": 11
+      },
+      {
+       "ms": 11.606399999989662,
+       "nodes": 228,
+       "simulations": 451,
+       "depth": 9
+      },
+      {
+       "ms": 1.267200000002049,
+       "nodes": 28,
+       "simulations": 48,
+       "depth": 7
+      },
+      {
+       "ms": 1.9507000000448897,
+       "nodes": 21,
+       "simulations": 41,
+       "depth": 5
+      },
+      {
+       "ms": 0.3209999999962747,
+       "nodes": 9,
+       "simulations": 15,
+       "depth": 3
+      },
+      {
+       "ms": 0.02950000000419095,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "g2",
+    "f7",
+    "g3",
+    "f6",
+    "g4",
+    "f5",
+    "g5",
+    "f4",
+    "f3h",
+    "e4",
+    "d3h",
+    "f5h",
+    "d4v",
+    "e5",
+    "h3h",
+    "e6",
+    "d6v",
+    "g4v",
+    "b3h",
+    "e7",
+    "e7h",
+    "e5v",
+    "a2h",
+    "f7",
+    "f7v",
+    "f6",
+    "g7h",
+    "g6",
+    "f5",
+    "g7",
+    "f4",
+    "h7",
+    "e4",
+    "i7",
+    "e5",
+    "i8",
+    "e6",
+    "i9",
+    "e7",
+    "h9",
+    "f7",
+    "g9",
+    "f6",
+    "f9",
+    "g6",
+    "f8",
+    "h6",
+    "e8",
+    "i6",
+    "h6h",
+    "h6",
+    "d8",
+    "g6",
+    "d7",
+    "g7",
+    "d6",
+    "h7",
+    "d5",
+    "i7",
+    "d4",
+    "i8",
+    "h8h",
+    "h8",
+    "c4",
+    "g8",
+    "b4",
+    "g9"
+   ]
+  },
+  {
+   "index": 2,
+   "pair": 1,
+   "aSeat": 0,
+   "opening": {
+    "seed": 324992930,
+    "plies": 4,
+    "moves": [
+     "d1",
+     "f9",
+     "c1",
+     "e9"
+    ]
+   },
+   "agentSeeds": [
+    4282468042,
+    4265691481
+   ],
+   "outcome": "b-win",
+   "plies": 68,
+   "durationMs": 34261.21649999998,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 48.558299999975134,
+       "nodes": 1493,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 39.76840000000084,
+       "nodes": 1333,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 47.1767000000109,
+       "nodes": 1508,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 63.240300000004936,
+       "nodes": 1746,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 72.93930000002729,
+       "nodes": 1642,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 71.31809999997495,
+       "nodes": 1648,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 44.86940000002505,
+       "nodes": 1232,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 62.96490000002086,
+       "nodes": 1334,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 65.16680000000633,
+       "nodes": 1381,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 51.2668999999878,
+       "nodes": 1443,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 46.92559999995865,
+       "nodes": 1315,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 40.305200000002515,
+       "nodes": 1058,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 42.56099999998696,
+       "nodes": 985,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 37.52900000003865,
+       "nodes": 959,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 31.458099999988917,
+       "nodes": 860,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 30.859299999952782,
+       "nodes": 940,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 27.12549999996554,
+       "nodes": 819,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 23.51579999999376,
+       "nodes": 1080,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.319099999964237,
+       "nodes": 607,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 19.428899999998976,
+       "nodes": 873,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.927000000025146,
+       "nodes": 798,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 16.167799999995623,
+       "nodes": 559,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.18719999998575,
+       "nodes": 365,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 26.49749999999767,
+       "nodes": 738,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 22.011200000008103,
+       "nodes": 650,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.073399999993853,
+       "nodes": 578,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.06239999999525,
+       "nodes": 368,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.533800000033807,
+       "nodes": 236,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.023300000000745,
+       "nodes": 167,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.4677000000374392,
+       "nodes": 125,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.4728000000468455,
+       "nodes": 122,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.8821999999927357,
+       "nodes": 63,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5751000000163913,
+       "nodes": 49,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.1203999999561347,
+       "nodes": 10,
+       "simulations": null,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 8
+    },
+    {
+     "moves": [
+      {
+       "ms": 1798.683000000019,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1680.1978000000236,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1671.694199999969,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 1607.789300000004,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 1694.5989999999874,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 1393.5559999999823,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1414.449499999988,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1381.579299999983,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1468.768299999996,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1472.5925999999745,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1406.66320000001,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1377.7233000000124,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 1498.4245000000228,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1467.0244999999995,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1412.4147999999695,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 1235.8634999999776,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1034.0076000000117,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1032.7782000000007,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 885.0121999999974,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 903.0007999999798,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 1053.9581999999937,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 914.8375999999698,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 736.538899999985,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 677.2423999999883,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 591.498900000006,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 525.8182999999844,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 24
+      },
+      {
+       "ms": 504.22749999997905,
+       "nodes": 2969,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 295.4890000000014,
+       "nodes": 2631,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 59.49949999997625,
+       "nodes": 779,
+       "simulations": 1377,
+       "depth": 11
+      },
+      {
+       "ms": 9.03020000003744,
+       "nodes": 157,
+       "simulations": 266,
+       "depth": 9
+      },
+      {
+       "ms": 5.180599999963306,
+       "nodes": 91,
+       "simulations": 159,
+       "depth": 7
+      },
+      {
+       "ms": 1.0048999999999069,
+       "nodes": 21,
+       "simulations": 33,
+       "depth": 5
+      },
+      {
+       "ms": 0.2502000000094995,
+       "nodes": 7,
+       "simulations": 12,
+       "depth": 3
+      },
+      {
+       "ms": 0.024599999946076423,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "c2",
+    "e8",
+    "c3",
+    "c3h",
+    "e7h",
+    "a3h",
+    "d3",
+    "d2v",
+    "d2",
+    "d1h",
+    "e8v",
+    "b1h",
+    "c7h",
+    "d8",
+    "c2",
+    "c8",
+    "b2",
+    "b8",
+    "a2",
+    "b7",
+    "a1",
+    "c7",
+    "b1",
+    "d7",
+    "c1",
+    "e7",
+    "d1",
+    "e6",
+    "e1",
+    "f6",
+    "f1",
+    "f5",
+    "f2",
+    "f4",
+    "f1h",
+    "g4",
+    "f3",
+    "g7h",
+    "f4",
+    "h8h",
+    "f3h",
+    "f4h",
+    "g4v",
+    "a7h",
+    "e2v",
+    "e4",
+    "d4",
+    "e5",
+    "d5",
+    "e6",
+    "d6",
+    "f6",
+    "e6",
+    "h6v",
+    "g6",
+    "h6",
+    "h5",
+    "h4",
+    "i5",
+    "h3",
+    "h2h",
+    "g3",
+    "i6",
+    "g2",
+    "i7",
+    "h2",
+    "i8",
+    "h1"
+   ]
+  },
+  {
+   "index": 3,
+   "pair": 1,
+   "aSeat": 1,
+   "opening": {
+    "seed": 324992930,
+    "plies": 4,
+    "moves": [
+     "d1",
+     "f9",
+     "c1",
+     "e9"
+    ]
+   },
+   "agentSeeds": [
+    4282303583,
+    3751648
+   ],
+   "outcome": "a-win",
+   "plies": 76,
+   "durationMs": 31711.741100000043,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 80.66610000003129,
+       "nodes": 1307,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 30.190999999991618,
+       "nodes": 1119,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 32.85109999997076,
+       "nodes": 1020,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 48.81339999998454,
+       "nodes": 1572,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 58.574199999973644,
+       "nodes": 1743,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 44.37390000000596,
+       "nodes": 1312,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 104.8344999999972,
+       "nodes": 1623,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 34.8691000000108,
+       "nodes": 1117,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 62.231799999950454,
+       "nodes": 1952,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 27.011699999973644,
+       "nodes": 1009,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 34.72100000001956,
+       "nodes": 1139,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 48.80849999998463,
+       "nodes": 1262,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 28.91990000003716,
+       "nodes": 1016,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 28.087899999984074,
+       "nodes": 1104,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 24.4212000000407,
+       "nodes": 706,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 19.79660000000149,
+       "nodes": 703,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.286399999982677,
+       "nodes": 534,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 19.1704000000027,
+       "nodes": 671,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 21.61229999997886,
+       "nodes": 760,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 32.052200000034645,
+       "nodes": 676,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 40.24969999998575,
+       "nodes": 1225,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 22.59169999998994,
+       "nodes": 1112,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 16.561799999966752,
+       "nodes": 971,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.352499999979045,
+       "nodes": 706,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.252500000002328,
+       "nodes": 374,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.3396000000066124,
+       "nodes": 276,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.6735000000335276,
+       "nodes": 268,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.438099999970291,
+       "nodes": 236,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.4783999999635853,
+       "nodes": 124,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.52990000002319,
+       "nodes": 127,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.5478000000002794,
+       "nodes": 124,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.1713999999919906,
+       "nodes": 118,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.133399999991525,
+       "nodes": 94,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.1902000000118278,
+       "nodes": 119,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.1437000000150874,
+       "nodes": 132,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.9935000000405125,
+       "nodes": 120,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5999000000301749,
+       "nodes": 61,
+       "simulations": null,
+       "depth": 3
+      },
+      {
+       "ms": 0.07360000000335276,
+       "nodes": 6,
+       "simulations": null,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 6
+    },
+    {
+     "moves": [
+      {
+       "ms": 1892.8159999999916,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 1781.0255999999936,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1571.5609000000404,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1633.760100000014,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1751.3636999999871,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1844.6726999999955,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1801.5436999999802,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1375.6472000000067,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1284.3753999999608,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1204.0201000000234,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1211.738799999992,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1201.7741999999853,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 8
+      },
+      {
+       "ms": 1136.6076999999932,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 1041.1575999999768,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 895.8572000000277,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 782.2002999999677,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 737.3067000000156,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 819.274000000034,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 790.4923999999883,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 1132.6809999999823,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 1109.4922999999835,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 945.2854999999981,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 590.892200000002,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 451.73540000000503,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 320.13020000001416,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 0.1737999999895692,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      },
+      {
+       "ms": 240.22959999996237,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 22
+      },
+      {
+       "ms": 233.11210000002757,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 24
+      },
+      {
+       "ms": 204.53209999995306,
+       "nodes": 2980,
+       "simulations": 3000,
+       "depth": 26
+      },
+      {
+       "ms": 190.687900000019,
+       "nodes": 2975,
+       "simulations": 3000,
+       "depth": 24
+      },
+      {
+       "ms": 181.86550000001444,
+       "nodes": 2966,
+       "simulations": 3000,
+       "depth": 23
+      },
+      {
+       "ms": 155.56689999997616,
+       "nodes": 2782,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 132.25300000002608,
+       "nodes": 2373,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 100.17830000002868,
+       "nodes": 1928,
+       "simulations": 2458,
+       "depth": 17
+      },
+      {
+       "ms": 30.621199999994133,
+       "nodes": 655,
+       "simulations": 754,
+       "depth": 14
+      },
+      {
+       "ms": 11.086100000014994,
+       "nodes": 243,
+       "simulations": 291,
+       "depth": 8
+      },
+      {
+       "ms": 2.246000000042841,
+       "nodes": 54,
+       "simulations": 70,
+       "depth": 6
+      },
+      {
+       "ms": 0.2056999999913387,
+       "nodes": 7,
+       "simulations": 14,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "c2",
+    "e8",
+    "c3",
+    "e7",
+    "e6h",
+    "d7",
+    "c6h",
+    "c3h",
+    "d3",
+    "d8",
+    "e3",
+    "d7",
+    "e4",
+    "e7",
+    "f7v",
+    "e8",
+    "f4",
+    "e9",
+    "e8v",
+    "e8",
+    "a3h",
+    "e7",
+    "c7v",
+    "e8",
+    "e7h",
+    "e9",
+    "e3h",
+    "d9",
+    "g3h",
+    "c9",
+    "f5",
+    "c8",
+    "f6",
+    "b8",
+    "f5",
+    "b7",
+    "g5",
+    "f8h",
+    "h5",
+    "h8h",
+    "g5",
+    "b6",
+    "f5",
+    "b5",
+    "e5",
+    "c5",
+    "e4v",
+    "b5v",
+    "e4",
+    "d4v",
+    "e5",
+    "c6",
+    "e6",
+    "d6",
+    "c6",
+    "b4h",
+    "c5",
+    "e6",
+    "d5",
+    "f6",
+    "d4",
+    "f5",
+    "c4",
+    "f4",
+    "b4",
+    "g4",
+    "a4",
+    "h4",
+    "a5",
+    "i4",
+    "a4",
+    "i3",
+    "a5",
+    "i2",
+    "a6",
+    "i1"
+   ]
+  },
+  {
+   "index": 4,
+   "pair": 2,
+   "aSeat": 0,
+   "opening": {
+    "seed": 4635815,
+    "plies": 4,
+    "moves": [
+     "d1",
+     "f9",
+     "c1",
+     "f8"
+    ]
+   },
+   "agentSeeds": [
+    4282486481,
+    4617286
+   ],
+   "outcome": "b-win",
+   "plies": 46,
+   "durationMs": 12980.665399999998,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 23.349799999967217,
+       "nodes": 1311,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.710599999991246,
+       "nodes": 1123,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 32.76339999999618,
+       "nodes": 1909,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 28.692900000023656,
+       "nodes": 1188,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 28.450299999967683,
+       "nodes": 1242,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 31.777899999986403,
+       "nodes": 1488,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 35.44120000000112,
+       "nodes": 1458,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 32.09440000000177,
+       "nodes": 1474,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 20.555300000007264,
+       "nodes": 948,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 20.74760000000242,
+       "nodes": 866,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 14.617199999978766,
+       "nodes": 775,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 15.697500000009313,
+       "nodes": 837,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.61040000000503,
+       "nodes": 733,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 16.291700000001583,
+       "nodes": 913,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.634099999966566,
+       "nodes": 587,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.972999999998137,
+       "nodes": 867,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 6.6450000000186265,
+       "nodes": 381,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.181700000015553,
+       "nodes": 77,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.8099999999976717,
+       "nodes": 78,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5450000000419095,
+       "nodes": 38,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.4870999999693595,
+       "nodes": 38,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.407100000011269,
+       "nodes": 38,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.15860000002430752,
+       "nodes": 10,
+       "simulations": null,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 3
+    },
+    {
+     "moves": [
+      {
+       "ms": 1057.7865999999922,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 944.9082000000053,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1066.10070000001,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 970.4653000000399,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 954.6593999999459,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 969.0169999999925,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 993.750400000019,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 849.680400000012,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 846.6161000000429,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 822.140000000014,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 695.8085999999894,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 656.6324000000022,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 621.016500000027,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 536.9787999999826,
+       "nodes": 2983,
+       "simulations": 3000,
+       "depth": 25
+      },
+      {
+       "ms": 324.7725999999675,
+       "nodes": 2865,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 172.1939999999595,
+       "nodes": 2218,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 89.84740000002785,
+       "nodes": 1475,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 28.222900000051595,
+       "nodes": 546,
+       "simulations": 1373,
+       "depth": 13
+      },
+      {
+       "ms": 4.930200000002515,
+       "nodes": 90,
+       "simulations": 204,
+       "depth": 9
+      },
+      {
+       "ms": 1.5771999999997206,
+       "nodes": 35,
+       "simulations": 62,
+       "depth": 7
+      },
+      {
+       "ms": 0.6506000000517815,
+       "nodes": 17,
+       "simulations": 30,
+       "depth": 5
+      },
+      {
+       "ms": 0.21570000000065193,
+       "nodes": 7,
+       "simulations": 13,
+       "depth": 3
+      },
+      {
+       "ms": 0.016699999978300184,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "c2",
+    "f7",
+    "c3",
+    "c3h",
+    "f6h",
+    "a3h",
+    "d3",
+    "d2v",
+    "d2",
+    "d1h",
+    "c2",
+    "b1h",
+    "b2",
+    "e7",
+    "a2",
+    "e6",
+    "a1",
+    "f6",
+    "b1",
+    "f5",
+    "c1",
+    "d6h",
+    "d1",
+    "f4",
+    "e1",
+    "h6h",
+    "f1",
+    "f3",
+    "f2h",
+    "e3h",
+    "f2",
+    "g3h",
+    "g2",
+    "h2h",
+    "f2",
+    "e3",
+    "f1h",
+    "e2",
+    "e3",
+    "f2",
+    "f3",
+    "g2",
+    "g3",
+    "h2",
+    "h3",
+    "h1"
+   ]
+  },
+  {
+   "index": 5,
+   "pair": 2,
+   "aSeat": 1,
+   "opening": {
+    "seed": 4635815,
+    "plies": 4,
+    "moves": [
+     "d1",
+     "f9",
+     "c1",
+     "f8"
+    ]
+   },
+   "agentSeeds": [
+    9305443,
+    26081008
+   ],
+   "outcome": "b-win",
+   "plies": 75,
+   "durationMs": 37999.933499999985,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 38.16849999997066,
+       "nodes": 1323,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 40.052800000004936,
+       "nodes": 1469,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 61.852599999983795,
+       "nodes": 1954,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 51.40409999998519,
+       "nodes": 1643,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 40.95869999995921,
+       "nodes": 1518,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 62.44309999997495,
+       "nodes": 2169,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 61.011499999964144,
+       "nodes": 1729,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 65.64539999997942,
+       "nodes": 2164,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 30.82900000002701,
+       "nodes": 1036,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 73.0238000000245,
+       "nodes": 1645,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 64.5238000000245,
+       "nodes": 1622,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 54.832800000032876,
+       "nodes": 1276,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 57.04550000000745,
+       "nodes": 1346,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 42.4267000000109,
+       "nodes": 948,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 19.449399999983143,
+       "nodes": 1064,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 21.475899999961257,
+       "nodes": 1057,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 21.759100000024773,
+       "nodes": 963,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.20549999998184,
+       "nodes": 960,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.59459999995306,
+       "nodes": 960,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 21.167900000000373,
+       "nodes": 959,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.933199999970384,
+       "nodes": 961,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 21.579100000031758,
+       "nodes": 923,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.9548000000068,
+       "nodes": 899,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.353699999977835,
+       "nodes": 793,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.435399999958463,
+       "nodes": 629,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.54780000000028,
+       "nodes": 600,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 8.758099999977276,
+       "nodes": 594,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.860500000009779,
+       "nodes": 672,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 14.54570000001695,
+       "nodes": 631,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.81219999998575,
+       "nodes": 511,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.412599999981467,
+       "nodes": 314,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.175300000002608,
+       "nodes": 268,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.0242000000434928,
+       "nodes": 234,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.6722000000299886,
+       "nodes": 233,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.919899999978952,
+       "nodes": 233,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.6574000000255182,
+       "nodes": 82,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.1217000000178814,
+       "nodes": 13,
+       "simulations": null,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 7
+    },
+    {
+     "moves": [
+      {
+       "ms": 1416.0261999999639,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 1757.4137999999803,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1668.1525000000256,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1666.6607000000076,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1483.0153999999748,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1487.5106999999844,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1529.341400000034,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1390.0042999999714,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1393.1476999999722,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 1383.0013000000035,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 1435.0297000000137,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 1296.8263000000152,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 1321.7755999999936,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 1137.5692999999737,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 1108.6618000000017,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 1139.7272999999695,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 1140.3989999999758,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 1112.8778000000166,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 1083.3538999999873,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 1037.438199999975,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 994.5240999999805,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 1037.7927999999956,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 943.3426000000327,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 22
+      },
+      {
+       "ms": 939.8879999999772,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 916.6058000000194,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 803.4952000000048,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 740.7860999999684,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 681.8798999999999,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 644.3044000000227,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 593.1027999999933,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 23
+      },
+      {
+       "ms": 376.06040000001667,
+       "nodes": 2991,
+       "simulations": 3000,
+       "depth": 26
+      },
+      {
+       "ms": 389.45630000001984,
+       "nodes": 2989,
+       "simulations": 3000,
+       "depth": 24
+      },
+      {
+       "ms": 380.0198000000091,
+       "nodes": 2991,
+       "simulations": 3000,
+       "depth": 22
+      },
+      {
+       "ms": 295.74280000000726,
+       "nodes": 2954,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 234.06640000001062,
+       "nodes": 2723,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 1.6177000000025146,
+       "nodes": 33,
+       "simulations": 47,
+       "depth": 5
+      },
+      {
+       "ms": 0.35570000001462176,
+       "nodes": 10,
+       "simulations": 16,
+       "depth": 3
+      },
+      {
+       "ms": 0.027000000001862645,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "c2",
+    "f7",
+    "e6h",
+    "g7",
+    "g6h",
+    "c2h",
+    "d2",
+    "h7",
+    "h7v",
+    "h8",
+    "h2h",
+    "g8",
+    "d7v",
+    "g9",
+    "e8v",
+    "c1v",
+    "e2",
+    "e2h",
+    "h8h",
+    "f2v",
+    "e1",
+    "g1h",
+    "a2h",
+    "g8",
+    "f1",
+    "g7",
+    "f7v",
+    "g8",
+    "c6h",
+    "g9",
+    "g1",
+    "f9",
+    "h1",
+    "f8",
+    "i1",
+    "f7",
+    "i2",
+    "e7",
+    "h2",
+    "e8",
+    "g2",
+    "e9",
+    "g3",
+    "d9",
+    "g4",
+    "d8",
+    "f4",
+    "d7",
+    "e4",
+    "c7",
+    "d4",
+    "b7",
+    "d5",
+    "b6",
+    "d4",
+    "b5",
+    "d5",
+    "b4",
+    "c5",
+    "b5v",
+    "c4",
+    "d4",
+    "b4",
+    "e4",
+    "b5",
+    "f4",
+    "b6",
+    "g4",
+    "b7",
+    "g3",
+    "b8",
+    "b8h",
+    "a8",
+    "g2",
+    "a9"
+   ]
+  },
+  {
+   "index": 6,
+   "pair": 3,
+   "aSeat": 0,
+   "opening": {
+    "seed": 4265528778,
+    "plies": 4,
+    "moves": [
+     "d1",
+     "e8",
+     "d2",
+     "e9"
+    ]
+   },
+   "agentSeeds": [
+    3467268,
+    4281536951
+   ],
+   "outcome": "a-win",
+   "plies": 89,
+   "durationMs": 26556.927599999995,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 60.17380000004778,
+       "nodes": 1542,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 38.837699999974575,
+       "nodes": 1282,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 38.083700000017416,
+       "nodes": 1011,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.149999999965075,
+       "nodes": 829,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 20.042900000000373,
+       "nodes": 709,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 22.553699999989476,
+       "nodes": 686,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 19.135199999960605,
+       "nodes": 705,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 16.338300000003073,
+       "nodes": 575,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 18.057600000000093,
+       "nodes": 657,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 22.806700000015553,
+       "nodes": 789,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 31.87349999998696,
+       "nodes": 821,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 30.92389999999432,
+       "nodes": 891,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 23.835599999991246,
+       "nodes": 1018,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 25.602100000018254,
+       "nodes": 648,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.480199999990873,
+       "nodes": 529,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.587899999984074,
+       "nodes": 420,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.738100000016857,
+       "nodes": 305,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.136199999949895,
+       "nodes": 436,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 10.008999999961816,
+       "nodes": 418,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 12.759900000004563,
+       "nodes": 449,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 8.937200000043958,
+       "nodes": 423,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 14.301399999996647,
+       "nodes": 456,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.568299999984447,
+       "nodes": 433,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 11.917000000015832,
+       "nodes": 517,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.270799999998417,
+       "nodes": 238,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.5867000000434928,
+       "nodes": 199,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.4060999999637716,
+       "nodes": 246,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.692600000009406,
+       "nodes": 446,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.092000000004191,
+       "nodes": 357,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.9949999999953434,
+       "nodes": 324,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 6.934799999988172,
+       "nodes": 350,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.954800000006799,
+       "nodes": 322,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.367599999997765,
+       "nodes": 327,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.9082999999518506,
+       "nodes": 268,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.4760999999707565,
+       "nodes": 183,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.7371999999741092,
+       "nodes": 172,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.4375,
+       "nodes": 264,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 6.835499999986496,
+       "nodes": 361,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.0829999999841675,
+       "nodes": 180,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.7388999999966472,
+       "nodes": 83,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5887999999686144,
+       "nodes": 69,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5608999999822117,
+       "nodes": 67,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.5737999999546446,
+       "nodes": 65,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.22499999997671694,
+       "nodes": 36,
+       "simulations": null,
+       "depth": 3
+      },
+      {
+       "ms": 0.03159999998752028,
+       "nodes": 4,
+       "simulations": null,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    },
+    {
+     "moves": [
+      {
+       "ms": 1206.7116999999853,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 1098.8703000000096,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 842.4087999999756,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1020.0714000000153,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 976.6167000000132,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 919.9447999999975,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 840.5146999999997,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 983.3413999999757,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 1030.1156999999657,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 1085.6330000000307,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 981.2766000000411,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 927.1251999999513,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 807.117099999974,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 686.599899999972,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 571.7235000000219,
+       "nodes": 2998,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 511.5810000000056,
+       "nodes": 2991,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 654.2607999999891,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 631.9145000000135,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 649.6445999999996,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 635.8736999999965,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 627.7481000000262,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 591.090899999952,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 638.9276000000536,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 602.4784999999683,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 608.3555000000051,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 18
+      },
+      {
+       "ms": 681.8780999999726,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 612.7466999999597,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 613.476100000029,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 597.2597999999998,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 22
+      },
+      {
+       "ms": 603.234300000011,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 22
+      },
+      {
+       "ms": 488.57460000005085,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 426.4418000000296,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 392.02530000003753,
+       "nodes": 2994,
+       "simulations": 3000,
+       "depth": 22
+      },
+      {
+       "ms": 346.5824000000139,
+       "nodes": 2944,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 298.91460000001825,
+       "nodes": 2729,
+       "simulations": 3000,
+       "depth": 20
+      },
+      {
+       "ms": 232.5415000000503,
+       "nodes": 2555,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 215.61589999997523,
+       "nodes": 2566,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 160.66330000001471,
+       "nodes": 2238,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 106.60389999998733,
+       "nodes": 1799,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 42.57440000004135,
+       "nodes": 749,
+       "simulations": 1259,
+       "depth": 12
+      },
+      {
+       "ms": 14.478600000031292,
+       "nodes": 281,
+       "simulations": 497,
+       "depth": 10
+      },
+      {
+       "ms": 6.534999999974389,
+       "nodes": 130,
+       "simulations": 231,
+       "depth": 8
+      },
+      {
+       "ms": 2.2633999999961816,
+       "nodes": 47,
+       "simulations": 88,
+       "depth": 6
+      },
+      {
+       "ms": 0.21779999998398125,
+       "nodes": 9,
+       "simulations": 23,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "d3",
+    "e8",
+    "d4",
+    "e7",
+    "d5",
+    "e6",
+    "d6",
+    "c6h",
+    "f6",
+    "e6h",
+    "g6",
+    "g6h",
+    "h6",
+    "e5",
+    "i6",
+    "h7h",
+    "h6",
+    "g7v",
+    "g6",
+    "f5v",
+    "g5",
+    "g4h",
+    "h5",
+    "h4v",
+    "h6",
+    "h2v",
+    "i6",
+    "e4",
+    "i5",
+    "e3",
+    "i4",
+    "e2",
+    "e1h",
+    "e3",
+    "i3",
+    "d3",
+    "i2",
+    "e3",
+    "i1",
+    "d3",
+    "h1",
+    "e3",
+    "h2",
+    "d3",
+    "h3",
+    "e3",
+    "g3",
+    "f3v",
+    "g2",
+    "f3",
+    "e2h",
+    "e3",
+    "d3v",
+    "f3",
+    "f2",
+    "f4",
+    "e2",
+    "f5",
+    "d2",
+    "e5",
+    "d3",
+    "d5",
+    "c1h",
+    "d4",
+    "d5",
+    "d3",
+    "c2h",
+    "c3",
+    "b3v",
+    "c4",
+    "b4h",
+    "d4",
+    "a1h",
+    "d6",
+    "a5v",
+    "c6",
+    "a7v",
+    "b6",
+    "d6",
+    "b7",
+    "c6",
+    "c7",
+    "b6",
+    "d7",
+    "b7",
+    "d8",
+    "b8",
+    "d9",
+    "b9"
+   ]
+  },
+  {
+   "index": 7,
+   "pair": 3,
+   "aSeat": 1,
+   "opening": {
+    "seed": 4265528778,
+    "plies": 4,
+    "moves": [
+     "d1",
+     "e8",
+     "d2",
+     "e9"
+    ]
+   },
+   "agentSeeds": [
+    273327931,
+    290106540
+   ],
+   "outcome": "b-win",
+   "plies": 71,
+   "durationMs": 17693.466399999976,
+   "agents": [
+    {
+     "moves": [
+      {
+       "ms": 37.7552999999607,
+       "nodes": 1126,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 26.95659999997588,
+       "nodes": 942,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 17.08269999996992,
+       "nodes": 771,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.29460000002291,
+       "nodes": 525,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 6.8400999999721535,
+       "nodes": 365,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.942999999970198,
+       "nodes": 213,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.36009999999078,
+       "nodes": 299,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 9.394299999985378,
+       "nodes": 456,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 20.112599999993108,
+       "nodes": 792,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 12.471100000024308,
+       "nodes": 468,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 13.086199999961536,
+       "nodes": 510,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 12.130400000023656,
+       "nodes": 415,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 10.019800000009127,
+       "nodes": 303,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.9192000000039116,
+       "nodes": 218,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 6.973699999973178,
+       "nodes": 196,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.890200000023469,
+       "nodes": 210,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 2.3563999999896623,
+       "nodes": 198,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.680900000035763,
+       "nodes": 313,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.013199999986682,
+       "nodes": 345,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 4.746500000008382,
+       "nodes": 429,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.679499999969266,
+       "nodes": 524,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 8.282100000011269,
+       "nodes": 550,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 7.355100000044331,
+       "nodes": 496,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.005899999989197,
+       "nodes": 484,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 5.337199999950826,
+       "nodes": 386,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.467000000004191,
+       "nodes": 134,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.5729000000283122,
+       "nodes": 109,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 3.440699999977369,
+       "nodes": 118,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 1.20519999996759,
+       "nodes": 107,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.8238000000128523,
+       "nodes": 76,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.7608000000473112,
+       "nodes": 76,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.9444999999832362,
+       "nodes": 108,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.3264000000199303,
+       "nodes": 43,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.31219999998575076,
+       "nodes": 52,
+       "simulations": null,
+       "depth": 4
+      },
+      {
+       "ms": 0.062399999995250255,
+       "nodes": 14,
+       "simulations": null,
+       "depth": 2
+      }
+     ],
+     "wallsUsed": 10
+    },
+    {
+     "moves": [
+      {
+       "ms": 1384.7868000000017,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 1163.2905000000028,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 891.0914999999804,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 749.4032000000007,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 726.5273000000161,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 582.0092999999761,
+       "nodes": 2997,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 734.3278000000282,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 10
+      },
+      {
+       "ms": 979.4602000000305,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 891.5500999999931,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 886.1284000000451,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 891.5687000000034,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 783.5411000000313,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 11
+      },
+      {
+       "ms": 683.5535999999847,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 9
+      },
+      {
+       "ms": 663.7678999999771,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 12
+      },
+      {
+       "ms": 610.2560999999987,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 13
+      },
+      {
+       "ms": 593.8169999999809,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 564.9680999999982,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 15
+      },
+      {
+       "ms": 344.3720999999787,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 29
+      },
+      {
+       "ms": 361.5136000000057,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 31
+      },
+      {
+       "ms": 335.88750000001164,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 29
+      },
+      {
+       "ms": 322.6909000000451,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 24
+      },
+      {
+       "ms": 396.63730000000214,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 26
+      },
+      {
+       "ms": 329.63020000001416,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 25
+      },
+      {
+       "ms": 365.24239999998827,
+       "nodes": 3000,
+       "simulations": 3000,
+       "depth": 26
+      },
+      {
+       "ms": 310.8808999999892,
+       "nodes": 3001,
+       "simulations": 3000,
+       "depth": 24
+      },
+      {
+       "ms": 198.17319999996107,
+       "nodes": 2939,
+       "simulations": 3000,
+       "depth": 21
+      },
+      {
+       "ms": 195.39079999999376,
+       "nodes": 2911,
+       "simulations": 3000,
+       "depth": 19
+      },
+      {
+       "ms": 172.7949999999837,
+       "nodes": 2873,
+       "simulations": 3000,
+       "depth": 17
+      },
+      {
+       "ms": 133.16649999999208,
+       "nodes": 2517,
+       "simulations": 3000,
+       "depth": 16
+      },
+      {
+       "ms": 99.74629999999888,
+       "nodes": 1934,
+       "simulations": 3000,
+       "depth": 14
+      },
+      {
+       "ms": 54.38730000000214,
+       "nodes": 1145,
+       "simulations": 1929,
+       "depth": 13
+      },
+      {
+       "ms": 13.080300000030547,
+       "nodes": 335,
+       "simulations": 554,
+       "depth": 10
+      },
+      {
+       "ms": 1.0326000000350177,
+       "nodes": 32,
+       "simulations": 52,
+       "depth": 7
+      },
+      {
+       "ms": 0.73140000004787,
+       "nodes": 23,
+       "simulations": 43,
+       "depth": 5
+      },
+      {
+       "ms": 0.23149999999441206,
+       "nodes": 10,
+       "simulations": 16,
+       "depth": 3
+      },
+      {
+       "ms": 0.022200000006705523,
+       "nodes": 2,
+       "simulations": 1,
+       "depth": 1
+      }
+     ],
+     "wallsUsed": 10
+    }
+   ],
+   "moves": [
+    "d3",
+    "e8",
+    "d4",
+    "e7",
+    "d5",
+    "e6",
+    "d6",
+    "e5",
+    "d7",
+    "e4",
+    "d8",
+    "d8h",
+    "d3h",
+    "c7v",
+    "f3h",
+    "d7v",
+    "d4v",
+    "e5",
+    "h3h",
+    "e6",
+    "c5h",
+    "b8h",
+    "b6v",
+    "e8v",
+    "b3h",
+    "d6",
+    "a4h",
+    "c6",
+    "d7",
+    "c7",
+    "a1h",
+    "c8",
+    "b7h",
+    "e6h",
+    "d6",
+    "e5v",
+    "e6",
+    "b8",
+    "e5",
+    "a8",
+    "e4",
+    "a7",
+    "f4",
+    "a6",
+    "g4",
+    "a5",
+    "h4",
+    "b5",
+    "h5",
+    "g6h",
+    "i5",
+    "h5h",
+    "h5",
+    "c5",
+    "g5",
+    "c4",
+    "g6",
+    "b4",
+    "h6",
+    "a4",
+    "i6",
+    "a3",
+    "i7",
+    "a2",
+    "i8",
+    "h8h",
+    "h8",
+    "b2",
+    "g8",
+    "c2",
+    "g9"
+   ]
+  }
+ ]
+}

@@ -1,14 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { agentName } from '../../ai/catalog';
 import { distanceToRow, goalRow, legalPawnMoves, legalWallPlacements } from '../../engine';
 import type { GameState } from '../../engine';
 import type { HistoryEntry } from '../../session/useGameSession';
-import { BfsAnalysis } from '../analysis/BfsAnalysis';
-import { MctsAnalysis } from '../analysis/MctsAnalysis';
-import { MinimaxAnalysis } from '../analysis/MinimaxAnalysis';
-import type { PreviewBinder } from '../analysis/preview';
-import { RandomAnalysis } from '../analysis/RandomAnalysis';
+import { TraceDetail, traceAgentName } from '../analysis/TraceDetail';
+import { usePreviewBinder } from '../analysis/usePreviewBinder';
 import type { BoardOverlay } from '../board/overlay';
 import { PLAYER_LABEL } from '../theme';
 import { Panel } from './Panel';
@@ -19,11 +15,6 @@ interface AnalysisPanelProps {
   hasAi: boolean;
   thinking: boolean;
   onPreview: (overlay: BoardOverlay | null) => void;
-}
-
-interface ActivePreview {
-  key: string;
-  overlay: BoardOverlay;
 }
 
 /**
@@ -38,38 +29,10 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
   );
   // null = follow the latest decision.
   const [selected, setSelected] = useState<number | null>(null);
-  const [hovered, setHovered] = useState<ActivePreview | null>(null);
-  const [pinned, setPinned] = useState<ActivePreview | null>(null);
-
   const position = selected === null ? decisions.length - 1 : Math.min(selected, decisions.length - 1);
   const decision = decisions[position];
-
   // A new move invalidates any preview built on the previous board.
-  useEffect(() => {
-    setHovered(null);
-    setPinned(null);
-  }, [history.length, position]);
-
-  const active = hovered ?? pinned;
-  useEffect(() => onPreview(active?.overlay ?? null), [active, onPreview]);
-  useEffect(() => () => onPreview(null), [onPreview]);
-
-  const bind: PreviewBinder = useCallback(
-    (key, build) => {
-      const show = () => setHovered((h) => (h?.key === key ? h : { key, overlay: build() }));
-      const hide = () => setHovered((h) => (h?.key === key ? null : h));
-      return {
-        onMouseEnter: show,
-        onMouseLeave: hide,
-        onFocus: show,
-        onBlur: hide,
-        onClick: () => setPinned((p) => (p?.key === key ? null : { key, overlay: build() })),
-        tabIndex: 0,
-        'aria-pressed': pinned?.key === key,
-      };
-    },
-    [pinned],
-  );
+  const bind = usePreviewBinder(onPreview, `${history.length}:${position}`);
 
   return (
     <div className="space-y-4">
@@ -112,25 +75,14 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
           <div className="space-y-3">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-xs">
               <span className="font-semibold text-slate-200">
-                {agentName(
-                  decision.trace.algorithm === 'mcts' && decision.trace.settings.variant === 'guided' ? 'mcts-guided' : decision.trace.algorithm,
-                )}{' '}
-                · {PLAYER_LABEL[decision.trace.player]}
+                {traceAgentName(decision.trace)} · {PLAYER_LABEL[decision.trace.player]}
               </span>
               <span className="font-mono text-[11px] text-slate-500">
                 ply {decision.index + 1} · {decision.trace.elapsedMs.toFixed(1)} ms
                 {thinking && selected === null && <span className="ml-2 text-violet-300">다음 수 계산 중…</span>}
               </span>
             </div>
-            {decision.trace.algorithm === 'random' ? (
-              <RandomAnalysis entry={decision.entry} trace={decision.trace} bind={bind} />
-            ) : decision.trace.algorithm === 'bfs' ? (
-              <BfsAnalysis entry={decision.entry} trace={decision.trace} bind={bind} />
-            ) : decision.trace.algorithm === 'minimax' ? (
-              <MinimaxAnalysis key={decision.index} entry={decision.entry} trace={decision.trace} bind={bind} />
-            ) : (
-              <MctsAnalysis key={decision.index} entry={decision.entry} trace={decision.trace} bind={bind} />
-            )}
+            <TraceDetail key={decision.index} entry={decision.entry} bind={bind} showHeader={false} />
           </div>
         )}
       </Panel>

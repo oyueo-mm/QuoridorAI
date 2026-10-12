@@ -16,7 +16,9 @@ export function SearchProgressBar({ progress, timeLimitMs, maxDepth }: Props) {
   const workFrac = !progress
     ? 0
     : mcts
-      ? (progress.simulations ?? 0) / Math.max(1, progress.simulationLimit ?? 1)
+      ? (progress.simulationLimit ?? 0) >= 1e8
+        ? 0
+        : (progress.simulations ?? 0) / Math.max(1, progress.simulationLimit ?? 1)
       : progress.completedDepth / Math.max(1, maxDepth);
   // The search ends at whichever budget runs out first.
   const frac = Math.min(1, Math.max(timeFrac, workFrac));
@@ -24,7 +26,10 @@ export function SearchProgressBar({ progress, timeLimitMs, maxDepth }: Props) {
   let headline = '탐색 시작…';
   let detail = '';
   if (progress && mcts) {
-    headline = `시뮬레이션 ${progress.simulations!.toLocaleString()} / ${progress.simulationLimit!.toLocaleString()}`;
+    headline =
+      progress.simulationLimit! >= 1e8
+        ? `시뮬레이션 ${progress.simulations!.toLocaleString()} (시간 제한)`
+        : `시뮬레이션 ${progress.simulations!.toLocaleString()} / ${progress.simulationLimit!.toLocaleString()}`;
     detail =
       `트리 ${progress.nodes.toLocaleString()} 노드 · 깊이 ${progress.depth} · ${(elapsed / 1000).toFixed(1)}s` +
       (progress.bestNotation ? ` · 최다 방문 ${progress.bestNotation}` : '') +
