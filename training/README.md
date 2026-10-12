@@ -1,4 +1,4 @@
-# training/ — AlphaZero 학습 인프라 (Stage 6A)
+# training/ — AlphaZero 학습 인프라 (Stage 6A · 6B-1)
 
 웹 엔진(`src/engine`, TypeScript)과 **같은 규칙·좌표계·행동 인덱스**를 쓰는 Python 패키지 `quoridor_az`와,
 VS Code에서 **Colab GPU 커널**로 실행하는 노트북으로 구성됩니다. 이번 단계는 인프라·검증 단계이며 장시간 학습은 하지 않습니다.
@@ -6,22 +6,30 @@ VS Code에서 **Colab GPU 커널**로 실행하는 노트북으로 구성됩니�
 ```
 training/
   quoridor_az/
-    engine.py      규칙 (TS 엔진의 1:1 포팅, 벽은 64비트 마스크)
-    features.py    신경망 입력 텐서 · 관점(canonical) 변환 · 합법 행동 마스크
+    engine.py      규칙 (TS 엔진의 1:1 포팅, 벽은 64비트 마스크) — 6B-1부터 비트보드 고속 경로
+    bitboard.py    81비트 정수 비트보드: 도달성·거리·벽 합법성, 벽 배치 기준 캐시 (6B-1)
+    reference.py   6A 원본 구현 보관 — 고속 경로가 이것과 비트 단위로 같아야 함 (6B-1)
+    features.py    신경망 입력 텐서 · 관점(canonical) 변환 · 합법 행동 마스크 (벽 평면 캐시)
     network.py     Policy-Value ResNet (ONNX 친화적 연산만 사용), export_onnx
-    evaluator.py   배치 신경망 평가 + 포지션 캐시, UniformEvaluator
-    mcts.py        Neural MCTS (PUCT, Dirichlet noise, temperature, 단계형 API)
-    selfplay.py    병렬(lockstep) Self-Play, 샘플 생성, 중단 대국 정책
+    evaluator.py   배치 신경망 평가 + 포지션 캐시, 시간 분해, OOM 시 배치 분할, fp16/bf16 옵션
+    mcts.py        Neural MCTS (PUCT, Dirichlet noise, temperature, 단계형 API, Virtual Loss)
+    selfplay.py    병렬(lockstep) Self-Play, 게임당 여러 리프, 계측, 시간 예산, 중단 대국 정책
     replay.py      Replay Buffer (원형, 원자적 저장/복원)
     train.py       손실(정책/가치/엔트로피), 학습 스텝, NaN/Inf 검사
     checkpoint.py  원자적 체크포인트 + sha256 검증 + RNG 상태 + 손상 시 이전 체크포인트로 복구
     evaluate.py    선후공 교환 대국 평가, Wilson 신뢰구간, 기준 플레이어
-    pipeline.py    Self-Play → 버퍼 → 학습 → 평가 → 체크포인트 반복 (재개 가능)
-    bench.py       성능 측정 (모두 실측)
+    pipeline.py    Self-Play → 버퍼 → 학습 → 평가 → 체크포인트 반복 (재개 가능, 실패 시 롤백)
+    bench.py       성능 측정 도구 (모두 실측) — 추론/학습/MCTS/Self-Play 스윕, GPU·CPU 사용률
+    verify.py      GPU 검증 보고서 (JSON, 측정 장치 표기, gpu_verified) (6B-1)
+    diagnostics.py 중단 대국 데이터 편향, 메모리 증가, 학습 가능성 검사 (6B-1)
+    pilot.py       소규모 Pilot 학습 + 안정성 검사, GPU 검증 전에는 실행 거부 (6B-1)
+    report.py      설정 추천, 측정값 기반 자원 추정 (6B-1)
     sync.py        Colab 쪽 번들 설치·검증
-  tests/           pytest (교차 언어 Fixture, 규칙, MCTS, Self-Play, 학습, 체크포인트)
+  tests/           pytest (교차 언어 Fixture, 고속 경로 동등성, 규칙, MCTS, Self-Play, 학습, 체크포인트, 복구)
   fixtures/        engine_fixtures.json — TS 엔진이 만든 정답 (npm run fixtures:engine)
-  notebooks/       quoridor_alphazero.ipynb — VS Code + Colab 커널용
+  tools/           ab_compare.py (6A ↔ 6B-1 비교), halted_analysis.py (중단 대국 정책 분석)
+  results/         측정 결과 (stage6b1/)
+  notebooks/       quoridor_alphazero.ipynb (6A 스모크), stage6b1_gpu_verification.ipynb (6B-1 GPU 검증·Pilot)
 ```
 
 ## 1. VS Code ⇄ Colab 실행 구조
@@ -86,10 +94,13 @@ GitHub에 push하지 않은 최신 코드도 이 방식으로 그대로 전달�
 | 정책 | 처리 |
 |---|---|
 | `discard` (기본) | 샘플을 버림 — 근거 없는 라벨을 만들지 않음 |
+| `policy-only` (6B-1) | 정책 학습에는 쓰고 가치 라벨은 붙이지 않음(`value_weight` 0) — 데이터를 버리지도, 라벨을 지어내지도 않음 |
 | `draw` | 가치 0 (명시적으로 선택할 때만) |
 | `adjudicate` | 0.5·tanh(BFS 거리 차/3) — 약한 추정 라벨 |
 
-버린 샘플 수와 중단 사유는 `SelfPlayStats`에 기록됩니다.
+버린 샘플 수, 가치 라벨 없이 남긴 샘플 수, 중단 사유는 `SelfPlayStats`에 기록됩니다.
+가치 손실은 `value_weight`로 가중 평균합니다(가중치가 모두 1이면 기존 평균과 같음). Replay Buffer 형식은
+`qz-replay-v2`(가중치·반복 번호 포함)이고 v1 파일도 읽습니다(가중치 1).
 
 ## 4. 체크포인트
 
@@ -97,6 +108,14 @@ GitHub에 push하지 않은 최신 코드도 이 방식으로 그대로 전달�
 `latest.json`(sha256 포함 포인터), `replay.npz`, `metrics.jsonl`.
 쓰기는 임시 파일 → fsync → 원자적 이름 변경이고, 로드 시 해시가 다르면 이전 체크포인트로 넘어갑니다.
 인코딩 버전(`qz-features-v1`, `qz-resnet-v1`)이 다르면 재개를 거부합니다.
+
+6B-1에서 추가된 복구 규칙:
+- 저장 순서는 Replay Buffer → 체크포인트 → 메트릭 행. Replay 파일은 자신의 반복 번호를 기록하고, 재개할 때
+  체크포인트와 다르면 `resume_warnings`로 알립니다.
+- 재개 시 `metrics.jsonl`을 체크포인트 이력에 맞춥니다(체크포인트에 도달하지 못한 반복의 행 제거, 빠진 행 복원).
+- 반복 도중 예외(CUDA 오류, 셀 중단, Drive 문제)가 나면 마지막 체크포인트(없으면 초기 상태)로 되돌린 뒤 예외를 다시 던집니다.
+- Self-Play가 실패하면 대기 중인 리프를 정리하고 부분 결과 없이 예외를 전달합니다(버퍼는 그대로).
+- CUDA OOM이 나면 추론 배치를 반으로 나눠 다시 시도합니다(`EvalStats.oom_splits`).
 
 ## 5. 로컬 테스트 (선택)
 
@@ -163,3 +182,109 @@ T4급 GPU에서 batch 256 추론은 CPU보다 수십 배 빠를 것으로 예상
 4. **평가**: 반복마다 이전 체크포인트, 탐욕 기준선과 선후공 교환 대국. Wilson 구간이 겹치지 않을 때만 개선으로 판단.
 5. **웹 연동 준비**: `export_onnx`로 내보낸 모델을 TS `encodeStatePlanes` + `canonicalActionIndex`와 묶어 브라우저에서
    onnxruntime-web으로 실행. 같은 입력에 대해 Python과 TS 출력이 같은지 Fixture로 검증.
+
+## 8. Stage 6B-1 — GPU 검증 준비와 Self-Play 최적화
+
+### 최적화 (규칙·인코딩은 그대로)
+
+6A에서 "인코딩 60–65%"로 보고된 시간은 실제로는 **합법 벽 생성(BFS 도달성 검사)이 대부분**이었습니다(평가기가 둘을
+한 타이머로 쟀음). 6B-1에서는 타이머를 인코딩·합법 행동·추론·후처리로 나눴습니다.
+
+- **비트보드**(`bitboard.py`): 칸 81비트 정수, 한 BFS 층을 시프트·마스크 몇 번으로 확장. 도달성·거리 맵·벽 겹침이 모두 정수 연산.
+- **벽 배치 기준 캐시**: 열린 변, 빈 벽 자리, 거리 층, "이 벽이 플레이어를 가두는가"는 벽 배치(+말 하나)에만 의존하므로
+  `lru_cache`로 공유 — 탐색 트리의 대부분 노드는 부모와 말 위치만 다름.
+- **경로 차단 후보만 검사 + 지역 우회 확인**: 최단 경로 하나를 끊는 벽만 검사하고, 끊긴 변 양 끝이 8걸음 안에 다시
+  이어지면 연결 유지(정확함), 아니면 전체 flood fill.
+- **입력 텐서**: 벽 평면(2–5, 8, 9)을 벽 배치별로 캐시(읽기 전용), 배치 전체를 한 배열에 바로 기록(`encode_batch`).
+- **MCTS**: Q·방문 합을 증분 갱신, `net.eval()`은 학습 모드일 때만 호출, 행동 객체 표(`ACTIONS`) 재사용.
+- **Numba**: 검토했지만 적용하지 않음 — 이 PC에서는 Windows 애플리케이션 제어 정책이 `llvmlite.dll` 로드를 막아 로컬에서
+  동등성을 검증할 수 없었음. 검증 못 한 커널은 넣지 않았고, Colab(numba 기본 설치)에서 6B-2 후보로 남김.
+
+**동등성 검사**: `reference.py`(6A 원본)와 고속 경로를 비교 — 433개 교차 언어 Fixture + 벽이 많은 무작위 대국(벽 15개 이상
+포지션 50개 초과)에서 합법 행동 순서, 벽 판정 사유 128종, 거리, 상태 전이, 입력 텐서 **바이트 단위 일치**(`tests/test_fast_paths.py`).
+`tools/ab_compare.py`는 6A 패키지와 6B-1 패키지를 별도 프로세스로 번갈아 실행하며 합법 행동·텐서·MCTS 방문 수·Self-Play 기보의
+해시까지 비교합니다 — 모두 동일.
+
+### 실측: 6A ↔ 6B-1 (로컬 CPU, `results/stage6b1/ab_compare.md`)
+
+| 항목 | 6A | 6B-1 | 배율 |
+|---|---:|---:|---:|
+| 합법 행동, 캐시 비움 (µs/포지션) | 1195 | 27 | 44× |
+| 합법 행동, 두 번째 (µs/포지션) | 1196 | 4.6 | 259× |
+| 입력 텐서, 캐시 비움 (µs/포지션) | 384 | 19 | 20× |
+| 입력 텐서, 두 번째 (µs/포지션) | 382 | 3.8 | 101× |
+| MCTS sims/s (배치 1, CPU 신경망) | 391 | 1180 | 3.0× |
+| Self-Play 대국당 초 (32 sims, 2대국) | 8.7 | 3.6 | 2.4× |
+
+935개 포지션, 3회 교대 실행의 중앙값. MCTS·Self-Play는 이제 CPU 신경망 추론이 대부분이라 배율이 작습니다.
+
+### Batched MCTS와 Virtual Loss
+
+- `SelfPlayConfig.parallel_games`(동시 대국) × `leaves_per_game`(게임당 라운드별 리프 수)로 배치 크기를 조절.
+- `leaves_per_game > 1`이면 Virtual Loss: 대기 중인 리프 경로의 간선에 가상 방문(패배로 계산)을 별도 배열에 더해 다음 하강이
+  다른 가지로 가게 하고, 실제 백업 직전에 정확히 제거(N·W·Q에는 실제 결과만 남음). 이미 대기 중인 리프에 다시 닿으면
+  그 라운드는 멈춤(충돌, `collisions`로 집계) — 같은 포지션을 두 번 평가하지 않음. `leaves_per_game = 1`이면 6A와 비트 단위로 같음.
+- 배치 안의 중복 포지션은 한 번만 평가, 포지션 캐시(LRU), 추론 호출 수·평균/최대 배치·리프 대기 시간·CPU 시간 기록.
+
+로컬 CPU 스윕(`results/stage6b1/verification_cpu_*.json`, 64×4, 32 sims, 설정당 30초):
+
+| 동시 대국 × 리프 | sims/s | 평균 배치 | 추론 비중 | CPU 측 µs/sim |
+|---|---:|---:|---:|---:|
+| 2 × 1 | 928 | 1.4 | 86% | 153 |
+| 2 × 4 | 1534 | 4.2 | 82% | 119 |
+| 8 × 1 | 1698 | 4.6 | 82% | 108 |
+| 8 × 4 | 2883 | 14.1 | 71% | 101 |
+| 16 × 1 | 2338 | 9.4 | 75% | 107 |
+| 16 × 4 | 3660 | 28.7 | 64% | 99 |
+| 32 × 1 | 2833 | 20.3 | 67% | 115 |
+| 32 × 4 | 4014 | 62.3 | 57% | 106 |
+
+"CPU 측 µs/sim" = 신경망을 뺀 모든 일(트리·규칙·인코딩·기록)의 시뮬레이션당 시간. 이 값의 역수(이 PC에서 약
+9,000–10,000 sims/s)가 GPU가 아무리 빨라도 한 프로세스로 넘을 수 없는 상한입니다. Colab vCPU의 값은 노트북에서 측정합니다.
+
+### 중단 대국 정책 분석 (`tools/halted_analysis.py`, `results/stage6b1/halted_analysis.json`)
+
+학습 전(무작위 가중치) 64×4 신경망, 32 sims, 32대국:
+
+| max_plies | 완료 / 중단 | `discard`가 남기는 포지션 | 선공 승률(완료 대국) |
+|---:|---|---:|---:|
+| 200 | 16 / 16 (50%) | 2046 / 5246 (39%) | 50% (16판) |
+| 300 | 21 / 11 (34%) | 3238 / 6538 (50%) | 38% (21판) |
+
+초기 반복에서 `discard`는 데이터의 절반 이상을 버리고, 남는 것은 빨리 끝난 대국뿐입니다(길이 편향). 선후공 편향은 표본이 작아
+판단할 수 없습니다(파일럿에서 계속 기록). 그래서 Pilot·6B-2 설정은 **`policy-only`**: 모든 포지션을 정책 학습에 쓰고, 가치
+라벨은 실제 승패가 난 대국에만 붙입니다. 라이브러리 기본값(`discard`)은 기존 설정의 의미가 바뀌지 않도록 그대로 둡니다.
+
+### GPU 검증 절차 (VS Code + Colab) — 아직 실행하지 않음
+
+1. 로컬: `npm run colab:bundle` → `bundle_id` 확인.
+2. 탐색기에서 `training/dist/quoridor_az_bundle.tar.gz` 우클릭 → **Upload to Colab**.
+3. `training/notebooks/stage6b1_gpu_verification.ipynb` 열기 → **Select Kernel → Colab → New Colab Server → GPU**.
+4. 2번 셀의 `EXPECTED_BUNDLE_ID`에 id 입력 후 1→6번 셀 순서대로 실행(5번이 GPU 검증, 약 10분).
+5. 7번(안정성 검사) 실행. 8번 Pilot은 `RUN_PILOT = True`로 바꿔야만 실행되고, 5번에서 `gpu_verified`가 True가 아니면 거부합니다.
+6. 10번이 `MyDrive/QuoridorAI/stage6b1/stage6b1_summary.json`을 저장 — 이 파일(또는 출력)을 공유하면 6B-2 설정을 확정할 수 있습니다.
+7. 재연결 후: 1, 2, 4번 → 9번(재개). `CONTINUE = True`면 한 반복 더.
+
+GPU 측정값(이름·VRAM·호환성·순전파/역전파·배치별 처리량·MCTS·Self-Play·체크포인트)은 **모두 미검증** 상태입니다.
+
+### Stage 6B-2 제안 (측정값 기반, GPU 확인 후 조정)
+
+| 항목 | 제안 | 근거 |
+|---|---|---|
+| 모델 | 64×4로 시작, 손실이 정체되면 96×6 | 6A/6B-1 스모크에서 안정 |
+| 동시 대국 × 리프 | GPU 스윕 결과의 `recommend_selfplay` (CPU에서는 16×4) | 처리량 상위 10% 안의 가장 작은 설정 |
+| MCTS | 64 sims → 가치 헤드가 의미 있어지면 128 | 시뮬레이션 수에 비례해 비용 증가 |
+| 반복당 대국 | 64 | 반복당 약 1만 포지션 |
+| 학습 | batch 512(CPU 측정 기준, GPU에서 재확인), 반복당 100 스텝 | 각 샘플을 약 4–5회 사용 |
+| Replay | 200k, `policy-only`, max_plies 200 | 위 분석 |
+| 반복 수 | 1차 100회, 5회마다 평가 | |
+
+계획 A(100반복 × 64대국 × 64 sims, 평균 164수 — 학습 전 신경망 실측) = 6,700만 시뮬레이션:
+- 이 PC CPU 실측 처리량(16×4, 3,660 sims/s)이면 Self-Play 5.1시간 + 학습 1.2시간(CPU batch 512) ≈ 6.9시간(평가 10% 포함).
+- 이 PC의 CPU 측 상한(약 10,000 sims/s)이면 Self-Play만 최소 1.8시간 — GPU를 써도 한 프로세스로는 이보다 빨라질 수 없음.
+- Replay 메모리 약 0.6 GB, 체크포인트 4.6 MB × 5개.
+
+계획 B(100반복 × 128대국 × 128 sims)는 시뮬레이션이 4배라 같은 기준으로 Self-Play 7.4–20시간입니다. Colab GPU에서의 실제 시간은
+노트북 10번 셀이 GPU 실측값으로 다시 계산합니다(평균 수는 Pilot 값 사용).
+
+6B-2에서 고려할 것: Self-Play 다중 프로세스(Colab vCPU 수만큼), Colab에서 Numba 커널(동등성 테스트 포함), 탐색 트리 재사용.

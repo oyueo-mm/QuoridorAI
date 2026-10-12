@@ -2,7 +2,9 @@
 
 loss = policy_loss + value_weight · value_loss   (+ L2 via the optimizer's weight decay)
   policy_loss = −Σ π · log softmax(masked logits)   (cross-entropy with the MCTS visit target)
-  value_loss  = (v − z)²
+  value_loss  = (v − z)²   (weighted mean with `value_weight` when the batch has it: samples
+                          with weight 0 — policy-only samples of halted games — train the
+                          policy head only)
 All terms, the gradient norm and finiteness checks are returned per step.
 """
 
@@ -35,12 +37,7 @@ def make_optimizer(net: PolicyValueNet, config: TrainConfig) -> torch.optim.Opti
 
 
 def to_tensors(batch: dict[str, np.ndarray], device: torch.device) -> dict[str, torch.Tensor]:
-    return {
-        'planes': torch.from_numpy(batch['planes']).to(device, non_blocking=True),
-        'policy': torch.from_numpy(batch['policy']).to(device, non_blocking=True),
-        'mask': torch.from_numpy(batch['mask']).to(device, non_blocking=True),
-        'value': torch.from_numpy(batch['value']).to(device, non_blocking=True),
-    }
+    return {k: torch.from_numpy(v).to(device, non_blocking=True) for k, v in batch.items()}
 
 
 def compute_losses(net: PolicyValueNet, t: dict[str, torch.Tensor], value_weight: float) -> dict[str, torch.Tensor]:
@@ -48,7 +45,11 @@ def compute_losses(net: PolicyValueNet, t: dict[str, torch.Tensor], value_weight
     log_p = masked_log_softmax(logits, t['mask'])
     # Targets are zero outside the mask, so masked entries (≈ −1e9) contribute 0 · finite.
     policy_loss = -(t['policy'] * log_p.clamp_min(-1e4)).sum(dim=1).mean()
-    value_loss = torch.mean((value - t['value']) ** 2)
+    if 'value_weight' in t:
+        w = t['value_weight']
+        value_loss = (w * (value - t['value']) ** 2).sum() / w.sum().clamp_min(1e-6)
+    else:
+        value_loss = torch.mean((value - t['value']) ** 2)
     total = policy_loss + value_weight * value_loss
     # Policy entropy of the network (diagnostic only).
     p = log_p.exp()
@@ -72,5 +73,7 @@ def train_step(net: PolicyValueNet, optimizer: torch.optim.Optimizer, batch: dic
     out = {k: float(v.detach().item()) for k, v in losses.items()}
     out['grad_norm'] = float(grad_norm.item())
     out['finite'] = finite
+    if 'value_weight' in batch:
+        out['value_labelled'] = float(np.mean(batch['value_weight'] > 0))
     out['seconds'] = time.perf_counter() - t0
     return out

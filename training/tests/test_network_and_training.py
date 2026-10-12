@@ -125,4 +125,7 @@ def test_checkpoint_save_resume_and_corruption_fallback(tmp_path):
     t3 = Trainer(tmp_path, tiny_run_config(), torch.device('cpu'))
     assert t3.resume()
     assert t3.iteration == 1
-    assert len(t3.ckpt.read_metrics()) == 2
+    # metrics.jsonl follows the checkpoint that was actually restored (iteration 2 will be redone),
+    # and the newer replay file is reported instead of silently mixed in.
+    assert [r['iteration'] for r in t3.ckpt.read_metrics()] == [1]
+    assert any('replay buffer is from iteration 2' in w for w in t3.resume_warnings)

@@ -1,0 +1,175 @@
+{
+ "created": "2026-10-12 23:38:14",
+ "network": "untrained 64x4 (torch.manual_seed(0))",
+ "device": "cpu",
+ "results": [
+  {
+   "max_plies": 200,
+   "games": 32,
+   "simulations": 32,
+   "seconds": 57.61194909999904,
+   "report": {
+    "games": 32,
+    "completed": 16,
+    "halted": 16,
+    "halted_max_plies": 16,
+    "halted_repetition": 0,
+    "abandoned": 0,
+    "halted_fraction": 0.5,
+    "p0_win_share": 0.5,
+    "plies_completed_mean": 127.875,
+    "plies_halted_mean": 200.0,
+    "positions": 5246,
+    "positions_in_halted_games": 3200,
+    "samples_kept": 5246,
+    "samples_discarded": 0,
+    "samples_value_masked": 3200,
+    "discard_fraction": 0.0,
+    "value_labelled_fraction": 0.3900114372855509,
+    "halted_policy": "policy-only",
+    "warnings": []
+   },
+   "yield": {
+    "discard": {
+     "policy_samples": 2046,
+     "value_samples": 2046
+    },
+    "policy-only": {
+     "policy_samples": 5246,
+     "value_samples": 2046
+    },
+    "draw": {
+     "policy_samples": 5246,
+     "value_samples": 5246,
+     "invented_value_labels": 3200
+    },
+    "adjudicate": {
+     "policy_samples": 5246,
+     "value_samples": 5246,
+     "invented_value_labels": 3200
+    }
+   },
+   "plies_completed": [
+    74,
+    91,
+    93,
+    99,
+    103,
+    104,
+    113,
+    117,
+    119,
+    132,
+    132,
+    132,
+    166,
+    176,
+    197,
+    198
+   ],
+   "plies_halted": [
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200,
+    200
+   ],
+   "value_target_mean_completed": 0.0039100684261974585
+  },
+  {
+   "max_plies": 300,
+   "games": 32,
+   "simulations": 32,
+   "seconds": 67.8359105999989,
+   "report": {
+    "games": 32,
+    "completed": 21,
+    "halted": 11,
+    "halted_max_plies": 11,
+    "halted_repetition": 0,
+    "abandoned": 0,
+    "halted_fraction": 0.34375,
+    "p0_win_share": 0.38095238095238093,
+    "plies_completed_mean": 154.1904761904762,
+    "plies_halted_mean": 300.0,
+    "positions": 6538,
+    "positions_in_halted_games": 3300,
+    "samples_kept": 6538,
+    "samples_discarded": 0,
+    "samples_value_masked": 3300,
+    "discard_fraction": 0.0,
+    "value_labelled_fraction": 0.49525848883450596,
+    "halted_policy": "policy-only",
+    "warnings": []
+   },
+   "yield": {
+    "discard": {
+     "policy_samples": 3238,
+     "value_samples": 3238
+    },
+    "policy-only": {
+     "policy_samples": 6538,
+     "value_samples": 3238
+    },
+    "draw": {
+     "policy_samples": 6538,
+     "value_samples": 6538,
+     "invented_value_labels": 3300
+    },
+    "adjudicate": {
+     "policy_samples": 6538,
+     "value_samples": 6538,
+     "invented_value_labels": 3300
+    }
+   },
+   "plies_completed": [
+    74,
+    91,
+    93,
+    99,
+    103,
+    104,
+    113,
+    117,
+    119,
+    132,
+    132,
+    132,
+    166,
+    176,
+    197,
+    198,
+    202,
+    210,
+    228,
+    264,
+    288
+   ],
+   "plies_halted": [
+    300,
+    300,
+    300,
+    300,
+    300,
+    300,
+    300,
+    300,
+    300,
+    300,
+    300
+   ],
+   "value_target_mean_completed": 0.0024706609017912293
+  }
+ ]
+}

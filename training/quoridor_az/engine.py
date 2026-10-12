@@ -10,13 +10,19 @@ A wall anchor (row, col) in 0..7 is the corner shared by cells (row, col), (row,
 (row+1, col) and (row+1, col+1): 'h' lies below row `row` across cols col..col+1,
 'v' lies right of col `col` across rows row..row+1.
 Walls are stored as 64-bit masks (bit row*8 + col).
+
+Hot paths (reachability, distances, legal moves and walls) run on bitboards with caches keyed
+by the wall layout (bitboard.py). reference.py keeps the original straightforward versions;
+tests check that both agree exactly, including the order of legal actions.
 """
 
 from __future__ import annotations
 
 from collections import deque
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from typing import NamedTuple, Optional, Union
+
+from . import bitboard as bb
 
 BOARD_SIZE = 9
 WALL_GRID = 8
@@ -137,23 +143,7 @@ def distance_to_row(h_walls: int, v_walls: int, start: Coord, target_row: int) -
     """Steps to `target_row`, or None if unreachable."""
     if start[0] == target_row:
         return 0
-    start_idx = cell_index(*start)
-    dist = {start_idx: 0}
-    queue = deque([start_idx])
-    while queue:
-        idx = queue.popleft()
-        row, col = divmod(idx, BOARD_SIZE)
-        for d_row, d_col in DIRECTIONS:
-            if not can_step(h_walls, v_walls, row, col, d_row, d_col):
-                continue
-            nxt = cell_index(row + d_row, col + d_col)
-            if nxt in dist:
-                continue
-            dist[nxt] = dist[idx] + 1
-            if row + d_row == target_row:
-                return dist[nxt]
-            queue.append(nxt)
-    return None
+    return bb.distance_from_layers(bb.goal_layers(h_walls, v_walls, target_row), cell_index(*start))
 
 
 def has_path_to_row(h_walls: int, v_walls: int, start: Coord, target_row: int) -> bool:
@@ -163,22 +153,9 @@ def has_path_to_row(h_walls: int, v_walls: int, start: Coord, target_row: int) -
 def distance_map(h_walls: int, v_walls: int, target_row: int) -> list[int]:
     """Distance of every cell (row*9 + col) to `target_row`; -1 = unreachable."""
     dist = [-1] * NUM_CELLS
-    queue = deque()
-    for col in range(BOARD_SIZE):
-        idx = cell_index(target_row, col)
-        dist[idx] = 0
-        queue.append(idx)
-    while queue:
-        idx = queue.popleft()
-        row, col = divmod(idx, BOARD_SIZE)
-        for d_row, d_col in DIRECTIONS:
-            if not can_step(h_walls, v_walls, row, col, d_row, d_col):
-                continue
-            nxt = cell_index(row + d_row, col + d_col)
-            if dist[nxt] != -1:
-                continue
-            dist[nxt] = dist[idx] + 1
-            queue.append(nxt)
+    for k, layer in enumerate(bb.goal_layers(h_walls, v_walls, target_row)):
+        for idx in bb.bit_indices(layer):
+            dist[idx] = k
     return dist
 
 
@@ -246,66 +223,75 @@ def wall_cuts_edges(edges: set[int], orientation: str, row: int, col: int) -> bo
 
 # ---------------------------------------------------------------- rules
 
-def legal_pawn_moves(state: GameState, player: Optional[int] = None) -> list[Move]:
-    """Same order as the TS engine: per direction, step / straight jump / diagonals."""
+def _can_step_open(open_s: int, open_e: int, row: int, col: int, d_row: int, d_col: int) -> bool:
+    """can_step() on the open-edge bitboards of bitboard.open_masks."""
+    if d_row == 1:
+        return (open_s >> (row * BOARD_SIZE + col)) & 1 == 1
+    if d_row == -1:
+        return row > 0 and (open_s >> ((row - 1) * BOARD_SIZE + col)) & 1 == 1
+    if d_col == 1:
+        return (open_e >> (row * BOARD_SIZE + col)) & 1 == 1
+    return col > 0 and (open_e >> (row * BOARD_SIZE + col - 1)) & 1 == 1
+
+
+def legal_pawn_move_cells(state: GameState, player: Optional[int] = None) -> list[int]:
+    """Destination cells (row*9 + col) of the legal pawn moves, in the TS engine's order:
+    per direction, step / straight jump / diagonals."""
     if state.winner is not None:
         return []
     if player is None:
         player = state.current_player
-    h, v = state.h_walls, state.v_walls
+    open_s, open_e = bb.open_masks(state.h_walls, state.v_walls)
     s_row, s_col = state.pawns[player]
-    other = state.pawns[opponent_of(player)]
-    moves: list[Move] = []
-    seen: set[Coord] = set()
-
-    def add(row: int, col: int) -> None:
-        if (row, col) not in seen:
-            seen.add((row, col))
-            moves.append(Move(row, col))
-
+    o_row, o_col = state.pawns[1 - player]
+    cells: list[int] = []
     for d_row, d_col in DIRECTIONS:
-        if not can_step(h, v, s_row, s_col, d_row, d_col):
+        if not _can_step_open(open_s, open_e, s_row, s_col, d_row, d_col):
             continue
-        nxt = (s_row + d_row, s_col + d_col)
-        if nxt != other:
-            add(*nxt)
+        n_row = s_row + d_row
+        n_col = s_col + d_col
+        if n_row != o_row or n_col != o_col:
+            cell = n_row * BOARD_SIZE + n_col
+            if cell not in cells:
+                cells.append(cell)
             continue
-        if can_step(h, v, other[0], other[1], d_row, d_col):
-            add(other[0] + d_row, other[1] + d_col)
+        if _can_step_open(open_s, open_e, o_row, o_col, d_row, d_col):
+            cell = (o_row + d_row) * BOARD_SIZE + o_col + d_col
+            if cell not in cells:
+                cells.append(cell)
             continue
         sides = ((-1, 0), (1, 0)) if d_row == 0 else ((0, -1), (0, 1))
         for side_row, side_col in sides:
-            if can_step(h, v, other[0], other[1], side_row, side_col):
-                add(other[0] + side_row, other[1] + side_col)
-    return moves
+            if _can_step_open(open_s, open_e, o_row, o_col, side_row, side_col):
+                cell = (o_row + side_row) * BOARD_SIZE + o_col + side_col
+                if cell not in cells:
+                    cells.append(cell)
+    return cells
 
 
-def legal_wall_placements(state: GameState) -> list[Wall]:
-    """All legal walls, 'h' first, row-major. A wall can only disconnect a player whose current
-    shortest path it cuts, so the reachability BFS only runs for those walls."""
+def legal_pawn_moves(state: GameState, player: Optional[int] = None) -> list[Move]:
+    """Same order as the TS engine: per direction, step / straight jump / diagonals."""
+    return [MOVES[c] for c in legal_pawn_move_cells(state, player)]
+
+
+def legal_wall_indices(state: GameState) -> list[int]:
+    """Action indices of all legal walls, 'h' first, row-major (the TS engine's order).
+
+    legal = geometrically free and not disconnecting either player. Both parts depend only on
+    the walls (and one pawn each), so they are memoised in bitboard.py."""
     if state.winner is not None or state.walls_remaining[state.current_player] <= 0:
         return []
     h, v = state.h_walls, state.v_walls
-    paths = [shortest_path(h, v, state.pawns[p], goal_row(p)) for p in (0, 1)]
-    if paths[0] is None or paths[1] is None:
-        return legal_wall_placements_brute_force(state)
-    edges = [path_edge_set(paths[0]), path_edge_set(paths[1])]
-    result: list[Wall] = []
-    for orientation in ('h', 'v'):
-        for row in range(WALL_GRID):
-            for col in range(WALL_GRID):
-                if wall_conflicts(h, v, orientation, row, col):
-                    continue
-                cuts0 = wall_cuts_edges(edges[0], orientation, row, col)
-                cuts1 = wall_cuts_edges(edges[1], orientation, row, col)
-                if cuts0 or cuts1:
-                    nh, nv = with_wall(h, v, orientation, row, col)
-                    if cuts0 and not has_path_to_row(nh, nv, state.pawns[0], goal_row(0)):
-                        continue
-                    if cuts1 and not has_path_to_row(nh, nv, state.pawns[1], goal_row(1)):
-                        continue
-                result.append(Wall(orientation, row, col))
-    return result
+    free_h, free_v = bb.free_wall_slots(h, v)
+    (r0, c0), (r1, c1) = state.pawns
+    b0h, b0v = bb.disconnecting_walls(h, v, r0 * BOARD_SIZE + c0, goal_row(0))
+    b1h, b1v = bb.disconnecting_walls(h, v, r1 * BOARD_SIZE + c1, goal_row(1))
+    return bb.bit_indices(free_h & ~(b0h | b1h), H_WALL_ACTION_OFFSET) + bb.bit_indices(free_v & ~(b0v | b1v), V_WALL_ACTION_OFFSET)
+
+
+def legal_wall_placements(state: GameState) -> list[Wall]:
+    """All legal walls, 'h' first, row-major."""
+    return [ACTIONS[i] for i in legal_wall_indices(state)]
 
 
 def legal_wall_placements_brute_force(state: GameState) -> list[Wall]:
@@ -322,9 +308,7 @@ def legal_wall_placements_brute_force(state: GameState) -> list[Wall]:
 
 def legal_actions(state: GameState) -> list[Action]:
     """Pawn moves first, then walls — the TS engine's order."""
-    if state.winner is not None:
-        return []
-    return [*legal_pawn_moves(state), *legal_wall_placements(state)]
+    return [ACTIONS[i] for i in legal_action_indices(state)]
 
 
 def is_legal_action(state: GameState, action: Action) -> bool:
@@ -349,27 +333,15 @@ def apply_action_unchecked(state: GameState, action: Action) -> GameState:
     """Transition without the legality check (only for engine-generated actions)."""
     player = state.current_player
     if isinstance(action, Move):
-        pawns = list(state.pawns)
-        pawns[player] = (action.row, action.col)
-        won = action.row == goal_row(player)
-        return replace(
-            state,
-            pawns=(pawns[0], pawns[1]),
-            current_player=player if won else opponent_of(player),
-            winner=player if won else None,
-            ply=state.ply + 1,
-        )
+        cell = (action.row, action.col)
+        pawns = (cell, state.pawns[1]) if player == 0 else (state.pawns[0], cell)
+        if action.row == goal_row(player):
+            return GameState(pawns, state.h_walls, state.v_walls, state.walls_remaining, player, player, state.ply + 1)
+        return GameState(pawns, state.h_walls, state.v_walls, state.walls_remaining, 1 - player, None, state.ply + 1)
     h, v = with_wall(state.h_walls, state.v_walls, action.orientation, action.row, action.col)
-    remaining = list(state.walls_remaining)
-    remaining[player] -= 1
-    return replace(
-        state,
-        h_walls=h,
-        v_walls=v,
-        walls_remaining=(remaining[0], remaining[1]),
-        current_player=opponent_of(player),
-        ply=state.ply + 1,
-    )
+    w0, w1 = state.walls_remaining
+    remaining = (w0 - 1, w1) if player == 0 else (w0, w1 - 1)
+    return GameState(state.pawns, h, v, remaining, 1 - player, None, state.ply + 1)
 
 
 def create_initial_state() -> GameState:
@@ -423,9 +395,7 @@ def encode_action(action: Action) -> int:
     return offset + wall_index(action.row, action.col)
 
 
-def decode_action(index: int) -> Action:
-    if not 0 <= index < ACTION_SPACE_SIZE:
-        raise ValueError(f"action index out of range: {index}")
+def _decode_action(index: int) -> Action:
     if index < H_WALL_ACTION_OFFSET:
         return Move(*divmod(index - MOVE_ACTION_OFFSET, BOARD_SIZE))
     orientation = 'h' if index < V_WALL_ACTION_OFFSET else 'v'
@@ -433,8 +403,22 @@ def decode_action(index: int) -> Action:
     return Wall(orientation, *divmod(slot, WALL_GRID))
 
 
+# Every action object, by index (actions are immutable, so they are shared).
+ACTIONS: tuple[Action, ...] = tuple(_decode_action(i) for i in range(ACTION_SPACE_SIZE))
+MOVES: tuple[Move, ...] = ACTIONS[MOVE_ACTION_OFFSET:H_WALL_ACTION_OFFSET]
+
+
+def decode_action(index: int) -> Action:
+    if not 0 <= index < ACTION_SPACE_SIZE:
+        raise ValueError(f"action index out of range: {index}")
+    return ACTIONS[index]
+
+
 def legal_action_indices(state: GameState) -> list[int]:
-    return [encode_action(a) for a in legal_actions(state)]
+    """Engine order: pawn moves first, then walls."""
+    if state.winner is not None:
+        return []
+    return [MOVE_ACTION_OFFSET + c for c in legal_pawn_move_cells(state)] + legal_wall_indices(state)
 
 
 # ---------------------------------------------------------------- notation

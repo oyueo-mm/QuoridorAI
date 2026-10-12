@@ -21,7 +21,7 @@ npm run bench:mcts    # MCTS 대국 평가 (장시간) → bench/results/mcts-be
                       #   BENCH_BUDGET_MIN(전체, 기본 40) · BENCH_GAME_LIMIT_S(대국당, 기본 90) · BENCH_ROWS(행 선택·순서)
 ```
 
-학습(Stage 6A, Python/Colab)은 [training/README.md](training/README.md)를 참고하세요.
+학습(Stage 6A·6B-1, Python/Colab)은 [training/README.md](training/README.md)를 참고하세요. Colab GPU 검증·Pilot은 `training/notebooks/stage6b1_gpu_verification.ipynb`에서 실행합니다.
 
 ```bash
 npm run fixtures:engine   # TS 엔진 → training/fixtures/engine_fixtures.json 재생성 (규칙을 바꿨을 때만)

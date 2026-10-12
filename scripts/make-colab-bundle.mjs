@@ -15,7 +15,7 @@ import { gzipSync } from 'node:zlib';
 
 const ROOT = process.cwd();
 const TRAINING = join(ROOT, 'training');
-const INCLUDE = ['pyproject.toml', 'README.md', 'quoridor_az', 'tests', 'fixtures'];
+const INCLUDE = ['pyproject.toml', 'README.md', 'quoridor_az', 'tests', 'fixtures', 'tools', 'results'];
 const SKIP = /(__pycache__|\.pyc$|\.pytest_cache|\.egg-info)/;
 
 function walk(path) {

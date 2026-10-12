@@ -14,12 +14,20 @@ Planes (11 x 9 x 9, float32, view coordinates):
 
 Actions: the 209-index layout of encoding.ts in view coordinates. canonical_action_index is an
 involution (engine -> view and view -> engine).
+
+Speed: planes 2-5, 8 and 9 depend only on the walls (in view coordinates), so they are built
+once per wall layout from bitboards and cached (wall_planes); a position then only adds its
+pawns and wall counts. reference.encode_state_planes is the original cell-by-cell version and
+tests require identical arrays.
 """
 
 from __future__ import annotations
 
+from functools import lru_cache
+
 import numpy as np
 
+from . import bitboard as bb
 from .engine import (
     ACTION_SPACE_SIZE,
     BOARD_SIZE,
@@ -27,10 +35,7 @@ from .engine import (
     NUM_CELLS,
     NUM_WALL_SLOTS,
     V_WALL_ACTION_OFFSET,
-    WALL_GRID,
     GameState,
-    distance_map,
-    is_blocked,
     legal_action_indices,
 )
 
@@ -58,58 +63,80 @@ def action_permutation(player: int) -> np.ndarray:
 
 
 def _reverse_mask(mask: int) -> int:
-    out = 0
-    for i in range(NUM_WALL_SLOTS):
-        if (mask >> i) & 1:
-            out |= 1 << (NUM_WALL_SLOTS - 1 - i)
-    return out
+    """Bit i -> bit 63 - i (the 180° rotation of the wall grid)."""
+    return int(format(mask, '064b')[::-1], 2)
 
 
 def canonical_view(state: GameState) -> tuple[int, int, tuple[int, int], tuple[int, int], int, int]:
     """(h_walls, v_walls, my_pawn, opponent_pawn, my_walls, opponent_walls) in view coordinates."""
     p = state.current_player
-    o = 1 - p
     if p == 0:
         return state.h_walls, state.v_walls, state.pawns[0], state.pawns[1], state.walls_remaining[0], state.walls_remaining[1]
-    rot = lambda c: (BOARD_SIZE - 1 - c[0], BOARD_SIZE - 1 - c[1])  # noqa: E731
-    return (
-        _reverse_mask(state.h_walls),
-        _reverse_mask(state.v_walls),
-        rot(state.pawns[p]),
-        rot(state.pawns[o]),
-        state.walls_remaining[p],
-        state.walls_remaining[o],
-    )
+    (r1, c1), (r0, c0) = state.pawns[1], state.pawns[0]
+    last = BOARD_SIZE - 1
+    return _reverse_mask(state.h_walls), _reverse_mask(state.v_walls), (last - r1, last - c1), (last - r0, last - c0), state.walls_remaining[1], state.walls_remaining[0]
+
+
+def _bits(mask: int, nbytes: int, n: int) -> np.ndarray:
+    return np.unpackbits(np.frombuffer(mask.to_bytes(nbytes, 'little'), dtype=np.uint8), bitorder='little')[:n]
+
+
+def _distance_plane(layers: tuple[int, ...]) -> np.ndarray:
+    """min(d, 80) / 80 per cell from BFS layers; unreachable cells = 1."""
+    buf = b''.join(layer.to_bytes(11, 'little') for layer in layers)
+    bits = np.unpackbits(np.frombuffer(buf, dtype=np.uint8), bitorder='little').reshape(len(layers), 88)[:, :NUM_CELLS]
+    dist = (bits * np.arange(len(layers))[:, None]).sum(axis=0)
+    return np.where(bits.any(axis=0), np.minimum(dist, DISTANCE_SCALE) / DISTANCE_SCALE, 1.0).reshape(BOARD_SIZE, BOARD_SIZE)
+
+
+WALL_PLANE_CACHE_SIZE = 1 << 14  # about 2 KB per entry
+
+
+@lru_cache(maxsize=WALL_PLANE_CACHE_SIZE)
+def wall_planes(h_walls: int, v_walls: int) -> np.ndarray:
+    """Planes 2, 3, 4, 5, 8, 9 (in that order) for a wall layout in view coordinates. Read-only."""
+    out = np.zeros((6, BOARD_SIZE, BOARD_SIZE), dtype=np.float32)
+    out[0, :8, :8] = _bits(h_walls, 8, 64).reshape(8, 8)
+    out[1, :8, :8] = _bits(v_walls, 8, 64).reshape(8, 8)
+    south, east = bb.blocked_masks(h_walls, v_walls)
+    out[2] = _bits(south, 11, NUM_CELLS).reshape(BOARD_SIZE, BOARD_SIZE)
+    out[3] = _bits(east, 11, NUM_CELLS).reshape(BOARD_SIZE, BOARD_SIZE)
+    out[4] = _distance_plane(bb.goal_layers(h_walls, v_walls, 0))
+    out[5] = _distance_plane(bb.goal_layers(h_walls, v_walls, BOARD_SIZE - 1))
+    out.setflags(write=False)
+    return out
+
+
+def encode_into(state: GameState, out: np.ndarray) -> None:
+    """Writes the planes of `state` into a zero-filled (11, 9, 9) float32 array."""
+    h, v, me, opp, my_walls, opp_walls = canonical_view(state)
+    static = wall_planes(h, v)
+    out[0, me[0], me[1]] = 1.0
+    out[1, opp[0], opp[1]] = 1.0
+    out[2:6] = static[0:4]
+    out[6] = my_walls / 10.0
+    out[7] = opp_walls / 10.0
+    out[8:10] = static[4:6]
+    out[10] = 1.0
 
 
 def encode_state_planes(state: GameState) -> np.ndarray:
-    h, v, me, opp, my_walls, opp_walls = canonical_view(state)
     planes = np.zeros((NUM_FEATURE_PLANES, BOARD_SIZE, BOARD_SIZE), dtype=np.float32)
-    planes[0, me[0], me[1]] = 1.0
-    planes[1, opp[0], opp[1]] = 1.0
-    for r in range(WALL_GRID):
-        for c in range(WALL_GRID):
-            bit = r * WALL_GRID + c
-            if (h >> bit) & 1:
-                planes[2, r, c] = 1.0
-            if (v >> bit) & 1:
-                planes[3, r, c] = 1.0
-    my_dist = distance_map(h, v, 0)
-    opp_dist = distance_map(h, v, BOARD_SIZE - 1)
-    for r in range(BOARD_SIZE):
-        for c in range(BOARD_SIZE):
-            if r < BOARD_SIZE - 1 and is_blocked(h, v, r, c, 1, 0):
-                planes[4, r, c] = 1.0
-            if c < BOARD_SIZE - 1 and is_blocked(h, v, r, c, 0, 1):
-                planes[5, r, c] = 1.0
-            dm = my_dist[r * BOARD_SIZE + c]
-            do = opp_dist[r * BOARD_SIZE + c]
-            planes[8, r, c] = 1.0 if dm < 0 else min(dm, DISTANCE_SCALE) / DISTANCE_SCALE
-            planes[9, r, c] = 1.0 if do < 0 else min(do, DISTANCE_SCALE) / DISTANCE_SCALE
-    planes[6] = my_walls / 10.0
-    planes[7] = opp_walls / 10.0
-    planes[10] = 1.0
+    encode_into(state, planes)
     return planes
+
+
+def encode_batch(states: list[GameState]) -> np.ndarray:
+    """(B, 11, 9, 9) float32 — one allocation for the whole batch."""
+    planes = np.zeros((len(states), NUM_FEATURE_PLANES, BOARD_SIZE, BOARD_SIZE), dtype=np.float32)
+    for i, s in enumerate(states):
+        encode_into(s, planes[i])
+    return planes
+
+
+def clear_caches() -> None:
+    wall_planes.cache_clear()
+    bb.clear_caches()
 
 
 def legal_mask(state: GameState) -> np.ndarray:

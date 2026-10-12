@@ -1,0 +1,298 @@
+{
+ "created": "2026-10-12 23:42:24",
+ "machine": {
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.10",
+  "processor": "Intel64 Family 6 Model 189 Stepping 1, GenuineIntel",
+  "torch_threads": 4
+ },
+ "repeats": 3,
+ "identical_results": {
+  "legal_hash": true,
+  "planes_hash": true,
+  "mcts_hash": true,
+  "selfplay_hash": true
+ },
+ "positions": 935,
+ "selfplay_games": {
+  "games": 2,
+  "plies": [
+   113,
+   200
+  ],
+  "outcomes": [
+   "win",
+   "halted-max-plies"
+  ],
+  "seconds": 7.252829199991538,
+  "seconds_per_game": 3.626414599995769,
+  "simulations_per_second": 1380.9783360142667,
+  "samples": 113
+ },
+ "table": [
+  {
+   "metric": "legal_action_indices, first pass, empty caches (\u00b5s/position)",
+   "baseline": 1195.3696256651629,
+   "candidate": 27.062887709368677,
+   "speedup": 44.170069303112385
+  },
+  {
+   "metric": "legal_action_indices, second pass (\u00b5s/position)",
+   "baseline": 1195.8768983953012,
+   "candidate": 4.618395730619005,
+   "speedup": 258.93772819572075
+  },
+  {
+   "metric": "encode_state_planes, first pass, empty caches (\u00b5s/position)",
+   "baseline": 384.0229946517331,
+   "candidate": 19.449839570166116,
+   "speedup": 19.744275692678798
+  },
+  {
+   "metric": "encode_state_planes, second pass (\u00b5s/position)",
+   "baseline": 382.34342246336297,
+   "candidate": 3.7954010680706345,
+   "speedup": 100.73860854387243
+  },
+  {
+   "metric": "MCTS simulations/s (batch 1, CPU network)",
+   "baseline": 390.8824072615102,
+   "candidate": 1179.7083092481396,
+   "speedup": 3.018064480090261
+  },
+  {
+   "metric": "self-play seconds per game (32 sims, 2 games)",
+   "baseline": 8.708193550002761,
+   "candidate": 3.626414599995769,
+   "speedup": 2.4013232105377362
+  },
+  {
+   "metric": "self-play simulations/s",
+   "baseline": 575.0905708794693,
+   "candidate": 1380.9783360142667,
+   "speedup": 2.4013232105377362
+  }
+ ],
+ "runs": {
+  "baseline": [
+   {
+    "package": "C:\\Users\\hihi9\\AppData\\Local\\Temp\\claude\\c--Users-hihi9-Desktop-Projects-QuoridorAI\\60eace48-1764-4ec7-8cec-ff3a2f798809\\scratchpad\\baseline_6a\\training\\quoridor_az",
+    "positions": 935,
+    "legal_us": {
+     "first_pass": 1195.3696256651629,
+     "second_pass": 1281.8642780664104
+    },
+    "legal_hash": "b0381e68e46af59d",
+    "encode_us": {
+     "first_pass": 384.0229946517331,
+     "second_pass": 380.4743315471725
+    },
+    "planes_hash": "500b8b61c33cc77c",
+    "mcts": {
+     "simulations": 600,
+     "seconds": 1.5343082999897888,
+     "simulations_per_second": 391.055695914565
+    },
+    "mcts_hash": "6e8dbc867018a49b",
+    "selfplay": {
+     "games": 2,
+     "plies": [
+      113,
+      200
+     ],
+     "outcomes": [
+      "win",
+      "halted-max-plies"
+     ],
+     "seconds": 16.766732899995986,
+     "seconds_per_game": 8.383366449997993,
+     "simulations_per_second": 597.3733857239652,
+     "samples": 113
+    },
+    "selfplay_hash": "7f7d0793a80be0f6"
+   },
+   {
+    "package": "C:\\Users\\hihi9\\AppData\\Local\\Temp\\claude\\c--Users-hihi9-Desktop-Projects-QuoridorAI\\60eace48-1764-4ec7-8cec-ff3a2f798809\\scratchpad\\baseline_6a\\training\\quoridor_az",
+    "positions": 935,
+    "legal_us": {
+     "first_pass": 1257.331871656691,
+     "second_pass": 1195.8768983953012
+    },
+    "legal_hash": "b0381e68e46af59d",
+    "encode_us": {
+     "first_pass": 381.9266310208203,
+     "second_pass": 388.89989304794545
+    },
+    "planes_hash": "500b8b61c33cc77c",
+    "mcts": {
+     "simulations": 600,
+     "seconds": 1.5349885000032373,
+     "simulations_per_second": 390.8824072615102
+    },
+    "mcts_hash": "6e8dbc867018a49b",
+    "selfplay": {
+     "games": 2,
+     "plies": [
+      113,
+      200
+     ],
+     "outcomes": [
+      "win",
+      "halted-max-plies"
+     ],
+     "seconds": 17.416387100005522,
+     "seconds_per_game": 8.708193550002761,
+     "simulations_per_second": 575.0905708794693,
+     "samples": 113
+    },
+    "selfplay_hash": "7f7d0793a80be0f6"
+   },
+   {
+    "package": "C:\\Users\\hihi9\\AppData\\Local\\Temp\\claude\\c--Users-hihi9-Desktop-Projects-QuoridorAI\\60eace48-1764-4ec7-8cec-ff3a2f798809\\scratchpad\\baseline_6a\\training\\quoridor_az",
+    "positions": 935,
+    "legal_us": {
+     "first_pass": 1182.2811764587752,
+     "second_pass": 1161.6682352991227
+    },
+    "legal_hash": "b0381e68e46af59d",
+    "encode_us": {
+     "first_pass": 384.3963636305771,
+     "second_pass": 382.34342246336297
+    },
+    "planes_hash": "500b8b61c33cc77c",
+    "mcts": {
+     "simulations": 600,
+     "seconds": 1.562314000009792,
+     "simulations_per_second": 384.0457167997211
+    },
+    "mcts_hash": "6e8dbc867018a49b",
+    "selfplay": {
+     "games": 2,
+     "plies": [
+      113,
+      200
+     ],
+     "outcomes": [
+      "win",
+      "halted-max-plies"
+     ],
+     "seconds": 17.745585700002266,
+     "seconds_per_game": 8.872792850001133,
+     "simulations_per_second": 564.4220579317774,
+     "samples": 113
+    },
+    "selfplay_hash": "7f7d0793a80be0f6"
+   }
+  ],
+  "candidate": [
+   {
+    "package": "C:\\Users\\hihi9\\Desktop\\Projects\\QuoridorAI\\training\\quoridor_az",
+    "positions": 935,
+    "legal_us": {
+     "first_pass": 26.481497328090953,
+     "second_pass": 4.618395730619005
+    },
+    "legal_hash": "b0381e68e46af59d",
+    "encode_us": {
+     "first_pass": 19.449839570166116,
+     "second_pass": 4.2433155087983225
+    },
+    "planes_hash": "500b8b61c33cc77c",
+    "mcts": {
+     "simulations": 600,
+     "seconds": 0.5406027000135509,
+     "simulations_per_second": 1109.8723701989654
+    },
+    "mcts_hash": "6e8dbc867018a49b",
+    "selfplay": {
+     "games": 2,
+     "plies": [
+      113,
+      200
+     ],
+     "outcomes": [
+      "win",
+      "halted-max-plies"
+     ],
+     "seconds": 7.252829199991538,
+     "seconds_per_game": 3.626414599995769,
+     "simulations_per_second": 1380.9783360142667,
+     "samples": 113
+    },
+    "selfplay_hash": "7f7d0793a80be0f6"
+   },
+   {
+    "package": "C:\\Users\\hihi9\\Desktop\\Projects\\QuoridorAI\\training\\quoridor_az",
+    "positions": 935,
+    "legal_us": {
+     "first_pass": 29.38299466305497,
+     "second_pass": 4.481497335242715
+    },
+    "legal_hash": "b0381e68e46af59d",
+    "encode_us": {
+     "first_pass": 22.278502670659577,
+     "second_pass": 3.7954010680706345
+    },
+    "planes_hash": "500b8b61c33cc77c",
+    "mcts": {
+     "simulations": 600,
+     "seconds": 0.5086003000033088,
+     "simulations_per_second": 1179.7083092481396
+    },
+    "mcts_hash": "6e8dbc867018a49b",
+    "selfplay": {
+     "games": 2,
+     "plies": [
+      113,
+      200
+     ],
+     "outcomes": [
+      "win",
+      "halted-max-plies"
+     ],
+     "seconds": 7.212743099997169,
+     "seconds_per_game": 3.6063715499985847,
+     "simulations_per_second": 1388.6533682315583,
+     "samples": 113
+    },
+    "selfplay_hash": "7f7d0793a80be0f6"
+   },
+   {
+    "package": "C:\\Users\\hihi9\\Desktop\\Projects\\QuoridorAI\\training\\quoridor_az",
+    "positions": 935,
+    "legal_us": {
+     "first_pass": 27.062887709368677,
+     "second_pass": 5.136898383846815
+    },
+    "legal_hash": "b0381e68e46af59d",
+    "encode_us": {
+     "first_pass": 18.653155081621545,
+     "second_pass": 3.756898396802857
+    },
+    "planes_hash": "500b8b61c33cc77c",
+    "mcts": {
+     "simulations": 600,
+     "seconds": 0.49935070000356063,
+     "simulations_per_second": 1201.5603462570928
+    },
+    "mcts_hash": "6e8dbc867018a49b",
+    "selfplay": {
+     "games": 2,
+     "plies": [
+      113,
+      200
+     ],
+     "outcomes": [
+      "win",
+      "halted-max-plies"
+     ],
+     "seconds": 7.350894999995944,
+     "seconds_per_game": 3.675447499997972,
+     "simulations_per_second": 1362.555171853975,
+     "samples": 113
+    },
+    "selfplay_hash": "7f7d0793a80be0f6"
+   }
+  ]
+ }
+}
