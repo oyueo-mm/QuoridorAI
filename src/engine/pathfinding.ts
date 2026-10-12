@@ -60,12 +60,36 @@ function reconstruct(parent: Int16Array, end: number, startIdx: number): Coord[]
 
 /** Number of steps on the shortest route to `targetRow`, or Infinity if none exists. */
 export function distanceToRow(walls: WallLayout, start: Coord, targetRow: number): number {
-  const path = shortestPath(walls, start, targetRow);
-  return path === null ? Infinity : path.length - 1;
+  if (start.row === targetRow) return 0;
+  // Hot path for search evaluation: reuse module-level buffers, no path reconstruction.
+  const dist = scratchDist.fill(UNREACHABLE);
+  const queue = scratchQueue;
+  let head = 0;
+  let tail = 0;
+  const startIdx = cellIndex(start.row, start.col);
+  dist[startIdx] = 0;
+  queue[tail++] = startIdx;
+  while (head < tail) {
+    const idx = queue[head++];
+    const row = Math.floor(idx / BOARD_SIZE);
+    const col = idx % BOARD_SIZE;
+    for (const d of DIRECTIONS) {
+      if (!canStep(walls, row, col, d.row, d.col)) continue;
+      const next = idx + d.row * BOARD_SIZE + d.col;
+      if (dist[next] !== UNREACHABLE) continue;
+      dist[next] = dist[idx] + 1;
+      if (row + d.row === targetRow) return dist[next];
+      queue[tail++] = next;
+    }
+  }
+  return Infinity;
 }
 
+const scratchDist = new Int16Array(NUM_CELLS);
+const scratchQueue = new Int16Array(NUM_CELLS);
+
 export function hasPathToRow(walls: WallLayout, start: Coord, targetRow: number): boolean {
-  return shortestPath(walls, start, targetRow) !== null;
+  return distanceToRow(walls, start, targetRow) !== Infinity;
 }
 
 /**

@@ -88,6 +88,14 @@ export function createState(setup: StateSetup = {}): GameState {
 /** Applies a legal action and returns the next state. Throws IllegalActionError otherwise. */
 export function applyAction(state: GameState, action: Action): GameState {
   if (!isLegalAction(state, action)) throw new IllegalActionError(action);
+  return applyActionUnchecked(state, action);
+}
+
+/**
+ * State transition without the legality check. Only for actions that were just produced
+ * by the engine's own generators (e.g. inside a search); anything else must use applyAction.
+ */
+export function applyActionUnchecked(state: GameState, action: Action): GameState {
   const player = state.currentPlayer;
 
   if (action.type === 'move') {

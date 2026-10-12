@@ -1,5 +1,6 @@
-import { DIRECTIONS, WALL_GRID, canStep, opponentOf, sameCoord } from './board';
-import { checkWallPlacement } from './walls';
+import { DIRECTIONS, WALL_GRID, canStep, goalRow, opponentOf, sameCoord } from './board';
+import { hasPathToRow, shortestPath } from './pathfinding';
+import { checkWallPlacement, pathEdgeSet, wallConflicts, wallCutsEdges, withWall } from './walls';
 import type { Action, Coord, GameState, Orientation, PlayerId, WallAction } from './types';
 
 /**
@@ -48,8 +49,42 @@ export function legalPawnMoves(state: GameState, player: PlayerId = state.curren
   return moves;
 }
 
-/** All legal wall placements for the player to move, horizontal walls first, row-major. */
+/**
+ * All legal wall placements for the player to move, horizontal walls first, row-major.
+ *
+ * Optimised: a wall can only disconnect a player if it cuts that player's current shortest
+ * path (otherwise that path still exists). So each player's path is computed once, and the
+ * full reachability BFS is only run for walls that cut one of the two paths.
+ * Equivalent to legalWallPlacementsBruteForce (verified by tests).
+ */
 export function legalWallPlacements(state: GameState): WallAction[] {
+  if (state.winner !== null || state.wallsRemaining[state.currentPlayer] <= 0) return [];
+  const paths = [0, 1].map((p) => shortestPath(state, state.pawns[p], goalRow(p as PlayerId)));
+  if (paths[0] === null || paths[1] === null) return legalWallPlacementsBruteForce(state);
+  const edges = [pathEdgeSet(paths[0]), pathEdgeSet(paths[1])];
+
+  const result: WallAction[] = [];
+  const orientations: Orientation[] = ['h', 'v'];
+  for (const orientation of orientations) {
+    for (let row = 0; row < WALL_GRID; row++) {
+      for (let col = 0; col < WALL_GRID; col++) {
+        if (wallConflicts(state, orientation, row, col)) continue;
+        const cuts0 = wallCutsEdges(edges[0], orientation, row, col);
+        const cuts1 = wallCutsEdges(edges[1], orientation, row, col);
+        if (cuts0 || cuts1) {
+          const next = withWall(state, orientation, row, col);
+          if (cuts0 && !hasPathToRow(next, state.pawns[0], goalRow(0))) continue;
+          if (cuts1 && !hasPathToRow(next, state.pawns[1], goalRow(1))) continue;
+        }
+        result.push({ type: 'wall', orientation, row, col });
+      }
+    }
+  }
+  return result;
+}
+
+/** Reference implementation: full checkWallPlacement for every slot. Kept for tests/benchmarks. */
+export function legalWallPlacementsBruteForce(state: GameState): WallAction[] {
   if (state.winner !== null || state.wallsRemaining[state.currentPlayer] <= 0) return [];
   const result: WallAction[] = [];
   const orientations: Orientation[] = ['h', 'v'];

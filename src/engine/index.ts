@@ -10,3 +10,4 @@ export * from './rules';
 export * from './game';
 export * from './encoding';
 export * from './notation';
+export * from './zobrist';
