@@ -21,3 +21,12 @@ training/notebooks/runs/
 *.onnx
 *.onnx.data
 !public/models/*.onnx
+# secrets / credentials (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*.json
+client_secret*.json
+service-account*.json
