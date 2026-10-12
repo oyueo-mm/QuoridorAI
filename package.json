@@ -10,7 +10,11 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
-    "bench": "vitest run --config vitest.bench.config.ts"
+    "bench": "npm run bench:search",
+    "bench:search": "vitest run --config vitest.bench.config.ts bench/search.bench.test.ts",
+    "bench:mcts": "vitest run --config vitest.bench.config.ts bench/mcts.bench.test.ts",
+    "bench:mcts-steps": "vitest run --config vitest.bench.config.ts bench/mcts-improvement.test.ts",
+    "bench:mcts-diagnosis": "vitest run --config vitest.bench.config.ts bench/mcts-diagnosis.test.ts"
   },
   "dependencies": {
     "react": "^19.3.0",

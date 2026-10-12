@@ -56,3 +56,49 @@ describe('runMatch', () => {
     await expect(runMatch([cheater, createBfsAgent()])).rejects.toThrow(IllegalAgentActionError);
   });
 });
+
+describe('runMatch experimental guards', () => {
+  const shuffler = (a: [number, number], b: [number, number]): Agent => {
+    let flip = false;
+    return {
+      id: 'shuffler',
+      decide: async (state) => {
+        flip = !flip;
+        const [row, col] = flip ? a : b;
+        const action = { type: 'move' as const, to: { row, col } };
+        return {
+          action,
+          trace: { algorithm: 'random', player: state.currentPlayer, ply: state.ply, elapsedMs: 0, seed: 0, decisionIndex: 0,
+            candidateCount: 1, pawnMoveCount: 1, wallCount: 0, roll: 0, chosenIndex: 0, chosenAction: action },
+        };
+      },
+    };
+  };
+
+  it('halts on a repeated position without declaring a winner', async () => {
+    // Both pawns step sideways and back: the start position recurs every 4 plies.
+    const record = await runMatch([shuffler([8, 3], [8, 4]), shuffler([0, 3], [0, 4])], { repetitionLimit: 3, maxPlies: 400 });
+    expect(record.status).toEqual({ kind: 'halted', reason: 'repetition', repeats: 3 });
+    expect(record.finalState.winner).toBeNull();
+    expect(record.moves).toHaveLength(8);
+  });
+
+  it('halts when the game exceeds its wall-clock budget', async () => {
+    let t = 0;
+    const record = await runMatch([createRandomAgent({ seed: 1 }), createRandomAgent({ seed: 2 })], {
+      maxGameMs: 50,
+      clock: () => (t += 10),
+    });
+    expect(record.status).toEqual({ kind: 'halted', reason: 'time-limit', limitMs: 50 });
+    expect(record.finalState.winner).toBeNull();
+  });
+
+  it('reports every move through onMove', async () => {
+    const seen: number[] = [];
+    const record = await runMatch([createRandomAgent({ seed: 1 }), createRandomAgent({ seed: 2 })], {
+      maxPlies: 10,
+      onMove: (_m, s) => seen.push(s.ply),
+    });
+    expect(seen).toEqual(record.moves.map((_, i) => i + 1));
+  });
+});

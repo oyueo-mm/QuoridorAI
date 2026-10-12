@@ -1,8 +1,9 @@
 import { DEFAULT_BFS_WEIGHTS } from '../ai/bfsAgent';
+import { resolveMctsSettings } from '../ai/mctsAgent';
 import { resolveMinimaxSettings } from '../ai/minimaxAgent';
 import { randomSeed } from '../ai/rng';
 import type { AgentId } from '../ai/registry';
-import type { BfsWeights, MinimaxSettings } from '../ai/types';
+import type { BfsWeights, MctsSettings, MinimaxSettings } from '../ai/types';
 import type { PlayerId } from '../engine';
 import { DEFAULT_MAX_PLIES } from '../match/outcome';
 
@@ -20,6 +21,8 @@ export interface GameConfig {
   seed: number;
   bfsWeights: BfsWeights;
   minimax: MinimaxSettings;
+  mcts: MctsSettings;
+  mctsGuided: MctsSettings;
   /** Experimental ply budget; reaching it halts the game without a winner. null = unlimited. */
   maxPlies: number | null;
 }
@@ -31,6 +34,8 @@ export function defaultConfig(): GameConfig {
     seed: randomSeed(),
     bfsWeights: { ...DEFAULT_BFS_WEIGHTS },
     minimax: resolveMinimaxSettings(),
+    mcts: resolveMctsSettings(),
+    mctsGuided: resolveMctsSettings({ variant: 'guided' }),
     maxPlies: DEFAULT_MAX_PLIES,
   };
 }

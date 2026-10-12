@@ -33,7 +33,7 @@ const settings = resolveMinimaxSettings({ maxDepth: 2, timeLimitMs: 0 });
 describe('WorkerAgent', () => {
   it('returns the worker search result and forwards progress', async () => {
     const workers: FakeWorker[] = [];
-    const agent = createWorkerAgent(settings, () => {
+    const agent = createWorkerAgent({ agent: 'minimax', settings }, () => {
       const w = new FakeWorker();
       workers.push(w);
       return w;
@@ -43,7 +43,7 @@ describe('WorkerAgent', () => {
     const { action, trace } = await agent.decide(state, { onProgress: (p) => progress.push(p.completedDepth) });
     expect(isLegalAction(state, action)).toBe(true);
     expect(trace.algorithm).toBe('minimax');
-    expect(trace.completedDepth).toBe(2);
+    expect(trace.algorithm === 'minimax' && trace.completedDepth).toBe(2);
     expect(progress).toContain(2);
     // The worker is reused for the next decision.
     await agent.decide(applyAction(state, action));
@@ -53,7 +53,7 @@ describe('WorkerAgent', () => {
 
   it('abort terminates the worker, rejects, and ignores the late answer', async () => {
     const workers: FakeWorker[] = [];
-    const agent = createWorkerAgent(settings, () => {
+    const agent = createWorkerAgent({ agent: 'minimax', settings }, () => {
       const w = new FakeWorker(true);
       workers.push(w);
       return w;
@@ -76,14 +76,14 @@ describe('WorkerAgent', () => {
 
   it('dispose terminates the worker', async () => {
     const w = new FakeWorker();
-    const agent = createWorkerAgent(settings, () => w);
+    const agent = createWorkerAgent({ agent: 'minimax', settings }, () => w);
     await agent.decide(createInitialState());
     agent.dispose?.();
     expect(w.terminated).toBe(true);
   });
 
   it('reports worker-side errors', async () => {
-    const agent = createWorkerAgent(settings, () => new FakeWorker());
+    const agent = createWorkerAgent({ agent: 'minimax', settings }, () => new FakeWorker());
     const finished = { ...createInitialState(), winner: 0 as const };
     await expect(agent.decide(finished)).rejects.toThrow();
   });

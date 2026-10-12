@@ -5,6 +5,7 @@ import { distanceToRow, goalRow, legalPawnMoves, legalWallPlacements } from '../
 import type { GameState } from '../../engine';
 import type { HistoryEntry } from '../../session/useGameSession';
 import { BfsAnalysis } from '../analysis/BfsAnalysis';
+import { MctsAnalysis } from '../analysis/MctsAnalysis';
 import { MinimaxAnalysis } from '../analysis/MinimaxAnalysis';
 import type { PreviewBinder } from '../analysis/preview';
 import { RandomAnalysis } from '../analysis/RandomAnalysis';
@@ -111,7 +112,10 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
           <div className="space-y-3">
             <div className="flex flex-wrap items-baseline justify-between gap-x-3 text-xs">
               <span className="font-semibold text-slate-200">
-                {agentName(decision.trace.algorithm)} · {PLAYER_LABEL[decision.trace.player]}
+                {agentName(
+                  decision.trace.algorithm === 'mcts' && decision.trace.settings.variant === 'guided' ? 'mcts-guided' : decision.trace.algorithm,
+                )}{' '}
+                · {PLAYER_LABEL[decision.trace.player]}
               </span>
               <span className="font-mono text-[11px] text-slate-500">
                 ply {decision.index + 1} · {decision.trace.elapsedMs.toFixed(1)} ms
@@ -122,8 +126,10 @@ export function AnalysisPanel({ state, history, hasAi, thinking, onPreview }: An
               <RandomAnalysis entry={decision.entry} trace={decision.trace} bind={bind} />
             ) : decision.trace.algorithm === 'bfs' ? (
               <BfsAnalysis entry={decision.entry} trace={decision.trace} bind={bind} />
-            ) : (
+            ) : decision.trace.algorithm === 'minimax' ? (
               <MinimaxAnalysis key={decision.index} entry={decision.entry} trace={decision.trace} bind={bind} />
+            ) : (
+              <MctsAnalysis key={decision.index} entry={decision.entry} trace={decision.trace} bind={bind} />
             )}
           </div>
         )}

@@ -127,7 +127,13 @@ export class GameController {
     for (const old of this.agents) old?.dispose?.();
     this.agents = controllers.map((c) =>
       c.kind === 'ai'
-        ? this.agentFactory(c.agentId, { seed: config.seed, bfsWeights: config.bfsWeights, minimax: config.minimax })
+        ? this.agentFactory(c.agentId, {
+            seed: config.seed,
+            bfsWeights: config.bfsWeights,
+            minimax: config.minimax,
+            mcts: config.mcts,
+            mctsGuided: config.mctsGuided,
+          })
         : null,
     ) as [Agent | null, Agent | null];
     const game = createInitialState();

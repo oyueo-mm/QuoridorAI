@@ -6,6 +6,7 @@ import type { BfsWeights } from '../../ai/types';
 import type { PlayerId } from '../../engine';
 import type { GameConfig, Opponent } from '../../session/config';
 import { PLAYER_LABEL } from '../theme';
+import { MctsSettingsForm } from './MctsSettingsForm';
 import { MinimaxSettingsForm } from './MinimaxSettingsForm';
 import { Panel } from './Panel';
 
@@ -19,6 +20,8 @@ const MODES: { value: Opponent; label: string }[] = [
   { value: 'random', label: 'Human vs Random AI' },
   { value: 'bfs', label: 'Human vs BFS AI' },
   { value: 'minimax', label: 'Human vs Minimax AI' },
+  { value: 'mcts', label: 'Human vs Pure MCTS AI' },
+  { value: 'mcts-guided', label: 'Human vs Guided MCTS AI' },
 ];
 
 const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = [
@@ -81,7 +84,14 @@ export function SetupPanel({ current, onStart }: SetupPanelProps) {
           </div>
         </div>
 
-        {draft.opponent === 'random' && (
+        {draft.opponent === 'mcts' && (
+          <MctsSettingsForm value={draft.mcts} onChange={(mcts) => setDraft({ ...draft, mcts })} />
+        )}
+        {draft.opponent === 'mcts-guided' && (
+          <MctsSettingsForm value={draft.mctsGuided} onChange={(mctsGuided) => setDraft({ ...draft, mctsGuided })} />
+        )}
+
+        {(draft.opponent === 'random' || draft.opponent === 'mcts' || draft.opponent === 'mcts-guided') && (
           <label className="block">
             <span className="mb-1.5 block text-xs text-slate-400">무작위 시드</span>
             <div className="flex gap-2">

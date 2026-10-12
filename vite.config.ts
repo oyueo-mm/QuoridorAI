@@ -10,5 +10,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts'],
+    // Search-algorithm tests (MCTS rollouts, deep Minimax) can exceed vitest's 5 s default.
+    testTimeout: 30_000,
   },
 });

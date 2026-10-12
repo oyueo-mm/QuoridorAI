@@ -39,6 +39,9 @@ export interface AgentProgress {
   /** Best move of the last completed iteration. */
   bestNotation?: string;
   score?: number;
+  /** MCTS only: simulations so far and the simulation budget. */
+  simulations?: number;
+  simulationLimit?: number;
 }
 
 export interface Agent<T extends DecisionTraceBase = DecisionTrace> {
@@ -254,4 +257,109 @@ export interface MinimaxTrace extends DecisionTraceBase {
   rationale: string[];
 }
 
-export type DecisionTrace = RandomTrace | BfsTrace | MinimaxTrace;
+// ---------------------------------------------------------------- MCTS
+
+export type RolloutPolicy = 'uniform' | 'balanced' | 'heuristic';
+
+export interface MctsSettings {
+  /**
+   * 'pure' = classic UCT with random/heuristic rollouts (stage-4 baseline, kept unchanged);
+   * 'guided' = Heuristic-Guided MCTS (evaluation cut-off, PUCT with heuristic priors, value shaping).
+   * Informational: the individual switches below define the behaviour.
+   */
+  variant: 'pure' | 'guided';
+  /** Maximum number of simulations (selection → expansion → simulation → backpropagation). */
+  iterations: number;
+  /** Wall-clock budget in ms; 0 = unlimited. With a time limit the result depends on speed. */
+  timeLimitMs: number;
+  /** UCT exploration constant C in Q + C·√(ln N_parent / N_child), Q ∈ [−1, 1]. */
+  exploration: number;
+  rollout: RolloutPolicy;
+  /** Rollouts stop after this many plies even without a winner. */
+  rolloutMaxPlies: number;
+  /**
+   * Value of a rollout that hit rolloutMaxPlies: 'distance' = race estimate from path lengths
+   * only, 'evaluation' = the Minimax evaluation (path lengths + walls in hand + tempo),
+   * 'draw' = 0.
+   */
+  rolloutCutoff: 'distance' | 'evaluation' | 'draw';
+  /** Tree policy: UCT (expand every child before re-visiting) or PUCT with heuristic priors. */
+  selection: 'uct' | 'puct';
+  /** PUCT constant c in Q + c·P·√N_parent / (1 + N_child). */
+  puctConstant: number;
+  /** Softmax temperature (in evaluation units ≈ steps) turning 1-ply evaluations into priors. */
+  priorTemperature: number;
+  /**
+   * Value shaping against saturation: heuristic estimates are mapped with a soft sign into
+   * (−0.9, 0.9) instead of saturating near ±1, and wins found by a rollout keep a margin
+   * term in (0.9, 1). Terminal/proven tree nodes stay exactly ±1, so a real win always
+   * outranks any estimate.
+   */
+  valueShaping: boolean;
+  /** Balanced rollout: probability of choosing a pawn move instead of a wall. */
+  balancedMoveProbability: number;
+  /** Same candidate filter as Minimax: 'opponent-path' keeps only walls cutting the opponent's path. */
+  wallFilter: 'all' | 'opponent-path';
+  /** Tree size cap; once reached, no new nodes are expanded (memory bound). */
+  maxNodes: number;
+}
+
+export type ProvenResult = 'win' | 'loss' | null;
+
+export interface MctsCandidate {
+  action: Action;
+  notation: string;
+  visits: number;
+  /** Mean value W/N from the deciding player's perspective, in [−1, 1]. */
+  q: number;
+  /** Final UCT score as seen from the root (null for proven moves). */
+  uct: number | null;
+  /** visits / total root visits. */
+  share: number;
+  /** Solved by MCTS-Solver from the deciding player's view. */
+  proven: ProvenResult;
+  /** Prior probability (PUCT only). */
+  prior?: number;
+  /** Most visited opponent reply under this move. */
+  reply?: { action: Action; notation: string; visits: number; q: number };
+  rank: number;
+}
+
+export interface MctsSnapshot {
+  simulations: number;
+  elapsedMs: number;
+  /** Top root children by visits at that moment (q from the deciding player's view). */
+  top: { notation: string; visits: number; q: number }[];
+}
+
+export interface MctsTrace extends DecisionTraceBase {
+  algorithm: 'mcts';
+  settings: MctsSettings;
+  /** Seed of the RNG used for this decision (derived from the game seed and ply). */
+  seed: number;
+  simulations: number;
+  treeNodes: number;
+  maxTreeDepth: number;
+  stopReason: 'iterations' | 'time' | 'proven-win' | 'proven-loss' | 'single-move';
+  rootQ: number;
+  rollouts: {
+    /** Simulations that ran a rollout (others ended in a terminal/proven tree node). */
+    count: number;
+    terminal: number;
+    truncated: number;
+    avgPlies: number;
+    treeTerminal: number;
+  };
+  /** How simulation results are turned into values (recorded for transparency). */
+  valueRule: string;
+  legalActionCount: number;
+  searchedActionCount: number;
+  candidates: MctsCandidate[];
+  selectionRule: 'most-visits' | 'proven-win';
+  /** Most-visited line from the root; q from the perspective of the player making each move. */
+  pv: { action: Action; notation: string; visits: number; q: number }[];
+  snapshots: MctsSnapshot[];
+  rationale: string[];
+}
+
+export type DecisionTrace = RandomTrace | BfsTrace | MinimaxTrace | MctsTrace;

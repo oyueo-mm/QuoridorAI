@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { DEFAULT_BFS_WEIGHTS } from '../../ai/bfsAgent';
+import { resolveMctsSettings } from '../../ai/mctsAgent';
 import { resolveMinimaxSettings } from '../../ai/minimaxAgent';
 import { createAgent } from '../../ai/registry';
 import type { Agent } from '../../ai/types';
@@ -13,6 +14,8 @@ const config = (patch: Partial<GameConfig> = {}): GameConfig => ({
   seed: 1,
   bfsWeights: { ...DEFAULT_BFS_WEIGHTS },
   minimax: resolveMinimaxSettings({ maxDepth: 2, timeLimitMs: 0 }),
+  mcts: resolveMctsSettings({ iterations: 200, timeLimitMs: 0 }),
+  mctsGuided: resolveMctsSettings({ variant: 'guided', iterations: 200, timeLimitMs: 0 }),
   maxPlies: 400,
   ...patch,
 });
@@ -230,5 +233,32 @@ describe('GameController with Minimax', () => {
     expect(s.history).toHaveLength(1);
     expect(s.history[0].trace?.algorithm).toBe('bfs');
     expect(progressSeen).not.toContain(999);
+  });
+});
+
+describe('GameController with MCTS', () => {
+  it('plays an MCTS reply and reproduces it for the same seed', async () => {
+    const play = async () => {
+      const ctl = make(config({ opponent: 'mcts', seed: 5 }));
+      ctl.playHuman(move(7, 4));
+      await ctl.idle();
+      const s = ctl.getSnapshot();
+      expect(s.history).toHaveLength(2);
+      const trace = s.history[1].trace!;
+      expect(trace.algorithm).toBe('mcts');
+      if (trace.algorithm === 'mcts') expect(trace.simulations).toBe(200);
+      expect(s.progress).toBeNull();
+      return s.history[1].action;
+    };
+    expect(await play()).toEqual(await play());
+  });
+
+  it('MCTS moves first when the user plays second, and restart discards it', async () => {
+    const ctl = make(config({ userSeat: 1, opponent: 'mcts' }));
+    ctl.restart(config({ userSeat: 1, opponent: 'random' }));
+    await ctl.idle();
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(1);
+    expect(s.history[0].trace?.algorithm).toBe('random');
   });
 });

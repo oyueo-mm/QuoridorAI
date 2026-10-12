@@ -15,7 +15,13 @@ export const AGENT_CATALOG: readonly AgentDescriptor[] = [
     description: 'Minimax / Alpha-Beta 탐색 (반복 심화, 이동 정렬, 전치표, Web Worker)',
     available: true,
   },
-  { id: 'mcts', name: 'MCTS', description: '몬테카를로 트리 탐색', available: false },
+  { id: 'mcts', name: 'Pure MCTS AI', description: '순수 몬테카를로 트리 탐색 (UCT, 긴 롤아웃, MCTS-Solver)', available: true },
+  {
+    id: 'mcts-guided',
+    name: 'Guided MCTS AI',
+    description: '휴리스틱 유도 MCTS (평가 컷오프 4 ply, PUCT + 휴리스틱 사전 확률, 가치 포화 완화)',
+    available: true,
+  },
   { id: 'alphazero', name: 'AlphaZero', description: '정책·가치망 + PUCT 탐색', available: false },
 ];
 

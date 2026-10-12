@@ -1,19 +1,19 @@
 import type { GameState } from '../../engine';
-import type { Agent, AgentContext, AgentDecision, MinimaxSettings, MinimaxTrace } from '../types';
-import type { WorkerLike, WorkerResponse } from './protocol';
+import type { Agent, AgentContext, AgentDecision } from '../types';
+import type { WorkerJob, WorkerLike, WorkerResponse, WorkerTrace } from './protocol';
 
 function abortError(): Error {
   return new DOMException('Decision aborted', 'AbortError');
 }
 
 /**
- * Runs Minimax in a Web Worker so long searches never block the UI.
+ * Runs a search agent (Minimax or MCTS) in a Web Worker so long searches never block the UI.
  *
  * Stale results cannot leak: each request has an id and only messages with the current id
  * are accepted; aborting terminates the worker (stopping the computation immediately) and a
  * fresh worker is created for the next request.
  */
-export function createWorkerAgent(settings: MinimaxSettings, createWorker: () => WorkerLike): Agent<MinimaxTrace> {
+export function createWorkerAgent(job: WorkerJob, createWorker: () => WorkerLike): Agent<WorkerTrace> {
   let worker: WorkerLike | null = null;
   let seq = 0;
 
@@ -25,8 +25,8 @@ export function createWorkerAgent(settings: MinimaxSettings, createWorker: () =>
   };
 
   return {
-    id: 'minimax',
-    decide(state: GameState, context?: AgentContext): Promise<AgentDecision<MinimaxTrace>> {
+    id: job.agent,
+    decide(state: GameState, context?: AgentContext): Promise<AgentDecision<WorkerTrace>> {
       return new Promise((resolve, reject) => {
         const signal = context?.signal;
         if (signal?.aborted) return reject(abortError());
@@ -63,7 +63,7 @@ export function createWorkerAgent(settings: MinimaxSettings, createWorker: () =>
           reject(new Error(event.message ?? 'Search worker failed'));
         };
         signal?.addEventListener('abort', onAbort, { once: true });
-        w.postMessage({ type: 'decide', id, state, settings });
+        w.postMessage({ ...job, type: 'decide', id, state });
       });
     },
     dispose() {

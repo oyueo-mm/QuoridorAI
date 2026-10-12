@@ -3,7 +3,7 @@
 
 대상 알고리즘: Random, BFS, Minimax, Alpha-Beta, MCTS, AlphaZero 계열.
 
-> 현재 단계: **3단계 — Minimax / Alpha-Beta 탐색 AI (Web Worker) · 탐색 시각화**
+> 현재 단계: **4단계 — Pure MCTS / Heuristic-Guided MCTS (PUCT) · 탐색 재생 시각화**
 
 ## 실행
 
@@ -14,7 +14,10 @@ npm test           # 단위 테스트 (Vitest)
 npm run typecheck  # 타입 검사
 npm run build      # 타입 검사 + 프로덕션 빌드 (dist/)
 npm run preview    # 빌드 결과 미리보기 → http://localhost:4173/QuoridorAI/
-npm run bench      # 탐색 벤치마크 → bench/results/search-benchmark.md (약 1분)
+npm run bench:search  # Minimax 탐색 벤치마크 → bench/results/search-benchmark.md (약 1분)
+npm run bench:mcts-steps  # Guided MCTS 단계별 소규모 평가 (BENCH_STEP=A|B|C) → bench/results/mcts-improvement/
+npm run bench:mcts    # MCTS 대국 평가 (장시간) → bench/results/mcts-benchmark.{md,jsonl,progress.log}
+                      #   BENCH_BUDGET_MIN(전체, 기본 40) · BENCH_GAME_LIMIT_S(대국당, 기본 90) · BENCH_ROWS(행 선택·순서)
 ```
 
 ## 배포 (GitHub Pages)
@@ -33,6 +36,8 @@ GitHub Pages 배포를 수행합니다. PR에서는 검증만 실행합니다.
 | Human vs Random AI | 합법 행동 중 균등 무작위 선택. 시드를 지정하면 같은 진행에서 같은 수를 둡니다. |
 | Human vs BFS AI | 모든 합법 행동(말 이동 + 벽)을 BFS 최단 거리로 평가하는 1수 휴리스틱. |
 | Human vs Minimax AI | 양측 대응을 고려하는 Minimax / Alpha-Beta 탐색. Web Worker에서 실행되어 UI가 멈추지 않습니다. |
+| Human vs Pure MCTS AI | UCT + 긴 휴리스틱 롤아웃의 순수 MCTS(기준선). 시뮬레이션 횟수·시간·롤아웃 전략을 설정할 수 있고 Web Worker에서 실행됩니다. |
+| Human vs Guided MCTS AI | 평가 함수 컷오프(4 ply) + PUCT 휴리스틱 사전 확률 + 가치 포화 완화를 쓰는 개선형 MCTS. |
 
 선공/후공을 선택할 수 있고, 후공이면 AI가 첫 수를 둡니다. AI 차례에는 보드 조작이 막힙니다.
 
@@ -61,18 +66,58 @@ GitHub Pages 배포를 수행합니다. PR에서는 검증만 실행합니다.
 - **취소 안전성**: 요청 id + 중단 시 Worker 종료 + 컨트롤러의 상태 일치 검사의 3중 장치로, 재시작·에이전트 변경 후 이전 탐색 결과·진행 상황이 반영되지 않습니다.
 - 기본 설정: Alpha-Beta, 최대 깊이 5, 시간 제한 2000 ms, 이동 정렬·TT 사용. 설정 패널에서 조정할 수 있습니다.
 
+### MCTS AI
+
+- **코어** (`src/ai/mcts/core.ts`): 게임에 독립적인 Selection → Expansion(한 번에 자식 1개) → Simulation → Backpropagation.
+  노드는 "그 노드로 들어온 수를 둔 플레이어" 관점의 W를 누적하므로 Q = W/N이 곧 그 수의 평균 가치입니다.
+- **UCT**: `Q + C·√(ln N부모 / N)`, Q ∈ [−1, 1], 기본 C = 1.4. 선택 규칙은 교체 가능한 객체이고 노드에 `prior`가 있어
+  AlphaZero의 PUCT(`Q + c·P·√N부모 / (1 + N)`)와 신경망 가치 평가(`LeafEvaluator`)로 바꿔 끼울 수 있습니다.
+- **MCTS-Solver**: 종료 포지션은 정확히 ±1, 상대에게 승리 수가 있는 노드는 '패배', 모든 응수가 지는 노드는 '승리'로 증명·전파합니다.
+  루트에서 승리가 증명되면 즉시 탐색을 멈추고 그 수를 둡니다(즉시 승리·즉시 패배 위협 처리).
+- **효율**: 후보는 Minimax와 같은 필터(말 이동 + 상대 최단 경로를 끊는 벽), 확장 순서는 승리 수 → 목표에 가까운 이동 → 벽.
+  노드 수 상한(기본 200,000)에 도달하면 더 확장하지 않습니다.
+- **롤아웃 전략**: 균등 무작위(합법 행동 전체에서 거부 표집 — 첫 수 기준 약 98%가 벽), 이동/벽 균형(이동 확률 설정),
+  BFS 휴리스틱(최단 경로로 전진, 상대가 앞서면 상대 경로를 끊는 벽, ε = 0.1 무작위).
+- **가치 규칙**: 롤아웃이 실제로 끝나면 ±1. 최대 길이(기본 100 ply)에 도달하면 `tanh((d상대 − d내 ± 0.5)/3)`(|v| < 1, 실제 승패와 구분)
+  또는 0(무승부 설정). 종료/절단 횟수는 DecisionTrace에 기록됩니다.
+- **재현성**: 결정마다 `(게임 시드, ply)`에서 유도한 시드를 씁니다. 시간 제한 없이 시뮬레이션 횟수만 제한하면 완전히 재현됩니다.
+- 최종 선택: 증명된 승리 수 → 그 외에는 최다 방문 수(패배가 증명된 수 제외).
+
+#### Pure MCTS의 약점과 Heuristic-Guided MCTS
+
+진단(`bench/results/mcts-diagnosis.md`) 결과 구현 버그는 없었고, 약점은 구조적이었습니다: 벽을 남발하는 롤아웃의 편향,
+잡음에 비해 부족한 시뮬레이션(동일 시간 200 ms에서 수당 수십~수백 회), 일방적인 포지션의 가치 포화.
+Guided MCTS는 다음을 단계별로(A → B → C) 적용하고 각각을 같은 포지션·시드·시간 예산과 미사용 검증 포지션에서 측정했습니다
+(`bench/results/mcts-improvement/SUMMARY.md`).
+
+- **A. 평가 함수 컷오프**: 롤아웃 4 ply 후 Minimax 평가(거리 + 남은 벽 + 템포)로 값을 매김. 0/2/4 ply 중 실제 대국 결과가 가장 좋았던 4 ply 채택.
+- **B. PUCT + 휴리스틱 사전 확률**: 각 후보의 1수 평가를 softmax로 사전 확률화, 지연 확장. 방문 집중(엔트로피 4.1 → 1.6비트), 트리 깊이 3 → 11.
+- **C. 가치 포화 완화**: 추정값을 `0.9·x/(|x|+4)`로 사상(|v| < 0.9), 롤아웃 안의 승리는 ±(0.9~1), 트리 종료·증명 노드는 ±1 — 실제 승리가 항상 추정보다 큼.
+- 결과(200 ms, 소규모): 고정 포지션의 Alpha-Beta 손실 0.89 → 0.22(검증 세트), Alpha-Beta 상대 6판 0승 → 4승 2패. 표본이 작아 대국 결과는 경향으로만 해석해야 합니다.
+
 ### 분석 패널
 
 AI가 실제로 계산해 `DecisionTrace`에 기록한 값만 표시합니다.
 
 - **Random**: 후보 행동 수(이동/벽), 개별 선택 확률, 난수 r과 선택 인덱스, 시드, 결정 순번.
 - **BFS**: 선택 행동과 근거 문장, 평가 전/후 내·상대 경로 길이, 실제 가중치가 들어간 점수식, 상위 10개 후보 비교표.
+- **MCTS**: 시뮬레이션 수·시간·트리 노드·최대 깊이·롤아웃 종료/절단 통계, 후보별 방문 N·평균 가치 Q·UCT·증명 결과·최다 응수,
+  탐색 분포 막대, 스냅샷 기반 탐색 재생(슬라이더/재생 버튼 + 상위 4개 후보의 방문 비율 변화 그래프), 최다 방문 경로.
+  스냅샷은 상위 8개 후보만 저장하고 64개를 넘으면 간격을 두 배로 늘려 메모리를 제한합니다.
 - **Minimax**: 도달 깊이, 방문 노드, β 컷 횟수, TT 적중, 소요 시간, 반복 심화 깊이별 결과, 후보별 점수(Alpha-Beta가 상한만 증명한 후보는 `≤`와 반박 수로 표시),
   예상 상대 응수, Principal Variation(단계별 보드 미리보기, PV 끝 정적 평가가 탐색 점수와 일치하는지 표시), 탐색 트리(루트 → 내 후보 → 상대 응수, 주 변화 강조·나머지 요약).
 - 후보 행·선택 카드에 마우스를 올리면 해당 행동을 둔 뒤의 보드와 AI가 계산한 두 경로가 표시되고, 클릭하면 고정됩니다.
 - ◀ ▶로 이전 AI 결정을 다시 볼 수 있습니다.
 
-### 실험용 최대 턴
+### 실험용 대국 중단 규칙
+
+- UI 대국: `maxPlies`(기본 400 ply)에 도달하면 실험 중단.
+- 헤드리스 `runMatch()`: `maxPlies` 외에 대국 전체 시간 제한(`maxGameMs`, 수와 수 사이에 검사)과
+  같은 포지션 반복 감지(`repetitionLimit`, 폰·벽·남은 벽·차례가 모두 같은 포지션이 N회 나오면 중단 — 공식 규칙 아님)를 지원합니다.
+- 모든 중단은 `{ kind: 'halted', reason: 'max-plies' | 'time-limit' | 'repetition' }`로 기록되고 승패로 세지 않습니다.
+- MCTS 벤치마크는 대국이 끝날 때마다 JSONL에 즉시 저장하고 진행 로그를 남기며, 전체 예산을 넘기면 남은 대국을 건너뛰고 요약에 기록합니다.
+
+### 실험용 최대 턴 (UI)
 
 `maxPlies`(기본 400 ply)에 도달하면 **실험 중단(halted)** 으로 끝나며 승자가 없습니다.
 엔진 규칙에 따른 **승리(win)** 와는 `MatchStatus`에서 구분됩니다. 헤드리스 AI vs AI 대국은 `runMatch()`를 사용합니다.
@@ -92,14 +137,15 @@ src/
     notation.ts    기보 표기 (e2, e3h …)
   ai/            Agent 계약·DecisionTrace 타입, Random/BFS/Minimax 에이전트, 시드 RNG, 레지스트리
     search/        Minimax/Alpha-Beta 탐색, 평가 함수, 후보 생성
+    mcts/          MCTS 코어(게임 독립), Quoridor 어댑터, 롤아웃 전략
     worker/        Web Worker 진입점·프로토콜·WorkerAgent
   match/         MatchStatus(승리/실험 중단 구분), 헤드리스 대국 러너 runMatch
   session/       GameController(턴 관리·AI 자동 진행·취소), React 훅, 게임 설정
   components/
     board/         SVG 보드, 히트 테스트, 분석 오버레이
-    analysis/      Random/BFS/Minimax DecisionTrace 시각화, 탐색 트리
+    analysis/      Random/BFS/Minimax/MCTS DecisionTrace 시각화, 탐색 트리, 방문 비율 그래프
     panels/        설정, 플레이어 카드, 분석 패널, 기보
-bench/           탐색 벤치마크 (npm run bench) 및 결과
+bench/           탐색 벤치마크·대국 평가 (npm run bench:*) 및 결과
 training/        Python/PyTorch 학습 코드 (Colab, 추후)
 ```
 

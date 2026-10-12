@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['bench/**/*.test.ts'],
-    testTimeout: 30 * 60 * 1000,
+    // Harnesses enforce their own budgets; this is only a last-resort ceiling.
+    testTimeout: 3 * 60 * 60 * 1000,
   },
 });
