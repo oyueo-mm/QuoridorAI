@@ -15,5 +15,5 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },
-  "include": ["vite.config.ts", "vitest.bench.config.ts", "bench"]
+  "include": ["vite.config.ts", "vitest.bench.config.ts", "vitest.fixtures.config.ts", "bench", "scripts"]
 }

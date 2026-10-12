@@ -21,6 +21,13 @@ npm run bench:mcts    # MCTS 대국 평가 (장시간) → bench/results/mcts-be
                       #   BENCH_BUDGET_MIN(전체, 기본 40) · BENCH_GAME_LIMIT_S(대국당, 기본 90) · BENCH_ROWS(행 선택·순서)
 ```
 
+학습(Stage 6A, Python/Colab)은 [training/README.md](training/README.md)를 참고하세요.
+
+```bash
+npm run fixtures:engine   # TS 엔진 → training/fixtures/engine_fixtures.json 재생성 (규칙을 바꿨을 때만)
+npm run colab:bundle      # training/ 코드를 Colab 업로드용 번들로 묶음 → training/dist/
+```
+
 ## 배포 (GitHub Pages)
 
 `.github/workflows/deploy.yml`이 `main`에 push될 때 테스트 → 타입 검사 → 빌드 → 자산 경로 확인 →
@@ -167,6 +174,7 @@ src/
     rules.ts       합법적 말 이동(점프·대각선) / 벽 설치 / 전체 행동 생성
     game.ts        초기 상태, 임의 상태 생성, 행동 적용, 승리 판정
     encoding.ts    신경망용 행동 인덱스(0..208) 인코딩
+    tensor.ts      신경망 입력 텐서(qz-features-v1)·관점(canonical) 변환 — Python features.py와 동일
     notation.ts    기보 표기 (e2, e3h …)
   arena/         에이전트 명세·예산 매핑, MatchSession(관전), 토너먼트 실행기, 통계, 내보내기
   compare/       같은 포지션 의사결정 비교
@@ -182,7 +190,8 @@ src/
     analysis/      Random/BFS/Minimax/MCTS DecisionTrace 시각화, 탐색 트리, 방문 비율 그래프
     panels/        설정, 플레이어 카드, 분석 패널, 기보
 bench/           탐색 벤치마크·대국 평가 (npm run bench:*) 및 결과
-training/        Python/PyTorch 학습 코드 (Colab, 추후)
+scripts/         교차 언어 Fixture 생성(engineFixtures.ts), Colab 번들(make-colab-bundle.mjs)
+training/        AlphaZero 학습 인프라: Python 엔진 포팅·Neural MCTS·Self-Play·학습·체크포인트, Colab 노트북
 ```
 
 새 AI를 추가하려면 `ai/`에 `Agent`를 구현하고, `DecisionTrace` 유니온과 `registry.ts`, `catalog.ts`에
@@ -197,7 +206,8 @@ training/        Python/PyTorch 학습 코드 (Colab, 추후)
   - `v`: `col` 오른쪽, 행 `row`~`row+1`을 가로막음
 - 행동 인덱스(`encoding.ts`, 총 209):
   `[0,81)` 말 이동(목적지 `row*9+col`) · `[81,145)` 가로벽 · `[145,209)` 세로벽(`row*8+col`).
-  학습 코드도 이 매핑을 그대로 따라야 합니다.
+  학습 코드도 이 매핑을 그대로 따라야 합니다. Python 포팅(`training/quoridor_az/engine.py`)은 TS가 생성한
+  Fixture(`training/fixtures/engine_fixtures.json`)로 합법 행동 순서·벽 판정·거리·전이·입력 텐서까지 대조합니다.
 - 상태는 불변(immutable)입니다. `applyAction`은 새 상태를 반환하며 불법 행동이면 예외를 던집니다.
 
 ## UI 조작

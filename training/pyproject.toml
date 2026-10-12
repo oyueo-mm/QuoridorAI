@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quoridor-az"
+version = "0.1.0"
+description = "AlphaZero-style training for QuoridorAI (rules mirror the TypeScript engine)"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+# torch is preinstalled on Colab; locally install the CPU wheel if you want to run the NN tests.
+torch = ["torch>=2.1"]
+dev = ["pytest>=8"]
+
+[tool.setuptools]
+packages = ["quoridor_az"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

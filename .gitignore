@@ -8,3 +8,16 @@ training/checkpoints/
 training/runs/
 __pycache__/
 *.pt
+# Python / training (Stage 6)
+training/.venv/
+training/dist/
+training/notebooks/runs/
+*.egg-info/
+.pytest_cache/
+*.pyc
+*.npz
+*.ckpt
+*.pth
+*.onnx
+*.onnx.data
+!public/models/*.onnx

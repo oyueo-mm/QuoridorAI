@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'node',
-    include: ['src/**/*.test.ts'],
+    include: ['src/**/*.test.ts', 'scripts/**/*.test.ts'],
     // Search-algorithm tests (MCTS rollouts, deep Minimax) can exceed vitest's 5 s default.
     testTimeout: 30_000,
   },

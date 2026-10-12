@@ -15,7 +15,9 @@
     "bench:mcts": "vitest run --config vitest.bench.config.ts bench/mcts.bench.test.ts",
     "bench:mcts-steps": "vitest run --config vitest.bench.config.ts bench/mcts-improvement.test.ts",
     "bench:mcts-diagnosis": "vitest run --config vitest.bench.config.ts bench/mcts-diagnosis.test.ts",
-    "bench:arena": "vitest run --config vitest.bench.config.ts bench/arena.bench.test.ts"
+    "bench:arena": "vitest run --config vitest.bench.config.ts bench/arena.bench.test.ts",
+    "fixtures:engine": "vitest run --config vitest.fixtures.config.ts",
+    "colab:bundle": "node scripts/make-colab-bundle.mjs"
   },
   "dependencies": {
     "react": "^19.3.0",
