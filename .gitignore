@@ -1,0 +1,10 @@
+node_modules
+dist
+*.local
+*.tsbuildinfo
+.vite
+# training artifacts (Colab outputs)
+training/checkpoints/
+training/runs/
+__pycache__/
+*.pt
