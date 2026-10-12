@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { DEFAULT_BFS_WEIGHTS } from '../../ai/bfsAgent';
 import { AGENT_CATALOG } from '../../ai/catalog';
+import { randomSeed } from '../../ai/rng';
+import type { BfsWeights } from '../../ai/types';
 import type { PlayerId } from '../../engine';
-import type { GameConfig } from '../../session/config';
+import type { GameConfig, Opponent } from '../../session/config';
 import { PLAYER_LABEL } from '../theme';
 import { Panel } from './Panel';
 
@@ -10,25 +13,48 @@ interface SetupPanelProps {
   onStart: (config: GameConfig) => void;
 }
 
+const MODES: { value: Opponent; label: string }[] = [
+  { value: 'human', label: 'Human vs Human' },
+  { value: 'random', label: 'Human vs Random AI' },
+  { value: 'bfs', label: 'Human vs BFS AI' },
+];
+
+const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = [
+  { key: 'selfDistance', label: '내 거리 가중치', step: 0.1 },
+  { key: 'opponentDistance', label: '상대 거리 가중치', step: 0.1 },
+  { key: 'wallCost', label: '벽 기본 비용', step: 0.1 },
+  { key: 'wallScarcity', label: '벽 희소성 비용', step: 0.1 },
+  { key: 'opponentWinThreat', label: '상대 즉시승리 위협', step: 10 },
+];
+
+const inputClass =
+  'w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-sky-500 focus:outline-none';
+
 export function SetupPanel({ current, onStart }: SetupPanelProps) {
   const [draft, setDraft] = useState<GameConfig>(current);
-  const changed = draft.userSeat !== current.userSeat || draft.opponent !== current.opponent;
+  const changed = JSON.stringify(draft) !== JSON.stringify(current);
+  const setWeight = (key: keyof BfsWeights, value: number) =>
+    setDraft({ ...draft, bfsWeights: { ...draft.bfsWeights, [key]: value } });
 
   return (
     <Panel title="게임 설정">
       <div className="space-y-4">
         <label className="block">
-          <span className="mb-1.5 block text-xs text-slate-400">상대</span>
+          <span className="mb-1.5 block text-xs text-slate-400">대전 모드</span>
           <select
             value={draft.opponent}
-            onChange={(e) => setDraft({ ...draft, opponent: e.target.value })}
-            className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-200 focus:border-sky-500 focus:outline-none"
+            onChange={(e) => setDraft({ ...draft, opponent: e.target.value as Opponent })}
+            className={inputClass}
           >
-            <option value="local">로컬 플레이어 (같은 기기)</option>
-            <optgroup label="AI 알고리즘 — 다음 단계에서 구현">
-              {AGENT_CATALOG.map((agent) => (
-                <option key={agent.id} value={agent.id} disabled={!agent.available}>
-                  {agent.name} {agent.available ? '' : '(준비 중)'}
+            {MODES.map((m) => (
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
+            ))}
+            <optgroup label="다음 단계에서 구현">
+              {AGENT_CATALOG.filter((a) => !a.available).map((agent) => (
+                <option key={agent.id} value={agent.id} disabled>
+                  Human vs {agent.name} (준비 중)
                 </option>
               ))}
             </optgroup>
@@ -52,6 +78,73 @@ export function SetupPanel({ current, onStart }: SetupPanelProps) {
             ))}
           </div>
         </div>
+
+        {draft.opponent === 'random' && (
+          <label className="block">
+            <span className="mb-1.5 block text-xs text-slate-400">무작위 시드</span>
+            <div className="flex gap-2">
+              <input
+                type="number"
+                value={draft.seed}
+                onChange={(e) => setDraft({ ...draft, seed: Math.trunc(Number(e.target.value)) || 0 })}
+                className={`${inputClass} font-mono`}
+              />
+              <button
+                type="button"
+                onClick={() => setDraft({ ...draft, seed: randomSeed() })}
+                className="shrink-0 rounded-lg border border-slate-700 px-3 text-xs text-slate-300 hover:bg-slate-800"
+                title="새 시드"
+              >
+                새 시드
+              </button>
+            </div>
+            <span className="mt-1 block text-[11px] text-slate-500">같은 시드와 같은 진행이면 같은 수를 둡니다.</span>
+          </label>
+        )}
+
+        {draft.opponent === 'bfs' && (
+          <details className="rounded-lg border border-slate-800 bg-slate-950/50 px-3 py-2">
+            <summary className="cursor-pointer text-xs text-slate-400">BFS 휴리스틱 가중치</summary>
+            <div className="mt-3 space-y-2">
+              {WEIGHT_FIELDS.map((f) => (
+                <label key={f.key} className="flex items-center justify-between gap-3 text-xs text-slate-400">
+                  {f.label}
+                  <input
+                    type="number"
+                    step={f.step}
+                    min={0}
+                    value={draft.bfsWeights[f.key]}
+                    onChange={(e) => setWeight(f.key, Math.max(0, Number(e.target.value) || 0))}
+                    className="w-20 rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-right font-mono text-slate-200 focus:border-sky-500 focus:outline-none"
+                  />
+                </label>
+              ))}
+              <button
+                type="button"
+                onClick={() => setDraft({ ...draft, bfsWeights: { ...DEFAULT_BFS_WEIGHTS } })}
+                className="text-[11px] text-sky-400 hover:underline"
+              >
+                기본값으로
+              </button>
+            </div>
+          </details>
+        )}
+
+        <label className="flex items-center justify-between gap-3 text-xs text-slate-400">
+          <span>
+            실험용 최대 턴 <span className="text-slate-500">(ply, 비우면 무제한)</span>
+          </span>
+          <input
+            type="number"
+            min={1}
+            value={draft.maxPlies ?? ''}
+            onChange={(e) => {
+              const v = Math.trunc(Number(e.target.value));
+              setDraft({ ...draft, maxPlies: e.target.value === '' || v <= 0 ? null : v });
+            }}
+            className="w-20 rounded-md border border-slate-700 bg-slate-950 px-2 py-1 text-right font-mono text-slate-200 focus:border-sky-500 focus:outline-none"
+          />
+        </label>
 
         <button
           type="button"

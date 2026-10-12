@@ -1,21 +1,39 @@
+import { DEFAULT_BFS_WEIGHTS } from '../ai/bfsAgent';
+import { randomSeed } from '../ai/rng';
+import type { AgentId } from '../ai/registry';
+import type { BfsWeights } from '../ai/types';
 import type { PlayerId } from '../engine';
+import { DEFAULT_MAX_PLIES } from '../match/outcome';
 
-/** Who controls a seat. AI seats reference an id from AGENT_CATALOG. */
-export type SeatController = { kind: 'human' } | { kind: 'ai'; agentId: string };
+/** Who controls a seat. */
+export type SeatController = { kind: 'human' } | { kind: 'ai'; agentId: AgentId };
 
-/** 'local' = a second person on the same device (hot-seat); otherwise an AGENT_CATALOG id. */
-export type OpponentId = 'local' | string;
+/** 'human' = a second person on the same device (hot-seat). */
+export type Opponent = 'human' | AgentId;
 
 export interface GameConfig {
   /** Seat the user plays. Player 0 always moves first. */
   userSeat: PlayerId;
-  opponent: OpponentId;
+  opponent: Opponent;
+  /** Seed for stochastic agents (Random AI). */
+  seed: number;
+  bfsWeights: BfsWeights;
+  /** Experimental ply budget; reaching it halts the game without a winner. null = unlimited. */
+  maxPlies: number | null;
 }
 
-export const DEFAULT_CONFIG: GameConfig = { userSeat: 0, opponent: 'local' };
+export function defaultConfig(): GameConfig {
+  return {
+    userSeat: 0,
+    opponent: 'bfs',
+    seed: randomSeed(),
+    bfsWeights: { ...DEFAULT_BFS_WEIGHTS },
+    maxPlies: DEFAULT_MAX_PLIES,
+  };
+}
 
 export function seatControllers(config: GameConfig): [SeatController, SeatController] {
   const opponent: SeatController =
-    config.opponent === 'local' ? { kind: 'human' } : { kind: 'ai', agentId: config.opponent };
+    config.opponent === 'human' ? { kind: 'human' } : { kind: 'ai', agentId: config.opponent };
   return config.userSeat === 0 ? [{ kind: 'human' }, opponent] : [opponent, { kind: 'human' }];
 }

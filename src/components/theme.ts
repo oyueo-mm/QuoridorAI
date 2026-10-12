@@ -3,7 +3,8 @@ import type { PlayerId, WallPlacementResult } from '../engine';
 /** Display names: engine player 0/1 are shown as P1/P2. */
 export const PLAYER_LABEL: Record<PlayerId, string> = { 0: 'P1', 1: 'P2' };
 
-export const PLAYER_COLOR: Record<PlayerId, string> = { 0: '#38bdf8', 1: '#fb7185' };
+// Validated for CVD separation and lightness on the dark board surface (#0f172a).
+export const PLAYER_COLOR: Record<PlayerId, string> = { 0: '#0b98d8', 1: '#f43f5e' };
 
 export const PLAYER_TEXT_CLASS: Record<PlayerId, string> = { 0: 'text-sky-400', 1: 'text-rose-400' };
 export const PLAYER_BG_CLASS: Record<PlayerId, string> = { 0: 'bg-sky-400', 1: 'bg-rose-400' };
