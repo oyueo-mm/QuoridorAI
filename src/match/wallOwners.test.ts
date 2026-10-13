@@ -49,6 +49,8 @@ describe('wall owners from the game record', () => {
     expect(parsed.actions.map((a) => a.player)).toEqual([0, 1, 0, 1]);
     const owners = wallOwnersFromMoves(openingRecord({ moves: 'e2 e8 e3h d6v' }));
     expect([...owners.values()].sort()).toEqual([0, 1]);
-    expect(openingRecord({ seed: 1, plies: 6 })).toEqual([]); // random openings move pawns only
+    const random = openingRecord({ seed: 1, plies: 6 });
+    expect(random).toHaveLength(6); // random openings: recorded pawn moves only
+    expect(wallOwnersFromMoves(random).size).toBe(0);
   });
 });

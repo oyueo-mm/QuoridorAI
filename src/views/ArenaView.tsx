@@ -20,8 +20,10 @@ import { Collapsible, Segmented, Tabs, buttonClass, cardClass, inputClass, useBo
 import { distanceToRow, goalRow, opponentOf } from '../engine';
 import type { GameState, PlayerId } from '../engine';
 import { describeHalt } from '../match/outcome';
+import { movesText } from '../match/gameRecord';
+import type { GameLine } from '../match/gameRecord';
 import { wallOwnersFromMoves } from '../match/wallOwners';
-import type { WallOwners } from '../match/wallOwners';
+import type { RecordedAction } from '../match/wallOwners';
 import type { MatchStatus } from '../match/outcome';
 
 interface Draft {
@@ -71,8 +73,15 @@ interface ArchivedMatch {
   final: GameState;
   moves: readonly ArenaMove[];
   budget: Budget;
-  /** Owners of walls already on the board at the start (from the opening move list). */
-  startOwners: WallOwners;
+  /** Moves from the standard start to `start` (the opening), e.g. for wall owners. */
+  startRecord: RecordedAction[];
+}
+
+/** A record sent from another view; Arena prepares a match starting from its selected ply. */
+export interface ArenaIncoming {
+  line: GameLine;
+  label: string;
+  sentAt: number;
 }
 
 const MAX_ARCHIVE = 10;
@@ -85,7 +94,7 @@ function resultText(status: MatchStatus, labels: [string, string]): { text: stri
 }
 
 /** AI vs AI: live viewing with play / pause / step / stop, replays and per-move DecisionTraces. */
-export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: string, wallOwners: WallOwners) => void }) {
+export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine, label: string) => void; incoming: ArenaIncoming | null }) {
   const [draft, setDraft] = useState<Draft>(INITIAL);
   const [delay, setDelay] = useState(400);
   const [session] = useState(() => new MatchSession(toConfig(INITIAL), workerFactory, 400));
@@ -103,14 +112,15 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
   useEffect(() => () => session.dispose(), [session]);
   useEffect(() => session.setDelay(delay), [session, delay]);
 
-  const liveStartOwners = useMemo(() => wallOwnersFromMoves(openingRecord(snap.config.opening)), [snap.config.opening]);
+  const liveStartRecord = useMemo(() => openingRecord(snap.config.opening), [snap.config.opening]);
+  const [notice, setNotice] = useState('');
   const labels: [string, string] = [agentLabel(snap.config.agents[0], snap.config.budget), agentLabel(snap.config.agents[1], snap.config.budget)];
 
   // Archive finished matches (bounded) and drive an automatic series.
   useEffect(() => {
     if (snap.phase !== 'finished' || archived.current.has(snap.matchId)) return;
     archived.current.add(snap.matchId);
-    setArchive((a) => [{ matchId: snap.matchId, labels, status: snap.status, start: snap.start, final: snap.game, moves: snap.moves, budget: snap.config.budget, startOwners: liveStartOwners }, ...a].slice(0, MAX_ARCHIVE));
+    setArchive((a) => [{ matchId: snap.matchId, labels, status: snap.status, start: snap.start, final: snap.game, moves: snap.moves, budget: snap.config.budget, startRecord: liveStartRecord }, ...a].slice(0, MAX_ARCHIVE));
     if (series.active) {
       const played = series.played + 1;
       if (played >= series.total) {
@@ -138,7 +148,21 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
   const ply = cursor === null ? moves.length : Math.min(cursor, moves.length);
   const boardState = ply === 0 ? start : ply < moves.length ? moves[ply].stateBefore : final;
   const selectedMove = ply > 0 ? moves[ply - 1] : undefined;
-  const wallOwners = useMemo(() => wallOwnersFromMoves(moves, shown ? shown.startOwners : liveStartOwners), [moves, shown, liveStartOwners]);
+  const startRecord = shown ? shown.startRecord : liveStartRecord;
+  const wallOwners = useMemo(() => wallOwnersFromMoves(moves, wallOwnersFromMoves(startRecord)), [moves, startRecord]);
+
+  // A record from Play / Compare: prepare a match that continues from its selected position.
+  useEffect(() => {
+    if (!incoming) return;
+    const next: Draft = { ...draft, openingMode: 'moves', moveText: movesText(incoming.line.actions, incoming.line.ply) };
+    setDraft(next);
+    setViewing(null);
+    setCursor(null);
+    setSeries((s) => ({ ...s, active: false }));
+    session.restart(toConfig(next));
+    setNotice(`${incoming.label} 포지션을 이어 둘 준비가 되었습니다 — ▶ 진행 (AI는 설정 탭에서 바꿀 수 있습니다)`);
+    setTab('moves');
+  }, [incoming?.sentAt]);
   // Sounds only for new live moves while the live position is shown (replay browsing is silent).
   // 'limited' thins out fast games to at most about three sounds per second.
   const soundSettings = useSyncExternalStore(soundEngine.subscribe, soundEngine.getSettings);
@@ -195,8 +219,14 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
               <SearchProgressBar progress={snap.progress} timeLimitMs={snap.config.budget.mode === 'equal-time' ? snap.config.budget.timeMs : 0} maxDepth={snap.config.budget.mode === 'equal-time' ? 30 : snap.config.agents[snap.game.currentPlayer].depth} />
             ) : (
               <div className="flex h-10 items-center justify-between gap-3 px-1 text-sm">
-                <span className={`truncate ${live ? result.tone : 'text-warn'}`}>
-                  {!live ? `리플레이 #${viewing} · ${result.text}` : shownStatus.kind === 'playing' ? `${PLAYER_LABEL[snap.game.currentPlayer]} ${snap.thinking ? '생각 중…' : snap.phase === 'running' ? '차례' : '대기 중'}` : result.text}
+                <span className={`truncate ${live ? result.tone : 'text-warn'}`} title={notice && live && snap.moves.length === 0 ? notice : undefined}>
+                  {!live
+                    ? `리플레이 #${viewing} · ${result.text}`
+                    : notice && snap.moves.length === 0 && snap.phase === 'idle'
+                      ? notice
+                      : shownStatus.kind === 'playing'
+                        ? `${PLAYER_LABEL[snap.game.currentPlayer]} ${snap.thinking ? '생각 중…' : snap.phase === 'running' ? '차례' : '대기 중'}`
+                        : result.text}
                 </span>
                 {!live && (
                   <button type="button" onClick={() => (setViewing(null), setCursor(null))} className={`${buttonClass.ghost} shrink-0 text-accent`}>
@@ -212,7 +242,7 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
             flipped={orientation.flipped}
             interactive={false}
             showPaths={false}
-            lastAction={selectedMove && { action: selectedMove.action, player: selectedMove.player }}
+            lastAction={selectedMove && { action: selectedMove.action, player: selectedMove.player, from: selectedMove.stateBefore.pawns[selectedMove.player] }}
             overlay={overlay}
             wallOwners={wallOwners}
             idleHint={cursor !== null || !live ? `${ply}수 후의 포지션` : ''}
@@ -280,7 +310,7 @@ export function ArenaView({ onCompare }: { onCompare: (state: GameState, label: 
                 {selectedMove && (
                   <button
                     type="button"
-                    onClick={() => onCompare(selectedMove.stateBefore, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`, wallOwners)}
+                    onClick={() => onCompare({ actions: [...startRecord, ...moves.map((m) => ({ action: m.action, player: m.player }))], ply: startRecord.length + ply - 1 }, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`)}
                     className={buttonClass.small}
                     title="이 수를 두기 직전 포지션을 Compare로 보냅니다"
                   >

@@ -23,7 +23,7 @@ interface PlayerStripProps {
 export function PlayerStrip({ player, name, isAi, wallsRemaining, distance, active, thinking, winner }: PlayerStripProps) {
   const status = winner ? '승리' : active ? (thinking ? '생각 중…' : '차례') : '';
   return (
-    <div className={`flex h-12 w-full items-center gap-3 rounded-xl px-3 transition-colors ${active || winner ? 'bg-card shadow-[var(--shadow-soft)]' : ''}`}>
+    <div data-player-strip={player} className={`flex h-12 w-full items-center gap-3 rounded-xl px-3 transition-colors ${active || winner ? 'bg-card shadow-[var(--shadow-soft)]' : ''}`}>
       <span className={`h-3 w-3 shrink-0 rounded-full ${PLAYER_BG_CLASS[player]}`} aria-hidden />
       <span className={`shrink-0 text-sm font-semibold ${PLAYER_TEXT_CLASS[player]}`}>{PLAYER_LABEL[player]}</span>
       <span className="min-w-0 truncate text-sm text-ink-soft" title={name}>

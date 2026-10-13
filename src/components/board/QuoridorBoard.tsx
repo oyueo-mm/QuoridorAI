@@ -42,7 +42,7 @@ interface QuoridorBoardProps {
   /** Draw the live BFS shortest paths of both players. */
   showPaths: boolean;
   /** Most recent action, emphasised on the board. */
-  lastAction?: { action: Action; player: PlayerId };
+  lastAction?: LastMove;
   /** Analysis preview drawn instead of the live position (board becomes read-only). */
   overlay?: BoardOverlay | null;
   /** Shown under the board when idle (e.g. "AI is thinking"). */
@@ -161,7 +161,6 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
 
   const mover = state.currentPlayer;
   const hoverCell = hover?.kind === 'cell' ? hover.view : null;
-  const highlight = overlay ? overlay.highlight : props.lastAction;
   const paths = overlay ? overlay.paths : livePaths;
 
   let hint = '';
@@ -262,7 +261,9 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             {overlay?.marks?.map((m, i) => (
               <ActionHighlight key={i} {...m} flipped={flipped} variant="mark" />
             ))}
-            {highlight && <ActionHighlight {...highlight} flipped={flipped} variant={overlay ? 'strong' : 'last'} />}
+            {overlay
+              ? overlay.highlight && <ActionHighlight {...overlay.highlight} flipped={flipped} variant="strong" />
+              : props.lastAction && <LastMoveMark key={lastMoveKey(props.lastAction)} last={props.lastAction} flipped={flipped} />}
 
             {/* Wall placement preview. */}
             {candidate && candidate.action.type === 'wall' && hover?.kind === 'wall' && (
@@ -369,6 +370,43 @@ function ActionHighlight({
           </text>
         </g>
       )}
+    </g>
+  );
+}
+
+/** The previous move: action, player and (for pawn moves) the cell it came from. */
+export interface LastMove {
+  action: Action;
+  player: PlayerId;
+  from?: Coord;
+}
+
+function lastMoveKey(m: LastMove): string {
+  return m.action.type === 'wall' ? `w${m.action.orientation}${m.action.row},${m.action.col}` : `m${m.from?.row},${m.from?.col}-${m.action.to.row},${m.action.to.col}`;
+}
+
+/**
+ * Quiet marker of the previous move, unlike the analysis highlight (solid ink) and the legal
+ * move dots: a soft solid outline in the mover's colour on the destination cell, a very faint
+ * dashed trace on the origin cell, or a thin outline around a newly placed wall (its owner
+ * colour stays as it is). Fades in once per move (`qz-last`; none with reduced motion).
+ */
+function LastMoveMark({ last, flipped }: { last: LastMove; flipped: boolean }) {
+  const colour = PLAYER_COLOR[last.player];
+  if (last.action.type === 'wall') {
+    const r = wallRect(last.action.orientation, wallAnchorToView(last.action.row, last.action.col, flipped));
+    return (
+      <g className="qz-last" pointerEvents="none" data-last-move="wall">
+        <rect x={r.x - 4} y={r.y - 4} width={r.width + 8} height={r.height + 8} rx={7} fill="none" stroke={colour} strokeOpacity={0.55} strokeWidth={2} />
+      </g>
+    );
+  }
+  const to = cellRect(cellToView(last.action.to, flipped));
+  const from = last.from ? cellRect(cellToView(last.from, flipped)) : null;
+  return (
+    <g className="qz-last" pointerEvents="none" data-last-move="move">
+      {from && <rect x={from.x + 3} y={from.y + 3} width={from.width - 6} height={from.height - 6} rx={7} fill={colour} fillOpacity={0.06} stroke={colour} strokeOpacity={0.25} strokeWidth={1.5} strokeDasharray="3 4" data-last-from="" />}
+      <rect x={to.x + 1.5} y={to.y + 1.5} width={to.width - 3} height={to.height - 3} rx={8} fill={colour} fillOpacity={0.07} stroke={colour} strokeOpacity={0.6} strokeWidth={2.5} data-last-to="" />
     </g>
   );
 }

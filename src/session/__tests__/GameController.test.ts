@@ -262,3 +262,105 @@ describe('GameController with MCTS', () => {
     expect(s.history[0].trace?.algorithm).toBe('random');
   });
 });
+
+describe('GameController undo', () => {
+  const wall = (orientation: 'h' | 'v', row: number, col: number): Action => ({ type: 'wall', orientation, row, col });
+
+  it('Human vs Human: takes back one move and restores walls in hand', () => {
+    const ctl = make(config({ opponent: 'human' }));
+    expect(ctl.getSnapshot().canUndo).toBe(false);
+    ctl.playHuman(move(7, 4));
+    ctl.playHuman(wall('h', 5, 3)); // P2 places a wall
+    expect(ctl.getSnapshot().game.wallsRemaining).toEqual([10, 9]);
+    expect(ctl.undo()).toBe(true);
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(1);
+    expect(s.game.currentPlayer).toBe(1);
+    expect(s.game.wallsRemaining).toEqual([10, 10]);
+    expect(s.game.hWalls.some((x) => x !== 0)).toBe(false);
+  });
+
+  it('a new move after undo discards the old continuation', () => {
+    const ctl = make(config({ opponent: 'human' }));
+    ctl.playHuman(move(7, 4));
+    ctl.playHuman(move(1, 4));
+    ctl.undo();
+    ctl.playHuman(move(0, 3));
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(2);
+    expect(s.history[1].action).toEqual(move(0, 3));
+  });
+
+  it('Human vs AI (user first): takes back the AI reply and the user move', async () => {
+    const ctl = make(config({ opponent: 'bfs' }));
+    ctl.playHuman(move(7, 4));
+    await ctl.idle();
+    expect(ctl.getSnapshot().history).toHaveLength(2);
+    expect(ctl.undo()).toBe(true);
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(0);
+    expect(s.humanToMove).toBe(true);
+    expect(s.game.pawns[0]).toEqual({ row: 8, col: 4 });
+    await ctl.idle();
+    expect(ctl.getSnapshot().history).toHaveLength(0); // the AI does not move again
+  });
+
+  it('Human vs AI (user second): keeps the AI opening move, nothing to undo before the user moved', async () => {
+    const ctl = make(config({ userSeat: 1, opponent: 'random' }));
+    await ctl.idle();
+    expect(ctl.getSnapshot().canUndo).toBe(false);
+    expect(ctl.undo()).toBe(false);
+    ctl.playHuman(move(1, 4));
+    await ctl.idle();
+    expect(ctl.getSnapshot().history).toHaveLength(3);
+    ctl.undo();
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(1);
+    expect(s.history[0].player).toBe(0);
+    expect(s.game.currentPlayer).toBe(1);
+    expect(s.humanToMove).toBe(true);
+  });
+
+  it('undo while the AI is thinking cancels it; its late answer is ignored', async () => {
+    let resolveSlow: () => void = () => {};
+    const slow: Agent = {
+      id: 'bfs',
+      decide: (state) =>
+        new Promise((resolve) => {
+          resolveSlow = () =>
+            resolve({
+              action: move(1, 4),
+              trace: { algorithm: 'random', player: state.currentPlayer, ply: state.ply, elapsedMs: 0, seed: 0,
+                decisionIndex: 0, candidateCount: 3, pawnMoveCount: 3, wallCount: 0, roll: 0, chosenIndex: 0, chosenAction: move(1, 4) },
+            });
+        }),
+    };
+    const ctl = make(config({ opponent: 'bfs' }), { agentFactory: (id, settings) => (id === 'bfs' ? slow : createAgent(id, settings)) });
+    ctl.playHuman(move(7, 4));
+    expect(ctl.getSnapshot().thinking).toBe(true);
+    expect(ctl.undo()).toBe(true);
+    resolveSlow();
+    await ctl.idle();
+    await new Promise((r) => setTimeout(r, 10));
+    const s = ctl.getSnapshot();
+    expect(s.history).toHaveLength(0);
+    expect(s.thinking).toBe(false);
+    expect(s.game.pawns[1]).toEqual({ row: 0, col: 4 });
+  });
+
+  it('undo after the game was won returns to the position before the winning move', () => {
+    const ctl = make(config({ opponent: 'human' }));
+    const p2 = [[0, 3], [0, 2], [0, 1], [0, 0], [1, 0], [2, 0], [3, 0]];
+    for (let i = 0; i < 8; i++) {
+      ctl.playHuman(move(7 - i, 4));
+      if (i < 7) ctl.playHuman(move(p2[i][0], p2[i][1]));
+    }
+    expect(ctl.getSnapshot().status.kind).toBe('win');
+    expect(ctl.undo()).toBe(true);
+    const s = ctl.getSnapshot();
+    expect(s.status.kind).toBe('playing');
+    expect(s.game.winner).toBeNull();
+    expect(s.game.pawns[0]).toEqual({ row: 1, col: 4 });
+    expect(s.humanToMove).toBe(true);
+  });
+});

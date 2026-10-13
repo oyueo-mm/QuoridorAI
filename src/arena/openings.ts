@@ -54,7 +54,7 @@ export function parseMoveList(text: string, start: GameState = createInitialStat
   return { positions, moves, actions };
 }
 
-/** The record of an Arena opening: the parsed move list, or none (random openings move pawns only). */
+/** The record of an Arena opening from the standard start: the move list, or the random pawn moves. */
 export function openingRecord(opening: OpeningSpec | { moves: string }): RecordedAction[] {
-  return 'moves' in opening ? parseMoveList(opening.moves).actions : [];
+  return parseMoveList('moves' in opening ? opening.moves : randomOpening(opening).moves.join(' ')).actions;
 }

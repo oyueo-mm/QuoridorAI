@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { GameState } from './engine';
-import { wallOwnersFromMoves } from './match/wallOwners';
-import type { WallOwners } from './match/wallOwners';
+
+import type { GameLine } from './match/gameRecord';
 import { SoundControl } from './components/SoundControl';
 import { useGameSession } from './session/useGameSession';
 import { ArenaView } from './views/ArenaView';
 import { CompareView } from './views/CompareView';
+import type { ArenaIncoming } from './views/ArenaView';
 import type { CompareSource } from './views/CompareView';
 import { ExperimentsView } from './views/ExperimentsView';
 import { HomeView } from './views/HomeView';
@@ -40,10 +40,18 @@ export default function App() {
     window.scrollTo({ top: 0 });
   }, []);
 
-  const playOwners = useMemo(() => wallOwnersFromMoves(session.history), [session.history]);
+  // The live Play game as a record (Compare's 'Play 탭' source).
+  const playLine = useMemo<GameLine>(() => ({ actions: session.history.map((h) => ({ action: h.action, player: h.player })), ply: session.history.length }), [session.history]);
+  const [arenaIncoming, setArenaIncoming] = useState<ArenaIncoming | null>(null);
 
-  const sendToCompare = useCallback((state: GameState, label: string, wallOwners: WallOwners) => {
-    setCompareSource({ state, label, sentAt: Date.now(), wallOwners });
+  const sendToArena = useCallback((line: GameLine, label: string) => {
+    setArenaIncoming({ line, label, sentAt: Date.now() });
+    window.location.hash = '/arena';
+    setRoute('arena');
+  }, []);
+
+  const sendToCompare = useCallback((line: GameLine, label: string) => {
+    setCompareSource({ line, label, sentAt: Date.now() });
     window.location.hash = '/compare';
     setRoute('compare');
   }, []);
@@ -82,13 +90,13 @@ export default function App() {
         <HomeView onOpen={go} />
       </div>
       <div hidden={route !== 'play'}>
-        <PlayView session={session} onCompare={sendToCompare} />
+        <PlayView session={session} onCompare={sendToCompare} onArena={sendToArena} />
       </div>
       <div hidden={route !== 'arena'}>
-        <ArenaView onCompare={sendToCompare} />
+        <ArenaView onCompare={sendToCompare} incoming={arenaIncoming} />
       </div>
       <div hidden={route !== 'compare'}>
-        <CompareView source={compareSource} playState={session.game} playOwners={playOwners} />
+        <CompareView source={compareSource} playLine={playLine} onArena={sendToArena} />
       </div>
       <div hidden={route !== 'experiments'}>
         <ExperimentsView />

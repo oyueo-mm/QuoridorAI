@@ -91,3 +91,23 @@ input[type='range'] {
   scrollbar-gutter: stable;
   overscroll-behavior: contain;
 }
+
+/* Last-move marker on the board: a short fade-in, none for reduced motion. */
+@keyframes qz-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.qz-last {
+  animation: qz-fade-in 260ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qz-last {
+    animation: none;
+  }
+}

@@ -30,6 +30,8 @@ export interface SessionSnapshot {
   progress: AgentProgress | null;
   /** The player to move is a person on this device and the game is not over. */
   humanToMove: boolean;
+  /** undo() would change something (there is a human move to take back). */
+  canUndo: boolean;
   error: string | null;
 }
 
@@ -113,6 +115,27 @@ export class GameController {
     return true;
   }
 
+  /**
+   * Takes back moves so that a person is to move again:
+   *  - Human vs Human: the last move.
+   *  - Human vs AI: the AI replies at the end of the record and the human move before them
+   *    (if the AI has not answered yet, just the human move).
+   * Works after the game ended too. A running AI computation is cancelled and its result can
+   * no longer be applied (runAiTurn only commits for the position it started from). Position,
+   * turn, walls in hand, winner and the record are restored exactly from the record; wall
+   * owners follow from the shortened record. Returns false if there is nothing to undo.
+   */
+  undo(): boolean {
+    const s = this.snapshot;
+    const k = undoTarget(s.history, s.controllers);
+    if (k === null) return false;
+    this.cancelAi();
+    const game = s.history[k].stateBefore;
+    this.update({ game, history: s.history.slice(0, k), thinking: false, progress: null, error: null });
+    this.scheduleAi();
+    return true;
+  }
+
   /** Starts a new game, optionally with a new configuration. Cancels any AI computation. */
   restart(config: GameConfig = this.snapshot.config): void {
     this.cancelAi();
@@ -149,16 +172,17 @@ export class GameController {
     });
   }
 
-  private derive(base: Omit<SessionSnapshot, 'status' | 'humanToMove'>): SessionSnapshot {
+  private derive(base: Omit<SessionSnapshot, 'status' | 'humanToMove' | 'canUndo'>): SessionSnapshot {
     const status = matchStatus(base.game, base.config.maxPlies);
     return {
       ...base,
       status,
       humanToMove: !isMatchOver(status) && base.controllers[base.game.currentPlayer].kind === 'human',
+      canUndo: undoTarget(base.history, base.controllers) !== null,
     };
   }
 
-  private update(patch: Partial<Omit<SessionSnapshot, 'status' | 'humanToMove'>>): void {
+  private update(patch: Partial<Omit<SessionSnapshot, 'status' | 'humanToMove' | 'canUndo'>>): void {
     this.snapshot = this.derive({ ...this.snapshot, ...patch });
     this.emit();
   }
@@ -218,4 +242,15 @@ export class GameController {
       this.update({ thinking: false, progress: null, error: `AI(${agent.id}) 오류: ${err instanceof Error ? err.message : String(err)}` });
     }
   }
+}
+
+/**
+ * Length the record is cut back to by undo(): drop trailing AI moves and the human move before
+ * them. null = nothing to undo (no human move in the record).
+ */
+export function undoTarget(history: readonly HistoryEntry[], controllers: readonly [SeatController, SeatController]): number | null {
+  let k = history.length;
+  while (k > 0 && controllers[history[k - 1].player].kind === 'ai') k--;
+  if (k === 0) return null;
+  return k - 1;
 }
