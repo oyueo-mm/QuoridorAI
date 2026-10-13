@@ -60,14 +60,20 @@ export function SoundControl() {
           <div className="space-y-1.5">
             <span className="block text-sm text-ink-soft">Arena 관전</span>
             <Segmented label="Arena 효과음" options={ARENA_OPTIONS} value={settings.arena} onChange={(arena) => soundEngine.update({ arena })} />
-            <p className="text-[11px] leading-relaxed text-faint">리플레이·기보 이동·분석 미리보기에서는 소리가 나지 않습니다. Experiments의 자동 대국도 무음입니다.</p>
+            <p className="text-[11px] leading-relaxed text-faint">승리·패배 소리는 Play에서 내 순서 기준으로 한 번 납니다(Arena 관전은 끔). 리플레이·기보 이동·분석 미리보기·재시작은 무음이고, Experiments의 자동 대국도 무음입니다.</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <button type="button" className={buttonClass.small} onClick={() => soundEngine.play('move', 'preview')}>
               말 소리
             </button>
             <button type="button" className={buttonClass.small} onClick={() => soundEngine.play('wall', 'preview')}>
               벽 소리
+            </button>
+            <button type="button" className={buttonClass.small} onClick={() => soundEngine.play('win', 'preview')}>
+              승리
+            </button>
+            <button type="button" className={buttonClass.small} onClick={() => soundEngine.play('lose', 'preview')}>
+              패배
             </button>
           </div>
         </div>

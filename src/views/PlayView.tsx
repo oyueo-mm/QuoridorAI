@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { agentName } from '../ai/catalog';
-import { useMoveSounds } from '../audio/moveSounds';
+import { useMoveSounds, useOutcomeSound } from '../audio/moveSounds';
 import { QuoridorBoard } from '../components/board/QuoridorBoard';
 import { boardColumnStyle } from '../components/board/layout';
 import type { BoardOverlay } from '../components/board/overlay';
@@ -34,6 +34,9 @@ export function PlayView({ session, onCompare }: { session: GameSession; onCompa
   const wallOwners = useMemo(() => wallOwnersFromMoves(history), [history]);
   // A sound for every completed move of either side (human or AI); restarts are silent.
   useMoveSounds(session.gameId, history, 'play');
+  // Win / loss from the user's seat (Human vs Human: the seat chosen as '내 순서'). Declared after
+  // the move sound so the result is scheduled after the winning move's sound.
+  useOutcomeSound(session.gameId, status, config.userSeat, 'play');
   const distances = useMemo(() => [0, 1].map((p) => distanceToRow(game, game.pawns[p], goalRow(p as PlayerId))), [game]);
 
   const userSeat = config.userSeat;

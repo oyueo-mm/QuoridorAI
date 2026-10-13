@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import type { Action } from '../engine';
+import type { Action, PlayerId } from '../engine';
+import type { MatchStatus } from '../match/outcome';
 import { soundEngine, soundForAction } from './sound';
 import type { SoundEngine, SoundKind, SoundSource } from './sound';
 
@@ -32,4 +33,31 @@ export function useMoveSounds(key: string | number, actions: readonly { action: 
     if (kind) engine.play(kind, source, minIntervalMs);
     // Only a new key or a new entry matters; other props are read at that moment.
   }, [key, actions.length]);
+}
+
+/**
+ * Win / loss sound: only when the same game (key) changes from "playing" to a real win.
+ * Judged from `perspective` (the user's seat). Halted games (no winner), the first observation
+ * (e.g. a game that was already over), restarts and re-renders stay silent, so each result
+ * sounds once.
+ */
+export class OutcomeSoundTracker {
+  private seen: { key: string | number; playing: boolean } | null = null;
+
+  observe(key: string | number, status: MatchStatus, perspective: PlayerId, enabled = true): 'win' | 'lose' | null {
+    const prev = this.seen;
+    this.seen = { key, playing: status.kind === 'playing' };
+    if (!enabled || prev === null || prev.key !== key || !prev.playing || status.kind !== 'win') return null;
+    return status.winner === perspective ? 'win' : 'lose';
+  }
+}
+
+/** Plays the win / loss sound once when a live game is decided (after its last move sound). */
+export function useOutcomeSound(key: string | number, status: MatchStatus, perspective: PlayerId, source: SoundSource, enabled = true, engine: SoundEngine = soundEngine): void {
+  const tracker = useRef<OutcomeSoundTracker | null>(null);
+  tracker.current ??= new OutcomeSoundTracker();
+  useEffect(() => {
+    const kind = tracker.current!.observe(key, status, perspective, enabled);
+    if (kind) engine.play(kind, source);
+  }, [key, status]);
 }

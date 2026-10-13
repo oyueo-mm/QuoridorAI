@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createState, legalPawnMoves } from '../engine';
-import { MoveSoundTracker } from './moveSounds';
+import { MoveSoundTracker, OutcomeSoundTracker } from './moveSounds';
 import { DEFAULT_SOUND_SETTINGS, MIN_GAP_MS, SOUND_STORAGE_KEY, SoundEngine, soundForAction } from './sound';
 import type { AudioContextLike, StorageLike } from './sound';
 
@@ -147,5 +147,52 @@ describe('MoveSoundTracker', () => {
     expect(t.observe('a', [move, wall], false)).toBeNull();
     expect(t.observe('a', [move, wall], true)).toBeNull();
     expect(t.observe('a', [move, wall, move], true)).toBe('move');
+  });
+});
+
+describe('win / loss sounds', () => {
+  const playing = { kind: 'playing' as const };
+  const p1Wins = { kind: 'win' as const, winner: 0 as const };
+  const p2Wins = { kind: 'win' as const, winner: 1 as const };
+  const halted = { kind: 'halted' as const, reason: 'max-plies' as const, maxPlies: 400 };
+
+  it('judges the result from the user seat (first or second player)', () => {
+    const first = new OutcomeSoundTracker();
+    first.observe(1, playing, 0);
+    expect(first.observe(1, p1Wins, 0)).toBe('win');
+    const second = new OutcomeSoundTracker();
+    second.observe(1, playing, 1);
+    expect(second.observe(1, p1Wins, 1)).toBe('lose');
+    const secondWins = new OutcomeSoundTracker();
+    secondWins.observe(1, playing, 1);
+    expect(secondWins.observe(1, p2Wins, 1)).toBe('win');
+  });
+
+  it('plays once per decided game: not on re-render, restart, halt or an already finished game', () => {
+    const t = new OutcomeSoundTracker();
+    expect(t.observe(1, p1Wins, 0)).toBeNull(); // first sight of a finished game
+    t.observe(2, playing, 0);
+    expect(t.observe(2, p2Wins, 0)).toBe('lose');
+    expect(t.observe(2, p2Wins, 0)).toBeNull(); // re-render
+    expect(t.observe(3, playing, 0)).toBeNull(); // restart
+    expect(t.observe(3, halted, 0)).toBeNull(); // no winner
+    t.observe(4, playing, 0);
+    expect(t.observe(4, p1Wins, 0, false)).toBeNull(); // disabled
+  });
+
+  it('the result sound starts after the winning move sound and is not merged with it', () => {
+    const { engine, advance } = engineWith();
+    engine.unlock();
+    expect(engine.play('wall', 'play')).toBe('played');
+    advance(5); // well inside the minimum gap
+    expect(engine.play('win', 'play')).toBe('played');
+    const [wall, win] = engine.log.slice(-2);
+    expect(win.start!).toBeGreaterThanOrEqual(wall.end!);
+    advance(5);
+    expect(engine.play('lose', 'preview')).toBe('played');
+    const lose = engine.log.at(-1)!;
+    expect(lose.start!).toBeGreaterThanOrEqual(win.end!);
+    engine.update({ muted: true });
+    expect(engine.play('win', 'play')).toBe('muted');
   });
 });

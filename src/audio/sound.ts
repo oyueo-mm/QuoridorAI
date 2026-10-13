@@ -1,10 +1,16 @@
 import type { Action } from '../engine';
 
 /*
- * Move sounds, synthesised with the Web Audio API (no audio files, nothing to license).
+ * Game sounds, synthesised with the Web Audio API (no audio files, nothing to license).
  *
  *   move  short, light wooden "tok" (every pawn move — step, jump or diagonal)
  *   wall  heavier wooden "thock" with a low body (a wall being set down)
+ *   win   short, bright rising arpeggio (C E G C)
+ *   lose  soft falling phrase (A F D)
+ *
+ * Outcome sounds are scheduled after the end of the previous sound, so the last move and the
+ * result never overlap; they are not merged by the minimum gap (they are deduplicated by
+ * OutcomeSoundTracker instead).
  *
  * Autoplay policy: the AudioContext is created on the first user gesture (installAudioUnlock).
  * Until then, or while the browser keeps it suspended, play() does nothing and says so in its
@@ -16,7 +22,9 @@ import type { Action } from '../engine';
  * interval used to thin out fast Arena games.
  */
 
-export type SoundKind = 'move' | 'wall';
+export type SoundKind = 'move' | 'wall' | 'win' | 'lose';
+
+const OUTCOME: ReadonlySet<SoundKind> = new Set(['win', 'lose']);
 export type ArenaSoundMode = 'all' | 'limited' | 'off';
 export type SoundSource = 'play' | 'arena' | 'preview';
 export type PlayResult = 'played' | 'muted' | 'off' | 'locked' | 'throttled';
@@ -76,6 +84,9 @@ export interface SoundLogEntry {
   source: SoundSource;
   result: PlayResult;
   at: number;
+  /** Audio-clock start / end of a played sound (seconds). */
+  start?: number;
+  end?: number;
 }
 
 export class SoundEngine {
@@ -84,6 +95,9 @@ export class SoundEngine {
   private settings: SoundSettings;
   private listeners = new Set<() => void>();
   private lastPlayedAt = -Infinity;
+  /** Audio-clock time at which the last scheduled sound ends. */
+  private busyUntil = 0;
+  private lastSpan: { start: number; end: number } | null = null;
   /** Recent play() calls with their outcome (diagnostics and tests). */
   readonly log: SoundLogEntry[] = [];
 
@@ -133,8 +147,9 @@ export class SoundEngine {
   }
 
   play(kind: SoundKind, source: SoundSource, minIntervalMs = 0): PlayResult {
+    this.lastSpan = null;
     const result = this.tryPlay(kind, source, minIntervalMs);
-    this.log.push({ kind, source, result, at: this.now() });
+    this.log.push({ kind, source, result, at: this.now(), ...(this.lastSpan ?? {}) });
     if (this.log.length > 100) this.log.splice(0, this.log.length - 100);
     return result;
   }
@@ -144,12 +159,18 @@ export class SoundEngine {
     if (s.muted || s.volume <= 0) return 'muted';
     if (source === 'arena' && s.arena === 'off') return 'off';
     const t = this.now();
-    if (t - this.lastPlayedAt < Math.max(MIN_GAP_MS, minIntervalMs)) return 'throttled';
+    const outcome = OUTCOME.has(kind);
+    if (!outcome && t - this.lastPlayedAt < Math.max(MIN_GAP_MS, minIntervalMs)) return 'throttled';
     if (!this.ready) return 'locked';
     this.lastPlayedAt = t;
+    const ctx = this.ctx!;
+    // Outcome sounds wait for the previous sound (e.g. the winning move) to finish.
+    const start = outcome ? Math.max(ctx.currentTime + 0.005, this.busyUntil + 0.06) : ctx.currentTime + 0.005;
+    const gain = s.volume * s.volume;
     try {
-      if (kind === 'wall') this.wall(s.volume * s.volume);
-      else this.move(s.volume * s.volume);
+      const length = kind === 'wall' ? this.wall(start, gain) : kind === 'win' ? this.win(start, gain) : kind === 'lose' ? this.lose(start, gain) : this.move(start, gain);
+      this.busyUntil = Math.max(this.busyUntil, start + length);
+      this.lastSpan = { start, end: start + length };
       return 'played';
     } catch {
       return 'locked';
@@ -198,23 +219,45 @@ export class SoundEngine {
     osc.stop(at + decay + 0.02);
   }
 
-  /** Light wooden piece set down: bright click + short hollow tok. */
-  private move(gain: number): void {
+  /** Light wooden piece set down: bright click + short hollow tok. Returns its length (s). */
+  private move(at: number, gain: number): number {
     const ctx = this.ctx!;
-    const at = ctx.currentTime + 0.005;
     const v = 1 + (Math.random() - 0.5) * 0.08;
     this.noiseBurst(ctx, at, 'bandpass', 2300 * v, 2.2, 0.55 * gain, 0.05);
     this.tone(ctx, at, 'triangle', 860 * v, 640 * v, 0.45 * gain, 0.07);
+    return 0.08;
   }
 
   /** Heavier wooden block: low body, darker knock and a small second contact. */
-  private wall(gain: number): void {
+  private wall(at: number, gain: number): number {
     const ctx = this.ctx!;
-    const at = ctx.currentTime + 0.005;
     const v = 1 + (Math.random() - 0.5) * 0.06;
     this.tone(ctx, at, 'sine', 175 * v, 115 * v, 0.7 * gain, 0.18);
     this.noiseBurst(ctx, at, 'lowpass', 950 * v, 0.9, 0.6 * gain, 0.09);
     this.tone(ctx, at + 0.035, 'triangle', 330 * v, 260 * v, 0.22 * gain, 0.06);
+    return 0.2;
+  }
+
+  /** Win: quick rising C major arpeggio (C5 E5 G5 C6), the last note held a little longer. */
+  private win(at: number, gain: number): number {
+    const ctx = this.ctx!;
+    const notes = [523.25, 659.25, 783.99, 1046.5];
+    notes.forEach((f, i) => {
+      const last = i === notes.length - 1;
+      this.tone(ctx, at + i * 0.085, 'triangle', f, f * 0.998, (last ? 0.3 : 0.26) * gain, last ? 0.42 : 0.2);
+    });
+    return 3 * 0.085 + 0.42;
+  }
+
+  /** Loss: soft falling phrase (A4 F4 D4) with sine tones and a gentle tail. */
+  private lose(at: number, gain: number): number {
+    const ctx = this.ctx!;
+    const notes = [440, 349.23, 293.66];
+    notes.forEach((f, i) => {
+      const last = i === notes.length - 1;
+      this.tone(ctx, at + i * 0.16, 'sine', f, f * 0.99, 0.28 * gain, last ? 0.6 : 0.3);
+    });
+    return 2 * 0.16 + 0.6;
   }
 }
 
