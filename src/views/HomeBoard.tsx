@@ -4,8 +4,8 @@ import { PAD, VIEW_PX, cellCenter, cellRect, wallRect } from '../components/boar
 import { BOARD_COLORS, PLAYER_COLOR, WALL_COLORS } from '../components/theme';
 import { homeReplay } from './homeReplay';
 
-const STEP_MS = 850;
-const HOLD_MS = 2400;
+const STEP_MS = 700;
+const HOLD_MS = 1800;
 const FADE_MS = 450;
 /** Frame shown for reduced motion: a mid-game position with several walls. */
 const STATIC_PLY = 18;
@@ -55,7 +55,7 @@ export function HomeBoard() {
     } else if (ply >= steps.length) {
       t = setTimeout(() => setFading(true), HOLD_MS);
     } else {
-      t = setTimeout(() => setPly((p) => p + 1), ply === 0 ? 900 : STEP_MS);
+      t = setTimeout(() => setPly((p) => p + 1), ply === 0 ? 750 : STEP_MS);
     }
     return () => clearTimeout(t);
   }, [running, ply, fading, steps.length]);

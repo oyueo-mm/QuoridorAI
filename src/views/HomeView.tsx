@@ -7,15 +7,15 @@ export function HomeView({ onOpen }: { onOpen: (id: SectionId) => void }) {
   return (
     <main className="mx-auto max-w-[1080px] px-4 pt-10 pb-16 sm:px-6 sm:pt-16">
       <section className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:gap-14">
-        <div>
-          <p className="text-base font-medium tracking-wide text-muted sm:text-lg">쿼리도 인공지능</p>
-          <h1 className="mt-2 text-5xl font-semibold tracking-tight text-ink sm:text-6xl">QuoridorAI</h1>
+        <div className="lg:-translate-y-16 xl:-translate-x-10">
+          <p className="text-base font-medium tracking-wide text-muted md:text-[21px]">쿼리도 인공지능</p>
+          <h1 className="mt-2 text-5xl font-semibold tracking-tight text-ink sm:text-6xl md:text-[70px] md:leading-none">QuoridorAI</h1>
           <div className="mt-8 flex flex-wrap gap-2">
             <button type="button" onClick={() => onOpen('play')} className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-card transition-colors hover:bg-accent-strong">
               바로 플레이
             </button>
             <button type="button" onClick={() => onOpen('arena')} className="rounded-xl border border-line bg-card px-5 py-2.5 text-sm text-ink-soft transition-colors hover:border-line-strong hover:bg-inset">
-              AI 관전
+              AI 대국 관전
             </button>
           </div>
         </div>
