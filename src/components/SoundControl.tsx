@@ -6,7 +6,7 @@ import { Segmented, buttonClass, cardClass } from './ui';
 const ARENA_OPTIONS: readonly { value: ArenaSoundMode; label: string; title: string }[] = [
   { value: 'all', label: '모두', title: '모든 수에 효과음' },
   { value: 'limited', label: '제한', title: '빠른 재생에서는 일부 수만 (기본)' },
-  { value: 'off', label: '끄기', title: 'Arena에서는 효과음 없음' },
+  { value: 'off', label: '끄기', title: 'AI 관전에서는 효과음 없음' },
 ];
 
 /**
@@ -58,9 +58,8 @@ export function SoundControl() {
             <input type="range" min={0} max={100} step={5} value={Math.round(settings.volume * 100)} onChange={(e) => soundEngine.update({ volume: Number(e.target.value) / 100 })} disabled={settings.muted} className="mt-2 w-full" aria-label="음량" />
           </label>
           <div className="space-y-1.5">
-            <span className="block text-sm text-ink-soft">Arena 관전</span>
-            <Segmented label="Arena 효과음" options={ARENA_OPTIONS} value={settings.arena} onChange={(arena) => soundEngine.update({ arena })} />
-            <p className="text-[11px] leading-relaxed text-faint">승리·패배 소리는 Play에서 내 순서 기준으로 한 번 납니다(Arena 관전은 끔). 리플레이·기보 이동·분석 미리보기·재시작은 무음이고, Experiments의 자동 대국도 무음입니다.</p>
+            <span className="block text-sm text-ink-soft">AI 관전</span>
+            <Segmented label="AI 관전 효과음" options={ARENA_OPTIONS} value={settings.arena} onChange={(arena) => soundEngine.update({ arena })} />
           </div>
           <div className="flex flex-wrap gap-2">
             <button type="button" className={buttonClass.small} onClick={() => soundEngine.play('move', 'preview')}>

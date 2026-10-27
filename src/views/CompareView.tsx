@@ -106,7 +106,7 @@ export function CompareView({ source, playLine, onArena }: { source: CompareSour
 
   const loadFromMode = () => {
     if (mode === 'sent' && source) return load(source.line, source.label);
-    if (mode === 'play') return load(playLine, `Play 대국 (${playLine.actions.length}수)`);
+    if (mode === 'play') return load(playLine, `플레이 대국 (${playLine.actions.length}수)`);
     if (mode === 'opening') {
       const actions = openingRecord(opening);
       return load({ actions, ply: actions.length }, `랜덤 오프닝 (시드 ${opening.seed}, ${opening.plies}수)`);
@@ -310,7 +310,7 @@ export function CompareView({ source, playLine, onArena }: { source: CompareSour
       {/* ------------------------------------------------ side tabs (fixed height, inner scroll) */}
       <aside className={`${cardClass} flex h-[36rem] min-w-0 flex-col gap-3 p-3 lg:sticky lg:top-[4.75rem] lg:h-[calc(100svh-6.25rem)]`}>
         <Tabs
-          label="Compare 패널"
+          label="AI 비교 패널"
           value={sideTab}
           onChange={setSideTab}
           items={[
@@ -375,7 +375,7 @@ export function CompareView({ source, playLine, onArena }: { source: CompareSour
               <div className="space-y-3">
                 <select value={mode} onChange={(e) => (setMode(e.target.value as SourceMode), setLoadError(''))} className={inputClass} aria-label="포지션 출처">
                   {source && <option value="sent">보낸 기보: {source.label}</option>}
-                  <option value="play">Play 탭의 대국</option>
+                  <option value="play">플레이 화면의 대국</option>
                   <option value="moves">기보 직접 입력</option>
                   <option value="file">JSON 기보 파일</option>
                   <option value="opening">랜덤 오프닝</option>
@@ -403,7 +403,7 @@ export function CompareView({ source, playLine, onArena }: { source: CompareSour
                   분석 보드로 불러오기
                 </button>
                 {loadError && <p className="text-xs text-danger">{loadError}</p>}
-                <p className="text-[11px] leading-relaxed text-faint">불러온 기보는 복사본으로 분석합니다. 분석 중 둔 수는 Play 대국이나 원본 기보를 바꾸지 않습니다.</p>
+                <p className="text-[11px] leading-relaxed text-faint">불러온 기보는 복사본으로 분석합니다. 분석 중 둔 수는 플레이 대국이나 원본 기보를 바꾸지 않습니다.</p>
               </div>
             </Panel>
             <Panel plain title="현재 수순 내보내기">
@@ -419,13 +419,13 @@ export function CompareView({ source, playLine, onArena }: { source: CompareSour
                     type="button"
                     className={buttonClass.small}
                     disabled={state.winner !== null}
-                    onClick={() => onArena(currentLine, `Compare · ${cursor}수 후`)}
+                    onClick={() => onArena(currentLine, `AI 비교 · ${cursor}수 후`)}
                     title={state.winner !== null ? '끝난 포지션입니다 — 종료 전의 수를 선택하세요' : '이 포지션에서 AI 대 AI로 이어 둡니다'}
                   >
-                    Arena에서 이어두기
+                    AI 관전에서 이어두기
                   </button>
                 </div>
-                <p className="min-h-4 text-[11px] text-faint">{state.winner !== null ? '끝난 포지션은 Arena로 보낼 수 없습니다 — 이전 수를 고르세요.' : notice || `보드의 포지션(${cursor}수 후)과 전체 수순을 내보냅니다.`}</p>
+                <p className="min-h-4 text-[11px] text-faint">{state.winner !== null ? '끝난 포지션은 AI 관전으로 보낼 수 없습니다 — 이전 수를 고르세요.' : notice || `보드의 포지션(${cursor}수 후)과 전체 수순을 내보냅니다.`}</p>
               </div>
             </Panel>
           </div>

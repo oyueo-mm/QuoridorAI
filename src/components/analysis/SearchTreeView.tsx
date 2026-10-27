@@ -74,7 +74,7 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
         height={NODE_H}
         rx={4}
         className={opts.selected ? 'fill-inset-strong' : 'fill-inset'}
-        stroke={opts.pv ? '#9a6d24' : '#c4b9a8'}
+        stroke={opts.pv ? '#9a6d24' : '#bfbcb6'}
         strokeWidth={opts.pv ? 1.5 : 1}
         strokeDasharray={n.bound === 'exact' ? undefined : '3 2'}
       />
@@ -97,7 +97,7 @@ export function SearchTreeView({ trace, stateBefore, bind }: Props) {
         key={key}
         d={`M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}`}
         fill="none"
-        stroke={pv ? '#9a6d24' : '#ddd4c6'}
+        stroke={pv ? '#9a6d24' : '#dddbd7'}
         strokeWidth={pv ? 1.8 : 1}
       />
     );

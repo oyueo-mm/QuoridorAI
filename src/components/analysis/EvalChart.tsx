@@ -83,9 +83,9 @@ export function EvalChart({ points, currentPly, onSelect, colour, format, upLabe
       <svg width={width} height={H} className="block" onPointerMove={(e) => setHover(pick(e.clientX))} onPointerLeave={() => setHover(null)} onClick={(e) => onSelect(pick(e.clientX))} role="img" aria-label="포지션 평가 추이">
         {/* Grid: zero line and ±max. */}
         {[-1, -0.5, 0.5, 1].map((f) => (
-          <line key={f} x1={M.left} x2={M.left + iw} y1={y(f * max)} y2={y(f * max)} stroke="#ebe4d9" strokeWidth={1} />
+          <line key={f} x1={M.left} x2={M.left + iw} y1={y(f * max)} y2={y(f * max)} stroke="#ececea" strokeWidth={1} />
         ))}
-        <line x1={M.left} x2={M.left + iw} y1={y(0)} y2={y(0)} stroke="#c4b9a8" strokeWidth={1} />
+        <line x1={M.left} x2={M.left + iw} y1={y(0)} y2={y(0)} stroke="#bfbcb6" strokeWidth={1} />
         <text x={M.left - 6} y={y(max)} textAnchor="end" dominantBaseline="central" className="fill-faint text-[10px]">{format(max)}</text>
         <text x={M.left - 6} y={y(0)} textAnchor="end" dominantBaseline="central" className="fill-faint text-[10px]">0</text>
         <text x={M.left - 6} y={y(-max)} textAnchor="end" dominantBaseline="central" className="fill-faint text-[10px]">{format(-max)}</text>
@@ -105,13 +105,13 @@ export function EvalChart({ points, currentPly, onSelect, colour, format, upLabe
           p.forced ? (
             <path key={p.ply} d={p.forced > 0 ? `M${x(p.ply)},${M.top - 2} l-5,8 h10 z` : `M${x(p.ply)},${M.top + ih + 2} l-5,-8 h10 z`} fill={colour} />
           ) : (
-            <circle key={p.ply} cx={x(p.ply)} cy={yOf(p)} r={p.ply === currentPly ? 5 : 3.5} fill={p.ply === currentPly ? '#fbf9f5' : colour} stroke={colour} strokeWidth={p.ply === currentPly ? 2.5 : 1.5} />
+            <circle key={p.ply} cx={x(p.ply)} cy={yOf(p)} r={p.ply === currentPly ? 5 : 3.5} fill={p.ply === currentPly ? '#ffffff' : colour} stroke={colour} strokeWidth={p.ply === currentPly ? 2.5 : 1.5} />
           ),
         )}
         {evaluated.length === 0 && (
           <text x={M.left + iw / 2} y={M.top + ih / 2 - 12} textAnchor="middle" className="fill-faint text-[11px]">{emptyText}</text>
         )}
-        {hovered && <line x1={x(hovered.ply)} x2={x(hovered.ply)} y1={M.top} y2={M.top + ih} stroke="#958b7f" strokeDasharray="3 3" />}
+        {hovered && <line x1={x(hovered.ply)} x2={x(hovered.ply)} y1={M.top} y2={M.top + ih} stroke="#7d7972" strokeDasharray="3 3" />}
       </svg>
       {hovered && (
         <div className="pointer-events-none absolute top-1 z-10 rounded-lg border border-line-soft bg-card px-2.5 py-1.5 text-[11px] text-ink shadow-[var(--shadow-soft)]" style={{ left: Math.min(width - 170, Math.max(0, x(hovered.ply) + 8)) }}>

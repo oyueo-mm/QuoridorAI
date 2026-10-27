@@ -29,18 +29,18 @@ export function MoveLog({ moves, selectedPly = null, onSelect, variationFrom }: 
   }
   const current = selectedPly ?? moves.length;
   return (
-    <ol ref={listRef} className="scroll-stable h-full space-y-0.5 pr-1 font-mono text-[13px]">
+    <ol ref={listRef} className="scroll-stable h-full space-y-1 pr-1 font-mono text-[15px]">
       {moves.map((entry, i) => {
         const selected = i + 1 === current;
         const variation = variationFrom !== undefined && i >= variationFrom;
         const row = (
           <>
-            <span className="w-7 text-right text-faint">{i + 1}</span>
-            <span className={`w-7 ${PLAYER_TEXT_CLASS[entry.player]}`}>{PLAYER_LABEL[entry.player]}</span>
-            <span className={`w-12 ${variation ? 'text-think' : 'text-ink'}`}>{formatAction(entry.action)}</span>
-            <span className="text-faint">{entry.action.type === 'move' ? '이동' : '벽'}</span>
-            {variation && <span className="text-[11px] text-think">변형</span>}
-            {entry.trace && <span className="ml-auto text-[11px] text-faint">{entry.trace.elapsedMs.toFixed(0)} ms</span>}
+            <span className="w-9 shrink-0 text-right text-sm text-faint tabular-nums">{i + 1}</span>
+            <span className={`w-8 shrink-0 font-semibold ${PLAYER_TEXT_CLASS[entry.player]}`}>{PLAYER_LABEL[entry.player]}</span>
+            <span className={`w-14 shrink-0 font-medium ${variation ? 'text-think' : 'text-ink'}`}>{formatAction(entry.action)}</span>
+            <span className="font-sans text-sm text-muted">{entry.action.type === 'move' ? '이동' : '벽'}</span>
+            {variation && <span className="font-sans text-xs text-think">변형</span>}
+            {entry.trace && <span className="ml-auto text-xs text-muted tabular-nums">{entry.trace.elapsedMs.toFixed(0)} ms</span>}
           </>
         );
         return (
@@ -50,12 +50,12 @@ export function MoveLog({ moves, selectedPly = null, onSelect, variationFrom }: 
                 type="button"
                 onClick={() => onSelect(i + 1 === moves.length ? null : i + 1)}
                 aria-current={selected ? 'step' : undefined}
-                className={`flex w-full gap-3 rounded-lg px-2.5 py-1 text-left hover:bg-inset ${selected ? 'bg-accent/10 ring-1 ring-accent/30' : i > current - 1 ? 'opacity-50' : 'odd:bg-inset/60'}`}
+                className={`flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-inset ${selected ? 'bg-accent/10 font-medium ring-2 ring-accent/40' : i > current - 1 ? 'opacity-50' : 'odd:bg-inset/60'}`}
               >
                 {row}
               </button>
             ) : (
-              <div className="flex gap-3 rounded-lg px-2.5 py-1 odd:bg-inset/60">{row}</div>
+              <div className="flex min-h-10 items-center gap-3 rounded-lg px-3 py-2 odd:bg-inset/60">{row}</div>
             )}
           </li>
         );

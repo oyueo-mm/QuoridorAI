@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { MouseEvent } from 'react';
 import type { MctsSnapshot } from '../../ai/types';
 
-/** Light-surface categorical slots 1–4 (validated on #fbf9f5: adjacent pairs pass CVD / normal-vision
+/** Light-surface categorical slots 1–4 (validated on #ffffff: adjacent pairs pass CVD / normal-vision
  * checks; blue and purple are close for protan vision, so slot 3 is also dashed). */
 export const SERIES_COLORS = ['#2b6aa3', '#d0612b', '#8f6bb5', '#3a8f5a'];
 export const SERIES_DASH: (string | undefined)[] = [undefined, undefined, '5 3', undefined];
@@ -100,7 +100,7 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
         >
           {[0, 0.25, 0.5, 0.75, 1].map((g) => (
             <g key={g}>
-              <line x1={M.left} x2={M.left + IW} y1={y(g)} y2={y(g)} stroke="#ebe4d9" strokeWidth={1} />
+              <line x1={M.left} x2={M.left + IW} y1={y(g)} y2={y(g)} stroke="#ececea" strokeWidth={1} />
               <text x={M.left - 4} y={y(g)} textAnchor="end" dominantBaseline="central" className="fill-faint font-mono text-[9px]">
                 {g * 100}%
               </text>
@@ -112,7 +112,7 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
           </text>
 
           {focusSnap && (
-            <line x1={x(focusSnap.simulations)} x2={x(focusSnap.simulations)} y1={M.top} y2={M.top + IH} stroke="#958b7f" strokeDasharray="3 3" />
+            <line x1={x(focusSnap.simulations)} x2={x(focusSnap.simulations)} y1={M.top} y2={M.top + IH} stroke="#7d7972" strokeDasharray="3 3" />
           )}
           {lines.map((segs, i) =>
             segs.map((d, j) => (
@@ -122,8 +122,8 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
           {/* Direct labels at the last point of each line (text in neutral ink, nudged apart). */}
           {endLabels.map((l) => (
             <g key={l.name}>
-              <circle cx={l.x} cy={l.y} r={3} fill={SERIES_COLORS[l.i]} stroke="#fbf9f5" strokeWidth={2} />
-              {Math.abs(l.labelY - l.y) > 1 && <line x1={l.x + 3} y1={l.y} x2={l.x + 6} y2={l.labelY} stroke="#c4b9a8" strokeWidth={1} />}
+              <circle cx={l.x} cy={l.y} r={3} fill={SERIES_COLORS[l.i]} stroke="#ffffff" strokeWidth={2} />
+              {Math.abs(l.labelY - l.y) > 1 && <line x1={l.x + 3} y1={l.y} x2={l.x + 6} y2={l.labelY} stroke="#bfbcb6" strokeWidth={1} />}
               <text x={l.x + 7} y={l.labelY} dominantBaseline="central" className="fill-ink-soft font-mono text-[9.5px]">
                 {l.name}
               </text>
@@ -133,7 +133,7 @@ export function MctsVisitChart({ snapshots, series, marker, onSelect }: Props) {
             series.map((name, i) => {
               const v = shareAt(focusSnap, name);
               return v === null ? null : (
-                <circle key={name} cx={x(focusSnap.simulations)} cy={y(v)} r={4} fill={SERIES_COLORS[i]} stroke="#fbf9f5" strokeWidth={2} />
+                <circle key={name} cx={x(focusSnap.simulations)} cy={y(v)} r={4} fill={SERIES_COLORS[i]} stroke="#ffffff" strokeWidth={2} />
               );
             })}
         </svg>
