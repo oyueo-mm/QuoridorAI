@@ -10,10 +10,10 @@ import { TraceDetail, traceAgentName } from '../components/analysis/TraceDetail'
 import { usePreviewBinder } from '../components/analysis/usePreviewBinder';
 import { AgentPicker, BudgetBadge, BudgetPicker } from '../components/arena/AgentPicker';
 import { QuoridorBoard } from '../components/board/QuoridorBoard';
-import { boardColumnStyle } from '../components/board/layout';
+import { GameStage } from '../components/board/GameStage';
 import type { BoardOverlay } from '../components/board/overlay';
 import { Panel } from '../components/panels/Panel';
-import { PlayerStrip } from '../components/panels/PlayerStrip';
+import { PlayerCard, PlayerStrip } from '../components/panels/PlayerStrip';
 import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
 import { SearchProgressBar } from '../components/panels/SearchProgressBar';
 import { PLAYER_COLOR, PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
@@ -192,8 +192,10 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
   const running = live && snap.phase === 'running';
   const thinkingNow = live && snap.thinking && cursor === null;
   const distances = [0, 1].map((p) => distanceToRow(boardState, boardState.pawns[p], goalRow(p as PlayerId)));
-  const strip = (p: PlayerId) => (
-    <PlayerStrip
+  const seat = (p: PlayerId, variant: 'strip' | 'card') => {
+    const Seat = variant === 'card' ? PlayerCard : PlayerStrip;
+    return (
+    <Seat
       player={p}
       name={shownLabels[p]}
       isAi
@@ -202,16 +204,19 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
       active={shownStatus.kind === 'playing' && boardState.winner === null && boardState.currentPlayer === p}
       thinking={thinkingNow && boardState.currentPlayer === p}
       winner={ply === moves.length && shownStatus.kind === 'win' && shownStatus.winner === p}
-    />
-  );
+    />    );
+  };
 
   return (
     <main className={sidePanelGrid(panelOpen)}>
       {/* ------------------------------------------------ board (fixed geometry) */}
-      <section className="flex flex-col items-center">
-        <div className="flex flex-col gap-2" style={boardColumnStyle(25)}>
-          {strip(opponentOf(orientation.bottomSeat))}
-
+      <GameStage
+        reserved={25}
+        reservedWide={17.5}
+        topSeat={opponentOf(orientation.bottomSeat)}
+        bottomSeat={orientation.bottomSeat}
+        seat={seat}
+        status={
           <div className="h-10">
             {live && snap.error ? (
               <p className="flex h-10 items-center truncate rounded-xl bg-danger/8 px-3 text-xs text-danger" title={snap.error}>
@@ -239,6 +244,8 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
             )}
           </div>
 
+        }
+        board={
           <QuoridorBoard
             state={boardState}
             flipped={orientation.flipped}
@@ -251,10 +258,11 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
             onAction={() => {}}
           />
 
-          {strip(orientation.bottomSeat)}
-
+        }
+        controls={
+          <div className="flex flex-col gap-2">
           {/* Playback controls (live) — one fixed row. */}
-          <div className="flex h-10 items-center gap-1.5 overflow-x-auto px-1 whitespace-nowrap">
+          <div className="flex min-h-10 flex-wrap items-center gap-1.5 px-1">
             {live ? (
               <>
                 {running ? (
@@ -288,8 +296,9 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
             </span>
             <Segmented label="보드 방향" options={ARENA_ORIENTATION} value={orientation.mode === 'p2' ? 'p2' : 'p1'} onChange={orientation.setMode} />
           </div>
-        </div>
-      </section>
+          </div>
+        }
+      />
 
       {/* ------------------------------------------------ side tabs (fixed height, inner scroll) */}
       <SidePanel

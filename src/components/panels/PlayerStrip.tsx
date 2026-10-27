@@ -46,6 +46,48 @@ export function PlayerStrip({ player, name, isAi, wallsRemaining, distance, acti
   );
 }
 
+const BORDER_CLASS: Record<PlayerId, string> = { 0: 'border-p1', 1: 'border-p2' };
+
+/** Same information as PlayerStrip, as a compact vertical card for the column beside the board. */
+export function PlayerCard({ player, name, isAi, wallsRemaining, distance, active, thinking, winner }: PlayerStripProps) {
+  const status = winner ? '승리' : active ? (thinking ? '생각 중…' : '차례') : '대기';
+  const lit = active || winner;
+  return (
+    <div
+      data-player-card={player}
+      className={`flex w-full flex-col gap-2.5 rounded-2xl border-2 bg-card p-3.5 transition-colors ${lit ? `${BORDER_CLASS[player]} shadow-[var(--shadow-soft)]` : 'border-line-soft'}`}
+    >
+      <div className="flex items-center gap-2">
+        <span className={`h-3 w-3 shrink-0 rounded-full ${PLAYER_BG_CLASS[player]}`} aria-hidden />
+        <span className={`text-base font-semibold ${PLAYER_TEXT_CLASS[player]}`}>{PLAYER_LABEL[player]}</span>
+        {isAi && <span className="shrink-0 rounded-md bg-think/10 px-1.5 py-0.5 text-[11px] text-think">AI</span>}
+        <span className={`ml-auto shrink-0 text-xs ${winner ? 'font-semibold text-good' : thinking ? 'text-think' : active ? 'font-medium text-ink-soft' : 'text-faint'}`}>{status}</span>
+      </div>
+      <p className="truncate text-sm text-ink-soft" title={name}>
+        {name}
+      </p>
+      <div className="flex items-center gap-2" title={`${PLAYER_LABEL[player]} 장벽 (남은 벽 ${wallsRemaining}개)`}>
+        <WallSwatch player={player} />
+        <span className="flex items-center gap-0.5" aria-hidden>
+          {Array.from({ length: WALLS_PER_PLAYER }, (_, i) => (
+            <span key={i} className={`h-4 w-1.5 rounded-full ${i < wallsRemaining ? PLAYER_BG_CLASS[player] : 'bg-inset-strong'}`} style={i < wallsRemaining ? { opacity: 0.85 } : undefined} />
+          ))}
+        </span>
+      </div>
+      <dl className="flex items-baseline justify-between text-xs text-muted">
+        <div className="flex items-baseline gap-1">
+          <dt>남은 벽</dt>
+          <dd className="font-mono text-sm text-ink">{wallsRemaining}</dd>
+        </div>
+        <div className="flex items-baseline gap-1">
+          <dt>최단 거리</dt>
+          <dd className="font-mono text-sm text-ink">{distance}</dd>
+        </div>
+      </dl>
+    </div>
+  );
+}
+
 /** This player's wall as drawn on the board (P1 solid, P2 with stripes) — the legend for walls. */
 export function WallSwatch({ player }: { player: PlayerId }) {
   const id = `qz-swatch-${useId().replace(/:/g, '')}`;

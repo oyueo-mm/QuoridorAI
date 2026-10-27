@@ -73,7 +73,7 @@ export default function App() {
                   onClick={() => go(t.id)}
                   title={t.hint}
                   aria-current={route === t.id ? 'page' : undefined}
-                  className={`rounded-lg px-2.5 py-1.5 text-sm whitespace-nowrap transition-colors sm:px-3 ${
+                  className={`rounded-lg px-1.5 py-1.5 text-[13px] whitespace-nowrap transition-colors sm:px-3 sm:text-sm ${
                     route === t.id ? 'bg-inset font-medium text-ink' : 'text-muted hover:text-ink'
                   }`}
                 >

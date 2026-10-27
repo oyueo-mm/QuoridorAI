@@ -2,11 +2,11 @@ import { useEffect, useMemo, useState } from 'react';
 import { agentName } from '../ai/catalog';
 import { useMoveSounds, useOutcomeSound } from '../audio/moveSounds';
 import { QuoridorBoard } from '../components/board/QuoridorBoard';
-import { boardColumnStyle } from '../components/board/layout';
+import { GameStage } from '../components/board/GameStage';
 import type { BoardOverlay } from '../components/board/overlay';
 import { AnalysisPanel } from '../components/panels/AnalysisPanel';
 import { MoveLog } from '../components/panels/MoveLog';
-import { PlayerStrip } from '../components/panels/PlayerStrip';
+import { PlayerCard, PlayerStrip } from '../components/panels/PlayerStrip';
 import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
 import { SearchProgressBar } from '../components/panels/SearchProgressBar';
 import { SetupPanel } from '../components/panels/SetupPanel';
@@ -66,8 +66,10 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
         ? { timeLimitMs: (config.opponent === 'mcts' ? config.mcts : config.mctsGuided).timeLimitMs, maxDepth: 0 }
         : null;
 
-  const strip = (p: PlayerId) => (
-    <PlayerStrip
+  const seat = (p: PlayerId, variant: 'strip' | 'card') => {
+    const Seat = variant === 'card' ? PlayerCard : PlayerStrip;
+    return (
+    <Seat
       player={p}
       name={whoIs(p)}
       isAi={controllers[p].kind === 'ai'}
@@ -77,15 +79,18 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
       thinking={session.thinking && game.currentPlayer === p}
       winner={status.kind === 'win' && status.winner === p}
     />
-  );
+    );
+  };
 
   return (
     <main className={sidePanelGrid(panelOpen)}>
-      <section className="flex flex-col items-center">
-        <div className="flex flex-col gap-2" style={boardColumnStyle(21)}>
-          {strip(opponentOf(orientation.bottomSeat))}
-
-          {/* One fixed-height slot: status, AI search progress or an error — never moves the board. */}
+      <GameStage
+        reserved={21}
+        reservedWide={15}
+        topSeat={opponentOf(orientation.bottomSeat)}
+        bottomSeat={orientation.bottomSeat}
+        seat={seat}
+        status={
           <div className="h-10">
             {session.error ? (
               <p className="flex h-10 items-center truncate rounded-xl bg-danger/8 px-3 text-xs text-danger" title={session.error}>
@@ -105,6 +110,8 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
             )}
           </div>
 
+        }
+        board={
           <QuoridorBoard
             state={game}
             flipped={orientation.flipped}
@@ -117,9 +124,9 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
             onAction={(a) => controller.playHuman(a)}
           />
 
-          {strip(orientation.bottomSeat)}
-
-          <div className="flex h-9 items-center gap-2 overflow-x-auto px-1 whitespace-nowrap">
+        }
+        controls={
+          <div className="flex min-h-9 flex-wrap items-center gap-2 px-1">
             <button
               type="button"
               onClick={() => controller.undo()}
@@ -140,8 +147,8 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
               </button>
             )}
           </div>
-        </div>
-      </section>
+        }
+      />
 
       <SidePanel
         open={panelOpen}
