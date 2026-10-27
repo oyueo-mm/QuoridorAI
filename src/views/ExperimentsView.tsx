@@ -376,7 +376,7 @@ export function ExperimentsView() {
             </Panel>
           </>
         ) : (
-          <Panel title="Experiments">
+          <Panel title="자동 실험">
             <div className="space-y-2 text-xs leading-relaxed text-muted">
               <p>
                 두 AI 사이에서 여러 대국을 자동으로 두고 결과를 집계합니다. 기본은 소규모(오프닝 3쌍 = 6판)이며, 실제 승률을 주 지표로, 실험 중단을 별도로

@@ -14,9 +14,10 @@ import { boardColumnStyle } from '../components/board/layout';
 import type { BoardOverlay } from '../components/board/overlay';
 import { Panel } from '../components/panels/Panel';
 import { PlayerStrip } from '../components/panels/PlayerStrip';
+import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
 import { SearchProgressBar } from '../components/panels/SearchProgressBar';
 import { PLAYER_COLOR, PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
-import { Collapsible, Segmented, Tabs, buttonClass, cardClass, inputClass, useBoardOrientation } from '../components/ui';
+import { Collapsible, Segmented, Tabs, buttonClass, inputClass, useBoardOrientation } from '../components/ui';
 import { distanceToRow, goalRow, opponentOf } from '../engine';
 import type { GameState, PlayerId } from '../engine';
 import { describeHalt } from '../match/outcome';
@@ -106,6 +107,7 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
   const [series, setSeries] = useState({ total: 4, swap: true, active: false, played: 0 });
   const archived = useRef(new Set<number>());
   const [tab, setTab] = useState<'moves' | 'trace' | 'setup' | 'archive'>('moves');
+  const [panelOpen, setPanelOpen] = useState(true);
   // Spectating: P1 at the bottom unless the viewer turns the board.
   const orientation = useBoardOrientation('arena', 0);
 
@@ -204,7 +206,7 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
   );
 
   return (
-    <main className="mx-auto grid max-w-[1280px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-5 sm:px-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+    <main className={sidePanelGrid(panelOpen)}>
       {/* ------------------------------------------------ board (fixed geometry) */}
       <section className="flex flex-col items-center">
         <div className="flex flex-col gap-2" style={boardColumnStyle(25)}>
@@ -290,18 +292,24 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
       </section>
 
       {/* ------------------------------------------------ side tabs (fixed height, inner scroll) */}
-      <aside className={`${cardClass} flex h-[34rem] min-w-0 flex-col gap-3 p-3 lg:sticky lg:top-[4.75rem] lg:h-[calc(100svh-6.25rem)]`}>
-        <Tabs
-          label="Arena 패널"
-          value={tab}
-          onChange={setTab}
-          items={[
-            { id: 'moves', label: '기보', badge: moves.length },
-            { id: 'trace', label: '분석' },
-            { id: 'setup', label: '설정' },
-            { id: 'archive', label: '리플레이', badge: archive.length || undefined },
-          ]}
-        />
+      <SidePanel
+        open={panelOpen}
+        onToggle={() => setPanelOpen((v) => !v)}
+        name="관전 패널"
+        tabs={
+          <Tabs
+            label="AI 관전 패널"
+            value={tab}
+            onChange={setTab}
+            items={[
+              { id: 'moves', label: '기보', badge: moves.length },
+              { id: 'trace', label: '분석' },
+              { id: 'setup', label: '설정' },
+              { id: 'archive', label: '리플레이', badge: archive.length || undefined },
+            ]}
+          />
+        }
+      >
         <div className={`min-h-0 flex-1 px-2 ${tab === 'moves' ? 'flex flex-col' : 'scroll-stable'}`}>
           <div hidden={tab !== 'moves'} className="min-h-0 flex-1">
             <div className="flex h-full flex-col gap-2">
@@ -310,9 +318,9 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
                 {selectedMove && (
                   <button
                     type="button"
-                    onClick={() => onCompare({ actions: [...startRecord, ...moves.map((m) => ({ action: m.action, player: m.player }))], ply: startRecord.length + ply - 1 }, `Arena #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`)}
+                    onClick={() => onCompare({ actions: [...startRecord, ...moves.map((m) => ({ action: m.action, player: m.player }))], ply: startRecord.length + ply - 1 }, `AI 관전 #${shown?.matchId ?? snap.matchId} · ${selectedMove.ply}수 직전`)}
                     className={buttonClass.small}
-                    title="이 수를 두기 직전 포지션을 Compare로 보냅니다"
+                    title="이 수를 두기 직전 포지션을 AI 비교로 보냅니다"
                   >
                     이 포지션 비교
                   </button>
@@ -321,19 +329,19 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
               {moves.length === 0 ? (
                 <p className="py-6 text-center text-sm text-faint">{live && snap.phase === 'idle' ? '▶ 진행 또는 한 수로 대국을 시작하세요.' : '아직 둔 수가 없습니다.'}</p>
               ) : (
-                <ol ref={moveListRef} className="scroll-stable min-h-0 flex-1 space-y-0.5 pr-1 font-mono text-[13px]">
+                <ol ref={moveListRef} className="scroll-stable min-h-0 flex-1 space-y-1 pr-1 font-mono text-[15px]">
                   {moves.map((m, i) => (
                     <li key={i}>
                       <button
                         type="button"
                         onClick={() => setCursor(i + 1 >= moves.length ? null : i + 1)}
-                        className={`flex w-full gap-3 rounded-lg px-2.5 py-1 text-left hover:bg-inset ${i === ply - 1 ? 'bg-warn/10 ring-1 ring-warn/30' : 'odd:bg-inset/60'}`}
+                        className={`flex min-h-10 w-full items-center gap-3 rounded-lg px-3 py-2 text-left hover:bg-inset ${i === ply - 1 ? 'bg-warn/10 font-medium ring-2 ring-warn/40' : 'odd:bg-inset/60'}`}
                       >
-                        <span className="w-7 text-right text-faint">{m.ply}</span>
-                        <span className={`w-7 ${PLAYER_TEXT_CLASS[m.player]}`}>{PLAYER_LABEL[m.player]}</span>
-                        <span className="w-12 text-ink">{m.notation}</span>
-                        <span className="min-w-0 flex-1 truncate text-faint">{traceAgentName(m.trace)}</span>
-                        <span className="text-faint">{m.elapsedMs.toFixed(0)}ms</span>
+                        <span className="w-9 shrink-0 text-right text-sm text-faint tabular-nums">{m.ply}</span>
+                        <span className={`w-8 shrink-0 font-semibold ${PLAYER_TEXT_CLASS[m.player]}`}>{PLAYER_LABEL[m.player]}</span>
+                        <span className="w-14 shrink-0 font-medium text-ink">{m.notation}</span>
+                        <span className="min-w-0 flex-1 truncate font-sans text-sm text-muted">{traceAgentName(m.trace)}</span>
+                        <span className="shrink-0 text-xs text-muted tabular-nums">{m.elapsedMs.toFixed(0)}ms</span>
                       </button>
                     </li>
                   ))}
@@ -424,7 +432,7 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
                     현재 대국 후 연속 대국 멈추기
                   </button>
                 )}
-                <p className="text-[11px] text-faint">통계적 비교는 Experiments의 Paired Matches를 사용하세요.</p>
+                <p className="text-[11px] text-faint">통계적 비교는 자동 실험의 Paired Matches를 사용하세요.</p>
               </div>
             </Panel>
           </div>
@@ -456,7 +464,7 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
             </Panel>
           </div>
         </div>
-      </aside>
+      </SidePanel>
     </main>
   );
 }
