@@ -86,7 +86,7 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
     <main className={sidePanelGrid(panelOpen)}>
       <GameStage
         reserved={21}
-        reservedWide={15}
+        reservedWide={11}
         topSeat={opponentOf(orientation.bottomSeat)}
         bottomSeat={orientation.bottomSeat}
         seat={seat}
@@ -110,6 +110,30 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
             )}
           </div>
 
+        }
+        side={
+          <>
+            <p className="text-center font-mono text-xs text-muted tabular-nums">
+              {game.ply}
+              {config.maxPlies !== null && ` / ${config.maxPlies}`} 수
+            </p>
+            {session.error ? (
+              <p className="line-clamp-5 rounded-xl bg-danger/8 px-2.5 py-2 text-xs text-danger" title={session.error}>
+                {session.error}
+              </p>
+            ) : session.thinking && aiToMove && aiSettings ? (
+              <SearchProgressBar compact progress={session.progress} timeLimitMs={aiSettings.timeLimitMs} maxDepth={aiSettings.maxDepth} />
+            ) : status.kind === 'halted' ? (
+              <p className="line-clamp-4 text-center text-xs text-warn">
+                실험 중단 — {describeHalt(status)} <span className="text-faint">(승패 없음)</span>
+              </p>
+            ) : null}
+            {status.kind !== 'playing' && (
+              <button type="button" onClick={() => controller.restart()} className={`${buttonClass.primary} px-3 py-1.5 text-xs`}>
+                다시 하기
+              </button>
+            )}
+          </>
         }
         board={
           <QuoridorBoard
