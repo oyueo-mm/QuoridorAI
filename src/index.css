@@ -162,6 +162,6 @@ input[type='range'] {
 @media (min-width: 1280px) {
   .qz-stage {
     /* 12.75rem = player column (11.5rem) + gap (1.25rem). */
-    --qz-board: min(calc(100cqw - 12.75rem), 680px, max(360px, calc(100svh - var(--qz-reserved-wide))));
+    --qz-board: min(calc(100cqw - 12.75rem), 760px, max(360px, calc(100svh - var(--qz-reserved-wide))));
   }
 }

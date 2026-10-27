@@ -212,7 +212,7 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
       {/* ------------------------------------------------ board (fixed geometry) */}
       <GameStage
         reserved={25}
-        reservedWide={17.5}
+        reservedWide={14}
         topSeat={opponentOf(orientation.bottomSeat)}
         bottomSeat={orientation.bottomSeat}
         seat={seat}
@@ -244,6 +244,35 @@ export function ArenaView({ onCompare, incoming }: { onCompare: (line: GameLine,
             )}
           </div>
 
+        }
+        side={
+          <>
+            <p className="text-center font-mono text-xs text-muted tabular-nums">
+              {live ? `대국 #${snap.matchId}` : `리플레이 #${viewing}`} · {ply} / {moves.length} 수
+            </p>
+            <p className={`text-center text-xs ${!live ? 'text-warn' : snap.phase === 'running' ? 'text-good' : 'text-muted'}`}>
+              {!live ? '지난 대국 보는 중' : snap.phase === 'running' ? '진행 중' : snap.phase === 'paused' ? '일시 정지' : snap.phase === 'finished' ? '종료' : '대기 중'}
+              {live && cursor !== null && ' · 기보 탐색 중'}
+            </p>
+            {live && snap.error ? (
+              <p className="line-clamp-5 rounded-xl bg-danger/8 px-2.5 py-2 text-xs text-danger" title={snap.error}>
+                {snap.error}
+              </p>
+            ) : thinkingNow && snap.progress ? (
+              <SearchProgressBar compact progress={snap.progress} timeLimitMs={snap.config.budget.mode === 'equal-time' ? snap.config.budget.timeMs : 0} maxDepth={snap.config.budget.mode === 'equal-time' ? 30 : snap.config.agents[snap.game.currentPlayer].depth} />
+            ) : shownStatus.kind === 'halted' ? (
+              <p className="line-clamp-4 text-center text-xs text-warn">{result.text}</p>
+            ) : notice && live && snap.moves.length === 0 && snap.phase === 'idle' ? (
+              <p className="line-clamp-4 text-center text-xs text-muted" title={notice}>
+                {notice}
+              </p>
+            ) : null}
+            {!live && (
+              <button type="button" onClick={() => (setViewing(null), setCursor(null))} className={`${buttonClass.secondary} px-3 py-1.5 text-xs text-accent`}>
+                실시간으로
+              </button>
+            )}
+          </>
         }
         board={
           <QuoridorBoard

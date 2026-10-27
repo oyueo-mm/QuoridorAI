@@ -6,10 +6,12 @@ interface Props {
   /** Search time budget (0 = unlimited) and depth budget (Minimax), for the progress bar. */
   timeLimitMs: number;
   maxDepth: number;
+  /** Multi-line card for the narrow side column (default: one fixed-height row). */
+  compact?: boolean;
 }
 
 /** Live status of a running search (reported by the worker), shown while the AI thinks. */
-export function SearchProgressBar({ progress, timeLimitMs, maxDepth }: Props) {
+export function SearchProgressBar({ progress, timeLimitMs, maxDepth, compact = false }: Props) {
   const elapsed = progress?.elapsedMs ?? 0;
   const timeFrac = timeLimitMs > 0 ? Math.min(1, elapsed / timeLimitMs) : 0;
   const mcts = progress?.simulations !== undefined;
@@ -40,6 +42,25 @@ export function SearchProgressBar({ progress, timeLimitMs, maxDepth }: Props) {
       `노드 ${progress.nodes.toLocaleString()} · ${(elapsed / 1000).toFixed(1)}s` +
       (progress.bestNotation ? ` · 현재 최선 ${progress.bestNotation}` : '') +
       (progress.score !== undefined ? ` (${formatSearchScore(progress.score)})` : '');
+  }
+
+  if (compact) {
+    return (
+      <div className="flex w-full flex-col gap-1.5 rounded-xl bg-think/5 p-2.5 font-mono text-[11px] text-think" role="status" aria-live="polite">
+        <span className="flex items-start gap-1.5 tabular-nums">
+          <span className="mt-1 inline-block h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-think" />
+          <span className="line-clamp-2 min-w-0">{headline}</span>
+        </span>
+        {detail && (
+          <span className="line-clamp-3 text-think/75" title={detail}>
+            {detail}
+          </span>
+        )}
+        <div className="h-1 overflow-hidden rounded-full bg-think/10">
+          <div className="h-1 rounded-full bg-think/70 transition-[width] duration-150" style={{ width: `${Math.max(2, frac * 100)}%` }} />
+        </div>
+      </div>
+    );
   }
 
   return (
