@@ -152,3 +152,16 @@ input[type='range'] {
     animation: none;
   }
 }
+
+/* Game stage board width (see GameStage). 100cqw = width of the stage column. */
+.qz-stage {
+  container-type: inline-size;
+  --qz-board: min(100cqw, 640px, max(320px, calc(100svh - var(--qz-reserved))));
+}
+
+@media (min-width: 1280px) {
+  .qz-stage {
+    /* 12.75rem = player column (11.5rem) + gap (1.25rem). */
+    --qz-board: min(calc(100cqw - 12.75rem), 680px, max(360px, calc(100svh - var(--qz-reserved-wide))));
+  }
+}

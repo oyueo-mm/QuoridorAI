@@ -6,7 +6,7 @@ import { cardClass } from '../ui';
  * small screens). Closed: a single column, so the board is centred.
  */
 export const sidePanelGrid = (open: boolean) =>
-  `relative mx-auto grid max-w-[1280px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-5 sm:px-6 ${open ? 'lg:grid-cols-[minmax(0,1fr)_clamp(380px,36vw,460px)]' : ''}`;
+  `relative mx-auto grid max-w-[1440px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-5 sm:px-6 ${open ? 'lg:grid-cols-[minmax(0,1fr)_clamp(380px,36vw,460px)]' : ''}`;
 
 /**
  * Collapsible right-hand panel. The content stays mounted while collapsed (just display:none),
