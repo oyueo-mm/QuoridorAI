@@ -1,15 +1,19 @@
 import { useEffect, useRef } from 'react';
 import { formatAction } from '../../engine';
-import type { Action, PlayerId } from '../../engine';
+import type { Action } from '../../engine';
 import { PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../theme';
 
 interface MoveLogProps {
-  moves: readonly { player: PlayerId; action: Action; trace?: { elapsedMs: number } }[];
+  moves: readonly { player: number; action: Action; trace?: { elapsedMs: number } }[];
   /** Selected position = number of moves played (null = latest). Rows select "after this move". */
   selectedPly?: number | null;
   onSelect?: (ply: number | null) => void;
   /** Moves from this index on are drawn as a variation (e.g. analysis moves beyond the source). */
   variationFrom?: number;
+  /** Multi-player games: label / colour slot of a seat (default: the seat itself). */
+  slotOf?: (player: number) => number;
+  /** Multi-player games: player name shown after the label. */
+  nameOf?: (player: number) => string;
 }
 
 /**
@@ -17,7 +21,7 @@ interface MoveLogProps {
  * Auto-scroll sets this element's own scrollTop — never scrollIntoView — so the page and the
  * board do not move when a move is added.
  */
-export function MoveLog({ moves, selectedPly = null, onSelect, variationFrom }: MoveLogProps) {
+export function MoveLog({ moves, selectedPly = null, onSelect, variationFrom, slotOf, nameOf }: MoveLogProps) {
   const listRef = useRef<HTMLOListElement>(null);
   useEffect(() => {
     const el = listRef.current;
@@ -33,12 +37,14 @@ export function MoveLog({ moves, selectedPly = null, onSelect, variationFrom }: 
       {moves.map((entry, i) => {
         const selected = i + 1 === current;
         const variation = variationFrom !== undefined && i >= variationFrom;
+        const slot = slotOf ? slotOf(entry.player) : entry.player;
         const row = (
           <>
             <span className="w-9 shrink-0 text-right text-sm text-faint tabular-nums">{i + 1}</span>
-            <span className={`w-8 shrink-0 font-semibold ${PLAYER_TEXT_CLASS[entry.player]}`}>{PLAYER_LABEL[entry.player]}</span>
+            <span className={`w-8 shrink-0 font-semibold ${PLAYER_TEXT_CLASS[slot]}`}>{PLAYER_LABEL[slot]}</span>
+            {nameOf && <span className="hidden w-20 shrink-0 truncate font-sans text-sm text-ink-soft sm:block" title={nameOf(entry.player)}>{nameOf(entry.player)}</span>}
             <span className={`w-14 shrink-0 font-medium ${variation ? 'text-think' : 'text-ink'}`}>{formatAction(entry.action)}</span>
-            <span className="font-sans text-sm text-muted">{entry.action.type === 'move' ? '이동' : '벽'}</span>
+            <span className="whitespace-nowrap font-sans text-sm text-muted">{entry.action.type === 'move' ? '이동' : '벽'}</span>
             {variation && <span className="font-sans text-xs text-think">변형</span>}
             {entry.trace && <span className="ml-auto text-xs text-muted tabular-nums">{entry.trace.elapsedMs.toFixed(0)} ms</span>}
           </>

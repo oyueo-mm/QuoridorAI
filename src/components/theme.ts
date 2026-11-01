@@ -1,26 +1,30 @@
-import type { PlayerId, WallPlacementResult } from '../engine';
-
-/** Display names: engine player 0/1 are shown as P1/P2. */
-export const PLAYER_LABEL: Record<PlayerId, string> = { 0: 'P1', 1: 'P2' };
-
-// Muted blue / terracotta on the light board (#efe6d8): separable under deuteranopia and
-// protanopia (different lightness and hue), never used as the only cue (labels P1 / P2).
-export const PLAYER_COLOR: Record<PlayerId, string> = { 0: '#3c6a8a', 1: '#ad5646' };
-
-export const PLAYER_TEXT_CLASS: Record<PlayerId, string> = { 0: 'text-p1', 1: 'text-p2' };
-export const PLAYER_BG_CLASS: Record<PlayerId, string> = { 0: 'bg-p1', 1: 'bg-p2' };
-export const PLAYER_RING_CLASS: Record<PlayerId, string> = {
-  0: 'ring-p1/45',
-  1: 'ring-p2/45',
-};
+import type { WallPlacementResult } from '../engine';
 
 /**
- * Walls take the colour of the player who placed them (the P1 / P2 tokens: muted blue-grey and
- * terracotta). Colour is never the only cue: P2 walls also carry faint diagonal stripes, walls
- * without a recorded owner are drawn hollow (light fill, grey outline), and hovering a wall
- * names its owner. Validated on the board (#e7dccb): P1 vs P2 CVD ΔE 10.6, normal ΔE 19.1.
+ * Per-player styling is indexed by *slot*: the player's position in the turn order (0..3), which
+ * is also what is shown to people (P1..P4). In the two-player game slot = engine seat. In the
+ * four-player game the seats on the top/left/right sides keep their engine ids, but the slot
+ * follows the clockwise turn order (see `seatSlot`), so P1 → P2 → P3 → P4 is always the order of play.
  */
-export const WALL_COLORS: Record<PlayerId, string> = PLAYER_COLOR;
+export const PLAYER_LABEL: readonly string[] = ['P1', 'P2', 'P3', 'P4'];
+
+// Muted blue / terracotta / ochre / violet on the light board (#efe6d8). Colour is never the only
+// cue: every player has a number (P1–P4) and its own wall texture (solid, diagonal stripes, dots,
+// vertical stripes).
+export const PLAYER_COLOR: readonly string[] = ['#3c6a8a', '#ad5646', '#9c7415', '#6b5a9e'];
+
+export const PLAYER_TEXT_CLASS: readonly string[] = ['text-p1', 'text-p2', 'text-p3', 'text-p4'];
+export const PLAYER_BG_CLASS: readonly string[] = ['bg-p1', 'bg-p2', 'bg-p3', 'bg-p4'];
+export const PLAYER_BORDER_CLASS: readonly string[] = ['border-p1', 'border-p2', 'border-p3', 'border-p4'];
+export const PLAYER_RING_CLASS: readonly string[] = ['ring-p1/45', 'ring-p2/45', 'ring-p3/45', 'ring-p4/45'];
+
+/**
+ * Walls take the colour of the player who placed them. Colour is never the only cue: P2 walls
+ * carry diagonal stripes, P3 dots, P4 vertical stripes, walls without a recorded owner are drawn
+ * hollow (light fill, grey outline), and hovering a wall names its owner. Validated on the board
+ * (#e7dccb): P1 vs P2 CVD ΔE 10.6, normal ΔE 19.1.
+ */
+export const WALL_COLORS: readonly string[] = PLAYER_COLOR;
 export const NEUTRAL_WALL = { fill: '#e2d9cc', stroke: '#8b8178' };
 
 /** Board surfaces (SVG). */

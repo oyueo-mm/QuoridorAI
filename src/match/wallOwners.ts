@@ -6,7 +6,7 @@ import type { Action, Orientation, PlayerId } from '../engine';
  * made each), not guessed from the board. A wall without an entry has no known owner and is
  * drawn neutral.
  */
-export type WallOwners = ReadonlyMap<string, PlayerId>;
+export type WallOwners = ReadonlyMap<string, number>;
 
 export const NO_WALL_OWNERS: WallOwners = new Map();
 
@@ -25,8 +25,8 @@ export interface RecordedAction {
  * for the start position, e.g. from an opening move list). Walls are permanent and a slot can
  * be used once, so the map is valid for every position along the record.
  */
-export function wallOwnersFromMoves(moves: readonly RecordedAction[], base: WallOwners = NO_WALL_OWNERS): WallOwners {
-  let owners: Map<string, PlayerId> | null = null;
+export function wallOwnersFromMoves(moves: readonly { action: Action; player: number }[], base: WallOwners = NO_WALL_OWNERS): WallOwners {
+  let owners: Map<string, number> | null = null;
   for (const { action, player } of moves) {
     if (action.type !== 'wall') continue;
     owners ??= new Map(base);

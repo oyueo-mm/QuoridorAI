@@ -12,3 +12,4 @@ export * from './encoding';
 export * from './notation';
 export * from './zobrist';
 export * from './tensor';
+export * from './multi';

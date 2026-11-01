@@ -7,7 +7,7 @@
  *   surfaces   paper (page) · card (panels) · inset (inputs, wells) · inset-strong
  *   lines      line-soft · line · line-strong
  *   text       ink · ink-soft · muted · faint
- *   accents    accent (links, focus, primary buttons) · p1 / p2 (players) · wall (wood)
+ *   accents    accent (links, focus, primary buttons) · p1 – p4 (players) · wall (wood)
  *   states     warn (halted, previews) · danger (errors) · good · think (AI thinking)
  */
 @theme {
@@ -32,6 +32,11 @@
   --color-p1-strong: #2f5874;
   --color-p2: #ad5646;
   --color-p2-strong: #924536;
+  /* Four-player seats 3 and 4: ochre and violet (separable by lightness/hue; always paired with a number and a wall texture). */
+  --color-p3: #9c7415;
+  --color-p3-strong: #7f5f10;
+  --color-p4: #6b5a9e;
+  --color-p4-strong: #574985;
 
   --color-wall: #8a6a4b;
   --color-wall-strong: #6f533a;
@@ -163,5 +168,9 @@ input[type='range'] {
   .qz-stage {
     /* 12.75rem = player column (11.5rem) + gap (1.25rem). */
     --qz-board: min(calc(100cqw - 12.75rem), 760px, max(360px, calc(100svh - var(--qz-reserved-wide))));
+  }
+  .qz-stage-multi {
+    /* 15.25rem = four-player card column (14rem) + gap (1.25rem). */
+    --qz-board: min(calc(100cqw - 15.25rem), 760px, max(360px, calc(100svh - var(--qz-reserved-wide))));
   }
 }

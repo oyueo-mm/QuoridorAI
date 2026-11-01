@@ -57,3 +57,46 @@ export function GameStage({
     </section>
   );
 }
+
+/**
+ * GameStage for more than two players: the same board column and sizing rules (see `.qz-stage`),
+ * but all player cards form one column beside the board on wide screens (top to bottom in seat
+ * order) and a 2×2 block above the board on narrow screens and phones.
+ */
+export function MultiGameStage({
+  reserved,
+  reservedWide,
+  seats,
+  seat,
+  status,
+  side,
+  board,
+  controls,
+}: {
+  reserved: number;
+  reservedWide: number;
+  seats: readonly number[];
+  seat: (player: number) => ReactNode;
+  /** Status row above the board (stacked layout only). */
+  status: ReactNode;
+  /** Status block under the cards (wide layout). */
+  side: ReactNode;
+  board: ReactNode;
+  controls: ReactNode;
+}) {
+  const vars = { '--qz-reserved': `${reserved}rem`, '--qz-reserved-wide': `${reservedWide}rem` } as CSSProperties;
+  return (
+    <section className="qz-stage qz-stage-multi flex min-w-0 items-start justify-center" style={vars}>
+      <div className="flex w-[var(--qz-board)] flex-col gap-2 xl:grid xl:w-auto xl:grid-cols-[14rem_var(--qz-board)] xl:gap-x-5">
+        <div className="grid grid-cols-2 gap-2 xl:hidden">{seats.map((p) => <div key={p} className="min-w-0">{seat(p)}</div>)}</div>
+        <div className="xl:hidden">{status}</div>
+        <div className="hidden xl:col-start-1 xl:row-start-1 xl:mb-7 xl:flex xl:flex-col xl:justify-between xl:gap-3 xl:overflow-hidden xl:[contain:size]">
+          {seats.map((p) => <div key={p}>{seat(p)}</div>)}
+          <div className="flex min-h-0 flex-1 flex-col justify-center gap-2 overflow-hidden">{side}</div>
+        </div>
+        <div className="xl:col-start-2 xl:row-start-1">{board}</div>
+        <div className="xl:col-start-2 xl:row-start-2">{controls}</div>
+      </div>
+    </section>
+  );
+}

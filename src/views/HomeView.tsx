@@ -1,9 +1,11 @@
 import { HomeBoard } from './HomeBoard';
 import { SECTIONS } from '../sections';
 import type { SectionId } from '../sections';
+import { GAME_MODES } from '../session/config';
+import type { GameMode } from '../session/config';
 
 /** Landing page: what this is, and four ways in. */
-export function HomeView({ onOpen }: { onOpen: (id: SectionId) => void }) {
+export function HomeView({ onOpen, onOpenMode }: { onOpen: (id: SectionId) => void; onOpenMode: (mode: GameMode) => void }) {
   return (
     <main className="mx-auto max-w-[1080px] px-4 pt-10 pb-16 sm:px-6 sm:pt-16">
       <section className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:gap-14">
@@ -22,7 +24,22 @@ export function HomeView({ onOpen }: { onOpen: (id: SectionId) => void }) {
         <HomeBoard />
       </section>
 
-      <section className="mt-14 grid gap-4 sm:grid-cols-2" aria-label="시작하기">
+      <section className="mt-12 grid gap-3 sm:grid-cols-3" aria-label="게임 모드">
+        {GAME_MODES.map((m) => (
+          <button
+            key={m.id}
+            type="button"
+            data-home-mode={m.id}
+            onClick={() => onOpenMode(m.id)}
+            className="flex flex-col rounded-2xl border border-line-soft bg-card px-5 py-4 text-left shadow-[var(--shadow-soft)] transition-colors hover:border-line"
+          >
+            <span className="text-base font-semibold text-ink">{m.title}</span>
+            <span className="mt-1 text-sm text-muted">{m.description}</span>
+          </button>
+        ))}
+      </section>
+
+      <section className="mt-6 grid gap-4 sm:grid-cols-2" aria-label="시작하기">
         {SECTIONS.map((s, i) => (
           <button
             key={s.id}

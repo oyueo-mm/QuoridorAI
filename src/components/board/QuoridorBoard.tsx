@@ -3,16 +3,12 @@ import type { PointerEvent } from 'react';
 import {
   BOARD_SIZE,
   WALL_GRID,
-  checkWallPlacement,
   formatAction,
   formatCoord,
-  goalRow,
-  legalPawnMoves,
   sameCoord,
-  shortestPath,
   wallIndex,
 } from '../../engine';
-import type { Action, Coord, GameState, Orientation, PlayerId, WallAction } from '../../engine';
+import type { Action, Coord, Orientation, PlayerId, WallAction } from '../../engine';
 import { wallKey } from '../../match/wallOwners';
 import type { WallOwners } from '../../match/wallOwners';
 import { BOARD_COLORS, NEUTRAL_WALL, PLAYER_COLOR, PLAYER_LABEL, WALL_COLORS, WALL_RESULT_TEXT } from '../theme';
@@ -31,10 +27,14 @@ import {
   wallRect,
 } from './geometry';
 import type { HitTarget } from './geometry';
+import { TWO_PLAYER_BOARD } from './boardRules';
+import type { BoardPosition, BoardRules } from './boardRules';
 import type { BoardOverlay } from './overlay';
 
 interface QuoridorBoardProps {
-  state: GameState;
+  state: BoardPosition;
+  /** Players, goals and move rules of the game type (default: the two-player game). */
+  rules?: BoardRules;
   /** Rotate 180° so Player 2 (engine seat 1) is drawn at the bottom. */
   flipped: boolean;
   /** Whether the player to move may act via the mouse. */
@@ -60,28 +60,20 @@ const FILES = 'abcdefghi';
  */
 export function QuoridorBoard(props: QuoridorBoardProps) {
   const { flipped, showPaths, overlay, onAction } = props;
-  const state = overlay?.state ?? props.state;
+  const rules = props.rules ?? TWO_PLAYER_BOARD;
+  const state: BoardPosition = overlay?.state ?? props.state;
   const interactive = props.interactive && !overlay;
   const [hover, setHover] = useState<HitTarget | null>(null);
   const stripesId = `qz-stripes-${useId().replace(/:/g, '')}`;
 
-  const legalMoves = useMemo(() => (interactive ? legalPawnMoves(state) : []), [state, interactive]);
-  const livePaths = useMemo(
-    () =>
-      showPaths && !overlay
-        ? ([0, 1] as const).flatMap((p) => {
-            const path = shortestPath(state, state.pawns[p], goalRow(p));
-            return path ? [{ player: p as PlayerId, path }] : [];
-          })
-        : [],
-    [state, showPaths, overlay],
-  );
+  const legalMoves = useMemo(() => (interactive ? rules.legalMoves(state) : []), [state, interactive, rules]);
+  const livePaths = useMemo(() => (showPaths && !overlay ? rules.paths(state) : []), [state, showPaths, overlay, rules]);
 
   // Walls of the drawn position. Only walls that exist in the real position (props.state) are
   // confirmed; walls that appear only in an analysis overlay are hypothetical and drawn as such.
   const placedWalls = useMemo(() => {
     const real = props.state;
-    const previewOwner = new Map<string, PlayerId>();
+    const previewOwner = new Map<string, number>();
     for (const m of [...(overlay?.marks ?? []), ...(overlay?.highlight ? [overlay.highlight] : [])]) {
       if (m.action.type === 'wall') previewOwner.set(wallKey(m.action.orientation, m.action.row, m.action.col), m.player);
     }
@@ -109,8 +101,8 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
     if (!w) return null;
     const name = formatAction({ type: 'wall', orientation: w.orientation, row: w.row, col: w.col });
     if (!w.confirmed) return `벽 ${name} — 분석 미리보기의 가상 벽 (실제로 놓이지 않음)`;
-    return `벽 ${name} — ${w.owner === null ? '설치한 플레이어 기록 없음' : `${PLAYER_LABEL[w.owner]}가 설치`}`;
-  }, [hover, flipped, placedWalls]);
+    return `벽 ${name} — ${w.owner === null ? '설치한 플레이어 기록 없음' : `${PLAYER_LABEL[rules.slot(w.owner)]}가 설치`}`;
+  }, [hover, flipped, placedWalls, rules]);
 
   // Resolve the hovered target into an engine-level candidate action (if any).
   const candidate = useMemo(() => {
@@ -122,13 +114,13 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
     }
     const anchor = wallAnchorFromView(hover.view.row, hover.view.col, flipped);
     const action: WallAction = { type: 'wall', orientation: hover.orientation, ...anchor };
-    const result = checkWallPlacement(state, action);
+    const result = rules.checkWall(state, action);
     return {
       action: action as Action,
       ok: result === 'ok',
       hint: `벽 ${formatAction(action)} — ${WALL_RESULT_TEXT[result]}`,
     };
-  }, [hover, interactive, flipped, legalMoves, state]);
+  }, [hover, interactive, flipped, legalMoves, state, rules]);
 
   const toBoardSpace = (e: PointerEvent<SVGSVGElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -156,10 +148,10 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
     }
     const anchor = wallAnchorFromView(target.view.row, target.view.col, flipped);
     const action: WallAction = { type: 'wall', orientation: target.orientation, ...anchor };
-    if (checkWallPlacement(state, action) === 'ok') onAction(action);
+    if (rules.checkWall(state, action) === 'ok') onAction(action);
   };
 
-  const mover = state.currentPlayer;
+  const mover = rules.slot(state.currentPlayer);
   const hoverCell = hover?.kind === 'cell' ? hover.view : null;
   const paths = overlay ? overlay.paths : livePaths;
 
@@ -194,6 +186,13 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             <pattern id={stripesId} patternUnits="userSpaceOnUse" width={6} height={6} patternTransform="rotate(45)">
               <rect width={2.2} height={6} fill="#fbf9f5" fillOpacity={0.35} />
             </pattern>
+            {/* Textures for P3 (dots) and P4 (vertical stripes) walls. */}
+            <pattern id={`${stripesId}-dots`} patternUnits="userSpaceOnUse" width={6} height={6}>
+              <circle cx={3} cy={3} r={1.3} fill="#fbf9f5" fillOpacity={0.5} />
+            </pattern>
+            <pattern id={`${stripesId}-bars`} patternUnits="userSpaceOnUse" width={5} height={5}>
+              <rect width={1.6} height={5} fill="#fbf9f5" fillOpacity={0.4} />
+            </pattern>
           </defs>
           <rect
             x={0}
@@ -208,9 +207,15 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
           />
           <rect x={PAD - 6} y={PAD - 6} width={BOARD_PX + 12} height={BOARD_PX + 12} rx={14} fill={BOARD_COLORS.groove} />
           {/* Goal markers: a bar in each player's colour along the edge that player must reach. */}
-          {([0, 1] as const).map((p) => {
-            const atTop = cellToView({ row: goalRow(p), col: 0 }, flipped).row === 0;
-            return <rect key={p} x={PAD + 8} y={atTop ? PAD - 12 : PAD + BOARD_PX + 8} width={BOARD_PX - 16} height={4} rx={2} fill={PLAYER_COLOR[p]} fillOpacity={0.55} pointerEvents="none" />;
+          {rules.goals.map((goal, seat) => {
+            const viewIndex = flipped ? BOARD_SIZE - 1 - goal.index : goal.index;
+            const edgeFirst = viewIndex === 0;
+            const colour = PLAYER_COLOR[rules.slot(seat)];
+            return goal.axis === 'row' ? (
+              <rect key={seat} x={PAD + 8} y={edgeFirst ? PAD - 12 : PAD + BOARD_PX + 8} width={BOARD_PX - 16} height={4} rx={2} fill={colour} fillOpacity={0.55} pointerEvents="none" data-goal={seat} />
+            ) : (
+              <rect key={seat} x={edgeFirst ? PAD - 12 : PAD + BOARD_PX + 8} y={PAD + 8} width={4} height={BOARD_PX - 16} rx={2} fill={colour} fillOpacity={0.55} pointerEvents="none" data-goal={seat} />
+            );
           })}
           <CoordinateLabels flipped={flipped} />
           <g transform={`translate(${PAD} ${PAD})`}>
@@ -219,25 +224,28 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             ))}
 
             {/* Shortest paths: live BFS (dashed) or the AI's evaluated paths (solid). */}
-            {paths.map(({ player, path }) =>
-              path.length > 1 ? (
+            {paths.map(({ player, path }) => {
+              const slot = rules.slot(player);
+              const [dx, dy] = PATH_OFFSET[slot];
+              return path.length > 1 ? (
                 <polyline
                   key={player}
+                  data-path={player}
                   points={path
                     .map((c) => cellCenter(cellToView(c, flipped)))
-                    .map(({ x, y }) => `${x + (player === 0 ? -5 : 5)},${y + (player === 0 ? -5 : 5)}`)
+                    .map(({ x, y }) => `${x + dx},${y + dy}`)
                     .join(' ')}
                   fill="none"
-                  stroke={PLAYER_COLOR[player]}
+                  stroke={PLAYER_COLOR[slot]}
                   strokeOpacity={overlay ? 0.85 : 0.4}
                   strokeWidth={overlay ? 3.5 : 2.5}
-                  strokeDasharray={overlay ? undefined : '5 7'}
+                  strokeDasharray={overlay ? undefined : PATH_DASH[slot]}
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   pointerEvents="none"
                 />
-              ) : null,
-            )}
+              ) : null;
+            })}
 
             {/* Legal move markers for the player to move. */}
             {legalMoves.map((m) => {
@@ -254,7 +262,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
 
             {/* Placed walls in their owner's colour (hypothetical ones from previews are see-through). */}
             {placedWalls.map((w) => (
-              <WallShape key={w.key} wall={w} rect={wallRect(w.orientation, wallAnchorToView(w.row, w.col, flipped))} stripesId={stripesId} />
+              <WallShape key={w.key} wall={w} slot={w.owner === null ? null : rules.slot(w.owner)} rect={wallRect(w.orientation, wallAnchorToView(w.row, w.col, flipped))} stripesId={stripesId} />
             ))}
 
             {/* Highlighted action (last move, or the previewed candidate). */}
@@ -263,7 +271,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             ))}
             {overlay
               ? overlay.highlight && <ActionHighlight {...overlay.highlight} flipped={flipped} variant="strong" />
-              : props.lastAction && <LastMoveMark key={lastMoveKey(props.lastAction)} last={props.lastAction} flipped={flipped} />}
+              : props.lastAction && <LastMoveMark key={lastMoveKey(props.lastAction)} last={props.lastAction} slot={rules.slot(props.lastAction.player)} flipped={flipped} />}
 
             {/* Wall placement preview. */}
             {candidate && candidate.action.type === 'wall' && hover?.kind === 'wall' && (
@@ -277,16 +285,17 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             )}
 
             {/* Pawns. */}
-            {([0, 1] as const).map((p) => {
-              const { x, y } = cellCenter(cellToView(state.pawns[p], flipped));
-              const active = state.winner === null && p === mover;
+            {state.pawns.map((pawn, seat) => {
+              const slot = rules.slot(seat);
+              const { x, y } = cellCenter(cellToView(pawn, flipped));
+              const active = state.winner === null && seat === state.currentPlayer;
               return (
-                <g key={p} pointerEvents="none">
-                  {active && <circle cx={x} cy={y} r={CELL * 0.43} fill="none" stroke={PLAYER_COLOR[p]} strokeOpacity={0.35} strokeWidth={2.5} />}
+                <g key={seat} pointerEvents="none" data-pawn={seat}>
+                  {active && <circle cx={x} cy={y} r={CELL * 0.43} fill="none" stroke={PLAYER_COLOR[slot]} strokeOpacity={0.35} strokeWidth={2.5} />}
                   <circle cx={x} cy={y + 1.5} r={CELL * 0.31} fill={BOARD_COLORS.ink} fillOpacity={0.12} />
-                  <circle cx={x} cy={y} r={CELL * 0.31} fill={PLAYER_COLOR[p]} stroke={BOARD_COLORS.cell} strokeWidth={2.5} />
+                  <circle cx={x} cy={y} r={CELL * 0.31} fill={PLAYER_COLOR[slot]} stroke={BOARD_COLORS.cell} strokeWidth={2.5} />
                   <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fill="#fbf9f5" className="text-[14px] font-semibold">
-                    {PLAYER_LABEL[p]}
+                    {PLAYER_LABEL[slot]}
                   </text>
                 </g>
               );
@@ -377,7 +386,7 @@ function ActionHighlight({
 /** The previous move: action, player and (for pawn moves) the cell it came from. */
 export interface LastMove {
   action: Action;
-  player: PlayerId;
+  player: number;
   from?: Coord;
 }
 
@@ -391,8 +400,8 @@ function lastMoveKey(m: LastMove): string {
  * dashed trace on the origin cell, or a thin outline around a newly placed wall (its owner
  * colour stays as it is). Fades in once per move (`qz-last`; none with reduced motion).
  */
-function LastMoveMark({ last, flipped }: { last: LastMove; flipped: boolean }) {
-  const colour = PLAYER_COLOR[last.player];
+function LastMoveMark({ last, slot, flipped }: { last: LastMove; slot: number; flipped: boolean }) {
+  const colour = PLAYER_COLOR[slot];
   if (last.action.type === 'wall') {
     const r = wallRect(last.action.orientation, wallAnchorToView(last.action.row, last.action.col, flipped));
     return (
@@ -419,28 +428,34 @@ interface PlacedWall {
   /** Present in the real position (false = only in an analysis preview). */
   confirmed: boolean;
   /** Who placed it; null = not recorded (drawn neutral). */
-  owner: PlayerId | null;
+  owner: number | null;
 }
 
 /**
  * One wall: owner colour (P2 with faint stripes), hollow neutral when the owner is unknown,
  * and see-through with a dashed outline when it exists only in a preview.
  */
-function WallShape({ wall, rect, stripesId }: { wall: PlacedWall; rect: { x: number; y: number; width: number; height: number }; stripesId: string }) {
-  const colour = wall.owner === null ? NEUTRAL_WALL.stroke : WALL_COLORS[wall.owner];
+function WallShape({ wall, slot, rect, stripesId }: { wall: PlacedWall; slot: number | null; rect: { x: number; y: number; width: number; height: number }; stripesId: string }) {
+  const colour = slot === null ? NEUTRAL_WALL.stroke : WALL_COLORS[slot];
   if (!wall.confirmed) {
     return <rect {...rect} rx={4} fill={colour} fillOpacity={0.28} stroke={colour} strokeWidth={1.5} strokeDasharray="4 3" pointerEvents="none" data-wall={wall.key} data-wall-kind="preview" />;
   }
-  if (wall.owner === null) {
+  if (slot === null) {
     return <rect x={rect.x + 0.75} y={rect.y + 0.75} width={rect.width - 1.5} height={rect.height - 1.5} rx={4} fill={NEUTRAL_WALL.fill} stroke={NEUTRAL_WALL.stroke} strokeWidth={1.5} pointerEvents="none" data-wall={wall.key} data-wall-kind="neutral" />;
   }
+  // Texture per slot (colour is never the only cue): P1 solid, P2 diagonal stripes, P3 dots, P4 vertical stripes.
+  const texture = slot === 1 ? stripesId : slot === 2 ? `${stripesId}-dots` : slot === 3 ? `${stripesId}-bars` : null;
   return (
-    <g pointerEvents="none" data-wall={wall.key} data-wall-kind={`p${wall.owner + 1}`}>
+    <g pointerEvents="none" data-wall={wall.key} data-wall-kind={`p${slot + 1}`}>
       <rect {...rect} rx={4} fill={colour} />
-      {wall.owner === 1 && <rect {...rect} rx={4} fill={`url(#${stripesId})`} />}
+      {texture && <rect {...rect} rx={4} fill={`url(#${texture})`} />}
     </g>
   );
 }
+
+/** Offset and dash of each slot's path line, so overlapping routes stay readable. */
+const PATH_OFFSET: readonly (readonly [number, number])[] = [[-5, -5], [5, 5], [-5, 5], [5, -5]];
+const PATH_DASH: readonly string[] = ['5 7', '5 7', '2 6', '9 5'];
 
 function sameTarget(a: HitTarget | null, b: HitTarget | null): boolean {
   if (a === null || b === null) return a === b;

@@ -15,6 +15,16 @@
 
 export type PlayerId = 0 | 1;
 
+/**
+ * Goal line of a pawn: every cell with `row === index` (axis 'row') or `col === index`
+ * (axis 'col'). The two-player game only uses row goals; four-player seats on the left and
+ * right use column goals.
+ */
+export interface Goal {
+  readonly axis: 'row' | 'col';
+  readonly index: number;
+}
+
 export interface Coord {
   readonly row: number;
   readonly col: number;

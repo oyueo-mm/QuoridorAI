@@ -2,13 +2,19 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { GameLine } from './match/gameRecord';
 import { SoundControl } from './components/SoundControl';
+import { modeOfConfig } from './session/config';
+import type { GameConfig, GameMode } from './session/config';
+import type { MultiConfig } from './session/MultiController';
 import { useGameSession } from './session/useGameSession';
+import { useMultiSession } from './session/useMultiSession';
 import { ArenaView } from './views/ArenaView';
 import { CompareView } from './views/CompareView';
 import type { ArenaIncoming } from './views/ArenaView';
 import type { CompareSource } from './views/CompareView';
 import { ExperimentsView } from './views/ExperimentsView';
+import { FourPlayerView } from './views/FourPlayerView';
 import { HomeView } from './views/HomeView';
+import type { PlaySetupApi } from './views/playSetup';
 import { PlayView } from './views/PlayView';
 import { SECTIONS } from './sections';
 import type { SectionId } from './sections';
@@ -26,6 +32,10 @@ const routeFromHash = (): RouteId => {
  */
 export default function App() {
   const session = useGameSession();
+  const multi = useMultiSession();
+  // 'four-player' is a separate local game; the other two modes are the two-player session (opponent human or AI).
+  const [fourActive, setFourActive] = useState(false);
+  const mode: GameMode = fourActive ? 'four-player' : modeOfConfig(session.config);
   const [route, setRoute] = useState<RouteId>(routeFromHash);
   const [compareSource, setCompareSource] = useState<CompareSource | null>(null);
 
@@ -43,6 +53,44 @@ export default function App() {
   // The live Play game as a record (Compare's 'Play 탭' source).
   const playLine = useMemo<GameLine>(() => ({ actions: session.history.map((h) => ({ action: h.action, player: h.player })), ply: session.history.length }), [session.history]);
   const [arenaIncoming, setArenaIncoming] = useState<ArenaIncoming | null>(null);
+
+  const playSetup = useMemo<PlaySetupApi>(
+    () => ({
+      mode,
+      config: session.config,
+      multiConfig: multi.config,
+      startTwoPlayer: (config: GameConfig) => {
+        setFourActive(false);
+        session.controller.restart(config);
+      },
+      startFourPlayer: (config: MultiConfig) => {
+        multi.controller.restart(config);
+        setFourActive(true);
+      },
+    }),
+    [mode, session.config, session.controller, multi.config, multi.controller],
+  );
+
+  /** Home entry: opens Play in `target`; a finished game, or one of another mode, starts fresh. */
+  const openMode = useCallback(
+    (target: GameMode) => {
+      if (target === 'four-player') {
+        if (!fourActive || multi.status.kind !== 'playing') multi.controller.restart();
+        setFourActive(true);
+      } else {
+        const wantsHuman = target === 'local-2p';
+        const sameMode = !fourActive && (session.config.opponent === 'human') === wantsHuman;
+        if (!sameMode || session.status.kind !== 'playing') {
+          setFourActive(false);
+          session.controller.restart({ ...session.config, opponent: wantsHuman ? 'human' : session.config.opponent === 'human' ? 'minimax' : session.config.opponent, userSeat: wantsHuman ? 0 : session.config.userSeat });
+        }
+      }
+      window.location.hash = '/play';
+      setRoute('play');
+      window.scrollTo({ top: 0 });
+    },
+    [fourActive, multi.controller, multi.status.kind, session.config, session.controller, session.status.kind],
+  );
 
   const sendToArena = useCallback((line: GameLine, label: string) => {
     setArenaIncoming({ line, label, sentAt: Date.now() });
@@ -87,10 +135,13 @@ export default function App() {
       </header>
 
       <div hidden={route !== 'home'}>
-        <HomeView onOpen={go} />
+        <HomeView onOpen={go} onOpenMode={openMode} />
       </div>
-      <div hidden={route !== 'play'}>
-        <PlayView session={session} onCompare={sendToCompare} onArena={sendToArena} />
+      <div hidden={route !== 'play' || fourActive}>
+        <PlayView session={session} setup={playSetup} onCompare={sendToCompare} onArena={sendToArena} />
+      </div>
+      <div hidden={route !== 'play' || !fourActive}>
+        <FourPlayerView session={multi} setup={playSetup} />
       </div>
       <div hidden={route !== 'arena'}>
         <ArenaView onCompare={sendToCompare} incoming={arenaIncoming} />

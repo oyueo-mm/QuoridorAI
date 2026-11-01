@@ -19,12 +19,14 @@ import { describeHalt } from '../match/outcome';
 import { buildRecord, recordToText, resultOf } from '../match/gameRecord';
 import type { GameLine, SeatInfo } from '../match/gameRecord';
 import { wallOwnersFromMoves } from '../match/wallOwners';
+import { localSeatName } from '../session/config';
 import type { GameSession } from '../session/useGameSession';
+import type { PlaySetupApi } from './playSetup';
 
 type PlayTab = 'analysis' | 'moves' | 'setup';
 
 /** Play: human vs AI / human vs human. Board in the middle; details live in the side tabs. */
-export function PlayView({ session, onCompare, onArena }: { session: GameSession; onCompare: (line: GameLine, label: string) => void; onArena: (line: GameLine, label: string) => void }) {
+export function PlayView({ session, setup, onCompare, onArena }: { session: GameSession; setup: PlaySetupApi; onCompare: (line: GameLine, label: string) => void; onArena: (line: GameLine, label: string) => void }) {
   const { game, config, controllers, status, history, controller } = session;
   const [showPaths, setShowPaths] = useState(false);
   const [overlay, setOverlay] = useState<BoardOverlay | null>(null);
@@ -53,6 +55,7 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
 
   const userSeat = config.userSeat;
   const whoIs = (p: PlayerId) => {
+    if (config.opponent === 'human') return localSeatName(config, p);
     if (p === userSeat) return '나';
     const c = controllers[p];
     return c.kind === 'ai' ? agentName(c.agentId) : '상대 (같은 기기)';
@@ -237,12 +240,15 @@ export function PlayView({ session, onCompare, onArena }: { session: GameSession
           </div>
           <div hidden={tab !== 'setup'}>
             <SetupPanel
-              key={session.gameId}
+              key={`${setup.mode}-${session.gameId}`}
               current={config}
+              currentMulti={setup.multiConfig}
+              currentMode={setup.mode}
               onStart={(c) => {
-                controller.restart(c);
+                setup.startTwoPlayer(c);
                 setTab(c.opponent === 'human' ? 'moves' : 'analysis');
               }}
+              onStartMulti={(c) => setup.startFourPlayer(c)}
             />
           </div>
         </div>

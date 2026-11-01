@@ -1,7 +1,7 @@
 import { DIRECTIONS, WALL_GRID, canStep, goalRow, opponentOf, sameCoord } from './board';
 import { hasPathToRow, shortestPath } from './pathfinding';
 import { checkWallPlacement, pathEdgeSet, wallConflicts, wallCutsEdges, withWall } from './walls';
-import type { Action, Coord, GameState, Orientation, PlayerId, WallAction } from './types';
+import type { Action, Coord, GameState, Orientation, PlayerId, WallAction, WallLayout } from './types';
 
 /**
  * Legal pawn destinations for `player` (defaults to the player to move).
@@ -14,10 +14,22 @@ import type { Action, Coord, GameState, Orientation, PlayerId, WallAction } from
  */
 export function legalPawnMoves(state: GameState, player: PlayerId = state.currentPlayer): Coord[] {
   if (state.winner !== null) return [];
-  const self = state.pawns[player];
-  const other = state.pawns[opponentOf(player)];
+  return pawnMovesAmong(state, state.pawns[player], [state.pawns[opponentOf(player)]]);
+}
+
+/**
+ * Pawn destinations for a pawn on `self` given the cells held by all `others` (walls only
+ * come from `walls`). Shared by the two-player and the multi-player engine.
+ *
+ * Per orthogonal direction: an unoccupied, unwalled neighbour is a step. If the neighbour holds
+ * a pawn, the mover may jump straight over it when the cell behind it is on the board, not
+ * walled off and not occupied (at most one pawn is ever jumped). Otherwise it may move
+ * diagonally to either side of the jumped pawn, where not walled off and not occupied.
+ */
+export function pawnMovesAmong(walls: WallLayout, self: Coord, others: readonly Coord[]): Coord[] {
   const moves: Coord[] = [];
   const seen = new Set<number>();
+  const occupied = (row: number, col: number) => others.some((o) => o.row === row && o.col === col);
   const add = (row: number, col: number) => {
     const key = row * 16 + col;
     if (seen.has(key)) return;
@@ -26,23 +38,23 @@ export function legalPawnMoves(state: GameState, player: PlayerId = state.curren
   };
 
   for (const d of DIRECTIONS) {
-    if (!canStep(state, self.row, self.col, d.row, d.col)) continue;
+    if (!canStep(walls, self.row, self.col, d.row, d.col)) continue;
     const next = { row: self.row + d.row, col: self.col + d.col };
-    if (!sameCoord(next, other)) {
+    if (!occupied(next.row, next.col)) {
       add(next.row, next.col);
       continue;
     }
-    if (canStep(state, other.row, other.col, d.row, d.col)) {
-      add(other.row + d.row, other.col + d.col);
+    if (canStep(walls, next.row, next.col, d.row, d.col) && !occupied(next.row + d.row, next.col + d.col)) {
+      add(next.row + d.row, next.col + d.col);
       continue;
     }
-    // Straight jump blocked: diagonal moves to the sides of the opponent.
+    // Straight jump blocked (wall, edge or another pawn behind): diagonal moves to the sides.
     const sides = d.row === 0
       ? [{ row: -1, col: 0 }, { row: 1, col: 0 }]
       : [{ row: 0, col: -1 }, { row: 0, col: 1 }];
     for (const s of sides) {
-      if (canStep(state, other.row, other.col, s.row, s.col)) {
-        add(other.row + s.row, other.col + s.col);
+      if (canStep(walls, next.row, next.col, s.row, s.col) && !occupied(next.row + s.row, next.col + s.col)) {
+        add(next.row + s.row, next.col + s.col);
       }
     }
   }

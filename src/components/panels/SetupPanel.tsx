@@ -4,24 +4,33 @@ import { AGENT_CATALOG } from '../../ai/catalog';
 import { randomSeed } from '../../ai/rng';
 import type { BfsWeights } from '../../ai/types';
 import type { PlayerId } from '../../engine';
-import type { GameConfig, Opponent } from '../../session/config';
-import { PLAYER_LABEL } from '../theme';
+import { GAME_MODES } from '../../session/config';
+import type { GameConfig, GameMode, Opponent } from '../../session/config';
+import { DEFAULT_PLAYER_NAMES } from '../../session/MultiController';
+import type { MultiConfig } from '../../session/MultiController';
+import { PLAYER_BG_CLASS, PLAYER_LABEL } from '../theme';
 import { MctsSettingsForm } from './MctsSettingsForm';
 import { MinimaxSettingsForm } from './MinimaxSettingsForm';
 import { Panel } from './Panel';
 
 interface SetupPanelProps {
+  /** The two-player game's settings. */
   current: GameConfig;
+  /** The four-player game's settings. */
+  currentMulti: MultiConfig;
+  /** Mode being played now. */
+  currentMode: GameMode;
   onStart: (config: GameConfig) => void;
+  onStartMulti: (config: MultiConfig) => void;
 }
 
-const MODES: { value: Opponent; label: string }[] = [
-  { value: 'human', label: 'Human vs Human' },
-  { value: 'random', label: 'Human vs Random AI' },
-  { value: 'bfs', label: 'Human vs BFS AI' },
-  { value: 'minimax', label: 'Human vs Minimax AI' },
-  { value: 'mcts', label: 'Human vs Pure MCTS AI' },
-  { value: 'mcts-guided', label: 'Human vs Guided MCTS AI' },
+/** Selectable opponents in 사람 vs AI. */
+const AI_OPPONENTS: { value: Exclude<Opponent, 'human'>; label: string }[] = [
+  { value: 'random', label: 'Random AI' },
+  { value: 'bfs', label: 'BFS AI' },
+  { value: 'minimax', label: 'Minimax / Alpha-Beta AI' },
+  { value: 'mcts', label: 'Pure MCTS AI' },
+  { value: 'mcts-guided', label: 'Guided MCTS AI' },
 ];
 
 const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = [
@@ -35,136 +44,224 @@ const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = 
 const inputClass =
   'w-full rounded-xl border border-line bg-card px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none';
 
-export function SetupPanel({ current, onStart }: SetupPanelProps) {
+/** Where each player starts, as the board shows it (P1 bottom, then clockwise). */
+const SEAT_SIDES = ['아래', '왼쪽', '위', '오른쪽'];
+
+export function SetupPanel({ current, currentMulti, currentMode, onStart, onStartMulti }: SetupPanelProps) {
+  const [mode, setMode] = useState<GameMode>(currentMode);
   const [draft, setDraft] = useState<GameConfig>(current);
-  const changed = JSON.stringify(draft) !== JSON.stringify(current);
+  const [multiDraft, setMultiDraft] = useState<MultiConfig>(currentMulti);
+  const changed =
+    mode !== currentMode ||
+    (mode === 'four-player' ? JSON.stringify(multiDraft) !== JSON.stringify(currentMulti) : JSON.stringify(draft) !== JSON.stringify(current));
   const setWeight = (key: keyof BfsWeights, value: number) =>
     setDraft({ ...draft, bfsWeights: { ...draft.bfsWeights, [key]: value } });
+
+  const chooseMode = (next: GameMode) => {
+    setMode(next);
+    if (next === 'vs-ai' && draft.opponent === 'human') setDraft({ ...draft, opponent: 'minimax' });
+    if (next === 'local-2p') setDraft({ ...draft, opponent: 'human', userSeat: 0 });
+  };
+
+  const start = () => {
+    if (mode === 'four-player') onStartMulti(multiDraft);
+    else onStart(mode === 'local-2p' ? { ...draft, opponent: 'human', userSeat: 0 } : { ...draft, opponent: draft.opponent === 'human' ? 'minimax' : draft.opponent });
+  };
 
   return (
     <Panel plain title="새 게임 설정">
       <div className="space-y-4">
-        <label className="block">
-          <span className="mb-1.5 block text-xs text-muted">대전 모드</span>
-          <select
-            value={draft.opponent}
-            onChange={(e) => setDraft({ ...draft, opponent: e.target.value as Opponent })}
-            className={inputClass}
-          >
-            {MODES.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.label}
-              </option>
-            ))}
-            <optgroup label="다음 단계에서 구현">
-              {AGENT_CATALOG.filter((a) => !a.available).map((agent) => (
-                <option key={agent.id} value={agent.id} disabled>
-                  Human vs {agent.name} (준비 중)
-                </option>
-              ))}
-            </optgroup>
-          </select>
-        </label>
-
-        <div>
-          <span className="mb-1.5 block text-xs text-muted">내 순서</span>
-          <div className="grid grid-cols-2 gap-1 rounded-xl bg-inset p-1">
-            {([0, 1] as PlayerId[]).map((seat) => (
-              <button
-                key={seat}
-                type="button"
-                onClick={() => setDraft({ ...draft, userSeat: seat })}
-                className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
-                  draft.userSeat === seat ? 'bg-card font-medium text-ink shadow-[var(--shadow-soft)]' : 'text-muted hover:text-ink'
-                }`}
-              >
-                {seat === 0 ? '선공' : '후공'} <span className="text-xs text-faint">({PLAYER_LABEL[seat]})</span>
-              </button>
-            ))}
-          </div>
+        <div role="radiogroup" aria-label="게임 모드" className="space-y-2">
+          {GAME_MODES.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              role="radio"
+              aria-checked={mode === m.id}
+              data-mode={m.id}
+              onClick={() => chooseMode(m.id)}
+              className={`block w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
+                mode === m.id ? 'border-accent bg-accent/5' : 'border-line-soft bg-card hover:border-line'
+              }`}
+            >
+              <span className="flex items-center gap-2 text-sm font-medium text-ink">
+                <span className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 ${mode === m.id ? 'border-accent bg-accent' : 'border-line-strong'}`} aria-hidden />
+                {m.title}
+                {currentMode === m.id && <span className="ml-auto text-[11px] font-normal text-faint">진행 중</span>}
+              </span>
+              <span className="mt-0.5 block pl-[1.375rem] text-xs text-muted">{m.description}</span>
+            </button>
+          ))}
         </div>
 
-        {draft.opponent === 'mcts' && (
-          <MctsSettingsForm value={draft.mcts} onChange={(mcts) => setDraft({ ...draft, mcts })} />
-        )}
-        {draft.opponent === 'mcts-guided' && (
-          <MctsSettingsForm value={draft.mctsGuided} onChange={(mctsGuided) => setDraft({ ...draft, mctsGuided })} />
+        {mode === 'vs-ai' && (
+          <>
+            <label className="block">
+              <span className="mb-1.5 block text-xs text-muted">상대 AI</span>
+              <select
+                value={draft.opponent === 'human' ? 'minimax' : draft.opponent}
+                onChange={(e) => setDraft({ ...draft, opponent: e.target.value as Opponent })}
+                className={inputClass}
+              >
+                {AI_OPPONENTS.map((m) => (
+                  <option key={m.value} value={m.value}>
+                    {m.label}
+                  </option>
+                ))}
+                <optgroup label="다음 단계에서 구현">
+                  {AGENT_CATALOG.filter((a) => !a.available).map((agent) => (
+                    <option key={agent.id} value={agent.id} disabled>
+                      {agent.name} (준비 중)
+                    </option>
+                  ))}
+                </optgroup>
+              </select>
+            </label>
+
+            <div>
+              <span className="mb-1.5 block text-xs text-muted">내 순서</span>
+              <div className="grid grid-cols-2 gap-1 rounded-xl bg-inset p-1">
+                {([0, 1] as PlayerId[]).map((seat) => (
+                  <button
+                    key={seat}
+                    type="button"
+                    onClick={() => setDraft({ ...draft, userSeat: seat })}
+                    className={`rounded-md px-3 py-1.5 text-sm transition-colors ${
+                      draft.userSeat === seat ? 'bg-card font-medium text-ink shadow-[var(--shadow-soft)]' : 'text-muted hover:text-ink'
+                    }`}
+                  >
+                    {seat === 0 ? '선공' : '후공'} <span className="text-xs text-faint">({PLAYER_LABEL[seat]})</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {draft.opponent === 'mcts' && <MctsSettingsForm value={draft.mcts} onChange={(mcts) => setDraft({ ...draft, mcts })} />}
+            {draft.opponent === 'mcts-guided' && <MctsSettingsForm value={draft.mctsGuided} onChange={(mctsGuided) => setDraft({ ...draft, mctsGuided })} />}
+
+            {(draft.opponent === 'random' || draft.opponent === 'mcts' || draft.opponent === 'mcts-guided') && (
+              <label className="block">
+                <span className="mb-1.5 block text-xs text-muted">무작위 시드</span>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    value={draft.seed}
+                    onChange={(e) => setDraft({ ...draft, seed: Math.trunc(Number(e.target.value)) || 0 })}
+                    className={`${inputClass} font-mono`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setDraft({ ...draft, seed: randomSeed() })}
+                    className="shrink-0 rounded-lg border border-line px-3 text-xs text-ink-soft hover:bg-inset"
+                    title="새 시드"
+                  >
+                    새 시드
+                  </button>
+                </div>
+                <span className="mt-1 block text-[11px] text-faint">같은 시드와 같은 진행이면 같은 수를 둡니다.</span>
+              </label>
+            )}
+
+            {draft.opponent === 'minimax' && <MinimaxSettingsForm value={draft.minimax} onChange={(minimax) => setDraft({ ...draft, minimax })} />}
+
+            {draft.opponent === 'bfs' && (
+              <details className="rounded-lg border border-line-soft bg-paper/50 px-3 py-2">
+                <summary className="cursor-pointer text-xs text-muted">BFS 휴리스틱 가중치</summary>
+                <div className="mt-3 space-y-2">
+                  {WEIGHT_FIELDS.map((f) => (
+                    <label key={f.key} className="flex items-center justify-between gap-3 text-xs text-muted">
+                      {f.label}
+                      <input
+                        type="number"
+                        step={f.step}
+                        min={0}
+                        value={draft.bfsWeights[f.key]}
+                        onChange={(e) => setWeight(f.key, Math.max(0, Number(e.target.value) || 0))}
+                        className="w-20 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-ink focus:border-accent focus:outline-none"
+                      />
+                    </label>
+                  ))}
+                  <button type="button" onClick={() => setDraft({ ...draft, bfsWeights: { ...DEFAULT_BFS_WEIGHTS } })} className="text-[11px] text-accent hover:underline">
+                    기본값으로
+                  </button>
+                </div>
+              </details>
+            )}
+          </>
         )}
 
-        {(draft.opponent === 'random' || draft.opponent === 'mcts' || draft.opponent === 'mcts-guided') && (
-          <label className="block">
-            <span className="mb-1.5 block text-xs text-muted">무작위 시드</span>
-            <div className="flex gap-2">
-              <input
-                type="number"
-                value={draft.seed}
-                onChange={(e) => setDraft({ ...draft, seed: Math.trunc(Number(e.target.value)) || 0 })}
-                className={`${inputClass} font-mono`}
+        {mode === 'local-2p' && (
+          <fieldset className="space-y-2">
+            <legend className="mb-1.5 text-xs text-muted">플레이어 이름</legend>
+            {([0, 1] as PlayerId[]).map((seat) => (
+              <NameRow
+                key={seat}
+                slot={seat}
+                hint={seat === 0 ? '아래 · 선공' : '위 · 후공'}
+                value={draft.names?.[seat] ?? ''}
+                placeholder={DEFAULT_PLAYER_NAMES[seat]}
+                onChange={(v) => setDraft({ ...draft, names: seat === 0 ? [v, draft.names?.[1] ?? ''] : [draft.names?.[0] ?? '', v] })}
               />
-              <button
-                type="button"
-                onClick={() => setDraft({ ...draft, seed: randomSeed() })}
-                className="shrink-0 rounded-lg border border-line px-3 text-xs text-ink-soft hover:bg-inset"
-                title="새 시드"
+            ))}
+          </fieldset>
+        )}
+
+        {mode === 'four-player' && (
+          <>
+            <fieldset className="space-y-2">
+              <legend className="mb-1.5 text-xs text-muted">플레이어 이름</legend>
+              {[0, 1, 2, 3].map((slot) => (
+                <NameRow
+                  key={slot}
+                  slot={slot}
+                  hint={SEAT_SIDES[slot]}
+                  value={multiDraft.names[slot] ?? ''}
+                  placeholder={DEFAULT_PLAYER_NAMES[slot]}
+                  onChange={(v) => setMultiDraft({ ...multiDraft, names: DEFAULT_PLAYER_NAMES.map((_, i) => (i === slot ? v : (multiDraft.names[i] ?? ''))) })}
+                />
+              ))}
+            </fieldset>
+            <label className="block">
+              <span className="mb-1.5 block text-xs text-muted">시작 플레이어</span>
+              <select
+                value={String(multiDraft.firstPlayer)}
+                onChange={(e) => setMultiDraft({ ...multiDraft, firstPlayer: e.target.value === 'random' ? 'random' : Number(e.target.value) })}
+                className={inputClass}
               >
-                새 시드
-              </button>
-            </div>
-            <span className="mt-1 block text-[11px] text-faint">같은 시드와 같은 진행이면 같은 수를 둡니다.</span>
+                <option value="random">무작위</option>
+                {[0, 1, 2, 3].map((slot) => (
+                  <option key={slot} value={slot}>
+                    {PLAYER_LABEL[slot]} ({SEAT_SIDES[slot]})
+                  </option>
+                ))}
+              </select>
+              <span className="mt-1 block text-[11px] text-faint">차례는 P1 → P2 → P3 → P4, 시계 방향입니다.</span>
+            </label>
+          </>
+        )}
+
+        {mode !== 'four-player' && (
+          <label className="flex items-center justify-between gap-3 text-xs text-muted">
+            <span>
+              실험용 최대 턴 <span className="text-faint">(ply, 비우면 무제한)</span>
+            </span>
+            <input
+              type="number"
+              min={1}
+              value={draft.maxPlies ?? ''}
+              onChange={(e) => {
+                const v = Math.trunc(Number(e.target.value));
+                setDraft({ ...draft, maxPlies: e.target.value === '' || v <= 0 ? null : v });
+              }}
+              className="w-20 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-ink focus:border-accent focus:outline-none"
+            />
           </label>
         )}
 
-        {draft.opponent === 'minimax' && (
-          <MinimaxSettingsForm value={draft.minimax} onChange={(minimax) => setDraft({ ...draft, minimax })} />
-        )}
-
-        {draft.opponent === 'bfs' && (
-          <details className="rounded-lg border border-line-soft bg-paper/50 px-3 py-2">
-            <summary className="cursor-pointer text-xs text-muted">BFS 휴리스틱 가중치</summary>
-            <div className="mt-3 space-y-2">
-              {WEIGHT_FIELDS.map((f) => (
-                <label key={f.key} className="flex items-center justify-between gap-3 text-xs text-muted">
-                  {f.label}
-                  <input
-                    type="number"
-                    step={f.step}
-                    min={0}
-                    value={draft.bfsWeights[f.key]}
-                    onChange={(e) => setWeight(f.key, Math.max(0, Number(e.target.value) || 0))}
-                    className="w-20 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-ink focus:border-accent focus:outline-none"
-                  />
-                </label>
-              ))}
-              <button
-                type="button"
-                onClick={() => setDraft({ ...draft, bfsWeights: { ...DEFAULT_BFS_WEIGHTS } })}
-                className="text-[11px] text-accent hover:underline"
-              >
-                기본값으로
-              </button>
-            </div>
-          </details>
-        )}
-
-        <label className="flex items-center justify-between gap-3 text-xs text-muted">
-          <span>
-            실험용 최대 턴 <span className="text-faint">(ply, 비우면 무제한)</span>
-          </span>
-          <input
-            type="number"
-            min={1}
-            value={draft.maxPlies ?? ''}
-            onChange={(e) => {
-              const v = Math.trunc(Number(e.target.value));
-              setDraft({ ...draft, maxPlies: e.target.value === '' || v <= 0 ? null : v });
-            }}
-            className="w-20 rounded-lg border border-line bg-card px-2 py-1 text-right font-mono text-ink focus:border-accent focus:outline-none"
-          />
-        </label>
-
         <button
           type="button"
-          onClick={() => onStart(draft)}
+          onClick={start}
+          data-start-game
           className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-card transition-colors hover:bg-accent-strong"
         >
           {changed ? '이 설정으로 새 게임' : '게임 재시작'}
@@ -172,5 +269,23 @@ export function SetupPanel({ current, onStart }: SetupPanelProps) {
         {changed && <p className="text-xs text-warn/80">변경한 설정은 새 게임부터 적용됩니다.</p>}
       </div>
     </Panel>
+  );
+}
+
+function NameRow({ slot, hint, value, placeholder, onChange }: { slot: number; hint: string; value: string; placeholder: string; onChange: (v: string) => void }) {
+  return (
+    <label className="flex items-center gap-2">
+      <span className={`flex h-6 w-9 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-card ${PLAYER_BG_CLASS[slot]}`}>{PLAYER_LABEL[slot]}</span>
+      <input
+        type="text"
+        maxLength={20}
+        value={value}
+        placeholder={placeholder}
+        aria-label={`${PLAYER_LABEL[slot]} 이름`}
+        onChange={(e) => onChange(e.target.value)}
+        className={inputClass}
+      />
+      <span className="w-14 shrink-0 text-[11px] text-faint">{hint}</span>
+    </label>
   );
 }
