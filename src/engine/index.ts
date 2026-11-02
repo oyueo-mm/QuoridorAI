@@ -13,3 +13,4 @@ export * from './notation';
 export * from './zobrist';
 export * from './tensor';
 export * from './multi';
+export * from './variants';

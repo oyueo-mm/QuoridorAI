@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useMoveSounds, useOutcomeSound } from '../audio/moveSounds';
 import { MultiGameStage } from '../components/board/GameStage';
 import { multiBoardRules } from '../components/board/boardRules';
@@ -8,34 +9,41 @@ import { MoveLog } from '../components/panels/MoveLog';
 import { PlayerChip } from '../components/panels/PlayerStrip';
 import { SetupPanel } from '../components/panels/SetupPanel';
 import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
-import { PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
+import { OBSTACLE_WALL, PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
 import { Tabs, buttonClass } from '../components/ui';
-import { goalDistanceMulti, seatSlot } from '../engine';
-import type { Coord, Goal } from '../engine';
+import { TEAM_NAMES, goalDistanceMulti, obstacleMetrics, describeObstacleMap, seatSlot, teamOf, teamSeats, winningSeats } from '../engine';
+import type { MultiRules } from '../engine';
 import { buildMultiRecord, multiRecordToText, parseMultiRecord } from '../match/multiRecord';
+import type { ParsedMultiRecord } from '../match/multiRecord';
 import { wallOwnersFromMoves } from '../match/wallOwners';
+import { modeInfo } from '../session/config';
+import type { GameMode } from '../session/config';
+import { seatText } from '../session/seatInfo';
 import type { MultiSession } from '../session/useMultiSession';
 import type { PlaySetupApi } from './playSetup';
 
-type FourTab = 'moves' | 'rules' | 'setup';
+type MultiTab = 'moves' | 'rules' | 'setup';
+type LoadableRecord = Extract<ParsedMultiRecord, { ok: true }>;
 
 /** Replay speed of "자동 재생". */
 const REPLAY_INTERVAL_MS = 700;
 
-const sideOfStart = (c: Coord) => (c.row === 8 ? '아래' : c.row === 0 ? '위' : c.col === 0 ? '왼쪽' : '오른쪽');
-const sideOfGoal = (g: Goal) => (g.axis === 'row' ? (g.index === 0 ? '위' : '아래') : g.index === 0 ? '왼쪽' : '오른쪽');
-
 /**
- * Four-player game (local, one device, clockwise). Same screen structure as Play: cards beside the
- * board, controls under it, record / rules / new-game tabs in the side panel. Browsing the record
- * (replay) shows that position read-only; playing resumes from "최신으로".
+ * Local multi-player game (one device): the official four-player game and every variant. Same
+ * screen structure as Play: cards beside the board, controls under it, record / rules / new-game
+ * tabs in the side panel. Browsing the record (replay) shows that position read-only; playing
+ * resumes from "최신으로". What differs per mode is the rule set in `session.setup.rules`.
  */
-export function FourPlayerView({ session, setup }: { session: MultiSession; setup: PlaySetupApi }) {
+export function MultiPlayView({ session, setup }: { session: MultiSession; setup: PlaySetupApi }) {
   const { game, history, controller, names, status, gameId } = session;
   const rules = game.rules;
+  const mode = session.config.mode;
+  const title = modeInfo(mode).title;
+  const [pendingImport, setPendingImport] = useState<LoadableRecord | null>(null);
+  const [focusMode, setFocusMode] = useState<GameMode | undefined>(undefined);
   const boardRules = useMemo(() => multiBoardRules(rules), [rules]);
   const [showPaths, setShowPaths] = useState(false);
-  const [tab, setTab] = useState<FourTab>('moves');
+  const [tab, setTab] = useState<MultiTab>('moves');
   const [panelOpen, setPanelOpen] = useState(true);
   const [selectedPly, setSelectedPly] = useState<number | null>(null);
   const [autoplay, setAutoplay] = useState(false);
@@ -48,7 +56,16 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
     setAutoplay(false);
     setConfirmRestart(false);
     setNotice('');
+    setPendingImport(null);
+    setFocusMode(undefined);
   }, [gameId]);
+  // The home page asked for the new-game tab.
+  useEffect(() => {
+    if (!setup.setupRequest) return;
+    setTab('setup');
+    setPanelOpen(true);
+    setFocusMode(setup.setupRequest.mode);
+  }, [setup.setupRequest]);
   // The record can shrink (undo): keep the selection inside it.
   useEffect(() => {
     if (selectedPly !== null && selectedPly >= history.length) setSelectedPly(null);
@@ -64,6 +81,9 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
   const nameOf = (seat: number) => names[slotOf(seat)];
   const playing = status.kind === 'playing';
   const turnSeat = position.currentPlayer;
+  const winners = useMemo(() => winningSeats(position), [position]);
+  const teamed = !!rules.teams;
+  const teamLabel = (seat: number) => TEAM_NAMES[teamOf(rules, seat)];
   const distances = useMemo(() => rules.players.map((_, seat) => goalDistanceMulti(position, seat)), [position, rules]);
 
   useMoveSounds(gameId, history, 'play');
@@ -102,22 +122,26 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
     setAutoplay(true);
   };
 
-  const record = () => buildMultiRecord(session.setup, actions, { names, ply });
+  const record = () => buildMultiRecord(session.setup, actions, { names, ply, mode });
   const exportJson = () => {
-    downloadText(`quoridor-4p-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`, JSON.stringify(record(), null, 2), 'application/json');
+    downloadText(`quoridor-${mode}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`, JSON.stringify(record(), null, 2), 'application/json');
     setNotice('JSON 파일을 저장했습니다.');
   };
+  const applyImport = (parsed: LoadableRecord) => {
+    controller.load(parsed);
+    setNotice(`기보를 불러왔습니다 — ${modeInfo(parsed.mode).title}, ${parsed.actions.length}수.`);
+    setPaste('');
+  };
+  // An invalid file changes nothing; a valid one replaces a game in progress only after a confirmation.
   const importText = (text: string) => {
     const parsed = parseMultiRecord(text);
-    if (!parsed.ok) return setNotice(`가져오기 실패 — ${parsed.error}`);
-    controller.load(parsed);
-    setNotice(`기보를 불러왔습니다 (${parsed.actions.length}수).`);
-    setPaste('');
+    if (!parsed.ok) return setNotice(`가져오기 실패 — ${parsed.error} 현재 게임은 그대로입니다.`);
+    if (history.length > 0) return setPendingImport(parsed);
+    applyImport(parsed);
   };
 
   const seat = (s: number) => {
     const slot = slotOf(s);
-    const start = rules.players[s].start;
     return (
       <PlayerChip
         player={slot}
@@ -125,23 +149,32 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
         isAi={false}
         thinking={false}
         wallsRemaining={position.wallsRemaining[s]}
-        wallsTotal={5}
+        wallsTotal={session.setup.wallsPerPlayer[s]}
         distance={distances[s]}
         active={playing && !browsing && turnSeat === s}
-        winner={position.winner === s}
-        seatHint={`${sideOfStart(start)}에서 시작 → ${sideOfGoal(rules.players[s].goal)}쪽 도착`}
+        winner={winners.includes(s)}
+        seatHint={seatText(rules.players[s])}
+        team={teamed ? { letter: 'AB'[teamOf(rules, s)], name: teamLabel(s) } : undefined}
       />
     );
   };
+
+  /** "P2 이름 승리", or in team games "A팀 승리 — P3 이름이 도착". */
+  const winnerText = (winner: number) => (
+    <>
+      {teamed && <span className="font-semibold">{teamLabel(winner)} 승리 — </span>}
+      <span className={`font-semibold ${PLAYER_TEXT_CLASS[slotOf(winner)]}`}>
+        {PLAYER_LABEL[slotOf(winner)]} {nameOf(winner)}
+      </span>
+      {teamed ? ' 도착' : ' 승리'}
+    </>
+  );
 
   const statusLine = (
     <div className="flex h-10 items-center justify-between gap-3 px-1">
       {status.kind === 'win' ? (
         <p className="truncate text-sm text-ink" data-status="win">
-          <span className={`font-semibold ${PLAYER_TEXT_CLASS[slotOf(status.winner)]}`}>
-            {PLAYER_LABEL[slotOf(status.winner)]} {nameOf(status.winner)}
-          </span>{' '}
-          승리 <span className="ml-2 font-mono text-xs text-faint">{history.length}수</span>
+          {winnerText(status.winner)} <span className="ml-2 font-mono text-xs text-faint">{history.length}수</span>
         </p>
       ) : (
         <p className="truncate text-sm text-ink-soft" data-status="playing">
@@ -160,7 +193,7 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
   );
 
   return (
-    <main className={sidePanelGrid(panelOpen)} data-view="four-player">
+    <main className={sidePanelGrid(panelOpen)} data-view="multi" data-mode={mode}>
       <MultiGameStage
         reserved={30}
         reservedWide={9}
@@ -169,19 +202,26 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
         status={statusLine}
         side={
           <>
+            <p className="text-center text-[11px] font-medium text-muted" data-mode-title>
+              {title}
+              <span className="ml-1.5 rounded bg-warn/10 px-1 text-warn">{modeInfo(mode).official ? '공식' : '변형'}</span>
+            </p>
             {status.kind === 'win' ? (
-              <p className="text-center text-sm text-ink">
-                <span className={`font-semibold ${PLAYER_TEXT_CLASS[slotOf(status.winner)]}`}>
-                  {PLAYER_LABEL[slotOf(status.winner)]} {nameOf(status.winner)}
-                </span>{' '}
-                승리
+              <p className="text-center text-sm text-ink" data-status-side="win">
+                {winnerText(status.winner)}
               </p>
             ) : (
-              <p className="text-center text-sm text-ink-soft">
+              <p className="text-center text-sm text-ink-soft" data-status-side="playing">
                 <span className={`font-semibold ${PLAYER_TEXT_CLASS[slotOf(game.currentPlayer)]}`}>{PLAYER_LABEL[slotOf(game.currentPlayer)]}</span> 차례
               </p>
             )}
             <p className="text-center font-mono text-xs text-muted tabular-nums">{history.length}수</p>
+            {boardRules.neutralWalls && (
+              <p className="flex items-center justify-center gap-1.5 text-[11px] text-muted" data-obstacle-legend>
+                <span className="inline-block h-2 w-6 rounded-sm" style={{ background: OBSTACLE_WALL.fill, border: `1px solid ${OBSTACLE_WALL.stroke}` }} aria-hidden />
+                중립 벽 {boardRules.neutralWalls.size}개
+              </p>
+            )}
             {status.kind === 'win' && (
               <button type="button" onClick={() => controller.restart()} className={`${buttonClass.primary} px-3 py-1.5 text-xs`}>
                 다시 하기
@@ -229,10 +269,10 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
       <SidePanel
         open={panelOpen}
         onToggle={() => setPanelOpen((v) => !v)}
-        name="4인전 패널"
+        name={`${title} 패널`}
         tabs={
           <Tabs
-            label="4인전 패널"
+            label={`${title} 패널`}
             value={tab}
             onChange={setTab}
             items={[
@@ -291,7 +331,7 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
                   {autoplay ? '정지' : '처음부터 재생'}
                 </button>
               </div>
-              <p className="min-h-4 text-[11px] text-faint">{notice || '수를 누르면 그 수 이후의 포지션을 보드에 보여 줍니다. AI 비교·관전·자동 실험은 2인전 전용이라 4인전 기보는 보낼 수 없습니다.'}</p>
+              <p className="min-h-4 text-[11px] text-faint">{notice || '수를 누르면 그 수 이후의 포지션을 보드에 보여 줍니다. AI 비교·관전·자동 실험은 정규 2인전 전용이라 이 기보는 보낼 수 없습니다.'}</p>
               <details className="text-xs text-muted">
                 <summary className="cursor-pointer">JSON 붙여넣기로 가져오기</summary>
                 <textarea
@@ -311,37 +351,133 @@ export function FourPlayerView({ session, setup }: { session: MultiSession; setu
             </div>
           </div>
           <div hidden={tab !== 'rules'}>
-            <FourPlayerRules />
+            <ModeRules mode={mode} rules={rules} wallsPerPlayer={session.setup.wallsPerPlayer} />
           </div>
           <div hidden={tab !== 'setup'}>
             <SetupPanel
-              key={`${setup.mode}-${gameId}`}
+              key={`${setup.mode}-${gameId}-${focusMode ?? ''}`}
               current={setup.config}
               currentMulti={setup.multiConfig}
               currentMode={setup.mode}
+              initialMode={focusMode}
               onStart={(c) => setup.startTwoPlayer(c)}
               onStartMulti={(c) => {
-                setup.startFourPlayer(c);
+                setup.startMulti(c);
                 setTab('moves');
               }}
             />
           </div>
         </div>
       </SidePanel>
+      {pendingImport && (
+        <ConfirmDialog
+          title="진행 중인 게임을 덮어쓸까요?"
+          confirmLabel="기보 불러오기"
+          onCancel={() => {
+            setPendingImport(null);
+            setNotice('가져오기를 취소했습니다 — 현재 게임은 그대로입니다.');
+          }}
+          onConfirm={() => {
+            const parsed = pendingImport;
+            setPendingImport(null);
+            applyImport(parsed);
+          }}
+        >
+          현재 {title} 게임({history.length}수)이 있습니다. 기보를 불러오면 이 게임은 사라집니다.
+          <br />
+          불러올 기보: <b>{modeInfo(pendingImport.mode).title}</b>, {pendingImport.actions.length}수.
+        </ConfirmDialog>
+      )}
     </main>
   );
 }
 
-function FourPlayerRules() {
+const JUMP_RULES = [
+  '인접한 말은 바로 뒤로 뛰어넘을 수 있습니다. 바로 뒤가 벽·보드 끝·다른 말이면 그 말의 좌우 옆 칸으로 대각선 이동합니다 (그 옆 칸에 벽이나 말이 있으면 못 갑니다).',
+  '한 번에 말 하나만 뛰어넘습니다. 말이 두 개 이상 일렬로 붙어 있으면 직선 점프는 불가능하고, 첫 말 기준으로 대각선만 가능합니다.',
+  '모든 플레이어에게 목표선까지 가는 길이 하나는 남아 있어야 하며, 이를 막는 벽은 놓을 수 없습니다. 말은 길을 막는 것으로 치지 않습니다.',
+];
+
+const MODE_RULES: Record<string, string[]> = {
+  'four-player': [
+    '네 말이 각 변의 한가운데에서 출발하고, 자기 출발선의 반대편 줄에 먼저 닿으면 이깁니다.',
+    '차례는 P1 → P2 → P3 → P4, 시계 방향입니다. 한 수에 말을 한 칸 옮기거나 벽 하나를 놓습니다.',
+    '벽은 한 사람당 5개입니다.',
+  ],
+  'race-2': [
+    '두 말이 맨 아래 줄 d1·f1에서 나란히 출발해, 위쪽 줄에 먼저 닿는 사람이 이깁니다. 두 출발점 모두 목표까지 8칸입니다.',
+    '벽은 10개씩. 상대의 길을 막아 늦출 수 있지만 완전히 막을 수는 없습니다.',
+    '같은 길목에서 마주치면 점프 규칙이 그대로 적용됩니다.',
+  ],
+  'race-4': [
+    '네 말이 맨 아래 줄 b·d·f·h에서 출발해 모두 위쪽 줄을 향합니다. 먼저 닿는 사람이 이깁니다.',
+    '벽은 5개씩. 모든 말의 길이 남아 있어야 벽을 놓을 수 있습니다.',
+    '배치는 좌우 대칭이지만, 바깥쪽(b·h)과 가운데(d·f) 말은 주변 공간이 달라 구조적으로 완전히 같지는 않습니다. 시작 플레이어를 바꿔 균형을 맞춰 보세요.',
+  ],
+  'three-player': [
+    '아래·왼쪽·위의 중앙에서 출발해 각자 반대편 줄에 먼저 닿는 사람이 이깁니다. (공식 규칙에 없는 변형입니다)',
+    '차례는 P1(아래) → P2(왼쪽) → P3(위) 시계 방향. 벽은 5개씩.',
+    '오른쪽 변은 비어 있어서 위치에 따라 불리·유리가 생길 수 있습니다. 시작 플레이어를 고르거나 무작위로 정할 수 있습니다.',
+  ],
+  'team-2v2': [
+    '정규 4인전과 같은 배치입니다. A팀은 아래·위, B팀은 왼쪽·오른쪽에 있고 A → B → A → B 순서로 번갈아 둡니다.',
+    '각자 자기 출발선의 반대편이 목표입니다. 팀원 누구든 자기 목표선에 먼저 닿으면 팀 전체가 이깁니다.',
+    '팀원의 말도 일반 말과 똑같이 같은 칸에 못 서고, 점프·대각선 규칙의 대상입니다. 벽은 아군에게도 똑같이 작용하며, 벽은 개인별 5개입니다 (팀 공동 벽은 없습니다).',
+  ],
+  asymmetric: [
+    '시작 위치·목표선·벽 개수·차례 순서를 플레이어마다 다르게 정한 대국입니다. 먼저 자기 목표선에 닿는 사람이 이깁니다.',
+    '이 조건이 공정한 대국을 보장하지는 않습니다. 겹치는 시작 위치나, 시작부터 목표선 위인 배치는 허용되지 않습니다.',
+  ],
+  obstacle: [
+    '처음부터 놓인 어두운 돌 벽(중립 벽)이 있는 맵에서 경쟁합니다. 중립 벽은 누구의 벽도 아니라서 내 벽 개수에 포함되지 않습니다.',
+    '모든 참가자가 목표선에 갈 수 있는 맵만 만들어집니다. 이후 각자 자기 벽을 더 놓을 수 있습니다.',
+    '같은 난이도·시드·인원이면 같은 맵입니다. 시드와 중립 벽 위치는 기보에 함께 저장됩니다.',
+  ],
+};
+
+const PRESET_TITLE: Record<string, string> = { easy: '쉬움', normal: '보통', hard: '어려움', random: '무작위' };
+
+function ModeRules({ mode, rules, wallsPerPlayer }: { mode: GameMode; rules: MultiRules; wallsPerPlayer: readonly number[] }) {
+  const info = modeInfo(mode);
+  const metrics = rules.neutralWalls?.length ? obstacleMetrics(rules, rules.neutralWalls) : null;
   return (
-    <div className="space-y-3 text-sm leading-relaxed text-ink-soft">
+    <div className="space-y-3 text-sm leading-relaxed text-ink-soft" data-rules-tab={mode}>
+      <p className="text-xs font-medium text-muted">
+        {info.title} · {info.players} · {info.official ? '공식 규칙' : '변형 규칙'}
+      </p>
       <ul className="list-disc space-y-1.5 pl-5">
-        <li>네 말이 각 변의 한가운데에서 출발하고, 자기 출발선의 반대편 줄에 먼저 닿으면 이깁니다.</li>
-        <li>차례는 P1 → P2 → P3 → P4, 시계 방향입니다. 한 수에 말을 한 칸 옮기거나 벽 하나를 놓습니다.</li>
-        <li>벽은 한 사람당 5개이고, 모든 플레이어의 목표 줄로 가는 길을 완전히 막을 수 없습니다.</li>
-        <li>인접한 말은 뛰어넘을 수 있습니다. 바로 뒤가 벽·보드 끝·다른 말이면 그 말의 좌우 옆 칸으로 대각선 이동합니다. 두 개 이상의 말은 뛰어넘을 수 없습니다.</li>
+        {(MODE_RULES[mode] ?? []).map((t) => (
+          <li key={t}>{t}</li>
+        ))}
       </ul>
-      <p className="text-xs text-faint">공식 룰북(Gigamic) 4인 규칙을 따릅니다. 이번 버전의 4인전은 AI 없이 사람끼리 두는 로컬 대국입니다.</p>
+      <div>
+        <p className="mb-1 text-xs font-medium text-muted">이동·점프·벽 (모든 모드 공통)</p>
+        <ul className="list-disc space-y-1.5 pl-5">
+          {JUMP_RULES.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
+        </ul>
+      </div>
+      <ul className="space-y-0.5 text-xs text-muted" aria-label="플레이어 설정">
+        {rules.players.map((p, i) => (
+          <li key={i}>
+            <span className="font-medium text-ink-soft">{PLAYER_LABEL[i]}</span>
+            {rules.teams ? ` (${TEAM_NAMES[rules.teams[i]]})` : ''} — {seatText(p)} · 벽 {wallsPerPlayer[i]}개
+          </li>
+        ))}
+        {rules.teams && <li>같은 팀: {[0, 1].map((t) => teamSeats(rules, rules.teams!.indexOf(t)).map((s) => PLAYER_LABEL[s]).join('·')).join(' / ')}</li>}
+      </ul>
+      {metrics && (
+        <p className="rounded-lg bg-inset px-3 py-2 text-xs text-muted" data-obstacle-info>
+          {rules.preset ? `난이도 ${PRESET_TITLE[rules.preset] ?? rules.preset} · ` : ''}
+          시드 <span className="font-mono">{rules.seed}</span>
+          <br />
+          {describeObstacleMap(metrics)}
+        </p>
+      )}
+      <p className="text-xs text-faint">
+        {info.official ? '공식 룰북(Gigamic) 4인 규칙을 따릅니다. ' : ''}여러 말이 얽힌 점프처럼 룰북이 정하지 않은 경우는 위와 같이 해석해 적용합니다. 이 모드는 AI 없이 사람끼리 두는 로컬 대국입니다.
+      </p>
     </div>
   );
 }

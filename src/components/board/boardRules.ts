@@ -8,7 +8,9 @@ import {
   legalPawnMovesMulti,
   seatSlot,
   shortestPath,
+  winningSeats,
 } from '../../engine';
+import { wallKey } from '../../match/wallOwners';
 import type { Coord, GameState, Goal, MultiRules, MultiState, WallAction, WallLayout, WallPlacementResult } from '../../engine';
 
 /** What the board needs to know about a position — satisfied by GameState and MultiState. */
@@ -32,6 +34,14 @@ export interface BoardRules {
   checkWall(state: BoardPosition, wall: WallAction): WallPlacementResult;
   /** Shortest path of every player that has one. */
   paths(state: BoardPosition): { player: number; path: Coord[] }[];
+  /** Start cell of every seat (drawn as a faint ring where the pawn began). */
+  readonly starts?: readonly Coord[];
+  /** Team index of every seat in team games (absent = everybody plays alone). */
+  readonly teams?: readonly number[];
+  /** Keys (see wallKey) of the walls that were on the board before the first move and belong to nobody. */
+  readonly neutralWalls?: ReadonlySet<string>;
+  /** Seats that won (a whole team in team games), empty while the game runs. */
+  winners?(state: BoardPosition): readonly number[];
 }
 
 export const TWO_PLAYER_BOARD: BoardRules = {
@@ -52,6 +62,10 @@ export function multiBoardRules(rules: MultiRules): BoardRules {
     playerCount: rules.players.length,
     goals: rules.players.map((p) => p.goal),
     slot: (seat) => seatSlot(rules, seat),
+    starts: rules.players.map((p) => p.start),
+    ...(rules.teams ? { teams: rules.teams } : {}),
+    ...(rules.neutralWalls?.length ? { neutralWalls: new Set(rules.neutralWalls.map((w) => wallKey(w.orientation, w.row, w.col))) } : {}),
+    winners: (s) => (s.winner === null ? [] : winningSeats({ ...(s as MultiState), rules })),
     legalMoves: (s) => legalPawnMovesMulti(s as MultiState),
     checkWall: (s, w) => checkWallMulti(s as MultiState, w),
     paths: (s) =>

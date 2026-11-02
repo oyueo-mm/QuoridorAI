@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { GameLine } from './match/gameRecord';
 import { SoundControl } from './components/SoundControl';
-import { modeOfConfig } from './session/config';
+import { isMultiMode, modeOfConfig } from './session/config';
 import type { GameConfig, GameMode } from './session/config';
+import { recommendedConfig } from './session/MultiController';
 import type { MultiConfig } from './session/MultiController';
 import { useGameSession } from './session/useGameSession';
 import { useMultiSession } from './session/useMultiSession';
@@ -12,7 +13,7 @@ import { CompareView } from './views/CompareView';
 import type { ArenaIncoming } from './views/ArenaView';
 import type { CompareSource } from './views/CompareView';
 import { ExperimentsView } from './views/ExperimentsView';
-import { FourPlayerView } from './views/FourPlayerView';
+import { MultiPlayView } from './views/MultiPlayView';
 import { HomeView } from './views/HomeView';
 import type { PlaySetupApi } from './views/playSetup';
 import { PlayView } from './views/PlayView';
@@ -33,9 +34,11 @@ const routeFromHash = (): RouteId => {
 export default function App() {
   const session = useGameSession();
   const multi = useMultiSession();
-  // 'four-player' is a separate local game; the other two modes are the two-player session (opponent human or AI).
-  const [fourActive, setFourActive] = useState(false);
-  const mode: GameMode = fourActive ? 'four-player' : modeOfConfig(session.config);
+  // The official four-player game and the variants are local multi-player games with their own
+  // controller; the two basic modes are the two-player session (opponent human or AI).
+  const [multiActive, setMultiActive] = useState(false);
+  const mode: GameMode = multiActive ? multi.config.mode : modeOfConfig(session.config);
+  const [setupRequest, setSetupRequest] = useState<PlaySetupApi['setupRequest']>(null);
   const [route, setRoute] = useState<RouteId>(routeFromHash);
   const [compareSource, setCompareSource] = useState<CompareSource | null>(null);
 
@@ -60,28 +63,29 @@ export default function App() {
       config: session.config,
       multiConfig: multi.config,
       startTwoPlayer: (config: GameConfig) => {
-        setFourActive(false);
+        setMultiActive(false);
         session.controller.restart(config);
       },
-      startFourPlayer: (config: MultiConfig) => {
-        multi.controller.restart(config);
-        setFourActive(true);
+      startMulti: (config: MultiConfig) => {
+        if (multi.controller.restart(config)) setMultiActive(true);
       },
+      setupRequest,
     }),
-    [mode, session.config, session.controller, multi.config, multi.controller],
+    [mode, session.config, session.controller, multi.config, multi.controller, setupRequest],
   );
 
   /** Home entry: opens Play in `target`; a finished game, or one of another mode, starts fresh. */
   const openMode = useCallback(
     (target: GameMode) => {
-      if (target === 'four-player') {
-        if (!fourActive || multi.status.kind !== 'playing') multi.controller.restart();
-        setFourActive(true);
+      if (isMultiMode(target)) {
+        // Same mode still running: resume it; otherwise start the mode with its recommended settings.
+        if (!multiActive || multi.config.mode !== target || multi.status.kind !== 'playing') multi.controller.restart(recommendedConfig(target, multi.config.names));
+        setMultiActive(true);
       } else {
         const wantsHuman = target === 'local-2p';
-        const sameMode = !fourActive && (session.config.opponent === 'human') === wantsHuman;
+        const sameMode = !multiActive && (session.config.opponent === 'human') === wantsHuman;
         if (!sameMode || session.status.kind !== 'playing') {
-          setFourActive(false);
+          setMultiActive(false);
           session.controller.restart({ ...session.config, opponent: wantsHuman ? 'human' : session.config.opponent === 'human' ? 'minimax' : session.config.opponent, userSeat: wantsHuman ? 0 : session.config.userSeat });
         }
       }
@@ -89,8 +93,16 @@ export default function App() {
       setRoute('play');
       window.scrollTo({ top: 0 });
     },
-    [fourActive, multi.controller, multi.status.kind, session.config, session.controller, session.status.kind],
+    [multiActive, multi.config, multi.controller, multi.status.kind, session.config, session.controller, session.status.kind],
   );
+
+  /** Home entry for the variants: Play opens on the new-game tab with the first variant selected. */
+  const openVariants = useCallback(() => {
+    setSetupRequest({ at: Date.now(), mode: 'race-2' });
+    window.location.hash = '/play';
+    setRoute('play');
+    window.scrollTo({ top: 0 });
+  }, []);
 
   const sendToArena = useCallback((line: GameLine, label: string) => {
     setArenaIncoming({ line, label, sentAt: Date.now() });
@@ -135,13 +147,13 @@ export default function App() {
       </header>
 
       <div hidden={route !== 'home'}>
-        <HomeView onOpen={go} onOpenMode={openMode} />
+        <HomeView onOpen={go} onOpenMode={openMode} onOpenVariants={openVariants} />
       </div>
-      <div hidden={route !== 'play' || fourActive}>
+      <div hidden={route !== 'play' || multiActive}>
         <PlayView session={session} setup={playSetup} onCompare={sendToCompare} onArena={sendToArena} />
       </div>
-      <div hidden={route !== 'play' || !fourActive}>
-        <FourPlayerView session={multi} setup={playSetup} />
+      <div hidden={route !== 'play' || !multiActive}>
+        <MultiPlayView session={multi} setup={playSetup} />
       </div>
       <div hidden={route !== 'arena'}>
         <ArenaView onCompare={sendToCompare} incoming={arenaIncoming} />

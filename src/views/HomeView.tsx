@@ -5,7 +5,7 @@ import { GAME_MODES } from '../session/config';
 import type { GameMode } from '../session/config';
 
 /** Landing page: what this is, and four ways in. */
-export function HomeView({ onOpen, onOpenMode }: { onOpen: (id: SectionId) => void; onOpenMode: (mode: GameMode) => void }) {
+export function HomeView({ onOpen, onOpenMode, onOpenVariants }: { onOpen: (id: SectionId) => void; onOpenMode: (mode: GameMode) => void; onOpenVariants: () => void }) {
   return (
     <main className="mx-auto max-w-[1080px] px-4 pt-10 pb-16 sm:px-6 sm:pt-16">
       <section className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:gap-14">
@@ -24,8 +24,8 @@ export function HomeView({ onOpen, onOpenMode }: { onOpen: (id: SectionId) => vo
         <HomeBoard />
       </section>
 
-      <section className="mt-12 grid gap-3 sm:grid-cols-3" aria-label="게임 모드">
-        {GAME_MODES.map((m) => (
+      <section className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="게임 모드">
+        {GAME_MODES.filter((m) => m.group === 'basic').map((m) => (
           <button
             key={m.id}
             type="button"
@@ -37,6 +37,15 @@ export function HomeView({ onOpen, onOpenMode }: { onOpen: (id: SectionId) => vo
             <span className="mt-1 text-sm text-muted">{m.description}</span>
           </button>
         ))}
+        <button
+          type="button"
+          data-home-variants
+          onClick={onOpenVariants}
+          className="flex flex-col rounded-2xl border border-dashed border-line bg-card px-5 py-4 text-left shadow-[var(--shadow-soft)] transition-colors hover:border-line-strong"
+        >
+          <span className="text-base font-semibold text-ink">변형 대전 {GAME_MODES.filter((m) => m.group === 'variant').length}종</span>
+          <span className="mt-1 text-sm text-muted">경주 · 3인 · 팀전 · 비대칭 · 장애물. 규칙을 바꿔 가며 즐기는 로컬 대국.</span>
+        </button>
       </section>
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2" aria-label="시작하기">

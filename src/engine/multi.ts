@@ -31,11 +31,34 @@ export interface PlayerSpec {
   readonly goal: Goal;
 }
 
+/** A wall given by position, e.g. a neutral obstacle placed before the first move. */
+export interface WallSpec {
+  readonly orientation: Orientation;
+  readonly row: number;
+  readonly col: number;
+}
+
 export interface MultiRules {
   /** Indexed by seat. */
   readonly players: readonly PlayerSpec[];
   /** Seats in the order they play, repeated cyclically. Every seat appears exactly once. */
   readonly turnOrder: readonly number[];
+  /** Variant id (see variants.ts); absent = a plain rule set (tests, official games). */
+  readonly mode?: string;
+  /**
+   * Team of every seat (0..k-1, at least two teams). When present the game is a team game: a
+   * pawn reaching its own goal line wins for its whole team. Absent = every seat plays for itself.
+   */
+  readonly teams?: readonly number[];
+  /**
+   * Neutral walls on the board before the first move. They belong to nobody, are never counted in
+   * anyone's walls and are part of the rules (a replay starts with them).
+   */
+  readonly neutralWalls?: readonly WallSpec[];
+  /** Seed the neutral walls were generated from (documentation only; the walls are explicit). */
+  readonly seed?: number;
+  /** Name of the obstacle preset the walls came from (documentation only). */
+  readonly preset?: string;
 }
 
 export interface MultiState extends WallLayout {
@@ -96,6 +119,39 @@ export function validateRules(rules: MultiRules): void {
   if (n < 2 || n > 4) throw new Error(`Unsupported player count: ${n}`);
   const order = [...rules.turnOrder].sort((a, b) => a - b);
   if (order.length !== n || order.some((seat, i) => seat !== i)) throw new Error('turnOrder must list every seat exactly once');
+  for (const p of rules.players) {
+    if (!inBounds(p.start.row, p.start.col)) throw new Error(`Pawn off board: ${JSON.stringify(p.start)}`);
+    if ((p.goal.axis !== 'row' && p.goal.axis !== 'col') || !Number.isInteger(p.goal.index) || p.goal.index < 0 || p.goal.index >= BOARD_SIZE) {
+      throw new Error(`Invalid goal line: ${JSON.stringify(p.goal)}`);
+    }
+  }
+  if (rules.teams) {
+    const t = rules.teams;
+    if (t.length !== n || t.some((x) => !Number.isInteger(x) || x < 0 || x >= n)) throw new Error('teams must give a team number for every seat');
+    const used = [...new Set(t)].sort((a, b) => a - b);
+    if (used.length < 2 || used.some((x, i) => x !== i)) throw new Error('teams must be numbered 0..k-1 with at least two teams');
+  }
+  for (const w of rules.neutralWalls ?? []) {
+    if ((w.orientation !== 'h' && w.orientation !== 'v') || !Number.isInteger(w.row) || !Number.isInteger(w.col) || !isWallAnchorInBounds(w.row, w.col)) {
+      throw new Error(`Wall off board: ${JSON.stringify(w)}`);
+    }
+  }
+}
+
+/** Team of `seat` (the seat itself when the game has no teams). */
+export function teamOf(rules: MultiRules, seat: number): number {
+  return rules.teams ? rules.teams[seat] : seat;
+}
+
+/** Seats playing for the same side as `seat` (just `seat` in a game without teams). */
+export function teamSeats(rules: MultiRules, seat: number): number[] {
+  const team = teamOf(rules, seat);
+  return rules.players.flatMap((_, s) => (teamOf(rules, s) === team ? [s] : []));
+}
+
+/** Seats that won the game (the whole team of the pawn that arrived), or [] while it is running. */
+export function winningSeats(state: MultiState): number[] {
+  return state.winner === null ? [] : teamSeats(state.rules, state.winner);
 }
 
 export function createMultiState(setup: MultiSetup = {}): MultiState {
@@ -110,7 +166,7 @@ export function createMultiState(setup: MultiSetup = {}): MultiState {
   });
 
   let layout: WallLayout = { hWalls: new Uint8Array(NUM_WALL_SLOTS), vWalls: new Uint8Array(NUM_WALL_SLOTS) };
-  for (const w of setup.walls ?? []) {
+  for (const w of [...(rules.neutralWalls ?? []), ...(setup.walls ?? [])]) {
     if (!isWallAnchorInBounds(w.row, w.col)) throw new Error(`Wall off board: ${JSON.stringify(w)}`);
     if (wallConflicts(layout, w.orientation, w.row, w.col)) throw new Error(`Wall conflicts with an existing wall: ${JSON.stringify(w)}`);
     layout = withWall(layout, w.orientation, w.row, w.col);

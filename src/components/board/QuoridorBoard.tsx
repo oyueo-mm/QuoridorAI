@@ -11,7 +11,7 @@ import {
 import type { Action, Coord, Orientation, PlayerId, WallAction } from '../../engine';
 import { wallKey } from '../../match/wallOwners';
 import type { WallOwners } from '../../match/wallOwners';
-import { BOARD_COLORS, NEUTRAL_WALL, PLAYER_COLOR, PLAYER_LABEL, WALL_COLORS, WALL_RESULT_TEXT } from '../theme';
+import { BOARD_COLORS, NEUTRAL_WALL, OBSTACLE_WALL, PLAYER_COLOR, PLAYER_LABEL, WALL_COLORS, WALL_RESULT_TEXT } from '../theme';
 import {
   BOARD_PX,
   CELL,
@@ -53,6 +53,7 @@ interface QuoridorBoardProps {
 }
 
 const FILES = 'abcdefghi';
+const TEAM_LETTERS = 'ABCD';
 
 /**
  * The board. Its box is a fixed square (aspect-ratio) and the hint line below has a fixed
@@ -85,13 +86,14 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
           if (!(orientation === 'h' ? state.hWalls[i] : state.vWalls[i])) continue;
           const key = wallKey(orientation, row, col);
           const confirmed = (orientation === 'h' ? real.hWalls[i] : real.vWalls[i]) !== 0;
-          const owner = confirmed ? (props.wallOwners?.get(key) ?? null) : (previewOwner.get(key) ?? null);
-          walls.push({ orientation, row, col, key, confirmed, owner });
+          const neutral = confirmed && (rules.neutralWalls?.has(key) ?? false);
+          const owner = neutral ? null : confirmed ? (props.wallOwners?.get(key) ?? null) : (previewOwner.get(key) ?? null);
+          walls.push({ orientation, row, col, key, confirmed, owner, neutral });
         }
       }
     }
     return walls;
-  }, [state, props.state, props.wallOwners, overlay]);
+  }, [state, props.state, props.wallOwners, overlay, rules]);
 
   // Hovering a placed wall names its owner (also when the board is read-only).
   const wallInfo = useMemo(() => {
@@ -101,6 +103,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
     if (!w) return null;
     const name = formatAction({ type: 'wall', orientation: w.orientation, row: w.row, col: w.col });
     if (!w.confirmed) return `벽 ${name} — 분석 미리보기의 가상 벽 (실제로 놓이지 않음)`;
+    if (w.neutral) return `벽 ${name} — 중립 벽 (처음부터 놓인 장애물, 누구의 벽도 아님)`;
     return `벽 ${name} — ${w.owner === null ? '설치한 플레이어 기록 없음' : `${PLAYER_LABEL[rules.slot(w.owner)]}가 설치`}`;
   }, [hover, flipped, placedWalls, rules]);
 
@@ -154,6 +157,7 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
   const mover = rules.slot(state.currentPlayer);
   const hoverCell = hover?.kind === 'cell' ? hover.view : null;
   const paths = overlay ? overlay.paths : livePaths;
+  const winners = useMemo(() => (overlay ? [] : (rules.winners?.(state) ?? (state.winner === null ? [] : [state.winner]))), [state, rules, overlay]);
 
   let hint = '';
   if (wallInfo) hint = wallInfo;
@@ -193,6 +197,10 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             <pattern id={`${stripesId}-bars`} patternUnits="userSpaceOnUse" width={5} height={5}>
               <rect width={1.6} height={5} fill="#fbf9f5" fillOpacity={0.4} />
             </pattern>
+            {/* Neutral obstacle walls: dark stone with a cross-hatch, unlike every player's wall. */}
+            <pattern id={`${stripesId}-stone`} patternUnits="userSpaceOnUse" width={7} height={7}>
+              <path d="M0 0L7 7M7 0L0 7" stroke="#d9d2c6" strokeOpacity={0.35} strokeWidth={1} />
+            </pattern>
           </defs>
           <rect
             x={0}
@@ -206,15 +214,22 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             strokeWidth={3}
           />
           <rect x={PAD - 6} y={PAD - 6} width={BOARD_PX + 12} height={BOARD_PX + 12} rx={14} fill={BOARD_COLORS.groove} />
-          {/* Goal markers: a bar in each player's colour along the edge that player must reach. */}
+          {/* Goal markers: a bar in each player's colour along the edge that player must reach. Seats sharing
+              one goal line split that bar into one segment each, so their colours never overlap. */}
           {rules.goals.map((goal, seat) => {
+            const sharing = rules.goals.flatMap((g, i) => (g.axis === goal.axis && g.index === goal.index ? [i] : []));
+            const k = sharing.length;
+            const part = sharing.indexOf(seat);
+            const full = BOARD_PX - 16;
+            const len = full / k;
             const viewIndex = flipped ? BOARD_SIZE - 1 - goal.index : goal.index;
             const edgeFirst = viewIndex === 0;
             const colour = PLAYER_COLOR[rules.slot(seat)];
+            const shown = k > 1 ? len - 5 : len;
             return goal.axis === 'row' ? (
-              <rect key={seat} x={PAD + 8} y={edgeFirst ? PAD - 12 : PAD + BOARD_PX + 8} width={BOARD_PX - 16} height={4} rx={2} fill={colour} fillOpacity={0.55} pointerEvents="none" data-goal={seat} />
+              <rect key={seat} x={PAD + 8 + part * len} y={edgeFirst ? PAD - 12 : PAD + BOARD_PX + 8} width={shown} height={4} rx={2} fill={colour} fillOpacity={0.55} pointerEvents="none" data-goal={seat} />
             ) : (
-              <rect key={seat} x={edgeFirst ? PAD - 12 : PAD + BOARD_PX + 8} y={PAD + 8} width={4} height={BOARD_PX - 16} rx={2} fill={colour} fillOpacity={0.55} pointerEvents="none" data-goal={seat} />
+              <rect key={seat} x={edgeFirst ? PAD - 12 : PAD + BOARD_PX + 8} y={PAD + 8 + part * len} width={4} height={shown} rx={2} fill={colour} fillOpacity={0.55} pointerEvents="none" data-goal={seat} />
             );
           })}
           <CoordinateLabels flipped={flipped} />
@@ -222,6 +237,12 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
             {Array.from({ length: BOARD_SIZE * BOARD_SIZE }, (_, i) => (
               <rect key={i} {...cellRect({ row: Math.floor(i / BOARD_SIZE), col: i % BOARD_SIZE })} rx={8} fill={BOARD_COLORS.cell} />
             ))}
+
+            {/* Where each pawn started (faint dashed ring, in the player's colour). */}
+            {rules.starts?.map((c, seat) => {
+              const { x, y } = cellCenter(cellToView(c, flipped));
+              return <circle key={seat} cx={x} cy={y} r={CELL * 0.4} fill="none" stroke={PLAYER_COLOR[rules.slot(seat)]} strokeOpacity={0.5} strokeWidth={2} strokeDasharray="3 4" pointerEvents="none" data-start={seat} />;
+            })}
 
             {/* Shortest paths: live BFS (dashed) or the AI's evaluated paths (solid). */}
             {paths.map(({ player, path }) => {
@@ -289,14 +310,25 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
               const slot = rules.slot(seat);
               const { x, y } = cellCenter(cellToView(pawn, flipped));
               const active = state.winner === null && seat === state.currentPlayer;
+              const won = winners.includes(seat);
+              const team = rules.teams?.[seat];
               return (
-                <g key={seat} pointerEvents="none" data-pawn={seat}>
+                <g key={seat} pointerEvents="none" data-pawn={seat} data-winner={won || undefined}>
+                  {won && <circle cx={x} cy={y} r={CELL * 0.46} fill="none" stroke={BOARD_COLORS.win} strokeWidth={4} data-win-ring={seat} />}
                   {active && <circle cx={x} cy={y} r={CELL * 0.43} fill="none" stroke={PLAYER_COLOR[slot]} strokeOpacity={0.35} strokeWidth={2.5} />}
                   <circle cx={x} cy={y + 1.5} r={CELL * 0.31} fill={BOARD_COLORS.ink} fillOpacity={0.12} />
                   <circle cx={x} cy={y} r={CELL * 0.31} fill={PLAYER_COLOR[slot]} stroke={BOARD_COLORS.cell} strokeWidth={2.5} />
                   <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fill="#fbf9f5" className="text-[14px] font-semibold">
                     {PLAYER_LABEL[slot]}
                   </text>
+                  {team !== undefined && (
+                    <g data-team-badge={TEAM_LETTERS[team]}>
+                      <circle cx={x + CELL * 0.27} cy={y - CELL * 0.27} r={8.5} fill={BOARD_COLORS.cell} stroke={BOARD_COLORS.ink} strokeWidth={1.5} />
+                      <text x={x + CELL * 0.27} y={y - CELL * 0.27} textAnchor="middle" dominantBaseline="central" fill={BOARD_COLORS.ink} className="text-[11px] font-bold">
+                        {TEAM_LETTERS[team]}
+                      </text>
+                    </g>
+                  )}
                 </g>
               );
             })}
@@ -429,6 +461,8 @@ interface PlacedWall {
   confirmed: boolean;
   /** Who placed it; null = not recorded (drawn neutral). */
   owner: number | null;
+  /** On the board before the first move and owned by nobody (an obstacle of the rules). */
+  neutral: boolean;
 }
 
 /**
@@ -437,6 +471,14 @@ interface PlacedWall {
  */
 function WallShape({ wall, slot, rect, stripesId }: { wall: PlacedWall; slot: number | null; rect: { x: number; y: number; width: number; height: number }; stripesId: string }) {
   const colour = slot === null ? NEUTRAL_WALL.stroke : WALL_COLORS[slot];
+  if (wall.neutral) {
+    return (
+      <g pointerEvents="none" data-wall={wall.key} data-wall-kind="obstacle">
+        <rect {...rect} rx={3} fill={OBSTACLE_WALL.fill} stroke={OBSTACLE_WALL.stroke} strokeWidth={1.5} />
+        <rect {...rect} rx={3} fill={`url(#${stripesId}-stone)`} />
+      </g>
+    );
+  }
   if (!wall.confirmed) {
     return <rect {...rect} rx={4} fill={colour} fillOpacity={0.28} stroke={colour} strokeWidth={1.5} strokeDasharray="4 3" pointerEvents="none" data-wall={wall.key} data-wall-kind="preview" />;
   }

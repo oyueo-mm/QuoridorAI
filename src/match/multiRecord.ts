@@ -1,37 +1,55 @@
 import {
+  MAX_WALLS,
+  MULTI_MODES,
+  OBSTACLE_WALLS,
   OFFICIAL_WALLS,
+  VARIANT_WALLS,
   applyActionMulti,
+  checkModeConsistency,
   createMultiState,
   formatAction,
   legalActionsMulti,
   validateRules,
 } from '../engine';
-import type { Action, Goal, MultiRules, MultiState } from '../engine';
+import type { Action, Goal, MultiGameMode, MultiRules, MultiState, WallSpec } from '../engine';
 import { GAME_RECORD_FORMAT } from './gameRecord';
 
 /*
- * Records of games with more than two players (record version 2). Version 1 — the two-player
- * record in gameRecord.ts — is unchanged and still read by parseRecord. A version 2 file carries
+ * Records of games with more than two players. Version 1 — the two-player record in
+ * gameRecord.ts — is unchanged and still read by parseRecord. A multi-player file carries
  * everything needed to replay the game without assumptions: mode, the start cell and goal line
  * of every seat, the turn order, walls per player, who moved first, the participants' names and
  * the moves (notation is the project's own, see formatAction; the player of each move is stored
  * and cross-checked on import).
+ *
+ * Version 2 is the official four-player game. Version 3 adds what the variants need — teams, the
+ * neutral walls of an obstacle race (explicit cells, so a replay never depends on the generator),
+ * the seed and preset they came from — and is written for every mode but the official four-player
+ * game, which stays version 2 so that older readers keep working. Both are read by parseMultiRecord.
  */
 
 export const MULTI_RECORD_VERSION = 2;
+export const VARIANT_RECORD_VERSION = 3;
 
-export type MultiGameMode = 'four-player';
+export type { MultiGameMode } from '../engine';
 
 export interface MultiRecordFile {
   format: typeof GAME_RECORD_FORMAT;
-  version: typeof MULTI_RECORD_VERSION;
+  version: typeof MULTI_RECORD_VERSION | typeof VARIANT_RECORD_VERSION;
   createdAt: string;
   source: string;
   mode: MultiGameMode;
-  /** Start cells and goal lines by seat, and the turn order. */
+  /** Start cells and goal lines by seat, and the turn order (version 3: teams and neutral walls too). */
   rules: {
     players: { seat: number; start: [number, number]; goal: Goal }[];
     turnOrder: number[];
+    /** Version 3 only: team of every seat. */
+    teams?: number[];
+    /** Version 3 only: walls on the board before the first move, owned by nobody. */
+    neutralWalls?: { orientation: 'h' | 'v'; row: number; col: number }[];
+    /** Version 3 only: where the neutral walls came from (informational). */
+    seed?: number;
+    preset?: string;
   };
   wallsPerPlayer: number[];
   firstPlayer: number;
@@ -75,15 +93,21 @@ export function buildMultiRecord(
   const positions = replayMulti(setup, actions);
   const last = positions[positions.length - 1];
   const { rules } = setup;
+  const mode = info.mode ?? 'four-player';
+  const variant = mode !== 'four-player';
   return {
     format: GAME_RECORD_FORMAT,
-    version: MULTI_RECORD_VERSION,
+    version: variant ? VARIANT_RECORD_VERSION : MULTI_RECORD_VERSION,
     createdAt: new Date().toISOString(),
     source: info.source ?? 'play',
-    mode: info.mode ?? 'four-player',
+    mode,
     rules: {
       players: rules.players.map((p, seat) => ({ seat, start: [p.start.row, p.start.col], goal: { ...p.goal } })),
       turnOrder: [...rules.turnOrder],
+      ...(variant && rules.teams ? { teams: [...rules.teams] } : {}),
+      ...(variant && rules.neutralWalls?.length ? { neutralWalls: rules.neutralWalls.map((w) => ({ ...w })) } : {}),
+      ...(variant && rules.seed !== undefined ? { seed: rules.seed } : {}),
+      ...(variant && rules.preset !== undefined ? { preset: rules.preset } : {}),
     },
     wallsPerPlayer: [...setup.wallsPerPlayer],
     firstPlayer: setup.firstPlayer,
@@ -125,9 +149,10 @@ export function parseMultiRecord(text: string): ParsedMultiRecord {
     return { ok: false, error: 'JSON 형식이 아닙니다.' };
   }
   if (data?.format !== GAME_RECORD_FORMAT) return { ok: false, error: `기보 형식이 아닙니다 (format: ${String(data?.format)}).` };
-  if ((data.version as number) === 1) return { ok: false, error: '2인전 기보입니다. 4인전에서는 4인전 기보(버전 2)만 불러올 수 있습니다.' };
-  if (data.version !== MULTI_RECORD_VERSION) return { ok: false, error: `지원하지 않는 기보 버전입니다 (${String(data.version)}).` };
-  if (data.mode !== 'four-player') return { ok: false, error: `지원하지 않는 게임 모드입니다 (${String(data.mode)}).` };
+  if ((data.version as number) === 1) return { ok: false, error: '정규 2인전 기보(버전 1)입니다. 여기서는 다인전·변형 대전 기보(버전 2·3)만 불러올 수 있습니다.' };
+  if (data.version !== MULTI_RECORD_VERSION && data.version !== VARIANT_RECORD_VERSION) return { ok: false, error: `지원하지 않는 기보 버전입니다 (${String(data.version)}).` };
+  if (!MULTI_MODES.includes(data.mode)) return { ok: false, error: `지원하지 않는 게임 모드입니다 (${String(data.mode)}).` };
+  if (data.version === MULTI_RECORD_VERSION && data.mode !== 'four-player') return { ok: false, error: `버전 2 기보는 정규 4인전만 담을 수 있습니다 (${String(data.mode)}).` };
   const r = data.rules;
   if (!r || !Array.isArray(r.players) || !Array.isArray(r.turnOrder) || !Array.isArray(data.moves) || !Array.isArray(data.wallsPerPlayer)) {
     return { ok: false, error: '기보에 규칙·참가자·수순 정보가 없습니다.' };
@@ -140,17 +165,33 @@ export function parseMultiRecord(text: string): ParsedMultiRecord {
   );
   if (!seatsOk) return { ok: false, error: '기보의 플레이어 설정이 올바르지 않습니다.' };
 
+  const v3 = data.version === VARIANT_RECORD_VERSION;
+  const teams = v3 ? r.teams : undefined;
+  if (teams !== undefined && (!Array.isArray(teams) || !teams.every(isInt))) return { ok: false, error: '기보의 팀 정보가 올바르지 않습니다.' };
+  const neutral = v3 ? r.neutralWalls : undefined;
+  if (neutral !== undefined && (!Array.isArray(neutral) || !neutral.every((w) => (w?.orientation === 'h' || w?.orientation === 'v') && isInt(w.row) && isInt(w.col)))) {
+    return { ok: false, error: '기보의 중립 벽 정보가 올바르지 않습니다.' };
+  }
+  if (!r.turnOrder.every(isInt)) return { ok: false, error: '기보의 턴 순서가 올바르지 않습니다.' };
   const rules: MultiRules = {
+    ...(v3 ? { mode: data.mode } : {}),
     players: r.players.map((p) => ({ start: { row: p.start[0], col: p.start[1] }, goal: { axis: p.goal.axis, index: p.goal.index } })),
     turnOrder: r.turnOrder,
+    ...(teams ? { teams } : {}),
+    ...(neutral ? { neutralWalls: neutral.map((w): WallSpec => ({ orientation: w.orientation, row: w.row, col: w.col })) } : {}),
+    ...(v3 && isInt(r.seed) ? { seed: r.seed } : {}),
+    ...(v3 && typeof r.preset === 'string' ? { preset: r.preset.slice(0, 20) } : {}),
   };
   const n = rules.players.length;
   const walls = data.wallsPerPlayer;
-  if (walls.length !== n || !walls.every((w) => isInt(w) && w >= 0 && w <= 20)) return { ok: false, error: '기보의 플레이어별 벽 개수가 올바르지 않습니다.' };
+  if (walls.length !== n || !walls.every((w) => isInt(w) && w >= 0 && w <= MAX_WALLS)) return { ok: false, error: '기보의 플레이어별 벽 개수가 올바르지 않습니다.' };
+  if (!isInt(data.firstPlayer)) return { ok: false, error: '기보의 시작 플레이어가 올바르지 않습니다.' };
   const setup: MultiGameSetup = { rules, wallsPerPlayer: walls, firstPlayer: data.firstPlayer };
   try {
     validateRules(rules);
-    initialMultiState(setup);
+    const mismatch = checkModeConsistency(data.mode, rules);
+    if (mismatch) return { ok: false, error: `기보의 규칙이 게임 모드와 맞지 않습니다: ${mismatch}` };
+    if (initialMultiState(setup).winner !== null) return { ok: false, error: '기보의 초기 배치에서 이미 목표선에 도착한 플레이어가 있습니다.' };
   } catch (err) {
     return { ok: false, error: `기보의 초기 배치가 올바르지 않습니다: ${err instanceof Error ? err.message : String(err)}` };
   }
@@ -187,6 +228,10 @@ export function parseMultiRecord(text: string): ParsedMultiRecord {
 
 /** Official wall count for a player count (used when a setup does not say). */
 export const officialWalls = (players: number): number[] => Array.from({ length: players }, () => OFFICIAL_WALLS[players]);
+
+/** Default walls per player of `mode` (obstacle races depend on the player count). */
+export const defaultWalls = (mode: MultiGameMode, players: number): number[] =>
+  Array.from({ length: players }, () => (mode === 'obstacle' ? OBSTACLE_WALLS[players] : VARIANT_WALLS[mode]));
 
 /** "1. e2 a5 e8 i5 2. …": one numbered round per `players` moves (the text form for copying). */
 export function multiRecordToText(actions: readonly RecordedMultiAction[], players: number): string {

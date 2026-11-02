@@ -116,7 +116,7 @@ export function WallSwatch({ player }: { player: number }) {
  * Compact card for the four-player game: slot colour, name, state, walls in hand and the
  * shortest distance — all of it readable at a glance with four of them on screen.
  */
-export function PlayerChip({ player, name, wallsRemaining, distance, active, winner, wallsTotal = 5, seatHint }: PlayerStripProps & { seatHint: string }) {
+export function PlayerChip({ player, name, wallsRemaining, distance, active, winner, wallsTotal = 5, seatHint, team }: PlayerStripProps & { seatHint: string; team?: { letter: string; name: string } }) {
   const status = winner ? '승리' : active ? '차례' : '';
   const lit = active || winner;
   return (
@@ -133,12 +133,18 @@ export function PlayerChip({ player, name, wallsRemaining, distance, active, win
         <span className="min-w-0 truncate text-sm text-ink-soft" title={name}>
           {name}
         </span>
+        {team && (
+          <span data-team={team.letter} className="shrink-0 rounded-md border border-ink/40 px-1 text-[11px] font-semibold text-ink" title={team.name}>
+            {team.name}
+          </span>
+        )}
         <span className={`ml-auto shrink-0 text-xs ${winner ? 'font-semibold text-good' : 'font-medium text-ink-soft'}`}>{status}</span>
       </div>
       <div className="flex items-center gap-2 text-xs text-muted" title={`${PLAYER_LABEL[player]} 장벽 (남은 벽 ${wallsRemaining}개)`}>
         <WallSwatch player={player} />
         <span className="hidden items-center gap-0.5 sm:flex" aria-hidden>
-          {Array.from({ length: wallsTotal }, (_, i) => (
+          {/* More than ten walls (asymmetric games) are shown by the number only. */}
+          {Array.from({ length: wallsTotal > 10 ? 0 : wallsTotal }, (_, i) => (
             <span key={i} className={`h-3.5 w-1.5 rounded-full ${i < wallsRemaining ? PLAYER_BG_CLASS[player] : 'bg-inset-strong'}`} style={i < wallsRemaining ? { opacity: 0.85 } : undefined} />
           ))}
         </span>

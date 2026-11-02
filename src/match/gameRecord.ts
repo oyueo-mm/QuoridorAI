@@ -128,7 +128,7 @@ export function parseRecord(text: string): ParsedRecord {
     return { ok: false, error: 'JSON 형식이 아닙니다.' };
   }
   if (data?.format !== GAME_RECORD_FORMAT) return { ok: false, error: `기보 형식이 아닙니다 (format: ${String(data?.format)}).` };
-  if ((data.version as number) === 2) return { ok: false, error: '4인전 기보입니다. AI 비교·AI 관전은 2인전 기보만 지원합니다.' };
+  if ((data.version as number) === 2 || (data.version as number) === 3) return { ok: false, error: '4인전·변형 대전 등 다인전 기보입니다. AI 비교·AI 관전은 정규 2인전 기보만 지원합니다.' };
   if (data.version !== GAME_RECORD_VERSION) return { ok: false, error: `지원하지 않는 기보 버전입니다 (${String(data.version)}).` };
   if (data.start !== 'standard' || !Array.isArray(data.moves)) return { ok: false, error: '표준 시작 포지션의 수순만 지원합니다.' };
   const parsed = parseMoveList(data.moves.map((m) => m.notation).join(' '));

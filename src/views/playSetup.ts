@@ -5,9 +5,11 @@ import type { MultiConfig } from '../session/MultiController';
 export interface PlaySetupApi {
   /** Mode being played now. */
   mode: GameMode;
-  /** Settings of the two-player game / the four-player game. */
+  /** Settings of the two-player game / the multi-player game. */
   config: GameConfig;
   multiConfig: MultiConfig;
   startTwoPlayer: (config: GameConfig) => void;
-  startFourPlayer: (config: MultiConfig) => void;
+  startMulti: (config: MultiConfig) => void;
+  /** Asked by the home page: open the new-game tab (optionally with this mode selected). Changes with every request. */
+  setupRequest: { at: number; mode?: GameMode } | null;
 }

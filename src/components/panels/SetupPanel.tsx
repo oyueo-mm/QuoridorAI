@@ -4,11 +4,12 @@ import { AGENT_CATALOG } from '../../ai/catalog';
 import { randomSeed } from '../../ai/rng';
 import type { BfsWeights } from '../../ai/types';
 import type { PlayerId } from '../../engine';
-import { GAME_MODES } from '../../session/config';
+import { isMultiMode } from '../../session/config';
 import type { GameConfig, GameMode, Opponent } from '../../session/config';
-import { DEFAULT_PLAYER_NAMES } from '../../session/MultiController';
+import { DEFAULT_PLAYER_NAMES, recommendedConfig, validateMultiConfig } from '../../session/MultiController';
 import type { MultiConfig } from '../../session/MultiController';
 import { PLAYER_BG_CLASS, PLAYER_LABEL } from '../theme';
+import { ModePicker, MultiSetupFields } from './MultiSetup';
 import { MctsSettingsForm } from './MctsSettingsForm';
 import { MinimaxSettingsForm } from './MinimaxSettingsForm';
 import { Panel } from './Panel';
@@ -16,10 +17,12 @@ import { Panel } from './Panel';
 interface SetupPanelProps {
   /** The two-player game's settings. */
   current: GameConfig;
-  /** The four-player game's settings. */
+  /** The multi-player game's settings. */
   currentMulti: MultiConfig;
   /** Mode being played now. */
   currentMode: GameMode;
+  /** Mode to select when the panel opens (default: the mode being played). */
+  initialMode?: GameMode;
   onStart: (config: GameConfig) => void;
   onStartMulti: (config: MultiConfig) => void;
 }
@@ -44,55 +47,33 @@ const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = 
 const inputClass =
   'w-full rounded-xl border border-line bg-card px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none';
 
-/** Where each player starts, as the board shows it (P1 bottom, then clockwise). */
-const SEAT_SIDES = ['아래', '왼쪽', '위', '오른쪽'];
-
-export function SetupPanel({ current, currentMulti, currentMode, onStart, onStartMulti }: SetupPanelProps) {
-  const [mode, setMode] = useState<GameMode>(currentMode);
+export function SetupPanel({ current, currentMulti, currentMode, initialMode, onStart, onStartMulti }: SetupPanelProps) {
+  const [mode, setMode] = useState<GameMode>(initialMode ?? currentMode);
   const [draft, setDraft] = useState<GameConfig>(current);
-  const [multiDraft, setMultiDraft] = useState<MultiConfig>(currentMulti);
-  const changed =
-    mode !== currentMode ||
-    (mode === 'four-player' ? JSON.stringify(multiDraft) !== JSON.stringify(currentMulti) : JSON.stringify(draft) !== JSON.stringify(current));
+  const [multiDraft, setMultiDraft] = useState<MultiConfig>(() => (initialMode && isMultiMode(initialMode) && initialMode !== currentMulti.mode ? recommendedConfig(initialMode, currentMulti.names) : currentMulti));
+  const multi = isMultiMode(mode);
+  const invalid = multi && validateMultiConfig(multiDraft).length > 0;
+  const changed = mode !== currentMode || (multi ? JSON.stringify(multiDraft) !== JSON.stringify(currentMulti) : JSON.stringify(draft) !== JSON.stringify(current));
   const setWeight = (key: keyof BfsWeights, value: number) =>
     setDraft({ ...draft, bfsWeights: { ...draft.bfsWeights, [key]: value } });
 
   const chooseMode = (next: GameMode) => {
     setMode(next);
+    // Picking a mode applies its recommended settings (the names typed so far are kept).
+    if (isMultiMode(next) && next !== multiDraft.mode) setMultiDraft(recommendedConfig(next, multiDraft.names));
     if (next === 'vs-ai' && draft.opponent === 'human') setDraft({ ...draft, opponent: 'minimax' });
     if (next === 'local-2p') setDraft({ ...draft, opponent: 'human', userSeat: 0 });
   };
 
   const start = () => {
-    if (mode === 'four-player') onStartMulti(multiDraft);
+    if (isMultiMode(mode)) onStartMulti(multiDraft);
     else onStart(mode === 'local-2p' ? { ...draft, opponent: 'human', userSeat: 0 } : { ...draft, opponent: draft.opponent === 'human' ? 'minimax' : draft.opponent });
   };
 
   return (
     <Panel plain title="새 게임 설정">
       <div className="space-y-4">
-        <div role="radiogroup" aria-label="게임 모드" className="space-y-2">
-          {GAME_MODES.map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              role="radio"
-              aria-checked={mode === m.id}
-              data-mode={m.id}
-              onClick={() => chooseMode(m.id)}
-              className={`block w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
-                mode === m.id ? 'border-accent bg-accent/5' : 'border-line-soft bg-card hover:border-line'
-              }`}
-            >
-              <span className="flex items-center gap-2 text-sm font-medium text-ink">
-                <span className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 ${mode === m.id ? 'border-accent bg-accent' : 'border-line-strong'}`} aria-hidden />
-                {m.title}
-                {currentMode === m.id && <span className="ml-auto text-[11px] font-normal text-faint">진행 중</span>}
-              </span>
-              <span className="mt-0.5 block pl-[1.375rem] text-xs text-muted">{m.description}</span>
-            </button>
-          ))}
-        </div>
+        <ModePicker selected={mode} playing={currentMode} onChoose={chooseMode} />
 
         {mode === 'vs-ai' && (
           <>
@@ -206,41 +187,9 @@ export function SetupPanel({ current, currentMulti, currentMode, onStart, onStar
           </fieldset>
         )}
 
-        {mode === 'four-player' && (
-          <>
-            <fieldset className="space-y-2">
-              <legend className="mb-1.5 text-xs text-muted">플레이어 이름</legend>
-              {[0, 1, 2, 3].map((slot) => (
-                <NameRow
-                  key={slot}
-                  slot={slot}
-                  hint={SEAT_SIDES[slot]}
-                  value={multiDraft.names[slot] ?? ''}
-                  placeholder={DEFAULT_PLAYER_NAMES[slot]}
-                  onChange={(v) => setMultiDraft({ ...multiDraft, names: DEFAULT_PLAYER_NAMES.map((_, i) => (i === slot ? v : (multiDraft.names[i] ?? ''))) })}
-                />
-              ))}
-            </fieldset>
-            <label className="block">
-              <span className="mb-1.5 block text-xs text-muted">시작 플레이어</span>
-              <select
-                value={String(multiDraft.firstPlayer)}
-                onChange={(e) => setMultiDraft({ ...multiDraft, firstPlayer: e.target.value === 'random' ? 'random' : Number(e.target.value) })}
-                className={inputClass}
-              >
-                <option value="random">무작위</option>
-                {[0, 1, 2, 3].map((slot) => (
-                  <option key={slot} value={slot}>
-                    {PLAYER_LABEL[slot]} ({SEAT_SIDES[slot]})
-                  </option>
-                ))}
-              </select>
-              <span className="mt-1 block text-[11px] text-faint">차례는 P1 → P2 → P3 → P4, 시계 방향입니다.</span>
-            </label>
-          </>
-        )}
+        {multi && <MultiSetupFields draft={multiDraft} onChange={setMultiDraft} />}
 
-        {mode !== 'four-player' && (
+        {!multi && (
           <label className="flex items-center justify-between gap-3 text-xs text-muted">
             <span>
               실험용 최대 턴 <span className="text-faint">(ply, 비우면 무제한)</span>
@@ -261,8 +210,9 @@ export function SetupPanel({ current, currentMulti, currentMode, onStart, onStar
         <button
           type="button"
           onClick={start}
+          disabled={invalid}
           data-start-game
-          className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-card transition-colors hover:bg-accent-strong"
+          className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-card transition-colors hover:bg-accent-strong disabled:opacity-40"
         >
           {changed ? '이 설정으로 새 게임' : '게임 재시작'}
         </button>

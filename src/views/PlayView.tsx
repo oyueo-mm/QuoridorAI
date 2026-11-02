@@ -20,6 +20,7 @@ import { buildRecord, recordToText, resultOf } from '../match/gameRecord';
 import type { GameLine, SeatInfo } from '../match/gameRecord';
 import { wallOwnersFromMoves } from '../match/wallOwners';
 import { localSeatName } from '../session/config';
+import type { GameMode } from '../session/config';
 import type { GameSession } from '../session/useGameSession';
 import type { PlaySetupApi } from './playSetup';
 
@@ -42,6 +43,15 @@ export function PlayView({ session, setup, onCompare, onArena }: { session: Game
   const [selectedPly, setSelectedPly] = useState<number | null>(null);
   const [notice, setNotice] = useState('');
   useEffect(() => setSelectedPly(null), [session.gameId]);
+  // The home page asked for the new-game tab (with a mode pre-selected); a started game clears it.
+  const [focusMode, setFocusMode] = useState<GameMode | undefined>(undefined);
+  useEffect(() => {
+    if (!setup.setupRequest) return;
+    setTab('setup');
+    setPanelOpen(true);
+    setFocusMode(setup.setupRequest.mode);
+  }, [setup.setupRequest]);
+  useEffect(() => setFocusMode(undefined), [session.gameId]);
   const ply = selectedPly === null || selectedPly > history.length ? history.length : selectedPly;
   const positionAt = ply === history.length ? game : history[ply].stateBefore;
   const actions = useMemo(() => history.map((h) => ({ action: h.action, player: h.player })), [history]);
@@ -240,15 +250,16 @@ export function PlayView({ session, setup, onCompare, onArena }: { session: Game
           </div>
           <div hidden={tab !== 'setup'}>
             <SetupPanel
-              key={`${setup.mode}-${session.gameId}`}
+              key={`${setup.mode}-${session.gameId}-${focusMode ?? ''}`}
               current={config}
+              initialMode={focusMode}
               currentMulti={setup.multiConfig}
               currentMode={setup.mode}
               onStart={(c) => {
                 setup.startTwoPlayer(c);
                 setTab(c.opponent === 'human' ? 'moves' : 'analysis');
               }}
-              onStartMulti={(c) => setup.startFourPlayer(c)}
+              onStartMulti={(c) => setup.startMulti(c)}
             />
           </div>
         </div>

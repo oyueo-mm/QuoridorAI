@@ -26,6 +26,8 @@ export const PLAYER_RING_CLASS: readonly string[] = ['ring-p1/45', 'ring-p2/45',
  */
 export const WALL_COLORS: readonly string[] = PLAYER_COLOR;
 export const NEUTRAL_WALL = { fill: '#e2d9cc', stroke: '#8b8178' };
+/** Neutral obstacle walls of the rules (장애물 경주): dark stone, never used for a player's wall. */
+export const OBSTACLE_WALL = { fill: '#675f55', stroke: '#3d3832' };
 
 /** Board surfaces (SVG). */
 export const BOARD_COLORS = {
@@ -35,6 +37,7 @@ export const BOARD_COLORS = {
   label: '#9a8f81',
   preview: '#9a6d24',
   invalid: '#a4473d',
+  win: '#c79a1e',
   ink: '#2e2a25',
 };
 
