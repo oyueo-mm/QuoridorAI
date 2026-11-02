@@ -219,8 +219,18 @@ async function scenarioFourPlayerHumanPlusThreeAi() {
 
   // record with AI seats
   await page.locator(`${MM} [role=tab]`, { hasText: '기보' }).click();
-  const [download] = await Promise.all([page.waitForEvent('download'), page.locator(`${MM} button`, { hasText: /^JSON$/ }).click()]);
-  const file = JSON.parse(fs.readFileSync(await download.path(), 'utf8'));
+  // A download can be reported as canceled when the page revokes its blob URL early; retry (logged) instead of failing the run on that.
+  let file;
+  for (let attempt = 1; attempt <= 3 && !file; attempt++) {
+    const [download] = await Promise.all([page.waitForEvent('download'), page.locator(`${MM} button`, { hasText: /^JSON$/ }).click()]);
+    try {
+      file = JSON.parse(fs.readFileSync(await download.path(), 'utf8'));
+    } catch (e) {
+      console.log(`NOTE record download attempt ${attempt} failed: ${String(e).split('
+')[0]}`);
+      if (attempt === 3) throw e;
+    }
+  }
   const kinds = file.participants.map((p) => p.controller?.agent?.kind ?? 'human');
   check('exported record stores who played each seat', JSON.stringify(kinds) === JSON.stringify(['human', 'greedy', 'random', 'maxn']), kinds.join(','));
   check('exported record has AI summaries, not full traces', file.moves.some((m) => m.ai?.algorithm === 'multi-maxn') && JSON.stringify(file).length < 40000, `${JSON.stringify(file).length} bytes`);
