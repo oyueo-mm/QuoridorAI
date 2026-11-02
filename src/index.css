@@ -11,6 +11,9 @@
  *   states     warn (halted, previews) · danger (errors) · good · think (AI thinking)
  */
 @theme {
+  /* Width from which the game stage puts the player cards beside the board (see GameStage). */
+  --breakpoint-stage: 68.75rem;
+
   --color-paper: #ffffff;
   --color-card: #ffffff;
   --color-inset: #f5f5f4;
@@ -158,19 +161,29 @@ input[type='range'] {
   }
 }
 
-/* Game stage board width (see GameStage). 100cqw = width of the stage column. */
+/* Game stage board width (see GameStage). 100cqw = width of the stage column; --qz-cards = width of the player-card column. */
 .qz-stage {
   container-type: inline-size;
+  --qz-cards: 11rem;
   --qz-board: min(100cqw, 640px, max(320px, calc(100svh - var(--qz-reserved))));
+}
+
+.qz-stage-multi {
+  --qz-cards: 12.5rem;
+}
+
+@media (min-width: 1100px) {
+  .qz-stage {
+    /* 1.25rem = gap between the card column and the board. */
+    --qz-board: min(calc(100cqw - var(--qz-cards) - 1.25rem), 760px, max(360px, calc(100svh - var(--qz-reserved-wide))));
+  }
 }
 
 @media (min-width: 1280px) {
   .qz-stage {
-    /* 12.75rem = player column (11.5rem) + gap (1.25rem). */
-    --qz-board: min(calc(100cqw - 12.75rem), 760px, max(360px, calc(100svh - var(--qz-reserved-wide))));
+    --qz-cards: 11.5rem;
   }
   .qz-stage-multi {
-    /* 15.25rem = four-player card column (14rem) + gap (1.25rem). */
-    --qz-board: min(calc(100cqw - 15.25rem), 760px, max(360px, calc(100svh - var(--qz-reserved-wide))));
+    --qz-cards: 14rem;
   }
 }

@@ -60,8 +60,12 @@ export function validateMultiConfig(config: MultiConfig): string[] {
   return errors;
 }
 
-/** The rules and wall counts a configuration plays with. Throws on an invalid configuration. */
-export function buildMultiSetup(config: MultiConfig, random: () => number = Math.random): MultiGameSetup {
+/**
+ * The rules and wall counts a configuration plays with. Throws on an invalid configuration.
+ * `obstacleMap` = the map already generated for the same obstacle settings (the mode preview
+ * generates it off the main thread); omitted, it is generated here.
+ */
+export function buildMultiSetup(config: MultiConfig, random: () => number = Math.random, obstacleMap?: MultiRules): MultiGameSetup {
   const errors = validateMultiConfig(config);
   if (errors.length > 0) throw new Error(errors[0]);
   let rules: MultiRules;
@@ -72,7 +76,7 @@ export function buildMultiSetup(config: MultiConfig, random: () => number = Math
     wallsPerPlayer = players.map((p) => p.walls);
   } else if (config.mode === 'obstacle') {
     const o = config.obstacle!;
-    rules = obstacleRules(o.players, o.preset, o.seed);
+    rules = obstacleMap ?? obstacleRules(o.players, o.preset, o.seed);
     wallsPerPlayer = Array.from({ length: o.players }, () => config.walls ?? defaultWalls('obstacle', o.players)[0]);
   } else {
     rules = fixedRules(config.mode) ?? FOUR_PLAYER_RULES;

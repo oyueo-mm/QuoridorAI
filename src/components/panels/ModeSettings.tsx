@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { DEFAULT_BFS_WEIGHTS } from '../../ai/bfsAgent';
 import { AGENT_CATALOG } from '../../ai/catalog';
 import { randomSeed } from '../../ai/rng';
@@ -6,26 +5,14 @@ import type { BfsWeights } from '../../ai/types';
 import type { PlayerId } from '../../engine';
 import { isMultiMode } from '../../session/config';
 import type { GameConfig, GameMode, Opponent } from '../../session/config';
-import { DEFAULT_PLAYER_NAMES, recommendedConfig, validateMultiConfig } from '../../session/MultiController';
+import { DEFAULT_PLAYER_NAMES, recommendedConfig } from '../../session/MultiController';
 import type { MultiConfig } from '../../session/MultiController';
 import { PLAYER_BG_CLASS, PLAYER_LABEL } from '../theme';
-import { ModePicker, MultiSetupFields } from './MultiSetup';
+import { MultiSetupFields } from './MultiSetup';
 import { MctsSettingsForm } from './MctsSettingsForm';
 import { MinimaxSettingsForm } from './MinimaxSettingsForm';
-import { Panel } from './Panel';
 
-interface SetupPanelProps {
-  /** The two-player game's settings. */
-  current: GameConfig;
-  /** The multi-player game's settings. */
-  currentMulti: MultiConfig;
-  /** Mode being played now. */
-  currentMode: GameMode;
-  /** Mode to select when the panel opens (default: the mode being played). */
-  initialMode?: GameMode;
-  onStart: (config: GameConfig) => void;
-  onStartMulti: (config: MultiConfig) => void;
-}
+
 
 /** Selectable opponents in 사람 vs AI. */
 const AI_OPPONENTS: { value: Exclude<Opponent, 'human'>; label: string }[] = [
@@ -47,34 +34,14 @@ const WEIGHT_FIELDS: { key: keyof BfsWeights; label: string; step: number }[] = 
 const inputClass =
   'w-full rounded-xl border border-line bg-card px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none';
 
-export function SetupPanel({ current, currentMulti, currentMode, initialMode, onStart, onStartMulti }: SetupPanelProps) {
-  const [mode, setMode] = useState<GameMode>(initialMode ?? currentMode);
-  const [draft, setDraft] = useState<GameConfig>(current);
-  const [multiDraft, setMultiDraft] = useState<MultiConfig>(() => (initialMode && isMultiMode(initialMode) && initialMode !== currentMulti.mode ? recommendedConfig(initialMode, currentMulti.names) : currentMulti));
+
+/** The mode-specific settings of the mode browser; the drafts live in the parent (they drive the board preview). */
+export function SetupFields({ mode, draft, setDraft, multiDraft, setMultiDraft }: { mode: GameMode; draft: GameConfig; setDraft: (c: GameConfig) => void; multiDraft: MultiConfig; setMultiDraft: (c: MultiConfig) => void }) {
   const multi = isMultiMode(mode);
-  const invalid = multi && validateMultiConfig(multiDraft).length > 0;
-  const changed = mode !== currentMode || (multi ? JSON.stringify(multiDraft) !== JSON.stringify(currentMulti) : JSON.stringify(draft) !== JSON.stringify(current));
-  const setWeight = (key: keyof BfsWeights, value: number) =>
-    setDraft({ ...draft, bfsWeights: { ...draft.bfsWeights, [key]: value } });
-
-  const chooseMode = (next: GameMode) => {
-    setMode(next);
-    // Picking a mode applies its recommended settings (the names typed so far are kept).
-    if (isMultiMode(next) && next !== multiDraft.mode) setMultiDraft(recommendedConfig(next, multiDraft.names));
-    if (next === 'vs-ai' && draft.opponent === 'human') setDraft({ ...draft, opponent: 'minimax' });
-    if (next === 'local-2p') setDraft({ ...draft, opponent: 'human', userSeat: 0 });
-  };
-
-  const start = () => {
-    if (isMultiMode(mode)) onStartMulti(multiDraft);
-    else onStart(mode === 'local-2p' ? { ...draft, opponent: 'human', userSeat: 0 } : { ...draft, opponent: draft.opponent === 'human' ? 'minimax' : draft.opponent });
-  };
+  const setWeight = (key: keyof BfsWeights, value: number) => setDraft({ ...draft, bfsWeights: { ...draft.bfsWeights, [key]: value } });
 
   return (
-    <Panel plain title="새 게임 설정">
-      <div className="space-y-4">
-        <ModePicker selected={mode} playing={currentMode} onChoose={chooseMode} />
-
+    <div className="space-y-4" data-setup-fields={mode}>
         {mode === 'vs-ai' && (
           <>
             <label className="block">
@@ -206,20 +173,16 @@ export function SetupPanel({ current, currentMulti, currentMode, initialMode, on
             />
           </label>
         )}
-
-        <button
-          type="button"
-          onClick={start}
-          disabled={invalid}
-          data-start-game
-          className="w-full rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-card transition-colors hover:bg-accent-strong disabled:opacity-40"
-        >
-          {changed ? '이 설정으로 새 게임' : '게임 재시작'}
-        </button>
-        {changed && <p className="text-xs text-warn/80">변경한 설정은 새 게임부터 적용됩니다.</p>}
-      </div>
-    </Panel>
+    </div>
   );
+}
+
+/** Drafts after choosing `next` in the mode browser: its recommended settings (typed names are kept). */
+export function draftsForMode(next: GameMode, draft: GameConfig, multiDraft: MultiConfig): { draft: GameConfig; multiDraft: MultiConfig } {
+  return {
+    draft: next === 'vs-ai' && draft.opponent === 'human' ? { ...draft, opponent: 'minimax' } : next === 'local-2p' ? { ...draft, opponent: 'human', userSeat: 0 } : draft,
+    multiDraft: isMultiMode(next) && next !== multiDraft.mode ? recommendedConfig(next, multiDraft.names) : multiDraft,
+  };
 }
 
 function NameRow({ slot, hint, value, placeholder, onChange }: { slot: number; hint: string; value: string; placeholder: string; onChange: (v: string) => void }) {

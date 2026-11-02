@@ -65,16 +65,27 @@ const boardSvg = (page) => multiMain(page).locator('svg[aria-label="쿼리도 �
 async function openSetup(page) {
   await page.goto(BASE + '#/play');
   await page.waitForSelector('main:visible');
-  // the visible play view has a "새 게임" tab
-  await page.locator('[role=tab]:visible', { hasText: '새 게임' }).first().click();
+  // the play view's "모드 변경" opens the mode browser (the game behind it stays untouched)
+  await page.locator('[data-open-mode-browser]:visible').first().click();
+  await page.waitForSelector('main[data-view="mode-browser"]');
 }
 
+const BASIC_MODES = ['vs-ai', 'local-2p', 'four-player'];
 async function pickMode(page, mode) {
-  await page.locator(`[data-mode="${mode}"]:visible`).first().click();
+  // the mode browser lists 기본 대전 and 변형 대전 on separate tabs
+  await page.locator('main[data-view="mode-browser"] [role=tab]', { hasText: BASIC_MODES.includes(mode) ? '기본 대전' : '변형 대전' }).click();
+  await page.locator(`[data-mode="${mode}"][role=radio]:visible`).first().click();
+}
+
+/** Starts the selected mode; answers the "end the running game?" confirmation when it appears. */
+async function confirmIfAsked(page) {
+  const ok = page.locator('[data-confirm-ok]');
+  if (await ok.count()) await ok.click();
 }
 
 async function startGame(page) {
   await page.locator('[data-start-game]:visible').first().click();
+  await confirmIfAsked(page);
   await page.waitForSelector('main[data-view="multi"]:visible');
 }
 
@@ -375,19 +386,22 @@ console.log('\n=== 장애물 경주 ===');
   check('obstacle: rules tab shows preset and seed', info.includes('어려움') && info.includes('12345'), info.replace(/\s+/g, ' '));
   await multiMain(page).locator('[role=tab]', { hasText: '기보' }).click();
   // same seed again = same map; other seed = other map
-  await multiMain(page).locator('[role=tab]', { hasText: '새 게임' }).click();
+  await page.locator('[data-open-mode-browser]:visible').first().click();
   await pickMode(page, 'obstacle');
   const seedBox = page.locator('input[aria-label="장애물 시드"]:visible');
   check('obstacle: setup remembers the running configuration', (await seedBox.inputValue()) === '12345');
   await page.locator('[data-start-game]:visible').first().click();
+  await confirmIfAsked(page);
   check('obstacle: same seed → same map', JSON.stringify(await keysOf()) === JSON.stringify(map1));
-  await multiMain(page).locator('[role=tab]', { hasText: '새 게임' }).click();
+  await page.locator('[data-open-mode-browser]:visible').first().click();
   await page.locator('input[aria-label="장애물 시드"]:visible').fill('777');
   await page.locator('[data-start-game]:visible').first().click();
+  await confirmIfAsked(page);
   check('obstacle: other seed → other map', JSON.stringify(await keysOf()) !== JSON.stringify(map1));
-  await multiMain(page).locator('[role=tab]', { hasText: '새 게임' }).click();
+  await page.locator('[data-open-mode-browser]:visible').first().click();
   await page.locator('input[aria-label="장애물 시드"]:visible').fill('12345');
   await page.locator('[data-start-game]:visible').first().click();
+  await confirmIfAsked(page);
   check('obstacle: seed back → map back', JSON.stringify(await keysOf()) === JSON.stringify(map1));
 
   await installMirror(page, { mode: 'obstacle', names: [], firstPlayer: 0, walls: 5, obstacle: { players: 3, preset: 'hard', seed: 12345 } });
@@ -410,7 +424,7 @@ console.log('\n=== 장애물 경주 ===');
   const b = await newPage();
   await b.page.goto(BASE + '#/play');
   await b.page.waitForSelector('main:visible');
-  await b.page.locator('[role=tab]:visible', { hasText: '새 게임' }).first().click();
+  await b.page.locator('[data-open-mode-browser]:visible').first().click();
   await pickMode(b.page, 'four-player');
   await startGame(b.page);
   await b.page.locator('main[data-view="multi"] input[type=file]').setInputFiles(`${OUT}/obstacle-finished.json`);
@@ -458,11 +472,12 @@ console.log('\n=== 기존 모드 회귀 ===');
   await page.screenshot({ path: `${OUT}/home.png`, fullPage: true });
   await page.locator('[data-home-variants]').click();
   await page.waitForSelector('[data-mode="race-2"][aria-checked="true"]');
-  check('home → variants opens the new-game tab with a variant selected', true);
+  check('home → variants opens the mode browser with a variant selected', true);
   await page.screenshot({ path: `${OUT}/variants-picker.png` });
   await page.goto(BASE);
   await page.locator('[data-home-mode="four-player"]').click();
-  await page.waitForSelector('main[data-view="multi"]:visible');
+  await page.waitForSelector('main[data-view="mode-browser"]'); // the shortcut previews the mode first
+  await startGame(page);
   check('home → 정규 4인전', (await multiMain(page).getAttribute('data-mode')) === 'four-player');
   await installMirror(page, { mode: 'four-player', names: [], firstPlayer: 0 });
   for (let i = 0; i < 4; i++) { const a = await pickAction(page, 0); await clickAction(page, a); await mirrorApply(page, a); }
@@ -476,7 +491,9 @@ console.log('\n=== 기존 모드 회귀 ===');
   const { ctx, page } = await newPage();
   await page.goto(BASE);
   await page.locator('[data-home-mode="local-2p"]').click();
-  await page.waitForSelector('svg[aria-label="쿼리도 보드"]:visible');
+  await page.waitForSelector('main[data-view="mode-browser"]');
+  await page.locator('[data-start-game]:visible').first().click();
+  await page.waitForSelector('main:not([data-view="mode-browser"]) svg[aria-label="쿼리도 보드"]:visible');
   const svg = page.locator('svg[aria-label="쿼리도 보드"]:visible').first();
   const click = async (row, col) => {
     const box = await svg.boundingBox();

@@ -6,14 +6,14 @@ import { cardClass } from '../ui';
  * small screens). Closed: a single column, so the board is centred.
  */
 export const sidePanelGrid = (open: boolean) =>
-  `relative mx-auto grid max-w-[1560px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-5 sm:px-6 ${open ? 'lg:grid-cols-[minmax(0,1fr)_clamp(380px,36vw,460px)]' : ''}`;
+  `relative mx-auto grid max-w-[1560px] grid-cols-[minmax(0,1fr)] gap-6 px-4 py-5 sm:px-6 ${open ? 'lg:grid-cols-[minmax(0,1fr)_clamp(340px,31vw,420px)] xl:grid-cols-[minmax(0,1fr)_clamp(380px,36vw,460px)]' : ''}`;
 
 /**
  * Collapsible right-hand panel. The content stays mounted while collapsed (just display:none),
  * so analysis, the selected move and replay state survive closing and reopening. When closed, a
  * visible "펼치기" button sits at the top-right of the layout (the parent must be `relative`).
  */
-export function SidePanel({ open, onToggle, name, tabs, children }: { open: boolean; onToggle: () => void; name: string; tabs: ReactNode; children: ReactNode }) {
+export function SidePanel({ open, onToggle, name, tabs, header, children }: { open: boolean; onToggle: () => void; name: string; tabs: ReactNode; header?: ReactNode; children: ReactNode }) {
   return (
     <>
       {!open && (
@@ -29,6 +29,7 @@ export function SidePanel({ open, onToggle, name, tabs, children }: { open: bool
         </button>
       )}
       <aside hidden={!open} aria-label={name} className={`${cardClass} qz-panel-in flex h-[34rem] min-w-0 flex-col gap-3 p-3 lg:sticky lg:top-[4.75rem] lg:h-[calc(100svh-6.25rem)]`}>
+        {header}
         <div className="flex items-center gap-2">
           <div className="min-w-0 flex-1">{tabs}</div>
           <button

@@ -7,7 +7,7 @@ import { QuoridorBoard } from '../components/board/QuoridorBoard';
 import { copyText, downloadText } from '../components/download';
 import { MoveLog } from '../components/panels/MoveLog';
 import { PlayerChip } from '../components/panels/PlayerStrip';
-import { SetupPanel } from '../components/panels/SetupPanel';
+import { ModeBar } from '../components/panels/ModeBar';
 import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
 import { OBSTACLE_WALL, PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
 import { Tabs, buttonClass } from '../components/ui';
@@ -20,9 +20,8 @@ import { modeInfo } from '../session/config';
 import type { GameMode } from '../session/config';
 import { seatText } from '../session/seatInfo';
 import type { MultiSession } from '../session/useMultiSession';
-import type { PlaySetupApi } from './playSetup';
 
-type MultiTab = 'moves' | 'rules' | 'setup';
+type MultiTab = 'moves' | 'rules';
 type LoadableRecord = Extract<ParsedMultiRecord, { ok: true }>;
 
 /** Replay speed of "자동 재생". */
@@ -34,13 +33,12 @@ const REPLAY_INTERVAL_MS = 700;
  * tabs in the side panel. Browsing the record (replay) shows that position read-only; playing
  * resumes from "최신으로". What differs per mode is the rule set in `session.setup.rules`.
  */
-export function MultiPlayView({ session, setup }: { session: MultiSession; setup: PlaySetupApi }) {
+export function MultiPlayView({ session, onChangeMode }: { session: MultiSession; onChangeMode: () => void }) {
   const { game, history, controller, names, status, gameId } = session;
   const rules = game.rules;
   const mode = session.config.mode;
   const title = modeInfo(mode).title;
   const [pendingImport, setPendingImport] = useState<LoadableRecord | null>(null);
-  const [focusMode, setFocusMode] = useState<GameMode | undefined>(undefined);
   const boardRules = useMemo(() => multiBoardRules(rules), [rules]);
   const [showPaths, setShowPaths] = useState(false);
   const [tab, setTab] = useState<MultiTab>('moves');
@@ -57,15 +55,7 @@ export function MultiPlayView({ session, setup }: { session: MultiSession; setup
     setConfirmRestart(false);
     setNotice('');
     setPendingImport(null);
-    setFocusMode(undefined);
   }, [gameId]);
-  // The home page asked for the new-game tab.
-  useEffect(() => {
-    if (!setup.setupRequest) return;
-    setTab('setup');
-    setPanelOpen(true);
-    setFocusMode(setup.setupRequest.mode);
-  }, [setup.setupRequest]);
   // The record can shrink (undo): keep the selection inside it.
   useEffect(() => {
     if (selectedPly !== null && selectedPly >= history.length) setSelectedPly(null);
@@ -258,10 +248,13 @@ export function MultiPlayView({ session, setup }: { session: MultiSession; setup
               {confirmRestart ? '정말 처음부터?' : '재시작'}
             </button>
             {browsing && (
-              <button type="button" onClick={() => goTo(history.length)} className={`${buttonClass.small} ml-auto`}>
+              <button type="button" onClick={() => goTo(history.length)} className={buttonClass.small}>
                 최신으로
               </button>
             )}
+            <button type="button" onClick={onChangeMode} className={`${buttonClass.small} ml-auto`} data-open-mode-browser title="다른 게임 모드를 살펴보고 고릅니다 (지금 게임은 유지됩니다)">
+              모드 변경
+            </button>
           </div>
         }
       />
@@ -278,10 +271,10 @@ export function MultiPlayView({ session, setup }: { session: MultiSession; setup
             items={[
               { id: 'moves', label: '기보', badge: history.length },
               { id: 'rules', label: '규칙' },
-              { id: 'setup', label: '새 게임' },
             ]}
           />
         }
+        header={<ModeBar mode={mode} onChange={onChangeMode} />}
       >
         <div className={`min-h-0 flex-1 px-2 ${tab === 'moves' ? '' : 'scroll-stable'}`}>
           <div hidden={tab !== 'moves'} className="h-full">
@@ -352,20 +345,6 @@ export function MultiPlayView({ session, setup }: { session: MultiSession; setup
           </div>
           <div hidden={tab !== 'rules'}>
             <ModeRules mode={mode} rules={rules} wallsPerPlayer={session.setup.wallsPerPlayer} />
-          </div>
-          <div hidden={tab !== 'setup'}>
-            <SetupPanel
-              key={`${setup.mode}-${gameId}-${focusMode ?? ''}`}
-              current={setup.config}
-              currentMulti={setup.multiConfig}
-              currentMode={setup.mode}
-              initialMode={focusMode}
-              onStart={(c) => setup.startTwoPlayer(c)}
-              onStartMulti={(c) => {
-                setup.startMulti(c);
-                setTab('moves');
-              }}
-            />
           </div>
         </div>
       </SidePanel>

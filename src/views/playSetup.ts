@@ -10,6 +10,4 @@ export interface PlaySetupApi {
   multiConfig: MultiConfig;
   startTwoPlayer: (config: GameConfig) => void;
   startMulti: (config: MultiConfig) => void;
-  /** Asked by the home page: open the new-game tab (optionally with this mode selected). Changes with every request. */
-  setupRequest: { at: number; mode?: GameMode } | null;
 }

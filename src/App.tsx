@@ -2,9 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import type { GameLine } from './match/gameRecord';
 import { SoundControl } from './components/SoundControl';
-import { isMultiMode, modeOfConfig } from './session/config';
+import { modeOfConfig } from './session/config';
 import type { GameConfig, GameMode } from './session/config';
-import { recommendedConfig } from './session/MultiController';
 import type { MultiConfig } from './session/MultiController';
 import { useGameSession } from './session/useGameSession';
 import { useMultiSession } from './session/useMultiSession';
@@ -15,6 +14,8 @@ import type { CompareSource } from './views/CompareView';
 import { ExperimentsView } from './views/ExperimentsView';
 import { MultiPlayView } from './views/MultiPlayView';
 import { HomeView } from './views/HomeView';
+import { ModeBrowserView } from './views/ModeBrowserView';
+import type { RunningGame } from './views/ModeBrowserView';
 import type { PlaySetupApi } from './views/playSetup';
 import { PlayView } from './views/PlayView';
 import { SECTIONS } from './sections';
@@ -38,7 +39,8 @@ export default function App() {
   // controller; the two basic modes are the two-player session (opponent human or AI).
   const [multiActive, setMultiActive] = useState(false);
   const mode: GameMode = multiActive ? multi.config.mode : modeOfConfig(session.config);
-  const [setupRequest, setSetupRequest] = useState<PlaySetupApi['setupRequest']>(null);
+  // Mode browser (Play only): the mode being looked at; null = closed. Opening it never touches the running game.
+  const [browser, setBrowser] = useState<{ mode: GameMode; at: number } | null>(null);
   const [route, setRoute] = useState<RouteId>(routeFromHash);
   const [compareSource, setCompareSource] = useState<CompareSource | null>(null);
 
@@ -69,40 +71,42 @@ export default function App() {
       startMulti: (config: MultiConfig) => {
         if (multi.controller.restart(config)) setMultiActive(true);
       },
-      setupRequest,
     }),
-    [mode, session.config, session.controller, multi.config, multi.controller, setupRequest],
+    [mode, session.config, session.controller, multi.config, multi.controller],
   );
 
-  /** Home entry: opens Play in `target`; a finished game, or one of another mode, starts fresh. */
-  const openMode = useCallback(
-    (target: GameMode) => {
-      if (isMultiMode(target)) {
-        // Same mode still running: resume it; otherwise start the mode with its recommended settings.
-        if (!multiActive || multi.config.mode !== target || multi.status.kind !== 'playing') multi.controller.restart(recommendedConfig(target, multi.config.names));
-        setMultiActive(true);
-      } else {
-        const wantsHuman = target === 'local-2p';
-        const sameMode = !multiActive && (session.config.opponent === 'human') === wantsHuman;
-        if (!sameMode || session.status.kind !== 'playing') {
-          setMultiActive(false);
-          session.controller.restart({ ...session.config, opponent: wantsHuman ? 'human' : session.config.opponent === 'human' ? 'minimax' : session.config.opponent, userSeat: wantsHuman ? 0 : session.config.userSeat });
-        }
-      }
-      window.location.hash = '/play';
-      setRoute('play');
-      window.scrollTo({ top: 0 });
-    },
-    [multiActive, multi.config, multi.controller, multi.status.kind, session.config, session.controller, session.status.kind],
-  );
+  const running: RunningGame = multiActive
+    ? { mode, plies: multi.history.length, finished: multi.status.kind !== 'playing' }
+    : { mode, plies: session.history.length, finished: session.status.kind !== 'playing' };
 
-  /** Home entry for the variants: Play opens on the new-game tab with the first variant selected. */
-  const openVariants = useCallback(() => {
-    setSetupRequest({ at: Date.now(), mode: 'race-2' });
+  const showPlay = useCallback(() => {
     window.location.hash = '/play';
     setRoute('play');
     window.scrollTo({ top: 0 });
   }, []);
+
+  /** Opens the mode browser on `target` (default: the mode being played). Nothing is started. */
+  const openBrowser = useCallback(
+    (target?: GameMode) => {
+      setBrowser({ mode: target ?? mode, at: Date.now() });
+      showPlay();
+    },
+    [mode, showPlay],
+  );
+
+  /** Home entry for a basic mode: a game of that mode already running is resumed, otherwise the browser previews it. */
+  const openMode = useCallback(
+    (target: GameMode) => {
+      const live = mode === target && (multiActive ? multi.status.kind : session.status.kind) === 'playing';
+      if (live) setBrowser(null);
+      else setBrowser({ mode: target, at: Date.now() });
+      showPlay();
+    },
+    [mode, multiActive, multi.status.kind, session.status.kind, showPlay],
+  );
+
+  /** Home entry for the variants: the browser opens on the first variant (its tab shows all six). */
+  const openVariants = useCallback(() => openBrowser('race-2'), [openBrowser]);
 
   const sendToArena = useCallback((line: GameLine, label: string) => {
     setArenaIncoming({ line, label, sentAt: Date.now() });
@@ -149,12 +153,17 @@ export default function App() {
       <div hidden={route !== 'home'}>
         <HomeView onOpen={go} onOpenMode={openMode} onOpenVariants={openVariants} />
       </div>
-      <div hidden={route !== 'play' || multiActive}>
-        <PlayView session={session} setup={playSetup} onCompare={sendToCompare} onArena={sendToArena} />
+      <div hidden={route !== 'play' || multiActive || !!browser}>
+        <PlayView session={session} setup={playSetup} onChangeMode={() => openBrowser()} onCompare={sendToCompare} onArena={sendToArena} />
       </div>
-      <div hidden={route !== 'play' || !multiActive}>
-        <MultiPlayView session={multi} setup={playSetup} />
+      <div hidden={route !== 'play' || !multiActive || !!browser}>
+        <MultiPlayView session={multi} onChangeMode={() => openBrowser()} />
       </div>
+      {browser && (
+        <div hidden={route !== 'play'}>
+          <ModeBrowserView key={browser.at} setup={playSetup} initialMode={browser.mode} running={running} onClose={() => setBrowser(null)} />
+        </div>
+      )}
       <div hidden={route !== 'arena'}>
         <ArenaView onCompare={sendToCompare} incoming={arenaIncoming} />
       </div>

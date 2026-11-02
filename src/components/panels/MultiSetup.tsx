@@ -2,8 +2,6 @@ import { randomSeed } from '../../ai/rng';
 import { MAX_WALLS, OBSTACLE_PRESETS, TEAM_NAMES, asymmetricRules, defaultAsymmetricPlayers, fixedRules, obstacleBaseRules, teamOf } from '../../engine';
 import type { AsymmetricPlayer, Goal, MultiGameMode, MultiRules, ObstaclePreset } from '../../engine';
 import { defaultWalls } from '../../match/multiRecord';
-import { GAME_MODES } from '../../session/config';
-import type { GameMode, ModeInfo } from '../../session/config';
 import { DEFAULT_PLAYER_NAMES, playerCountOf, validateMultiConfig } from '../../session/MultiController';
 import type { MultiConfig } from '../../session/MultiController';
 import { seatText } from '../../session/seatInfo';
@@ -17,43 +15,6 @@ export function previewRules(draft: MultiConfig): MultiRules | null {
   if (draft.mode === 'asymmetric') return draft.asymmetric ? asymmetricRules(draft.asymmetric) : null;
   if (draft.mode === 'obstacle') return obstacleBaseRules(draft.obstacle?.players ?? 2);
   return fixedRules(draft.mode);
-}
-
-/** Mode cards in two groups: 기본 대전 (official rules) and 변형 대전. */
-export function ModePicker({ selected, playing, onChoose }: { selected: GameMode; playing: GameMode; onChoose: (mode: GameMode) => void }) {
-  const groups: { id: ModeInfo['group']; title: string }[] = [
-    { id: 'basic', title: '기본 대전' },
-    { id: 'variant', title: '변형 대전' },
-  ];
-  return (
-    <div role="radiogroup" aria-label="게임 모드" className="space-y-3">
-      {groups.map((g) => (
-        <section key={g.id} aria-label={g.title} className="space-y-1.5">
-          <h3 className="px-0.5 text-[11px] font-medium tracking-wide text-faint">{g.title}</h3>
-          {GAME_MODES.filter((m) => m.group === g.id).map((m) => (
-            <button
-              key={m.id}
-              type="button"
-              role="radio"
-              aria-checked={selected === m.id}
-              data-mode={m.id}
-              onClick={() => onChoose(m.id)}
-              className={`block w-full rounded-xl border px-3.5 py-2.5 text-left transition-colors ${selected === m.id ? 'border-accent bg-accent/5' : 'border-line-soft bg-card hover:border-line'}`}
-            >
-              <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-ink">
-                <span className={`h-3.5 w-3.5 shrink-0 rounded-full border-2 ${selected === m.id ? 'border-accent bg-accent' : 'border-line-strong'}`} aria-hidden />
-                {m.title}
-                <span className="rounded-md bg-inset px-1.5 py-0.5 text-[11px] font-normal text-muted">{m.players}</span>
-                <span className={`rounded-md px-1.5 py-0.5 text-[11px] font-normal ${m.official ? 'bg-good/10 text-good' : 'bg-warn/10 text-warn'}`}>{m.official ? '공식 규칙' : '변형 규칙'}</span>
-                {playing === m.id && <span className="ml-auto text-[11px] font-normal text-faint">진행 중</span>}
-              </span>
-              <span className="mt-0.5 block pl-[1.375rem] text-xs text-muted">{m.description}</span>
-            </button>
-          ))}
-        </section>
-      ))}
-    </div>
-  );
 }
 
 const GOALS: { label: string; goal: Goal }[] = [

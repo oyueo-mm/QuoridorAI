@@ -9,7 +9,7 @@ import { MoveLog } from '../components/panels/MoveLog';
 import { PlayerCard, PlayerStrip } from '../components/panels/PlayerStrip';
 import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
 import { SearchProgressBar } from '../components/panels/SearchProgressBar';
-import { SetupPanel } from '../components/panels/SetupPanel';
+import { ModeBar } from '../components/panels/ModeBar';
 import { PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
 import { ORIENTATION_OPTIONS, Segmented, Tabs, buttonClass, useBoardOrientation } from '../components/ui';
 import { distanceToRow, goalRow, opponentOf } from '../engine';
@@ -20,14 +20,13 @@ import { buildRecord, recordToText, resultOf } from '../match/gameRecord';
 import type { GameLine, SeatInfo } from '../match/gameRecord';
 import { wallOwnersFromMoves } from '../match/wallOwners';
 import { localSeatName } from '../session/config';
-import type { GameMode } from '../session/config';
 import type { GameSession } from '../session/useGameSession';
 import type { PlaySetupApi } from './playSetup';
 
-type PlayTab = 'analysis' | 'moves' | 'setup';
+type PlayTab = 'analysis' | 'moves';
 
 /** Play: human vs AI / human vs human. Board in the middle; details live in the side tabs. */
-export function PlayView({ session, setup, onCompare, onArena }: { session: GameSession; setup: PlaySetupApi; onCompare: (line: GameLine, label: string) => void; onArena: (line: GameLine, label: string) => void }) {
+export function PlayView({ session, setup, onChangeMode, onCompare, onArena }: { session: GameSession; setup: PlaySetupApi; onChangeMode: () => void; onCompare: (line: GameLine, label: string) => void; onArena: (line: GameLine, label: string) => void }) {
   const { game, config, controllers, status, history, controller } = session;
   const [showPaths, setShowPaths] = useState(false);
   const [overlay, setOverlay] = useState<BoardOverlay | null>(null);
@@ -43,15 +42,8 @@ export function PlayView({ session, setup, onCompare, onArena }: { session: Game
   const [selectedPly, setSelectedPly] = useState<number | null>(null);
   const [notice, setNotice] = useState('');
   useEffect(() => setSelectedPly(null), [session.gameId]);
-  // The home page asked for the new-game tab (with a mode pre-selected); a started game clears it.
-  const [focusMode, setFocusMode] = useState<GameMode | undefined>(undefined);
-  useEffect(() => {
-    if (!setup.setupRequest) return;
-    setTab('setup');
-    setPanelOpen(true);
-    setFocusMode(setup.setupRequest.mode);
-  }, [setup.setupRequest]);
-  useEffect(() => setFocusMode(undefined), [session.gameId]);
+  // A new game opens the tab that matters for it (the record for two people, the analysis against an AI).
+  useEffect(() => setTab(config.opponent === 'human' ? 'moves' : 'analysis'), [session.gameId]); // eslint-disable-line react-hooks/exhaustive-deps
   const ply = selectedPly === null || selectedPly > history.length ? history.length : selectedPly;
   const positionAt = ply === history.length ? game : history[ply].stateBefore;
   const actions = useMemo(() => history.map((h) => ({ action: h.action, player: h.player })), [history]);
@@ -183,6 +175,9 @@ export function PlayView({ session, setup, onCompare, onArena }: { session: Game
                 <span className="hidden sm:inline">이 포지션 비교</span>
               </button>
             )}
+            <button type="button" onClick={onChangeMode} className={`${buttonClass.small} ml-auto`} data-open-mode-browser title="다른 게임 모드를 살펴보고 고릅니다 (지금 게임은 유지됩니다)">
+              모드 변경
+            </button>
           </div>
         }
       />
@@ -199,10 +194,10 @@ export function PlayView({ session, setup, onCompare, onArena }: { session: Game
             items={[
               { id: 'analysis', label: '분석' },
               { id: 'moves', label: '기보', badge: history.length },
-              { id: 'setup', label: '새 게임' },
             ]}
           />
         }
+        header={<ModeBar mode={setup.mode} onChange={onChangeMode} />}
       >
         <div className={`min-h-0 flex-1 px-2 ${tab === 'moves' ? '' : 'scroll-stable'}`}>
           <div hidden={tab !== 'analysis'}>
@@ -247,20 +242,6 @@ export function PlayView({ session, setup, onCompare, onArena }: { session: Game
                 <MoveLog moves={history} selectedPly={selectedPly} onSelect={setSelectedPly} />
               </div>
             </div>
-          </div>
-          <div hidden={tab !== 'setup'}>
-            <SetupPanel
-              key={`${setup.mode}-${session.gameId}-${focusMode ?? ''}`}
-              current={config}
-              initialMode={focusMode}
-              currentMulti={setup.multiConfig}
-              currentMode={setup.mode}
-              onStart={(c) => {
-                setup.startTwoPlayer(c);
-                setTab(c.opponent === 'human' ? 'moves' : 'analysis');
-              }}
-              onStartMulti={(c) => setup.startMulti(c)}
-            />
           </div>
         </div>
       </SidePanel>
