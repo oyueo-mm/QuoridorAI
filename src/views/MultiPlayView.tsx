@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState } from 'react';
+import { summarizeTrace } from '../ai/multiAgent';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useMoveSounds, useOutcomeSound } from '../audio/moveSounds';
 import { MultiGameStage } from '../components/board/GameStage';
 import { multiBoardRules } from '../components/board/boardRules';
 import { QuoridorBoard } from '../components/board/QuoridorBoard';
+import type { BoardOverlay } from '../components/board/overlay';
 import { copyText, downloadText } from '../components/download';
 import { MoveLog } from '../components/panels/MoveLog';
 import { PlayerChip } from '../components/panels/PlayerStrip';
 import { ModeBar } from '../components/panels/ModeBar';
+import { MultiAnalysisPanel } from '../components/panels/MultiAnalysisPanel';
 import { SidePanel, sidePanelGrid } from '../components/panels/SidePanel';
 import { OBSTACLE_WALL, PLAYER_LABEL, PLAYER_TEXT_CLASS } from '../components/theme';
-import { Tabs, buttonClass } from '../components/ui';
+import { Segmented, Tabs, buttonClass } from '../components/ui';
 import { TEAM_NAMES, goalDistanceMulti, obstacleMetrics, describeObstacleMap, seatSlot, teamOf, teamSeats, winningSeats } from '../engine';
 import type { MultiRules } from '../engine';
 import { buildMultiRecord, multiRecordToText, parseMultiRecord } from '../match/multiRecord';
@@ -21,7 +24,16 @@ import type { GameMode } from '../session/config';
 import { seatText } from '../session/seatInfo';
 import type { MultiSession } from '../session/useMultiSession';
 
-type MultiTab = 'moves' | 'rules';
+type MultiTab = 'moves' | 'analysis' | 'rules';
+
+/** AI turn pacing offered in the controls (minimum duration of an AI turn). */
+const SPEED_OPTIONS = [
+  { value: '1500', label: '느리게', title: '한 수에 최소 1.5초' },
+  { value: '500', label: '보통', title: '한 수에 최소 0.5초' },
+  { value: '100', label: '빠르게', title: '한 수에 최소 0.1초' },
+  { value: '0', label: '최대', title: 'AI가 답하는 즉시 둡니다' },
+] as const;
+const nearestSpeed = (ms: number) => SPEED_OPTIONS.reduce((best, o) => (Math.abs(Number(o.value) - ms) < Math.abs(Number(best.value) - ms) ? o : best)).value;
 type LoadableRecord = Extract<ParsedMultiRecord, { ok: true }>;
 
 /** Replay speed of "자동 재생". */
@@ -47,14 +59,21 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
   const [autoplay, setAutoplay] = useState(false);
   const [confirmRestart, setConfirmRestart] = useState(false);
   const [notice, setNotice] = useState('');
+  // Board preview of a candidate hovered in the analysis tab (read-only, replaces the live position).
+  const [overlay, setOverlay] = useState<BoardOverlay | null>(null);
   const [paste, setPaste] = useState('');
 
+  // The AI tab only exists while a seat is an AI (a new game may have none).
+  useEffect(() => {
+    if (tab === 'analysis' && !session.aiPresent) setTab('moves');
+  }, [tab, session.aiPresent]);
   useEffect(() => {
     setSelectedPly(null);
     setAutoplay(false);
     setConfirmRestart(false);
     setNotice('');
     setPendingImport(null);
+    setOverlay(null);
   }, [gameId]);
   // The record can shrink (undo): keep the selection inside it.
   useEffect(() => {
@@ -66,7 +85,8 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
   const position = browsing ? history[ply].stateBefore : game;
   const lastEntry = ply > 0 ? history[ply - 1] : undefined;
   const wallOwners = useMemo(() => wallOwnersFromMoves(history), [history]);
-  const actions = useMemo(() => history.map((h) => ({ action: h.action, player: h.player })), [history]);
+  const actions = useMemo(() => history.map((h) => ({ action: h.action, player: h.player, ...(h.trace ? { ai: summarizeTrace(h.trace) } : {}) })), [history]);
+  const slotControllers = rules.turnOrder.map((seat) => session.controllers[seat]);
   const slotOf = (seat: number) => seatSlot(rules, seat);
   const nameOf = (seat: number) => names[slotOf(seat)];
   const playing = status.kind === 'playing';
@@ -112,7 +132,7 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
     setAutoplay(true);
   };
 
-  const record = () => buildMultiRecord(session.setup, actions, { names, ply, mode });
+  const record = () => buildMultiRecord(session.setup, actions, { names, ply, mode, controllers: slotControllers });
   const exportJson = () => {
     downloadText(`quoridor-${mode}-${new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-')}.json`, JSON.stringify(record(), null, 2), 'application/json');
     setNotice('JSON 파일을 저장했습니다.');
@@ -136,8 +156,8 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
       <PlayerChip
         player={slot}
         name={names[slot]}
-        isAi={false}
-        thinking={false}
+        isAi={session.controllers[s].kind === 'ai'}
+        thinking={session.thinking?.seat === s}
         wallsRemaining={position.wallsRemaining[s]}
         wallsTotal={session.setup.wallsPerPlayer[s]}
         distance={distances[s]}
@@ -159,6 +179,15 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
       {teamed ? ' 도착' : ' 승리'}
     </>
   );
+
+  const aiTurn = playing && !session.humanToMove;
+  const idleHint = browsing
+    ? `기보 보기 — ${ply}수 후 (최신으로 돌아가면 이어서 둘 수 있습니다)`
+    : status.kind === 'win'
+      ? '게임이 끝났습니다 — 무르기로 되돌리거나 다시 하세요'
+      : aiTurn
+        ? `${PLAYER_LABEL[slotOf(game.currentPlayer)]} ${nameOf(game.currentPlayer)} ${session.paused ? '— AI 진행이 일시정지되어 있습니다' : session.thinking ? '생각 중…' : '차례'}`
+        : '';
 
   const statusLine = (
     <div className="flex h-10 items-center justify-between gap-3 px-1">
@@ -224,17 +253,19 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
             state={position}
             rules={boardRules}
             flipped={false}
-            interactive={playing && !browsing}
+            interactive={session.humanToMove && !browsing}
+            overlay={overlay}
             showPaths={showPaths}
             lastAction={lastEntry && { action: lastEntry.action, player: lastEntry.player, from: lastEntry.stateBefore.pawns[lastEntry.player] }}
             wallOwners={wallOwners}
-            idleHint={browsing ? `기보 보기 — ${ply}수 후 (최신으로 돌아가면 이어서 둘 수 있습니다)` : status.kind === 'win' ? '게임이 끝났습니다 — 무르기로 되돌리거나 다시 하세요' : ''}
+            idleHint={idleHint}
             onAction={(a) => controller.play(a)}
           />
         }
         controls={
+          <>
           <div className="flex min-h-9 flex-wrap items-center gap-2 px-1">
-            <button type="button" onClick={() => controller.undo()} disabled={!session.canUndo || browsing} className={`${buttonClass.small} shrink-0`} title={browsing ? '기보 보기 중입니다 — 최신으로 돌아간 뒤 무르세요' : '직전 한 수를 되돌립니다'}>
+            <button type="button" onClick={() => controller.undo()} disabled={!session.canUndo || browsing} className={`${buttonClass.small} shrink-0`} title={browsing ? '기보 보기 중입니다 — 최신으로 돌아간 뒤 무르세요' : session.aiPresent ? '내 이전 차례로 되돌립니다 (그 뒤의 AI 수도 함께)' : '직전 한 수를 되돌립니다'}>
               ↶ 무르기
             </button>
             <button type="button" onClick={() => setShowPaths((v) => !v)} aria-pressed={showPaths} className={`${buttonClass.ghost} ${showPaths ? 'bg-inset text-ink' : ''}`} title="네 플레이어의 최단 경로를 각자의 색으로 표시합니다">
@@ -252,10 +283,27 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
                 최신으로
               </button>
             )}
+            {session.aiPresent && (
+              <span className="flex flex-wrap items-center gap-1.5" data-ai-controls>
+                <button type="button" onClick={() => controller.setPaused(!session.paused)} aria-pressed={session.paused} data-ai-pause className={`${buttonClass.small} ${session.paused ? 'bg-inset text-ink' : ''}`} title="AI 진행을 멈추거나 이어 갑니다">
+                  {session.paused ? '▶ 진행' : '⏸ 일시정지'}
+                </button>
+                <button type="button" onClick={() => controller.step()} disabled={!session.paused || !aiTurn || !!session.thinking} data-ai-step className={buttonClass.small} title="일시정지 중 AI가 한 수만 둡니다">
+                  한 수 ▶|
+                </button>
+                <Segmented label="AI 속도" options={SPEED_OPTIONS} value={nearestSpeed(session.delayMs)} onChange={(v) => controller.setDelay(Number(v))} />
+              </span>
+            )}
             <button type="button" onClick={onChangeMode} className={`${buttonClass.small} ml-auto`} data-open-mode-browser title="다른 게임 모드를 살펴보고 고릅니다 (지금 게임은 유지됩니다)">
               모드 변경
             </button>
           </div>
+          {session.notice && (
+            <p role="alert" data-ai-notice className="mt-1 rounded-lg bg-warn/10 px-3 py-1.5 text-xs text-warn">
+              {session.notice}
+            </p>
+          )}
+          </>
         }
       />
 
@@ -270,6 +318,7 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
             onChange={setTab}
             items={[
               { id: 'moves', label: '기보', badge: history.length },
+              ...(session.aiPresent ? [{ id: 'analysis' as const, label: 'AI 분석' }] : []),
               { id: 'rules', label: '규칙' },
             ]}
           />
@@ -343,6 +392,11 @@ export function MultiPlayView({ session, onChangeMode }: { session: MultiSession
               </div>
             </div>
           </div>
+          {session.aiPresent && (
+            <div hidden={tab !== 'analysis'}>
+              <MultiAnalysisPanel key={gameId} history={history} thinking={session.thinking} paused={session.paused} turnOrder={rules.turnOrder} onPreview={setOverlay} />
+            </div>
+          )}
           <div hidden={tab !== 'rules'}>
             <ModeRules mode={mode} rules={rules} wallsPerPlayer={session.setup.wallsPerPlayer} />
           </div>
@@ -455,7 +509,7 @@ function ModeRules({ mode, rules, wallsPerPlayer }: { mode: GameMode; rules: Mul
         </p>
       )}
       <p className="text-xs text-faint">
-        {info.official ? '공식 룰북(Gigamic) 4인 규칙을 따릅니다. ' : ''}여러 말이 얽힌 점프처럼 룰북이 정하지 않은 경우는 위와 같이 해석해 적용합니다. 이 모드는 AI 없이 사람끼리 두는 로컬 대국입니다.
+        {info.official ? '공식 룰북(Gigamic) 4인 규칙을 따릅니다. ' : ''}여러 말이 얽힌 점프처럼 룰북이 정하지 않은 경우는 위와 같이 해석해 적용합니다. 자리마다 사람 또는 AI(Random · BFS / Greedy · Max-N)를 고를 수 있고, AI가 모두인 대국은 스스로 진행합니다.
       </p>
     </div>
   );

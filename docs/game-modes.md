@@ -76,9 +76,13 @@ QuoridorAI의 모드는 **기본 대전**(공식 규칙)과 **변형 대전**(�
 
 ## AI 호환 정책
 
-기존 AI(Random·BFS·Minimax·MCTS·AlphaZero 학습 인프라)는 *정규 2인전만* 지원합니다. 신규 모드는 2인용 변형(동방향 경주 등)도 포함해 전부 사람 대전으로만 제공하며, 2인 AI로 가는 경로가 없습니다: 변형 모드는 `MultiController`(AI 없음)에서만 실행되고, `parseRecord`(AI 비교·관전·실험이 쓰는 파서)는 버전 2·3 기보를 이유와 함께 거부하며, `supportsTwoPlayerAi(rules)`는 모드가 지정된 규칙(`rules.mode`가 있는 규칙)을 항상 거부합니다.
+기존 AI(Random·BFS·Minimax·MCTS·AlphaZero 학습 인프라)는 *정규 2인전만* 지원합니다. 2인용 변형(동방향 경주 등)을 포함한 다인 모드에는 **다인전 전용 AI**(Random·BFS/Greedy·Max-N, [docs/multi-ai.md](multi-ai.md))만 쓰입니다. 2인 AI로 가는 경로는 여전히 없습니다: 변형 모드는 `MultiController`에서만 실행되고, `parseRecord`(AI 비교·관전·실험이 쓰는 파서)는 버전 2·3 기보를 이유와 함께 거부하며, `supportsTwoPlayerAi(rules)`는 모드가 지정된 규칙(`rules.mode`가 있는 규칙)을 항상 거부합니다.
 
-### 다음 단계(다인전 AI·관전·실험)에 필요한 구조 변경
+기보 버전 2·3은 AI 자리가 있으면 선택 키 `participants[].controller`와 `moves[].ai`를 더 가집니다(옛 판독기는 무시).
+
+### 남은 단계(3-B 이후: 고급 AI·관전·실험)에 필요한 구조 변경
+
+1번(인터페이스)·4번(Worker)·6번(AI 시드 기록)은 3-A에서 구현했습니다(`ai/multi/`).
 
 1. **AI 인터페이스**: `src/ai/multiAgent.ts`의 `MultiAgent`(규칙 지원 여부 선언 + `chooseAction(MultiState)`)를 구현하고, 에이전트 레지스트리를 2인용(`GameState`)과 다인용(`MultiState`)으로 분리합니다. 현재 `ai/*`는 `GameState`·`PlayerId = 0|1`에 묶여 있습니다.
 2. **평가·탐색**: BFS 거리 휴리스틱을 "내 거리 vs 나머지 평균/최소"로 일반화하고, 탐색은 Max-N(또는 팀전은 팀 합산 Paranoid)부터 시작합니다. MCTS는 다인 롤아웃(좌석 순환)과 좌석별 보상 벡터가 필요합니다. 팀전은 보상을 팀 단위로 합산합니다.

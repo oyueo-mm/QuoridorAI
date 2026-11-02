@@ -1,11 +1,13 @@
+import { agentSeatName } from '../../ai/multiAgent';
 import { randomSeed } from '../../ai/rng';
 import { MAX_WALLS, OBSTACLE_PRESETS, TEAM_NAMES, asymmetricRules, defaultAsymmetricPlayers, fixedRules, obstacleBaseRules, teamOf } from '../../engine';
 import type { AsymmetricPlayer, Goal, MultiGameMode, MultiRules, ObstaclePreset } from '../../engine';
 import { defaultWalls } from '../../match/multiRecord';
-import { DEFAULT_PLAYER_NAMES, playerCountOf, validateMultiConfig } from '../../session/MultiController';
-import type { MultiConfig } from '../../session/MultiController';
+import { DEFAULT_PLAYER_NAMES, HUMAN, playerCountOf, validateMultiConfig } from '../../session/MultiController';
+import type { MultiConfig, MultiSeatController } from '../../session/MultiController';
 import { seatText } from '../../session/seatInfo';
 import { PLAYER_BG_CLASS, PLAYER_LABEL } from '../theme';
+import { SeatControllerFields } from './MultiAgentSettings';
 
 const inputClass = 'w-full rounded-xl border border-line bg-card px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none';
 const smallInput = 'rounded-lg border border-line bg-card px-2 py-1 text-sm text-ink focus:border-accent focus:outline-none';
@@ -34,6 +36,10 @@ export function MultiSetupFields({ draft, onChange }: { draft: MultiConfig; onCh
   const errors = validateMultiConfig(draft);
   const setName = (slot: number, v: string) => onChange({ ...draft, names: DEFAULT_PLAYER_NAMES.map((_, i) => (i === slot ? v : (draft.names[i] ?? ''))) });
   const showWalls = mode !== 'four-player' && mode !== 'asymmetric';
+  const controllerAt = (slot: number): MultiSeatController => draft.controllers?.[slot] ?? HUMAN;
+  const setController = (slot: number, c: MultiSeatController) =>
+    onChange({ ...draft, controllers: Array.from({ length: 4 }, (_, i) => (i === slot ? c : (draft.controllers?.[i] ?? HUMAN))) });
+  const aiCount = Array.from({ length: n }, (_, i) => controllerAt(i)).filter((c) => c.kind === 'ai').length;
 
   return (
     <div className="space-y-4" data-multi-setup={mode}>
@@ -51,7 +57,7 @@ export function MultiSetupFields({ draft, onChange }: { draft: MultiConfig; onCh
                 type="text"
                 maxLength={20}
                 value={draft.names[slot] ?? ''}
-                placeholder={DEFAULT_PLAYER_NAMES[slot]}
+                placeholder={controllerAt(slot).kind === 'ai' ? agentSeatName((controllerAt(slot) as Extract<MultiSeatController, { kind: 'ai' }>).agent) : DEFAULT_PLAYER_NAMES[slot]}
                 aria-label={`${PLAYER_LABEL[slot]} 이름`}
                 onChange={(e) => setName(slot, e.target.value)}
                 className={inputClass}
@@ -60,6 +66,16 @@ export function MultiSetupFields({ draft, onChange }: { draft: MultiConfig; onCh
             </label>
           );
         })}
+      </fieldset>
+
+      <fieldset className="space-y-2" data-participants>
+        <legend className="mb-1.5 text-xs text-muted">
+          참가자 <span className="text-faint">({aiCount === 0 ? '모두 사람' : aiCount === n ? `AI ${n}개 — 자동 대국` : `사람 ${n - aiCount} · AI ${aiCount}`})</span>
+        </legend>
+        {Array.from({ length: n }, (_, slot) => (
+          <SeatControllerFields key={slot} slot={slot} label={PLAYER_LABEL[slot]} value={controllerAt(slot)} onChange={(c) => setController(slot, c)} />
+        ))}
+        <p className="text-[11px] leading-snug text-faint">AI를 고른 자리에만 난이도와 고급 설정이 나타납니다. 보드 배치는 바뀌지 않습니다.</p>
       </fieldset>
 
       <label className="block">

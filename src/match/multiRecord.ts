@@ -12,6 +12,8 @@ import {
   validateRules,
 } from '../engine';
 import type { Action, Goal, MultiGameMode, MultiRules, MultiState, WallSpec } from '../engine';
+import { resolveSpec } from '../ai/multi/registry';
+import type { MultiAiSummary, MultiSeatController } from '../ai/multi/types';
 import { GAME_RECORD_FORMAT } from './gameRecord';
 
 /*
@@ -26,6 +28,11 @@ import { GAME_RECORD_FORMAT } from './gameRecord';
  * neutral walls of an obstacle race (explicit cells, so a replay never depends on the generator),
  * the seed and preset they came from — and is written for every mode but the official four-player
  * game, which stays version 2 so that older readers keep working. Both are read by parseMultiRecord.
+ *
+ * Games with AI seats add two optional keys to both versions (older readers ignore unknown keys, so
+ * no version bump is needed): `participants[].controller` (the AI's algorithm, settings and seed) and
+ * `moves[].ai` (a small summary of each AI decision — never the full search trace, which would make
+ * the file huge). The moves themselves are always re-validated by the rules engine.
  */
 
 export const MULTI_RECORD_VERSION = 2;
@@ -54,8 +61,8 @@ export interface MultiRecordFile {
   wallsPerPlayer: number[];
   firstPlayer: number;
   /** Who sits where: `slot` is the position in the turn order (P1…Pn as shown). */
-  participants: { seat: number; slot: number; name: string }[];
-  moves: { ply: number; player: number; notation: string }[];
+  participants: { seat: number; slot: number; name: string; controller?: MultiSeatController }[];
+  moves: { ply: number; player: number; notation: string; ai?: MultiAiSummary }[];
   /** Selected position (number of moves played). */
   ply: number;
   result: { kind: 'playing' } | { kind: 'win'; winner: number };
@@ -66,6 +73,8 @@ export interface MultiRecordFile {
 export interface RecordedMultiAction {
   action: Action;
   player: number;
+  /** Summary of the AI decision that chose this action (AI seats only). */
+  ai?: MultiAiSummary;
 }
 
 export interface MultiGameSetup {
@@ -88,7 +97,7 @@ export function replayMulti(setup: MultiGameSetup, actions: readonly RecordedMul
 export function buildMultiRecord(
   setup: MultiGameSetup,
   actions: readonly RecordedMultiAction[],
-  info: { source?: string; mode?: MultiGameMode; names: readonly string[]; ply?: number },
+  info: { source?: string; mode?: MultiGameMode; names: readonly string[]; ply?: number; controllers?: readonly MultiSeatController[] },
 ): MultiRecordFile {
   const positions = replayMulti(setup, actions);
   const last = positions[positions.length - 1];
@@ -111,8 +120,11 @@ export function buildMultiRecord(
     },
     wallsPerPlayer: [...setup.wallsPerPlayer],
     firstPlayer: setup.firstPlayer,
-    participants: rules.turnOrder.map((seat, slot) => ({ seat, slot, name: info.names[slot] ?? `P${slot + 1}` })),
-    moves: actions.map(({ action, player }, i) => ({ ply: i + 1, player, notation: formatAction(action) })),
+    participants: rules.turnOrder.map((seat, slot) => {
+      const controller = info.controllers?.[slot];
+      return { seat, slot, name: info.names[slot] ?? `P${slot + 1}`, ...(controller?.kind === 'ai' ? { controller } : {}) };
+    }),
+    moves: actions.map(({ action, player, ai }, i) => ({ ply: i + 1, player, notation: formatAction(action), ...(ai ? { ai } : {}) })),
     ply: Math.max(0, Math.min(info.ply ?? actions.length, actions.length)),
     result: last.winner === null ? { kind: 'playing' } : { kind: 'win', winner: last.winner },
     final: {
@@ -131,10 +143,14 @@ export function parseActionMulti(state: MultiState, notation: string): Action | 
 }
 
 export type ParsedMultiRecord =
-  | { ok: true; setup: MultiGameSetup; names: string[]; mode: MultiGameMode; actions: RecordedMultiAction[]; ply: number }
+  | { ok: true; setup: MultiGameSetup; names: string[]; mode: MultiGameMode; actions: RecordedMultiAction[]; ply: number; controllers?: MultiSeatController[] }
   | { ok: false; error: string };
 
 const isInt = (v: unknown): v is number => typeof v === 'number' && Number.isInteger(v);
+const isAiSummary = (v: unknown): v is MultiAiSummary => {
+  const a = v as Partial<MultiAiSummary> | undefined;
+  return !!a && typeof a.algorithm === 'string' && typeof a.elapsedMs === 'number' && Number.isFinite(a.elapsedMs);
+};
 
 /**
  * Reads a version 2 record (JSON). Every move is replayed with the rules engine; the player of
@@ -203,7 +219,7 @@ export function parseMultiRecord(text: string): ParsedMultiRecord {
     const action = typeof m?.notation === 'string' ? parseActionMulti(state, m.notation) : null;
     if (!action) return { ok: false, error: `${i + 1}번째 수 '${String(m?.notation)}'가 합법이 아닙니다.` };
     if (m.player !== state.currentPlayer) return { ok: false, error: `${i + 1}번째 수의 플레이어 정보가 수순과 맞지 않습니다.` };
-    actions.push({ action, player: state.currentPlayer });
+    actions.push({ action, player: state.currentPlayer, ...(isAiSummary(m.ai) ? { ai: m.ai } : {}) });
     state = applyActionMulti(state, action);
   }
   const f = data.final;
@@ -223,7 +239,19 @@ export function parseMultiRecord(text: string): ParsedMultiRecord {
     return typeof name === 'string' && name.trim() ? name.trim().slice(0, 20) : `P${slot + 1}`;
   });
   const ply = isInt(data.ply) ? Math.max(0, Math.min(data.ply, actions.length)) : actions.length;
-  return { ok: true, setup, names, mode: data.mode, actions, ply };
+  // AI seats (optional): a controller whose settings cannot be read is rejected rather than guessed.
+  let controllers: MultiSeatController[] | undefined;
+  if (data.participants?.some((p) => p?.controller !== undefined)) {
+    controllers = [];
+    for (let slot = 0; slot < n; slot++) {
+      const c = data.participants.find((p) => p?.seat === rules.turnOrder[slot])?.controller;
+      const agent = c?.kind === 'ai' ? resolveSpec(c.agent) : null;
+      if (c === undefined || c?.kind === 'human') controllers.push({ kind: 'human' });
+      else if (agent) controllers.push({ kind: 'ai', agent });
+      else return { ok: false, error: '기보의 AI 설정을 읽을 수 없습니다.' };
+    }
+  }
+  return { ok: true, setup, names, mode: data.mode, actions, ply, ...(controllers ? { controllers } : {}) };
 }
 
 /** Official wall count for a player count (used when a setup does not say). */

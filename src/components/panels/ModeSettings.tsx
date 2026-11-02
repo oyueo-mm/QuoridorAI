@@ -181,7 +181,8 @@ export function SetupFields({ mode, draft, setDraft, multiDraft, setMultiDraft }
 export function draftsForMode(next: GameMode, draft: GameConfig, multiDraft: MultiConfig): { draft: GameConfig; multiDraft: MultiConfig } {
   return {
     draft: next === 'vs-ai' && draft.opponent === 'human' ? { ...draft, opponent: 'minimax' } : next === 'local-2p' ? { ...draft, opponent: 'human', userSeat: 0 } : draft,
-    multiDraft: isMultiMode(next) && next !== multiDraft.mode ? recommendedConfig(next, multiDraft.names) : multiDraft,
+    // who plays each slot (person / AI) is not a rule of the mode, so it is kept when the mode changes
+    multiDraft: isMultiMode(next) && next !== multiDraft.mode ? { ...recommendedConfig(next, multiDraft.names), ...(multiDraft.controllers ? { controllers: multiDraft.controllers } : {}) } : multiDraft,
   };
 }
 

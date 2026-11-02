@@ -51,12 +51,13 @@ export function ModeBrowserView({ setup, initialMode, running, onClose }: { setu
     setMultiDraft(d.multiDraft);
   };
 
-  const { result, pending, shown } = usePreview(mode, multiDraft);
+  const { result, pending, shown, obstacleMap } = usePreview(mode, multiDraft);
   const errors = multi ? validateMultiConfig(multiDraft) : [];
   const canStart = result?.ok === true && errors.length === 0;
 
   const start = () => {
-    if (multi) setup.startMulti(multiDraft);
+    // The obstacle map the preview already generated is reused, so starting never generates it again on the main thread.
+    if (multi) setup.startMulti(multiDraft, obstacleMap ? { obstacleMap } : undefined);
     else setup.startTwoPlayer(mode === 'local-2p' ? { ...draft, opponent: 'human', userSeat: 0 } : { ...draft, opponent: draft.opponent === 'human' ? 'minimax' : draft.opponent });
     onClose();
   };
@@ -83,6 +84,7 @@ export function ModeBrowserView({ setup, initialMode, running, onClose }: { setu
             stale={pending || !result?.ok}
             pending={pending}
             names={previewNames(shown.mode, draft, multiDraft, shown)}
+            aiSlots={multi ? Array.from({ length: shown.setup.rules.players.length }, (_, i) => multiDraft.controllers?.[i]?.kind === 'ai') : []}
             userSeat={mode === 'vs-ai' ? draft.userSeat : 0}
             running={running}
           />
@@ -107,7 +109,8 @@ export function ModeBrowserView({ setup, initialMode, running, onClose }: { setu
           </button>
         </div>
 
-        <div className="space-y-4 p-3 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain">
+        {/* pb-24 on small screens: the sticky start button must not cover the last settings */}
+        <div className="space-y-4 p-3 pb-24 lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:overscroll-contain lg:pb-3">
           <ModeCards selected={mode} playing={running.mode} onChoose={choose} />
 
           {shown && <Brief preview={shown} />}
@@ -146,7 +149,7 @@ export function ModeBrowserView({ setup, initialMode, running, onClose }: { setu
  * Obstacle maps are generated in a worker; a result that arrives after the settings moved on is
  * dropped. While a new one is pending (or the settings are invalid) the last valid board stays.
  */
-function usePreview(mode: GameMode, multiDraft: MultiConfig): { result: PreviewResult | null; pending: boolean; shown: ModePreview | null } {
+function usePreview(mode: GameMode, multiDraft: MultiConfig): { result: PreviewResult | null; pending: boolean; shown: ModePreview | null; obstacleMap: MultiRules | undefined } {
   const key = layoutKey(mode, multiDraft);
   const generated = mode === 'obstacle' && needsObstacleMap(mode, multiDraft);
   const mapKey = obstacleKey(multiDraft);
@@ -155,9 +158,11 @@ function usePreview(mode: GameMode, multiDraft: MultiConfig): { result: PreviewR
   useEffect(() => {
     if (!generated) return;
     let current = true;
-    generateObstacleMap(multiDraft.obstacle!).then((rules) => {
-      if (current) setMap({ key: mapKey, rules });
-    });
+    generateObstacleMap(multiDraft.obstacle!)
+      .then((rules) => {
+        if (current) setMap({ key: mapKey, rules });
+      })
+      .catch(() => undefined); // superseded by newer settings
     return () => {
       current = false;
     };
@@ -172,17 +177,17 @@ function usePreview(mode: GameMode, multiDraft: MultiConfig): { result: PreviewR
   );
   const last = useRef<ModePreview | null>(null);
   if (result?.ok) last.current = result.preview;
-  return { result, pending: result === null, shown: result?.ok ? result.preview : last.current };
+  return { result, pending: result === null, shown: result?.ok ? result.preview : last.current, obstacleMap: mode === 'obstacle' && generated ? ready : undefined };
 }
 
 /** Name shown on each seat's card. */
 function previewNames(mode: GameMode, draft: PlaySetupApi['config'], multiDraft: MultiConfig, p: ModePreview): string[] {
   if (mode === 'vs-ai') return [0, 1].map((s) => (s === draft.userSeat ? '나' : `${agentName(draft.opponent === 'human' ? 'minimax' : draft.opponent)} (AI)`));
   if (mode === 'local-2p') return [0, 1].map((s) => localSeatName({ ...draft, opponent: 'human' }, s as 0 | 1));
-  return resolveNames(multiDraft.names, p.setup.rules.players.length);
+  return resolveNames(multiDraft.names, p.setup.rules.players.length, multiDraft.controllers);
 }
 
-function PreviewStage({ preview, stale, pending, names, userSeat, running }: { preview: ModePreview; stale: boolean; pending: boolean; names: string[]; userSeat: 0 | 1; running: RunningGame }) {
+function PreviewStage({ preview, stale, pending, names, aiSlots, userSeat, running }: { preview: ModePreview; stale: boolean; pending: boolean; names: string[]; aiSlots: boolean[]; userSeat: 0 | 1; running: RunningGame }) {
   const { state, setup } = preview;
   const rules = setup.rules;
   const boardRules = useMemo(() => multiBoardRules(rules), [rules]);
@@ -200,7 +205,7 @@ function PreviewStage({ preview, stale, pending, names, userSeat, running }: { p
       <PlayerChip
         player={slot}
         name={names[slot]}
-        isAi={false}
+        isAi={!!aiSlots[slot]}
         thinking={false}
         wallsRemaining={state.wallsRemaining[s]}
         wallsTotal={setup.wallsPerPlayer[s]}

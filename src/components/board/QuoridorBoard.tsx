@@ -8,7 +8,7 @@ import {
   sameCoord,
   wallIndex,
 } from '../../engine';
-import type { Action, Coord, Orientation, PlayerId, WallAction } from '../../engine';
+import type { Action, Coord, Orientation, WallAction } from '../../engine';
 import { wallKey } from '../../match/wallOwners';
 import type { WallOwners } from '../../match/wallOwners';
 import { BOARD_COLORS, NEUTRAL_WALL, OBSTACLE_WALL, PLAYER_COLOR, PLAYER_LABEL, WALL_COLORS, WALL_RESULT_TEXT } from '../theme';
@@ -288,10 +288,10 @@ export function QuoridorBoard(props: QuoridorBoardProps) {
 
             {/* Highlighted action (last move, or the previewed candidate). */}
             {overlay?.marks?.map((m, i) => (
-              <ActionHighlight key={i} {...m} flipped={flipped} variant="mark" />
+              <ActionHighlight key={i} {...m} player={rules.slot(m.player)} flipped={flipped} variant="mark" />
             ))}
             {overlay
-              ? overlay.highlight && <ActionHighlight {...overlay.highlight} flipped={flipped} variant="strong" />
+              ? overlay.highlight && <ActionHighlight {...overlay.highlight} player={rules.slot(overlay.highlight.player)} flipped={flipped} variant="strong" />
               : props.lastAction && <LastMoveMark key={lastMoveKey(props.lastAction)} last={props.lastAction} slot={rules.slot(props.lastAction.player)} flipped={flipped} />}
 
             {/* Wall placement preview. */}
@@ -354,7 +354,8 @@ function ActionHighlight({
   variant,
 }: {
   action: Action;
-  player: PlayerId;
+  /** Colour slot (P1…P4), not the seat. */
+  player: number;
   label?: string;
   flipped: boolean;
   variant: 'last' | 'strong' | 'mark';

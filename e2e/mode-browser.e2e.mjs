@@ -12,10 +12,13 @@
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createDiagnostics } from './diagnostics.mjs';
 
 const BASE = process.env.BASE || 'http://localhost:5199/QuoridorAI/';
 const OUT = path.resolve(process.env.OUT || './shots');
 fs.mkdirSync(OUT, { recursive: true });
+// Failure screenshots, browser console / request errors and a JSON report (see diagnostics.mjs).
+const diag = createDiagnostics({ name: 'mode-browser', out: OUT, base: BASE });
 
 function findChrome() {
   if (process.env.CHROME) return process.env.CHROME;
@@ -30,13 +33,17 @@ function findChrome() {
 const browser = await chromium.launch({ executablePath: findChrome(), headless: true });
 let failed = 0;
 const check = (name, ok, extra = '') => {
-  if (!ok) failed++;
+  if (!ok) {
+    failed++;
+    diag.failure(name, extra);
+  }
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${extra ? '  — ' + extra : ''}`);
 };
 
 async function open(viewport = { width: 1440, height: 1000 }) {
   const ctx = await browser.newContext({ viewport });
   const page = await ctx.newPage();
+  diag.attach(page);
   page.on('pageerror', (e) => check('no page error', false, String(e)));
   await page.goto(BASE);
   await page.waitForSelector('header');
@@ -269,6 +276,7 @@ for (const [w, h] of [[390, 844], [820, 1180], [1100, 800], [1440, 900]]) {
   await ctx.close();
 }
 
+await diag.finish({ browserVersion: browser.version(), checks: { failed } });
 await browser.close();
 console.log(failed ? `\n${failed} FAILED` : '\nall passed');
 process.exit(failed ? 1 : 0);

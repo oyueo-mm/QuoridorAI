@@ -4,6 +4,7 @@ import type { GameLine } from './match/gameRecord';
 import { SoundControl } from './components/SoundControl';
 import { modeOfConfig } from './session/config';
 import type { GameConfig, GameMode } from './session/config';
+import type { MultiRules } from './engine';
 import type { MultiConfig } from './session/MultiController';
 import { useGameSession } from './session/useGameSession';
 import { useMultiSession } from './session/useMultiSession';
@@ -68,8 +69,8 @@ export default function App() {
         setMultiActive(false);
         session.controller.restart(config);
       },
-      startMulti: (config: MultiConfig) => {
-        if (multi.controller.restart(config)) setMultiActive(true);
+      startMulti: (config: MultiConfig, options?: { obstacleMap?: MultiRules }) => {
+        if (multi.controller.restart(config, options)) setMultiActive(true);
       },
     }),
     [mode, session.config, session.controller, multi.config, multi.controller],

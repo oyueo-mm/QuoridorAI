@@ -1,15 +1,16 @@
-import type { Action, Coord, GameState, PlayerId } from '../../engine';
+import type { Action, Coord } from '../../engine';
+import type { BoardPosition } from './boardRules';
 
 /** A path to draw on the board, taken from an AI's DecisionTrace. */
 export interface BoardPath {
-  player: PlayerId;
+  player: number;
   path: Coord[];
 }
 
 /** An action drawn on the board, optionally numbered (e.g. a step of a principal variation). */
 export interface BoardMark {
   action: Action;
-  player: PlayerId;
+  player: number;
   label?: string;
 }
 
@@ -18,7 +19,7 @@ export interface BoardMark {
  * candidate action an AI evaluated, together with the paths that AI computed for it.
  */
 export interface BoardOverlay {
-  state: GameState;
+  state: BoardPosition;
   title: string;
   /** Main action (solid outline). */
   highlight?: BoardMark;

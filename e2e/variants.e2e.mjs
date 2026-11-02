@@ -15,10 +15,13 @@
 import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 import path from 'node:path';
+import { createDiagnostics } from './diagnostics.mjs';
 
 const BASE = process.env.BASE || 'http://localhost:5199/QuoridorAI/';
 const OUT = path.resolve(process.env.OUT || './shots');
 fs.mkdirSync(OUT, { recursive: true });
+// Failure screenshots, browser console / request errors and a JSON report (see diagnostics.mjs).
+const diag = createDiagnostics({ name: 'variants', out: OUT, base: BASE });
 const ORIGIN = new URL(BASE).origin;
 const SRC = process.env.SRC_PREFIX ?? '/QuoridorAI/src'; // only valid against the dev server
 
@@ -38,6 +41,7 @@ const browser = await chromium.launch({ executablePath: exe, headless: true });
 const results = [];
 const check = (name, ok, extra = '') => {
   results.push({ name, ok });
+  if (!ok) diag.failure(name, extra);
   console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${extra ? '  — ' + extra : ''}`);
 };
 
@@ -54,6 +58,7 @@ async function newPage(viewport = { width: 1440, height: 1000 }) {
     });
   }
   const page = await ctx.newPage();
+  diag.attach(page);
   page.on('pageerror', (e) => check('no page error', false, String(e)));
   page.on('console', (m) => { if (m.type() === 'error') console.log('console.error:', m.text()); });
   return { ctx, page };
@@ -543,7 +548,8 @@ for (const [label, viewport] of [['mobile', { width: 390, height: 844 }], ['tabl
   }
 }
 
-await browser.close();
 const failed = results.filter((r) => !r.ok);
+await diag.finish({ browserVersion: browser.version(), checks: { total: results.length, failed: failed.length } });
+await browser.close();
 console.log(`\n${results.length - failed.length}/${results.length} checks passed`);
 process.exit(failed.length ? 1 : 0);
