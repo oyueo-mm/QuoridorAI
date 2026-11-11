@@ -1,0 +1,44 @@
+{
+ "id": "S1-masked-vs-reference-300",
+ "question": "Bitboard BFS only: AB (masked BFS) vs AB (reference BFS), same filter, 300 ms per move",
+ "configHash": "8be90d5f5f407d0e",
+ "games": 200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "masked BFS",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "reference BFS",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "reference"
+    }
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 100,
+  "seed": 92001,
+  "maxGameMs": 120000
+ }
+}

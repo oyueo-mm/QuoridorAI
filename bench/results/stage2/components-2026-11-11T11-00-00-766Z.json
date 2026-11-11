@@ -1,0 +1,500 @@
+{
+ "provenance": {
+  "timestamp": "2026-11-11T11:00:00.766Z",
+  "git": {
+   "commit": "e3c507f50cd3bc412b101ea7e32bf84368e0044e",
+   "branch": "stage1-benchmark",
+   "dirty": true,
+   "srcDirty": false,
+   "srcDirtyFiles": []
+  },
+  "node": "v24.19.0",
+  "v8": "13.6.233.17-node.51",
+  "platform": "win32",
+  "osRelease": "10.0.26200",
+  "arch": "x64",
+  "cpu": "Intel(R) Core(TM) Ultra 7 256V",
+  "logicalCores": 8,
+  "totalMemGB": 15.5
+ },
+ "micros": {
+  "distanceToRow (cached layout)": {
+   "opening (0–3 walls)": [
+    1.614349462365589,
+    0.9032661047561732
+   ],
+   "early (4–8)": [
+    2.64956790123457,
+    1.390878127896198
+   ],
+   "middle (9–14)": [
+    3.4962209302325706,
+    3.3916309255079127
+   ],
+   "late (15–20)": [
+    5.320803886925783,
+    3.4590898617511656
+   ]
+  },
+  "hasPathToRow (cached layout)": {
+   "opening (0–3 walls)": [
+    3.0418522267206463,
+    0.3747970272295767
+   ],
+   "early (4–8)": [
+    2.8245629699248247,
+    0.4017715586502418
+   ],
+   "middle (9–14)": [
+    4.613512269938671,
+    0.5743596860643206
+   ],
+   "late (15–20)": [
+    5.341023131672567,
+    0.82978152654867
+   ]
+  },
+  "distanceMap": {
+   "opening (0–3 walls)": [
+    10.973503649635003,
+    4.753061708860762
+   ],
+   "early (4–8)": [
+    11.23263059701495,
+    6.4737607758620825
+   ],
+   "middle (9–14)": [
+    12.106330645161183,
+    7.963267195767186
+   ],
+   "late (15–20)": [
+    13.304934782608656,
+    10.189611486486523
+   ]
+  },
+  "shortestPath": {
+   "opening (0–3 walls)": [
+    3.8921049222796915,
+    2.105280112044818
+   ],
+   "early (4–8)": [
+    6.397872340425663,
+    2.722731397459166
+   ],
+   "middle (9–14)": [
+    7.06273474178394,
+    3.3842004504504484
+   ],
+   "late (15–20)": [
+    7.3056796116505,
+    3.378941441441454
+   ]
+  },
+  "distanceToRow (new layout, mask build included)": {
+   "opening (0–3 walls)": [
+    148.31545454545366,
+    156.4994999999999
+   ],
+   "early (4–8)": [
+    181.10027777778063,
+    181.09583333333225
+   ],
+   "middle (9–14)": [
+    221.48642857142866,
+    284.34499999999997
+   ],
+   "late (15–20)": [
+    131.09708333333097,
+    110.47928571428785
+   ]
+  }
+ },
+ "searchRows": [
+  {
+   "name": "initial",
+   "ref": {
+    "nodes": 7585,
+    "leaves": 6110,
+    "terminals": 0,
+    "orderingEvals": 1410,
+    "cutoffs": 945,
+    "prunedMoves": 17912,
+    "ttProbes": 1470,
+    "ttHits": 620,
+    "ttCutoffs": 185,
+    "elapsedMs": 240.08930000000146
+   },
+   "masked": {
+    "nodes": 7585,
+    "leaves": 6110,
+    "terminals": 0,
+    "orderingEvals": 1410,
+    "cutoffs": 945,
+    "prunedMoves": 17912,
+    "ttProbes": 1470,
+    "ttHits": 620,
+    "ttCutoffs": 185,
+    "elapsedMs": 161.4965000000011
+   },
+   "defense": {
+    "nodes": 90620,
+    "leaves": 81033,
+    "terminals": 0,
+    "orderingEvals": 9569,
+    "cutoffs": 5179,
+    "prunedMoves": 220884,
+    "ttProbes": 9582,
+    "ttHits": 4585,
+    "ttCutoffs": 2579,
+    "elapsedMs": 1076.4146999999994
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "opening (0–3 walls) #1",
+   "ref": {
+    "nodes": 4934,
+    "leaves": 3989,
+    "terminals": 0,
+    "orderingEvals": 766,
+    "cutoffs": 612,
+    "prunedMoves": 7142,
+    "ttProbes": 940,
+    "ttHits": 360,
+    "ttCutoffs": 37,
+    "elapsedMs": 102.99009999999907
+   },
+   "masked": {
+    "nodes": 4934,
+    "leaves": 3989,
+    "terminals": 0,
+    "orderingEvals": 766,
+    "cutoffs": 612,
+    "prunedMoves": 7142,
+    "ttProbes": 940,
+    "ttHits": 360,
+    "ttCutoffs": 37,
+    "elapsedMs": 67.00540000000001
+   },
+   "defense": {
+    "nodes": 41906,
+    "leaves": 35546,
+    "terminals": 796,
+    "orderingEvals": 5540,
+    "cutoffs": 3408,
+    "prunedMoves": 107384,
+    "ttProbes": 5559,
+    "ttHits": 2254,
+    "ttCutoffs": 980,
+    "elapsedMs": 427.3173999999999
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "opening (0–3 walls) #2",
+   "ref": {
+    "nodes": 515,
+    "leaves": 297,
+    "terminals": 37,
+    "orderingEvals": 136,
+    "cutoffs": 124,
+    "prunedMoves": 718,
+    "ttProbes": 176,
+    "ttHits": 55,
+    "ttCutoffs": 6,
+    "elapsedMs": 7.272899999999936
+   },
+   "masked": {
+    "nodes": 515,
+    "leaves": 297,
+    "terminals": 37,
+    "orderingEvals": 136,
+    "cutoffs": 124,
+    "prunedMoves": 718,
+    "ttProbes": 176,
+    "ttHits": 55,
+    "ttCutoffs": 6,
+    "elapsedMs": 5.8937000000005355
+   },
+   "defense": {
+    "nodes": 1534,
+    "leaves": 918,
+    "terminals": 167,
+    "orderingEvals": 696,
+    "cutoffs": 357,
+    "prunedMoves": 4791,
+    "ttProbes": 444,
+    "ttHits": 138,
+    "ttCutoffs": 19,
+    "elapsedMs": 21.123900000000503
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "early (4–8) #1",
+   "ref": {
+    "nodes": 1773,
+    "leaves": 1255,
+    "terminals": 38,
+    "orderingEvals": 306,
+    "cutoffs": 269,
+    "prunedMoves": 1965,
+    "ttProbes": 475,
+    "ttHits": 228,
+    "ttCutoffs": 72,
+    "elapsedMs": 40.522399999999834
+   },
+   "masked": {
+    "nodes": 1773,
+    "leaves": 1255,
+    "terminals": 38,
+    "orderingEvals": 306,
+    "cutoffs": 269,
+    "prunedMoves": 1965,
+    "ttProbes": 475,
+    "ttHits": 228,
+    "ttCutoffs": 72,
+    "elapsedMs": 25.04439999999886
+   },
+   "defense": {
+    "nodes": 9293,
+    "leaves": 7381,
+    "terminals": 116,
+    "orderingEvals": 1652,
+    "cutoffs": 1022,
+    "prunedMoves": 20747,
+    "ttProbes": 1791,
+    "ttHits": 817,
+    "ttCutoffs": 365,
+    "elapsedMs": 153.08220000000074
+   },
+   "scoreSame": false
+  },
+  {
+   "name": "early (4–8) #2",
+   "ref": {
+    "nodes": 2437,
+    "leaves": 1821,
+    "terminals": 43,
+    "orderingEvals": 350,
+    "cutoffs": 344,
+    "prunedMoves": 3015,
+    "ttProbes": 568,
+    "ttHits": 219,
+    "ttCutoffs": 59,
+    "elapsedMs": 149.58419999999933
+   },
+   "masked": {
+    "nodes": 2437,
+    "leaves": 1821,
+    "terminals": 43,
+    "orderingEvals": 350,
+    "cutoffs": 344,
+    "prunedMoves": 3015,
+    "ttProbes": 568,
+    "ttHits": 219,
+    "ttCutoffs": 59,
+    "elapsedMs": 78.61449999999968
+   },
+   "defense": {
+    "nodes": 14457,
+    "leaves": 11410,
+    "terminals": 71,
+    "orderingEvals": 2016,
+    "cutoffs": 2185,
+    "prunedMoves": 59707,
+    "ttProbes": 2971,
+    "ttHits": 785,
+    "ttCutoffs": 284,
+    "elapsedMs": 259.1319999999978
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "middle (9–14) #1",
+   "ref": {
+    "nodes": 3126,
+    "leaves": 2038,
+    "terminals": 0,
+    "orderingEvals": 1003,
+    "cutoffs": 702,
+    "prunedMoves": 12978,
+    "ttProbes": 1083,
+    "ttHits": 396,
+    "ttCutoffs": 137,
+    "elapsedMs": 107.90130000000136
+   },
+   "masked": {
+    "nodes": 3126,
+    "leaves": 2038,
+    "terminals": 0,
+    "orderingEvals": 1003,
+    "cutoffs": 702,
+    "prunedMoves": 12978,
+    "ttProbes": 1083,
+    "ttHits": 396,
+    "ttCutoffs": 137,
+    "elapsedMs": 82.76729999999952
+   },
+   "defense": {
+    "nodes": 23194,
+    "leaves": 15988,
+    "terminals": 0,
+    "orderingEvals": 7120,
+    "cutoffs": 3968,
+    "prunedMoves": 122357,
+    "ttProbes": 7201,
+    "ttHits": 3318,
+    "ttCutoffs": 1784,
+    "elapsedMs": 499.0169999999998
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "middle (9–14) #2",
+   "ref": {
+    "nodes": 2531,
+    "leaves": 1568,
+    "terminals": 2,
+    "orderingEvals": 534,
+    "cutoffs": 648,
+    "prunedMoves": 7386,
+    "ttProbes": 956,
+    "ttHits": 315,
+    "ttCutoffs": 197,
+    "elapsedMs": 72.51910000000134
+   },
+   "masked": {
+    "nodes": 2531,
+    "leaves": 1568,
+    "terminals": 2,
+    "orderingEvals": 534,
+    "cutoffs": 648,
+    "prunedMoves": 7386,
+    "ttProbes": 956,
+    "ttHits": 315,
+    "ttCutoffs": 197,
+    "elapsedMs": 64.12250000000131
+   },
+   "defense": {
+    "nodes": 109093,
+    "leaves": 99171,
+    "terminals": 233,
+    "orderingEvals": 8490,
+    "cutoffs": 5279,
+    "prunedMoves": 220313,
+    "ttProbes": 9684,
+    "ttHits": 4580,
+    "ttCutoffs": 2357,
+    "elapsedMs": 1575.3708000000006
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "late (15–20) #1",
+   "ref": {
+    "nodes": 2292,
+    "leaves": 1473,
+    "terminals": 0,
+    "orderingEvals": 954,
+    "cutoffs": 409,
+    "prunedMoves": 3449,
+    "ttProbes": 814,
+    "ttHits": 430,
+    "ttCutoffs": 206,
+    "elapsedMs": 125.99459999999817
+   },
+   "masked": {
+    "nodes": 2292,
+    "leaves": 1473,
+    "terminals": 0,
+    "orderingEvals": 954,
+    "cutoffs": 409,
+    "prunedMoves": 3449,
+    "ttProbes": 814,
+    "ttHits": 430,
+    "ttCutoffs": 206,
+    "elapsedMs": 58.87640000000101
+   },
+   "defense": {
+    "nodes": 8293,
+    "leaves": 5848,
+    "terminals": 0,
+    "orderingEvals": 3484,
+    "cutoffs": 1475,
+    "prunedMoves": 16570,
+    "ttProbes": 2440,
+    "ttHits": 1019,
+    "ttCutoffs": 248,
+    "elapsedMs": 198.32670000000144
+   },
+   "scoreSame": true
+  },
+  {
+   "name": "late (15–20) #2",
+   "ref": {
+    "nodes": 880,
+    "leaves": 467,
+    "terminals": 0,
+    "orderingEvals": 480,
+    "cutoffs": 216,
+    "prunedMoves": 3679,
+    "ttProbes": 408,
+    "ttHits": 207,
+    "ttCutoffs": 100,
+    "elapsedMs": 34.60889999999927
+   },
+   "masked": {
+    "nodes": 880,
+    "leaves": 467,
+    "terminals": 0,
+    "orderingEvals": 480,
+    "cutoffs": 216,
+    "prunedMoves": 3679,
+    "ttProbes": 408,
+    "ttHits": 207,
+    "ttCutoffs": 100,
+    "elapsedMs": 43.30210000000079
+   },
+   "defense": {
+    "nodes": 14297,
+    "leaves": 9534,
+    "terminals": 0,
+    "orderingEvals": 4186,
+    "cutoffs": 2198,
+    "prunedMoves": 53802,
+    "ttProbes": 4758,
+    "ttHits": 2688,
+    "ttCutoffs": 1490,
+    "elapsedMs": 334.3323999999993
+   },
+   "scoreSame": true
+  }
+ ],
+ "timed": {
+  "opponent-path, reference BFS (stage 1)@300": {
+   "depth": 6.111111111111111,
+   "kNodesPerSec": 37.838142848386354
+  },
+  "opponent-path, reference BFS (stage 1)@2000": {
+   "depth": 8.555555555555555,
+   "kNodesPerSec": 37.61593526039049
+  },
+  "opponent-path, masked BFS@300": {
+   "depth": 6.555555555555555,
+   "kNodesPerSec": 51.826636737340436
+  },
+  "opponent-path, masked BFS@2000": {
+   "depth": 8.88888888888889,
+   "kNodesPerSec": 49.47724988065831
+  },
+  "path-defense, masked BFS@300": {
+   "depth": 4.777777777777778,
+   "kNodesPerSec": 63.15634147478286
+  },
+  "path-defense, masked BFS@2000": {
+   "depth": 6.444444444444445,
+   "kNodesPerSec": 63.028374553769126
+  }
+ }
+}
