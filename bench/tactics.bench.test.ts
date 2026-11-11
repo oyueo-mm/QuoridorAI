@@ -254,6 +254,8 @@ interface Answer {
   wall?: boolean;
   /** The correct move was not among Alpha-Beta's search candidates (filter miss). */
   filteredOut?: boolean;
+  /** win-in-3 answered with a move that still forces a win within 5 plies (slower, not wrong). */
+  slowerWin?: boolean;
 }
 
 const win5Memo = new Map<string, boolean>();
@@ -281,6 +283,7 @@ async function run(positions: TacticPosition[], agentIds: string[]) {
         } else {
           a.correct = p.solution!.includes(move);
         }
+        if (!a.correct && p.category === 'win-in-3') a.slowerWin = keepsForcedWin(s, action, 5);
         if (p.category === 'endgame-win' || p.category === 'endgame-loss') {
           const solver = solverFor(s);
           const v = solver.valueOf(s);
@@ -346,6 +349,11 @@ function report(positions: TacticPosition[], answers: Answer[], agentIds: string
     return id.startsWith('ab') ? `${as.filter((a) => a.filteredOut).length}/${as.length}` : '—';
   });
   L.push(`| AB misses where every correct move was outside the wall filter | ${filt.join(' | ')} |`);
+  const slower = agentIds.map((id) => {
+    const as = answers.filter((a) => a.agent === id && a.category === 'win-in-3' && a.correct === false);
+    return `${as.filter((a) => a.slowerWin).length}/${as.length}`;
+  });
+  L.push(`| win-in-3 misses that still force a win within 5 plies | ${slower.join(' | ')} |`);
   L.push('');
   L.push('## Heuristic categories — mean gap to the best 1-ply race margin (0 = best; lower is better) · self-harm walls · wall share');
   L.push('');

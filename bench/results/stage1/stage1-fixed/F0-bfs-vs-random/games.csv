@@ -1,0 +1,41 @@
+index,pair,a_seat,opening,outcome,plies,duration_ms,a_moves,a_ms_mean,a_ms_p95,a_nodes_mean,a_depth_mean,a_walls,a_missed_win,a_allowed_win,b_moves,b_ms_mean,b_ms_p95,b_nodes_mean,b_depth_mean,b_walls,b_missed_win,b_allowed_win,repeated_positions,over_budget_moves,session,moves
+0,0,first,f1 d9 g1 c9 g2 c8,a-win,13,25,7,3.2,4.7,121,1.00,0,0,0,6,0.2,0.3,,,6,0,1,0,0,c4a8fefaeec69056,g3 h1h g4 b6h g5 c2v g6 g4h g7 d5h g8 h5h g9
+1,0,second,f1 d9 g1 c9 g2 c8,a-win,14,30,7,4.0,5.5,119,1.00,0,0,0,7,0.2,0.3,,,7,0,0,0,0,c4a8fefaeec69056,c1v c7 h1v c6 d4v c5 a1h c4 f5h c3 a7h c2 c5h c1
+2,1,first,e4v d9 e2 b5v d2 c9,a-win,17,29,9,2.9,4.6,108,1.00,1,0,0,8,0.2,0.2,,,8,0,1,0,0,8020f8eb5499322f,d3 c6h d4 h6v d5 c7v d6 e1h a6h g7v e6 h1v e7 g4v e8 b1v e9
+3,1,second,e4v d9 e2 b5v d2 c9,a-win,18,92,9,9.9,33.6,102,1.00,1,0,0,9,0.2,0.3,,,9,0,1,0,0,8020f8eb5499322f,f5v c8 b8h d8h a4h c7 g3h c6 d5h c5 e1h c4 g7h c3 h2h c2 h4h c1
+4,2,first,a1v e8 f1 f8 e1 f7,a-win,15,22,8,2.5,3.2,115,1.00,0,0,0,7,0.2,0.3,,,7,0,1,0,0,5532c6564c10d1ba,e2 g2v e3 g5v e4 b2h e5 h7v e6 e1h e7 h6h e8 a4v e9
+5,2,second,a1v e8 f1 f8 e1 f7,a-win,12,28,6,4.3,6.1,116,1.00,0,0,0,6,0.2,0.3,,,6,0,1,0,0,5532c6564c10d1ba,h5h f6 d6v f5 g6v f4 c4v f3 e8h f2 f4v f1
+6,3,first,f1 e8 f2 f8 g2 e8,a-win,13,24,7,3.1,3.6,120,1.00,0,0,0,6,0.2,0.2,,,6,0,1,0,0,efa6a908d6cd3079,g3 d2h g4 g6v g5 a2v g6 e8v g7 g4h g8 h2v g9
+7,3,second,f1 e8 f2 f8 g2 e8,a-win,22,60,11,5.1,11.0,106,1.00,2,0,0,11,0.3,0.6,,,10,0,0,0,0,efa6a908d6cd3079,e5h g5h h6v d8 d8h h8h h1h d7 h7h d6 b4v d5 a6v d4 b1v d3 c1h e3 d6h e2 g1 e1
+8,4,first,f1 e8 f2 f8 c8v g8,a-win,13,20,7,2.6,3.9,119,1.00,0,0,0,6,0.2,0.3,,,6,0,1,0,0,dbeea0abbf390f68,f3 a2h f4 d1v f5 c3h f6 f2v f7 a3h f8 e2h f9
+9,4,second,f1 e8 f2 f8 c8v g8,a-win,26,49,13,3.4,4.4,100,1.00,5,0,0,13,0.2,0.4,,,9,0,0,0,0,dbeea0abbf390f68,h5v g7 c6v g6 d8h f8h g1h f6 b6h h8h b3h a8h g3v f5 h7v f4 b4v f3 f4 b5h f5 a2v g5 f2 h5 f1
+10,5,first,f1 e8 e1 e9 e2 e8,a-win,13,26,7,3.3,4.4,119,1.00,1,0,0,6,0.2,0.3,,,6,0,1,0,0,6f6aca0e60343f2b,e3 c4h e4 h5h e5 d5v e4h b7h e6 g3h e7 c8h e9
+11,5,second,f1 e8 e1 e9 e2 e8,a-win,14,32,7,4.2,5.9,115,1.00,1,0,0,7,0.2,0.4,,,7,0,1,0,0,6f6aca0e60343f2b,a4v e7 g4v e6 c5h e5 a1h e5h c2v e4 a8v e3 d3v e1
+12,6,first,e2 f9 a8v f8 e3 g4h,a-win,11,25,6,3.9,4.9,116,1.00,1,0,0,5,0.2,0.2,,,4,0,1,0,0,c4a8fefaeec69056,e4 a7h e5 a3v e4h d3v e6 g6v e7 e8 e9
+13,6,second,e2 f9 a8v f8 e3 g4h,a-win,14,42,7,5.6,7.7,110,1.00,0,0,0,7,0.4,1.2,,,7,0,1,0,0,c4a8fefaeec69056,e6v f7 d2h f6 d6h f5 d1h f4 a2v f3 h3v f2 h1v f1
+14,7,first,f1 c7v g1 d9 h1 d8,a-win,23,71,12,5.6,15.0,99,1.00,4,0,0,11,0.3,0.7,,,9,0,0,0,0,8020f8eb5499322f,d7h c1h f7h f5h h2 a6h h3 a5h h4 e7v b8h g5v d8v d5h h5 h5v h6 g2h h7 d9 h8 d8 h9
+15,7,second,f1 c7v g1 d9 h1 d8,a-win,30,34,15,2.1,4.2,88,1.00,8,0,0,15,0.1,0.3,,,10,0,0,0,0,8020f8eb5499322f,f5h h5h f1h d7 b3h d6 g3h d5 a4h d5h b5v c4v d2v c6h c8h e8h h3v g8h b7h e1v i1 e3h i2 d4 i1 d3 i2 d2 i1 d1
+16,8,first,d1 d9 c1 c9 c2 b9,a-win,13,71,7,9.9,32.4,121,1.00,0,0,0,6,0.2,0.2,,,5,0,1,0,0,5532c6564c10d1ba,c3 g4v c4 a6v c5 d7v c6 d1h c7 f3v c8 c9 b9
+17,8,second,d1 d9 c1 c9 c2 b9,a-win,16,34,8,3.6,6.0,116,1.00,0,0,0,8,0.2,0.3,,,8,0,1,0,0,5532c6564c10d1ba,e3v b8 g2h b7 h7h b6 b6v b5 g1v b4 h6h b3 a1v b2 b2v b1
+18,9,first,e2 b2h d8v h6h f2 f9,a-win,17,55,9,3.6,6.1,105,1.00,2,0,0,8,2.8,13.3,,,8,0,1,0,0,efa6a908d6cd3079,f3 d6h f4 b4v f5 f1h f6 b6v f7 c5v f6h d3h c7v f2h f8 g8v e9
+19,9,second,e2 b2h d8v h6h f2 f9,a-win,16,64,8,6.5,11.4,106,1.00,0,0,0,8,1.4,6.0,,,8,0,1,0,0,efa6a908d6cd3079,b6h f8 b7h f7 f4v f6 c8h f5 a6v f4 a8v f3 f1h e2 e8v e1
+20,10,first,d1 b6v d2 f9 d2v g9,a-win,15,25,8,2.9,3.9,110,1.00,1,0,0,7,0.2,0.2,,,7,0,1,0,0,dbeea0abbf390f68,d3 h8v d4 f3h d5 c3h d6 c7v d7 e1h h3h a4v d8 e5h d9
+21,10,second,d1 b6v d2 f9 d2v g9,a-win,18,40,9,4.1,9.1,102,1.00,1,0,0,9,0.2,0.3,,,9,0,1,0,0,dbeea0abbf390f68,g3v c3h c7v g8 a8h g7 h2v g6 b5h g5 h8h g4 d4v g3 d8v g2 b2v g1
+22,11,first,g5h e8 b3h e7 e2 e6,a-win,11,23,6,3.4,4.3,116,1.00,0,0,0,5,0.2,0.3,,,5,0,1,0,0,6f6aca0e60343f2b,e3 a1v e4 h4h e5 c4v e7 b1h e8 g3h e9
+23,11,second,g5h e8 b3h e7 e2 e6,a-win,8,23,4,5.3,6.8,119,1.00,0,0,0,4,0.4,1.0,,,3,0,1,0,0,6f6aca0e60343f2b,f8v e5 e3 e4 h2h e2 b4h e1
+24,12,first,b5v a3h d1 f9 c1 g9,a-win,35,60,18,2.7,6.8,77,1.00,9,0,0,17,0.4,1.1,,,9,0,0,0,0,c4a8fefaeec69056,c2 g6h c3 b8h c4 c2v c5 h4h e6h b4h c6 c4v c7 d4h f4h g3h b2h e8h a1h f9 d8v g9 d6v g8 b7v g9 d7h g8 g7v g7 c8 g8 d8 g9 d9
+25,12,second,b5v a3h d1 f9 c1 g9,a-win,34,37,17,2.0,2.7,80,1.00,7,0,0,17,0.1,0.2,,,9,0,0,0,0,c4a8fefaeec69056,a4h c6h c1v b2h h3v e6h c7v g8 f5h h8 b1 a1h g2h g6h h1v h8h d1h f8h e2h i8 a1 i7 b1 i6 a1 i5 b1 i4 a1 i3 b1 i2 a1 i1
+26,13,first,d1 f9 h3h g9 e1 h9,a-win,33,35,17,2.0,4.8,74,1.00,9,0,0,16,0.1,0.2,,,10,0,0,0,0,8020f8eb5499322f,f3h g8v g7h c2v e2 b8h e3 c6v e4 g2v d3h e5v b3h e2h a2h g1h b1h e7v a4v c4v f8h i9 e5 h9 e6 h8 h7v h9 e7 i9 e8 i8 e9
+27,13,second,d1 f9 h3h g9 e1 h9,a-win,24,39,12,3.0,4.4,106,1.00,1,0,0,12,0.2,0.3,,,9,0,0,0,0,8020f8eb5499322f,c5v g9 e5h g8 d7v g7 f6h h7 d6h h6 f2v g6 b2v g5 a7h g4 g4h g3 d1 c7h c1 g2 c2 g1
+28,14,first,d1 e8 d4h d8 c4v h3v,a-win,37,44,19,2.2,5.0,76,1.00,8,0,0,18,0.1,0.3,,,9,0,0,0,0,5532c6564c10d1ba,d2 e6h d3 a5v c3 b8h c4 f5h c5 d8v c6 f3v c7 e8v c8 c7v d7h b7h a6h d9 b5h c9 d5v b9 f7v c9 h5h d9 g8h d8 f4h d9 b8 c9 a8 d9 a9
+29,14,second,d1 e8 d4h d8 c4v h3v,a-win,18,29,9,3.0,4.1,104,1.00,1,0,0,9,0.2,0.4,,,8,0,0,0,0,5532c6564c10d1ba,e6h c8 a1v c7 h4h c6 h8h c5 h5v b5h d6v c4 h1v c3 g2v c2 d2 c1
+30,15,first,f1 e8 e1 d8 f1 d9,a-win,17,35,9,3.5,5.6,115,1.00,1,0,0,8,0.3,0.8,,,8,0,1,0,0,efa6a908d6cd3079,f2 d1h f3 b7h f4 e3h c8h f1v f5 b3h f6 a1v f7 a7v f8 f6h f9
+31,15,second,f1 e8 e1 d8 f1 d9,a-win,32,44,16,2.6,5.6,98,1.00,4,0,0,16,0.2,0.4,,,10,0,0,0,0,efa6a908d6cd3079,e5v d8 g1v d7 f3h d6 d4v d5 h7v d4 b1h d3 d2h f2h a2h c2v d5h b5h h6h a8h g1 e3 f1 f3 g1 g3 f1 h3 e1 h2 d1 h1
+32,16,first,f1 e8 c6h e7 e1 e8,a-win,23,39,12,2.8,4.2,107,1.00,2,0,0,11,0.3,1.1,,,10,0,0,0,0,dbeea0abbf390f68,e2 g4v e3 e4h e4 e8h f4 a5v g4 h5h g5 g6v g6 a3h g7 e6h f5h h1v c3h a2h g8 e7 g9
+33,16,second,f1 e8 c6h e7 e1 e8,a-win,16,28,8,3.3,5.4,111,1.00,1,0,0,8,0.2,0.2,,,7,0,1,0,0,dbeea0abbf390f68,f5v e7 a7v e6 e4v e6h d1 e5 h4v e4 b6v e3 a8h e2 e5h e1
+34,17,first,d1 d5h c1 d9 d1 c9,a-win,19,65,10,6.2,12.8,114,1.00,0,0,0,9,0.3,0.9,,,8,0,1,0,0,6f6aca0e60343f2b,d2 f4v d3 c8 d4 b5h d5 g6v e5 b2h f5 b3h f6 d2v f7 b1h f8 h8v f9
+35,17,second,d1 d5h c1 d9 d1 c9,a-win,26,42,13,2.8,4.3,99,1.00,5,0,0,13,0.3,1.3,,,10,0,0,0,0,6f6aca0e60343f2b,b4v c8 e2h c7 f7h c6 h8h c5 f8v b5h h1v c4 c1v d1h g4h d7h g5v c3 a7h g2h e1 f1h d1 c2 e1 c1
+36,18,first,e2 e8 h4h f8 e3 c4v,a-win,13,15,7,2.0,3.5,113,1.00,1,0,0,6,0.1,0.2,,,6,0,1,0,0,c4a8fefaeec69056,e4 c3h e5 e5v e6 f3v e7 g3h e4h d7v e8 b8h e9
+37,18,second,e2 e8 h4h f8 e3 c4v,a-win,28,35,14,2.3,3.4,95,1.00,5,0,0,14,0.1,0.2,,,9,0,0,0,0,c4a8fefaeec69056,f3 f7 d4h f6 g1h f5 e3h g3h f6v d2v e2v g4v g6v e1h b5v f4 c5h e4 h8h d4 g3 d3 h3 h2h i3 d2 i4 d1
+38,19,first,f8v e8 e2 h1h e1 d8,a-win,21,29,11,2.4,3.4,108,1.00,2,0,0,10,0.2,0.2,,,9,0,0,0,0,8020f8eb5499322f,e2 e1v e3 h4h e4 d4h f4 g2v f5 a6h f6 b7h f7 f1h d7h g8v e6h c3v f8 e8 f9
+39,19,second,f8v e8 e2 h1h e1 d8,a-win,16,21,8,2.4,4.1,109,1.00,1,0,0,8,0.2,0.2,,,8,0,1,0,0,8020f8eb5499322f,e6v d7 e8h d6 g4h d5 c3v d4 d8v d3 e1h d1v a7v d2 f2v d1

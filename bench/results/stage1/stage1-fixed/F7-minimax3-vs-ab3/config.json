@@ -1,0 +1,34 @@
+{
+ "id": "F7-minimax3-vs-ab3",
+ "question": "Sanity: plain Minimax depth 3 vs Alpha-Beta depth 3 (same minimax value, tie-breaks may differ)",
+ "configHash": "f8c12b0ca984d37d",
+ "games": 40,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "minimax",
+    "depth": 3,
+    "simulations": 0
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 3,
+    "simulations": 0
+   }
+  ],
+  "budget": {
+   "mode": "fixed",
+   "timeMs": 0
+  },
+  "pairs": 20,
+  "seed": 81007,
+  "maxGameMs": null
+ }
+}
