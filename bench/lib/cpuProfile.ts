@@ -72,7 +72,8 @@ export function componentOf(frame: CallFrame): string {
   const fn = frame.functionName;
   const url = frame.url.replace(/\\/g, '/');
   if (fn === '(garbage collector)') return 'gc';
-  if (fn === '(program)' || fn === '(idle)' || fn === '(root)') return 'idle/program';
+  // The profiler's own start/stop (Profiler.stop serialises the profile) is not search work.
+  if (fn === '(program)' || fn === '(idle)' || fn === '(root)' || frame.url.startsWith('node:inspector')) return 'idle/program';
   if (url.includes('/engine/pathfinding')) return 'bfs-distance';
   if (url.includes('/engine/board')) return 'board-primitives (canStep/isBlocked/hasWall)';
   if (url.includes('/engine/walls')) return 'wall-geometry (conflicts/withWall/path-cut)';

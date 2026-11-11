@@ -152,8 +152,18 @@ it('stage-1 profile', async () => {
   // ---------------------------------------------------------------- 1. micro
   const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
   type Op = [string, (s: GameState) => unknown, number?];
-  const firstMove = (s: GameState): Action => ({ type: 'move', to: legalPawnMoves(s)[0] });
-  const firstWall = (s: GameState): Action | null => legalWallPlacements(s)[0] ?? null;
+  // Actions are chosen before timing so the transition cost is measured alone.
+  const moveOf = new Map<GameState, Action>();
+  const wallOf = new Map<GameState, Action | null>();
+  for (const xs of buckets.values()) {
+    for (const s of xs) {
+      moveOf.set(s, { type: 'move', to: legalPawnMoves(s)[0] });
+      const walls = legalWallPlacements(s);
+      wallOf.set(s, walls[Math.floor(walls.length / 2)] ?? null);
+    }
+  }
+  const firstMove = (s: GameState): Action => moveOf.get(s)!;
+  const firstWall = (s: GameState): Action | null => wallOf.get(s)!;
   const ops: Op[] = [
     ['legalPawnMoves', (s) => legalPawnMoves(s)],
     ['wallConflicts (per slot, 128 slots)', (s) => { for (const w of ALL_SLOTS) sink += wallConflicts(s, w.orientation, w.row, w.col) ? 1 : 0; }, 128],

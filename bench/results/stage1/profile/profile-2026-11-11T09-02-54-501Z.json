@@ -1,0 +1,6137 @@
+{
+ "provenance": {
+  "timestamp": "2026-11-11T09:02:54.501Z",
+  "git": {
+   "commit": "b48330c8840528d22099ba4fcb8e60814c7c04da",
+   "branch": "stage1-benchmark",
+   "dirty": true,
+   "srcDirty": false,
+   "srcDirtyFiles": []
+  },
+  "node": "v24.19.0",
+  "v8": "13.6.233.17-node.51",
+  "platform": "win32",
+  "osRelease": "10.0.26200",
+  "arch": "x64",
+  "cpu": "Intel(R) Core(TM) Ultra 7 256V",
+  "logicalCores": 8,
+  "totalMemGB": 15.5
+ },
+ "micro": {
+  "legalPawnMoves": {
+   "initial": 0.18243126142095709,
+   "opening (0–3 walls on board)": 0.15242963113504687,
+   "early (4–8)": 0.256397624337719,
+   "middle (9–14)": 0.25189420654911715,
+   "late (15–20)": 0.26253850192509787
+  },
+  "wallConflicts (per slot, 128 slots)": {
+   "initial": 0.06130416748398039,
+   "opening (0–3 walls on board)": 0.06111793636658024,
+   "early (4–8)": 0.06026893028846121,
+   "middle (9–14)": 0.06021153846153774,
+   "late (15–20)": 0.05935842803030361
+  },
+  "checkWallPlacement (per slot: conflicts + 2 BFS)": {
+   "initial": 11.883730468749931,
+   "opening (0–3 walls on board)": 5.524355468750031,
+   "early (4–8)": 5.587727864583354,
+   "middle (9–14)": 5.934580078124974,
+   "late (15–20)": 2.09970052083334
+  },
+  "legalWallPlacements (path-cut shortcut)": {
+   "initial": 259.66336206896545,
+   "opening (0–3 walls on board)": 128.31645833333218,
+   "early (4–8)": 137.6202272727286,
+   "middle (9–14)": 182.48305555555615,
+   "late (15–20)": 67.73195652173814
+  },
+  "legalWallPlacementsBruteForce": {
+   "initial": 1496.5195121951137,
+   "opening (0–3 walls on board)": 704.341666666672,
+   "early (4–8)": 709.981666666666,
+   "middle (9–14)": 765.4312499999833,
+   "late (15–20)": 258.50833333333867
+  },
+  "legalActions": {
+   "initial": 264.47312775329885,
+   "opening (0–3 walls on board)": 125.1665384615395,
+   "early (4–8)": 137.4500000000022,
+   "middle (9–14)": 175.61805555555515,
+   "late (15–20)": 66.04902173912903
+  },
+  "pseudoCandidates (opponent-path filter)": {
+   "initial": 20.41980265396353,
+   "opening (0–3 walls on board)": 12.348155737704921,
+   "early (4–8)": 14.050208333333524,
+   "middle (9–14)": 17.017584269662844,
+   "late (15–20)": 8.203060109289517
+  },
+  "distanceToRow (one player)": {
+   "initial": 5.487297668038409,
+   "opening (0–3 walls on board)": 2.5244495798319764,
+   "early (4–8)": 3.7773241206029144,
+   "middle (9–14)": 5.32749999999996,
+   "late (15–20)": 5.042818791946273
+  },
+  "shortestPath (one player)": {
+   "initial": 7.22217140105922,
+   "opening (0–3 walls on board)": 4.184428969359369,
+   "early (4–8)": 5.321046099290909,
+   "middle (9–14)": 6.843931818181607,
+   "late (15–20)": 6.738979820627947
+  },
+  "distanceMap (one goal row)": {
+   "initial": 11.23039490922718,
+   "opening (0–3 walls on board)": 11.306090225564258,
+   "early (4–8)": 12.051120000000083,
+   "middle (9–14)": 11.648604651163058,
+   "late (15–20)": 12.119354838709144
+  },
+  "applyActionUnchecked (pawn move)": {
+   "initial": 0.12870620235189134,
+   "opening (0–3 walls on board)": 0.08779086439983659,
+   "early (4–8)": 0.08894218796323868,
+   "middle (9–14)": 0.08640372098381284,
+   "late (15–20)": 0.08276787684837478
+  },
+  "applyAction (pawn move, legality checked)": {
+   "initial": 0.3401796142375953,
+   "opening (0–3 walls on board)": 0.36310820624546114,
+   "early (4–8)": 0.34666917032585215,
+   "middle (9–14)": 0.3496631701631643,
+   "late (15–20)": 0.34294581618656733
+  },
+  "hashState": {
+   "initial": 0.6679178911746461,
+   "opening (0–3 walls on board)": 0.6666381608174408,
+   "early (4–8)": 0.7143523809523858,
+   "middle (9–14)": 0.7714280205655647,
+   "late (15–20)": 0.8245096153846284
+  },
+  "evaluator.evaluate (2 BFS)": {
+   "initial": 10.673763785129939,
+   "opening (0–3 walls on board)": 5.476989051094876,
+   "early (4–8)": 6.5620851528385025,
+   "middle (9–14)": 9.582722929936626,
+   "late (15–20)": 10.397344827586117
+  },
+  "childEvaluator setup (2 distance maps)": {
+   "initial": 22.600489273617235,
+   "opening (0–3 walls on board)": 22.467089552237802,
+   "early (4–8)": 23.293653846153923,
+   "middle (9–14)": 23.953124999999886,
+   "late (15–20)": 23.65691406250079
+  },
+  "applyActionUnchecked (wall, copies a Uint8Array)": {
+   "initial": 0.187026317676143,
+   "opening (0–3 walls on board)": 0.15421044515267354,
+   "early (4–8)": 0.15047793380139868,
+   "middle (9–14)": 0.14897412979790106,
+   "late (15–20)": 0.14481952137865897
+  }
+ },
+ "runs": [
+  {
+   "agent": "alphabeta",
+   "phase": "initial",
+   "budgetMs": 300,
+   "elapsedMs": 408.6983,
+   "stats": {
+    "depth": 5,
+    "decided": false,
+    "nodes": 9600,
+    "leaves": 7632,
+    "orderingEvals": 1921,
+    "cutoffs": 1251,
+    "prunedMoves": 23342,
+    "ttProbes": 1961,
+    "ttHits": 810,
+    "ttCutoffs": 270,
+    "legal": 131,
+    "searched": 19
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.591900110244751
+   },
+   "heapDeltaMB": -0.2496490478515625,
+   "profile": {
+    "totalMs": 300.89500000000004,
+    "samples": 480,
+    "selfByComponent": {
+     "agent-other": 1.052,
+     "bfs-distance": 195.19900000000013,
+     "candidate-generation": 14.846000000000004,
+     "other-js": 2.306,
+     "evaluation": 37.94800000000001,
+     "wall-geometry (conflicts/withWall/path-cut)": 7.666,
+     "board-primitives (canStep/isBlocked/hasWall)": 13.099,
+     "state-transition": 3.773,
+     "alphabeta-control (negamax/expand/ordering/TT)": 21.347,
+     "legal-move-generation": 0.58,
+     "gc": 0.623,
+     "hashing": 0.575,
+     "native:now": 1.245,
+     "native:dispatch": 0.636
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 152.193,
+     "negamax": 297.44399999999996,
+     "isCandidateLegal": 109.45499999999998,
+     "materialize": 93.94499999999998,
+     "hasPathToRow": 82.30599999999997,
+     "pseudoCandidates": 52.60099999999999,
+     "expand": 103.04799999999997,
+     "childEvaluator": 26.089,
+     "shortestPath": 41.14499999999999,
+     "applyActionUnchecked": 3.773,
+     "wallConflicts": 0.606,
+     "legalPawnMoves": 0.58,
+     "hashState": 0.575
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 146.86599999999999
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 35.775000000000006
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 24.357999999999997
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 13.589999999999995
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 11.987
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 11.813999999999998
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 9.249
+     },
+     {
+      "fn": "isCandidateLegal @search/candidates.ts:57",
+      "ms": 5.596999999999999
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 4.718999999999999
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 4.064
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 4.0360000000000005
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 3.773
+     },
+     {
+      "fn": "wallsCuttingPath @engine/walls.ts:62",
+      "ms": 2.8619999999999997
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 2.507
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 2.306
+     }
+    ],
+    "phases": {
+     "outside search": 2.828,
+     "ab: leaf evaluation": 90.334,
+     "ab: materialize (child state + wall legality)": 90.428,
+     "ab: expand (candidates + ordering evals)": 103.04799999999997,
+     "negamax (self: loop, TT map, bookkeeping)": 11.813999999999998,
+     "gc": 0.623,
+     "ab: hashing": 0.575,
+     "ab: time/abort check": 1.245
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "initial",
+   "budgetMs": 300,
+   "elapsedMs": 357.06159999999727,
+   "stats": {
+    "simulations": 399,
+    "treeNodes": 400,
+    "maxTreeDepth": 9,
+    "stopReason": "time",
+    "rollouts": 399,
+    "avgRolloutPlies": 4,
+    "legal": 131,
+    "searched": 19,
+    "topShare": 0.7769423558897243
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.7432000637054443
+   },
+   "heapDeltaMB": -4.8440093994140625,
+   "profile": {
+    "totalMs": 303.983,
+    "samples": 457,
+    "selfByComponent": {
+     "agent-other": 6.457000000000001,
+     "candidate-generation": 4.5329999999999995,
+     "mcts-expansion (priors/ordering)": 7.6129999999999995,
+     "mcts-evaluation (rollout/cutoff)": 29.656,
+     "bfs-distance": 211.32199999999997,
+     "evaluation": 6.01,
+     "board-primitives (canStep/isBlocked/hasWall)": 11.253999999999996,
+     "mcts-loop": 8.02,
+     "mcts-selection": 2.6809999999999996,
+     "mcts-backpropagation": 1.157,
+     "other-js": 2.4899999999999998,
+     "wall-geometry (conflicts/withWall/path-cut)": 9.082999999999998,
+     "mcts-expansion": 1.144,
+     "gc": 0.62,
+     "state-transition": 0.716,
+     "native:now": 0.613,
+     "native:dispatch": 0.614
+    },
+    "inclusiveByFunction": {
+     "isCandidateLegal": 19.124000000000002,
+     "searchCandidates": 27.417,
+     "priorOrder": 37.620999999999995,
+     "heuristicAction": 212.37499999999997,
+     "distanceToRow": 164.73499999999999,
+     "hasPathToRow": 93.14799999999997,
+     "evaluate": 3.431,
+     "truncatedValue": 1.689,
+     "shortestPath": 32.97799999999999,
+     "pseudoCandidates": 5.542,
+     "distanceMap": 12.796,
+     "backpropagate": 1.157,
+     "withWall": 4.586,
+     "wallConflicts": 1.319,
+     "childEvaluator": 2.404,
+     "selectChild": 1.149,
+     "applyActionUnchecked": 0.716
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 160.55499999999998
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 28.868999999999993
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 21.812000000000005
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 10.811
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 10.477
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 5.744000000000001
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 5.222
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 4.794999999999999
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 4.586
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 3.8209999999999997
+     },
+     {
+      "fn": "takeSnapshot @mcts/core.ts:119",
+      "ms": 3.2079999999999993
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 3.066
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 2.991
+     },
+     {
+      "fn": "searchCandidates @search/candidates.ts:67",
+      "ms": 2.751
+     },
+     {
+      "fn": "(anonymous) @mcts/quoridor.ts:42",
+      "ms": 2.632
+     }
+    ],
+    "phases": {
+     "outside search": 8.268,
+     "mcts: expansion (actions, priors, child state)": 66.18200000000002,
+     "mcts: evaluation (rollout / cutoff eval)": 216.44199999999998,
+     "mcts: trace snapshots": 4.377999999999999,
+     "mcts: selection": 3.2569999999999997,
+     "runMcts (self: loop, TT map, bookkeeping)": 3.066,
+     "mcts: backpropagation (+solver)": 1.157,
+     "gc": 0.62,
+     "mcts: other (now)": 0.613
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "initial",
+   "budgetMs": 300,
+   "elapsedMs": 355.0679999999993,
+   "stats": {
+    "simulations": 61,
+    "treeNodes": 62,
+    "maxTreeDepth": 2,
+    "stopReason": "time",
+    "rollouts": 61,
+    "avgRolloutPlies": 76.70491803278688,
+    "legal": 131,
+    "searched": 19,
+    "topShare": 0.11475409836065574
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.3842999935150146
+   },
+   "heapDeltaMB": -0.8049087524414062,
+   "profile": {
+    "totalMs": 302.7450000000001,
+    "samples": 484,
+    "selfByComponent": {
+     "mcts-evaluation (rollout/cutoff)": 43.58900000000001,
+     "bfs-distance": 224.57000000000016,
+     "board-primitives (canStep/isBlocked/hasWall)": 16.706999999999997,
+     "mcts-loop": 1.2570000000000001,
+     "wall-geometry (conflicts/withWall/path-cut)": 8.803999999999997,
+     "mcts-selection": 0.729,
+     "agent-other": 0.52,
+     "other-js": 2.8680000000000003,
+     "legal-move-generation": 1.161,
+     "gc": 1.2650000000000001,
+     "mcts-expansion (priors/ordering)": 0.613,
+     "native:dispatch": 0.662
+    },
+    "inclusiveByFunction": {
+     "heuristicAction": 290.21000000000026,
+     "distanceToRow": 145.03799999999993,
+     "hasPathToRow": 79.75700000000003,
+     "shortestPath": 37.97700000000001,
+     "distanceMap": 43.274999999999984,
+     "withWall": 1.7479999999999998,
+     "selectChild": 0.729,
+     "isCandidateLegal": 1.9209999999999998,
+     "searchCandidates": 1.9209999999999998,
+     "wallConflicts": 0.566,
+     "pureOrder": 0.613,
+     "legalWallPlacements": 0.757,
+     "legalActions": 0.757
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 140.70499999999993
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 38.502999999999986
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 33.462
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 33.35
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 10.854
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 7.090999999999999
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.667999999999999
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 2.8680000000000003
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 2.537
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 2.426
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 2.377
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 2.3419999999999996
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 2.3229999999999995
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:226",
+      "ms": 1.826
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 1.7479999999999998
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 292.6830000000003,
+     "runMcts (self: loop, TT map, bookkeeping)": 1.2570000000000001,
+     "outside search": 4.277,
+     "mcts: selection": 0.729,
+     "mcts: expansion (actions, priors, child state)": 2.534,
+     "gc": 1.2650000000000001
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 300,
+   "elapsedMs": 352.27260000000024,
+   "stats": {
+    "depth": 5,
+    "decided": false,
+    "nodes": 11392,
+    "leaves": 7064,
+    "orderingEvals": 3886,
+    "cutoffs": 3211,
+    "prunedMoves": 35521,
+    "ttProbes": 4320,
+    "ttHits": 1302,
+    "ttCutoffs": 515,
+    "legal": 125,
+    "searched": 16
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.101599931716919
+   },
+   "heapDeltaMB": 14.2706298828125,
+   "profile": {
+    "totalMs": 301.52700000000027,
+    "samples": 486,
+    "selfByComponent": {
+     "bfs-distance": 125.80199999999995,
+     "candidate-generation": 13.339,
+     "alphabeta-control (negamax/expand/ordering/TT)": 39.168000000000006,
+     "board-primitives (canStep/isBlocked/hasWall)": 23.477999999999998,
+     "evaluation": 77.14099999999996,
+     "wall-geometry (conflicts/withWall/path-cut)": 5.941,
+     "state-transition": 0.612,
+     "other-js": 7.226999999999999,
+     "hashing": 4.608,
+     "gc": 1.855,
+     "legal-move-generation": 1.761,
+     "native:dispatch": 0.595
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 76.74,
+     "negamax": 296.1180000000003,
+     "isCandidateLegal": 58.24900000000003,
+     "materialize": 62.09100000000002,
+     "pseudoCandidates": 67.05199999999999,
+     "expand": 124.69199999999996,
+     "hasPathToRow": 57.047000000000025,
+     "shortestPath": 52.24100000000001,
+     "childEvaluator": 81.56099999999996,
+     "wallConflicts": 1.184,
+     "applyActionUnchecked": 0.612,
+     "hashState": 4.608,
+     "legalPawnMoves": 2.525
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 73.71100000000001
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 70.00599999999996
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 44.679
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 20.639
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 17.157
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 12.826
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 12.725000000000001
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 7.412
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 7.226999999999999
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 4.714
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 4.608
+     },
+     {
+      "fn": "materialize @search/minimax.ts:139",
+      "ms": 2.6340000000000003
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 2.37
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 1.855
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 1.819
+     }
+    ],
+    "phases": {
+     "ab: other (distanceToRow)": 13.588,
+     "ab: materialize (child state + wall legality)": 50.56400000000001,
+     "ab: expand (candidates + ordering evals)": 124.69199999999996,
+     "negamax (self: loop, TT map, bookkeeping)": 21.250999999999998,
+     "ab: leaf evaluation": 79.56999999999995,
+     "ab: time/abort check": 1.262,
+     "outside search": 2.9419999999999993,
+     "ab: hashing": 4.608,
+     "gc": 1.855,
+     "ab: trace recording": 0.595,
+     "ab: other (fromTT)": 0.6
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 300,
+   "elapsedMs": 363.0501000000004,
+   "stats": {
+    "simulations": 1008,
+    "treeNodes": 1009,
+    "maxTreeDepth": 7,
+    "stopReason": "time",
+    "rollouts": 1008,
+    "avgRolloutPlies": 3.9672619047619047,
+    "legal": 125,
+    "searched": 16,
+    "topShare": 0.12698412698412698
+   },
+   "gc": {
+    "count": 2,
+    "ms": 2.2095999717712402
+   },
+   "heapDeltaMB": 9.233924865722656,
+   "profile": {
+    "totalMs": 301.66200000000003,
+    "samples": 479,
+    "selfByComponent": {
+     "mcts-expansion (priors/ordering)": 10.131999999999998,
+     "bfs-distance": 201.58900000000017,
+     "mcts-evaluation (rollout/cutoff)": 28.2,
+     "state-transition": 3.085,
+     "board-primitives (canStep/isBlocked/hasWall)": 23.025000000000002,
+     "wall-geometry (conflicts/withWall/path-cut)": 6.5969999999999995,
+     "mcts-selection": 5.278999999999999,
+     "candidate-generation": 3.72,
+     "evaluation": 6.522999999999999,
+     "mcts-backpropagation": 1.2309999999999999,
+     "gc": 1.221,
+     "mcts-loop": 5.01,
+     "legal-move-generation": 3.008,
+     "agent-other": 0.623,
+     "other-js": 1.773,
+     "native:dispatch": 0.646
+    },
+    "inclusiveByFunction": {
+     "priorOrder": 60.80900000000001,
+     "hasPathToRow": 65.13699999999999,
+     "heuristicAction": 168.1570000000001,
+     "distanceMap": 54.41999999999998,
+     "distanceToRow": 125.017,
+     "isCandidateLegal": 28.700000000000003,
+     "searchCandidates": 42.661999999999985,
+     "applyActionUnchecked": 3.085,
+     "shortestPath": 27.846999999999998,
+     "selectChild": 4.717999999999999,
+     "childEvaluator": 15.673999999999996,
+     "wallConflicts": 1.776,
+     "pseudoCandidates": 12.725,
+     "evaluate": 6.901000000000001,
+     "truncatedValue": 6.901000000000001,
+     "backpropagate": 1.2309999999999999,
+     "withWall": 1.244,
+     "legalPawnMoves": 1.182,
+     "legalWallPlacements": 0.631,
+     "legalActions": 0.631
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 120.63599999999998
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 48.38499999999999
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 21.25
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 20.186
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 11.958
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 10.702000000000002
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 9.546999999999999
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 4.399
+     },
+     {
+      "fn": "pathEdges @mcts/rollout.ts:33",
+      "ms": 4.218
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 3.731
+     },
+     {
+      "fn": "selectChild @mcts/core.ts:52",
+      "ms": 3.539
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 3.085
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:11",
+      "ms": 2.583
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 2.483
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 2.384
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 104.65999999999995,
+     "mcts: evaluation (rollout / cutoff eval)": 178.75200000000012,
+     "mcts: selection": 5.278999999999999,
+     "mcts: backpropagation (+solver)": 1.2309999999999999,
+     "outside search": 5.509,
+     "gc": 1.221,
+     "runMcts (self: loop, TT map, bookkeeping)": 4.399,
+     "mcts: trace snapshots": 0.611
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 300,
+   "elapsedMs": 368.6205000000009,
+   "stats": {
+    "simulations": 103,
+    "treeNodes": 104,
+    "maxTreeDepth": 3,
+    "stopReason": "time",
+    "rollouts": 103,
+    "avgRolloutPlies": 58.66990291262136,
+    "legal": 125,
+    "searched": 16,
+    "topShare": 0.1262135922330097
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.6346001625061035
+   },
+   "heapDeltaMB": 0.680328369140625,
+   "profile": {
+    "totalMs": 320.361,
+    "samples": 443,
+    "selfByComponent": {
+     "mcts-evaluation (rollout/cutoff)": 54.491,
+     "bfs-distance": 223.83999999999995,
+     "board-primitives (canStep/isBlocked/hasWall)": 21.792,
+     "wall-geometry (conflicts/withWall/path-cut)": 7.909,
+     "other-js": 1.314,
+     "state-transition": 1.19,
+     "agent-other": 7.971,
+     "gc": 0.61,
+     "native:dispatch": 1.244
+    },
+    "inclusiveByFunction": {
+     "heuristicAction": 304.99499999999995,
+     "shortestPath": 38.732,
+     "distanceToRow": 134.24599999999995,
+     "hasPathToRow": 87.2,
+     "distanceMap": 56.56499999999998,
+     "isCandidateLegal": 0.595,
+     "searchCandidates": 0.595,
+     "wallConflicts": 0.606,
+     "applyActionUnchecked": 1.19,
+     "withWall": 0.555
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 131.85199999999992
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 47.844
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 45.74899999999999
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 30.848000000000003
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 16.305
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 14.187999999999999
+     },
+     {
+      "fn": "buildTrace @ai/mctsAgent.ts:109",
+      "ms": 7.218999999999999
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 3.755
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 3.202
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 3.104
+     },
+     {
+      "fn": "pathEdges @mcts/rollout.ts:33",
+      "ms": 1.8090000000000002
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 1.7759999999999998
+     },
+     {
+      "fn": "wallCutsEdges @engine/walls.ts:55",
+      "ms": 1.77
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:226",
+      "ms": 1.734
+     },
+     {
+      "fn": "dispatch @:-1",
+      "ms": 1.244
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 2.487,
+     "outside search": 317.26399999999995,
+     "gc": 0.61
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 300,
+   "elapsedMs": 348.612000000001,
+   "stats": {
+    "depth": 8,
+    "decided": false,
+    "nodes": 16384,
+    "leaves": 10370,
+    "orderingEvals": 5215,
+    "cutoffs": 3368,
+    "prunedMoves": 28020,
+    "ttProbes": 5606,
+    "ttHits": 2171,
+    "ttCutoffs": 669,
+    "legal": 120,
+    "searched": 6
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.3007001876831055
+   },
+   "heapDeltaMB": 24.274703979492188,
+   "profile": {
+    "totalMs": 300.924,
+    "samples": 474,
+    "selfByComponent": {
+     "board-primitives (canStep/isBlocked/hasWall)": 21.081000000000003,
+     "alphabeta-control (negamax/expand/ordering/TT)": 43.036,
+     "bfs-distance": 166.52499999999998,
+     "hashing": 2.423,
+     "legal-move-generation": 1.791,
+     "evaluation": 32.51,
+     "other-js": 2.893,
+     "wall-geometry (conflicts/withWall/path-cut)": 13.928000000000003,
+     "candidate-generation": 13.015999999999998,
+     "state-transition": 1.3279999999999998,
+     "gc": 1.1749999999999998,
+     "native:dispatch": 1.218
+    },
+    "inclusiveByFunction": {
+     "distanceMap": 70.57400000000004,
+     "childEvaluator": 92.12800000000001,
+     "negamax": 296.77299999999997,
+     "expand": 116.10799999999998,
+     "shortestPath": 50.45600000000002,
+     "hashState": 2.423,
+     "legalPawnMoves": 1.791,
+     "pseudoCandidates": 61.05200000000001,
+     "distanceToRow": 58.31199999999999,
+     "wallConflicts": 4.281000000000001,
+     "hasPathToRow": 32.25299999999999,
+     "isCandidateLegal": 33.405,
+     "materialize": 37.095,
+     "applyActionUnchecked": 1.3279999999999998
+    },
+    "topSelf": [
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 58.17400000000001
+     },
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 55.39299999999998
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 47.597000000000016
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 17.552999999999997
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 16.672
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 14.677
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 12.698
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 11.863999999999997
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 7.6
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 6.424999999999999
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 5.361000000000001
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 4.531
+     },
+     {
+      "fn": "wallConflicts @engine/walls.ts:14",
+      "ms": 4.281000000000001
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 4.237
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 2.423
+     }
+    ],
+    "phases": {
+     "ab: leaf evaluation": 123.97099999999998,
+     "ab: expand (candidates + ordering evals)": 116.10799999999998,
+     "negamax (self: loop, TT map, bookkeeping)": 18.117000000000004,
+     "ab: hashing": 2.423,
+     "ab: other (fromTT)": 0.084,
+     "ab: materialize (child state + wall legality)": 30.912999999999997,
+     "ab: time/abort check": 2.4789999999999996,
+     "ab: other (distanceToRow)": 0.58,
+     "outside search": 2.412,
+     "gc": 1.1749999999999998,
+     "ab: other (toTT)": 2.051,
+     "ab: other (leafEvaluator)": 0.611
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 300,
+   "elapsedMs": 371.0037999999986,
+   "stats": {
+    "simulations": 1177,
+    "treeNodes": 1176,
+    "maxTreeDepth": 13,
+    "stopReason": "time",
+    "rollouts": 1161,
+    "avgRolloutPlies": 3.943152454780362,
+    "legal": 120,
+    "searched": 6,
+    "topShare": 0.9753610875106202
+   },
+   "gc": {
+    "count": 2,
+    "ms": 1.7705998420715332
+   },
+   "heapDeltaMB": -17.203834533691406,
+   "profile": {
+    "totalMs": 300.64800000000014,
+    "samples": 467,
+    "selfByComponent": {
+     "agent-other": 2.0780000000000003,
+     "mcts-backpropagation": 0.785,
+     "bfs-distance": 187.76600000000002,
+     "evaluation": 11.966000000000001,
+     "mcts-evaluation (rollout/cutoff)": 34.83799999999999,
+     "other-js": 2.456,
+     "wall-geometry (conflicts/withWall/path-cut)": 9.068,
+     "mcts-selection": 4.649,
+     "board-primitives (canStep/isBlocked/hasWall)": 19.802999999999997,
+     "mcts-expansion (priors/ordering)": 5.636,
+     "mcts-expansion": 1.22,
+     "gc": 1.6,
+     "candidate-generation": 3.2350000000000003,
+     "mcts-loop": 10.527999999999999,
+     "legal-move-generation": 1.498,
+     "native:now": 1.218,
+     "state-transition": 1.7320000000000002,
+     "native:dispatch": 0.572
+    },
+    "inclusiveByFunction": {
+     "backpropagate": 0.785,
+     "distanceToRow": 106.40199999999994,
+     "heuristicAction": 182.81400000000005,
+     "evaluate": 9.06,
+     "truncatedValue": 9.695,
+     "shortestPath": 35.650999999999996,
+     "priorOrder": 50.528000000000006,
+     "distanceMap": 56.321000000000005,
+     "pseudoCandidates": 9.645000000000001,
+     "hasPathToRow": 48.070999999999984,
+     "withWall": 4.217,
+     "isCandidateLegal": 21.719,
+     "selectChild": 5.9639999999999995,
+     "childEvaluator": 17.720000000000002,
+     "legalPawnMoves": 3.346,
+     "applyActionUnchecked": 1.7320000000000002,
+     "wallConflicts": 0.6
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 99.52499999999996
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 50.115
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 29.568
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 26.305999999999994
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 10.454000000000002
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 7.349
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 6.7029999999999985
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 5.7490000000000006
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.89
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 4.377
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 4.217
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 4.186
+     },
+     {
+      "fn": "selectChild @mcts/core.ts:52",
+      "ms": 3.419
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 2.616
+     },
+     {
+      "fn": "(anonymous) @mcts/core.ts:54",
+      "ms": 2.545
+     }
+    ],
+    "phases": {
+     "outside search": 3.2939999999999996,
+     "mcts: backpropagation (+solver)": 0.785,
+     "mcts: evaluation (rollout / cutoff eval)": 194.86100000000008,
+     "mcts: expansion (actions, priors, child state)": 83.71299999999998,
+     "mcts: selection": 7.194,
+     "gc": 1.6,
+     "runMcts (self: loop, TT map, bookkeeping)": 7.349,
+     "mcts: other (now)": 1.218,
+     "mcts: trace snapshots": 0.634
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 300,
+   "elapsedMs": 354.2668999999987,
+   "stats": {
+    "simulations": 177,
+    "treeNodes": 178,
+    "maxTreeDepth": 5,
+    "stopReason": "time",
+    "rollouts": 169,
+    "avgRolloutPlies": 47.485207100591715,
+    "legal": 120,
+    "searched": 6,
+    "topShare": 0.8926553672316384
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.9491000175476074
+   },
+   "heapDeltaMB": 5.5478973388671875,
+   "profile": {
+    "totalMs": 301.62500000000034,
+    "samples": 486,
+    "selfByComponent": {
+     "board-primitives (canStep/isBlocked/hasWall)": 22.759999999999998,
+     "other-js": 8.350000000000001,
+     "bfs-distance": 206.18500000000003,
+     "mcts-evaluation (rollout/cutoff)": 40.227000000000004,
+     "wall-geometry (conflicts/withWall/path-cut)": 10.718999999999998,
+     "native:now": 1.8019999999999998,
+     "agent-other": 4.162,
+     "gc": 1.7849999999999997,
+     "legal-move-generation": 3.146,
+     "mcts-selection": 0.57,
+     "candidate-generation": 0.602,
+     "state-transition": 0.614,
+     "native:dispatch": 0.703
+    },
+    "inclusiveByFunction": {
+     "shortestPath": 37.333999999999996,
+     "heuristicAction": 281.78400000000056,
+     "distanceToRow": 107.21399999999997,
+     "distanceMap": 74.78999999999998,
+     "hasPathToRow": 51.32499999999996,
+     "withWall": 4.14,
+     "pureOrder": 0.539,
+     "isCandidateLegal": 0.627,
+     "legalPawnMoves": 3.146,
+     "wallConflicts": 0.591,
+     "selectChild": 0.57,
+     "pseudoCandidates": 0.602,
+     "applyActionUnchecked": 0.614
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 104.18699999999997
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 64.345
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 31.569999999999997
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 25.464000000000002
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 14.934000000000001
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 8.350000000000001
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 5.558000000000001
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:226",
+      "ms": 5.511
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 5.478
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 4.14
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 3.694
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 3.041
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 2.9269999999999996
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 2.4699999999999998
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 2.375
+     }
+    ],
+    "phases": {
+     "outside search": 299.84000000000043,
+     "gc": 1.7849999999999997
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "early (4–8)",
+   "budgetMs": 300,
+   "elapsedMs": 358.7089999999989,
+   "stats": {
+    "depth": 6,
+    "decided": false,
+    "nodes": 14528,
+    "leaves": 10425,
+    "orderingEvals": 3302,
+    "cutoffs": 2061,
+    "prunedMoves": 16715,
+    "ttProbes": 3867,
+    "ttHits": 2114,
+    "ttCutoffs": 803,
+    "legal": 109,
+    "searched": 10
+   },
+   "gc": {
+    "count": 3,
+    "ms": 6.948499917984009
+   },
+   "heapDeltaMB": 6.989585876464844,
+   "profile": {
+    "totalMs": 301.69100000000014,
+    "samples": 467,
+    "selfByComponent": {
+     "bfs-distance": 193.6140000000001,
+     "wall-geometry (conflicts/withWall/path-cut)": 16.711000000000002,
+     "alphabeta-control (negamax/expand/ordering/TT)": 46.246999999999986,
+     "board-primitives (canStep/isBlocked/hasWall)": 17.098,
+     "candidate-generation": 10.874,
+     "legal-move-generation": 1.811,
+     "state-transition": 4.366,
+     "other-js": 1.842,
+     "evaluation": 4.307,
+     "hashing": 3.002,
+     "gc": 1.2189999999999999,
+     "native:dispatch": 0.6
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 120.24199999999996,
+     "hasPathToRow": 68.93199999999999,
+     "isCandidateLegal": 69.54799999999999,
+     "materialize": 75.21499999999995,
+     "negamax": 298.0080000000001,
+     "distanceMap": 38.70199999999999,
+     "wallConflicts": 3.472,
+     "pseudoCandidates": 58.26900000000001,
+     "expand": 103.65499999999996,
+     "shortestPath": 43.058,
+     "childEvaluator": 30.106999999999992,
+     "legalPawnMoves": 1.811,
+     "applyActionUnchecked": 4.366,
+     "hashState": 3.002
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 116.03999999999996
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 38.77299999999999
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 30.73699999999999
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 18.945000000000004
+     },
+     {
+      "fn": "(anonymous) @search/minimax.ts:127",
+      "ms": 14.905
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 10.498
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 10.407
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 10.258000000000001
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 7.434
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 6.296000000000001
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 4.366
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 4.307
+     },
+     {
+      "fn": "wallConflicts @engine/walls.ts:14",
+      "ms": 3.472
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 3.002
+     },
+     {
+      "fn": "wallCutsEdges @engine/walls.ts:55",
+      "ms": 2.532
+     }
+    ],
+    "phases": {
+     "ab: materialize (child state + wall legality)": 65.79299999999996,
+     "ab: other (distanceMap)": 12.902,
+     "ab: expand (candidates + ordering evals)": 103.65499999999996,
+     "negamax (self: loop, TT map, bookkeeping)": 18.945000000000004,
+     "ab: other (distanceToRow)": 3.655,
+     "ab: other (shortestPath)": 2.439,
+     "ab: time/abort check": 0.598,
+     "ab: leaf evaluation": 87.019,
+     "ab: hashing": 3.002,
+     "outside search": 2.464,
+     "gc": 1.2189999999999999
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "early (4–8)",
+   "budgetMs": 300,
+   "elapsedMs": 345.5570999999982,
+   "stats": {
+    "simulations": 1109,
+    "treeNodes": 1106,
+    "maxTreeDepth": 11,
+    "stopReason": "time",
+    "rollouts": 1097,
+    "avgRolloutPlies": 3.908842297174111,
+    "legal": 109,
+    "searched": 10,
+    "topShare": 0.4950405770964833
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.0674002170562744
+   },
+   "heapDeltaMB": 7.9295806884765625,
+   "profile": {
+    "totalMs": 300.8000000000001,
+    "samples": 478,
+    "selfByComponent": {
+     "bfs-distance": 190.37200000000007,
+     "mcts-selection": 6.478,
+     "board-primitives (canStep/isBlocked/hasWall)": 16.231,
+     "mcts-evaluation (rollout/cutoff)": 26.157,
+     "other-js": 2.36,
+     "evaluation": 13.625999999999998,
+     "wall-geometry (conflicts/withWall/path-cut)": 10.98,
+     "candidate-generation": 6.1,
+     "state-transition": 3.495,
+     "mcts-expansion (priors/ordering)": 9.786999999999999,
+     "mcts-loop": 6.430000000000001,
+     "agent-other": 1.4889999999999999,
+     "mcts-expansion": 0.589,
+     "legal-move-generation": 2.531,
+     "gc": 3.0000000000000004,
+     "native:dispatch": 1.1749999999999998
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 115.02699999999986,
+     "hasPathToRow": 55.35400000000001,
+     "isCandidateLegal": 36.445,
+     "searchCandidates": 49.35099999999999,
+     "distanceMap": 52.95,
+     "heuristicAction": 148.134,
+     "evaluate": 8.575,
+     "truncatedValue": 8.575,
+     "shortestPath": 28.397000000000006,
+     "selectChild": 4.547,
+     "legalPawnMoves": 3.716,
+     "priorOrder": 70.29199999999997,
+     "childEvaluator": 19.079000000000004,
+     "pseudoCandidates": 11.133000000000001,
+     "applyActionUnchecked": 3.495,
+     "withWall": 2.5,
+     "wallConflicts": 2.292
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 111.39099999999989
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 46.27300000000001
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 25.441000000000003
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 19.735
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 9.593
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 8.345
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 7.267
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 7.0779999999999985
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 5.107000000000001
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 4.154
+     },
+     {
+      "fn": "score @mcts/core.ts:26",
+      "ms": 3.614
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 3.495
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 3.0000000000000004
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 2.993
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 2.5
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 120.87599999999989,
+     "mcts: evaluation (rollout / cutoff eval)": 160.18200000000002,
+     "mcts: selection": 6.478,
+     "runMcts (self: loop, TT map, bookkeeping)": 5.107000000000001,
+     "outside search": 3.2459999999999996,
+     "mcts: other (now)": 1.3159999999999998,
+     "mcts: other (updateProof)": 0.595,
+     "gc": 3.0000000000000004
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "early (4–8)",
+   "budgetMs": 300,
+   "elapsedMs": 349.04789999999775,
+   "stats": {
+    "simulations": 161,
+    "treeNodes": 162,
+    "maxTreeDepth": 5,
+    "stopReason": "time",
+    "rollouts": 159,
+    "avgRolloutPlies": 46.36477987421384,
+    "legal": 109,
+    "searched": 10,
+    "topShare": 0.33540372670807456
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.0524001121520996
+   },
+   "heapDeltaMB": 4.448760986328125,
+   "profile": {
+    "totalMs": 302.58600000000007,
+    "samples": 491,
+    "selfByComponent": {
+     "bfs-distance": 209.2959999999999,
+     "mcts-evaluation (rollout/cutoff)": 48.80199999999999,
+     "other-js": 3.035,
+     "wall-geometry (conflicts/withWall/path-cut)": 11.844999999999997,
+     "board-primitives (canStep/isBlocked/hasWall)": 18.651999999999994,
+     "legal-move-generation": 2.6660000000000004,
+     "mcts-backpropagation": 0.615,
+     "native:now": 2.209,
+     "gc": 1.555,
+     "mcts-loop": 1.795,
+     "mcts-expansion (priors/ordering)": 0.85,
+     "agent-other": 0.608,
+     "native:dispatch": 0.658
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 113.70999999999987,
+     "hasPathToRow": 59.589000000000006,
+     "heuristicAction": 288.1660000000001,
+     "distanceMap": 70.89699999999995,
+     "shortestPath": 37.01999999999999,
+     "withWall": 4.21,
+     "legalPawnMoves": 3.232,
+     "backpropagate": 0.615,
+     "wallConflicts": 1.751,
+     "pureOrder": 0.85
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 110.70799999999988
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 61.74999999999998
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 34.249
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 31.087999999999994
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 15.028
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:226",
+      "ms": 5.531
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 5.17
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.246
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 4.21
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 4.187
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 3.035
+     },
+     {
+      "fn": "wallCutsEdges @engine/walls.ts:55",
+      "ms": 2.348
+     },
+     {
+      "fn": "now @:-1",
+      "ms": 2.209
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 1.807
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 1.771
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 294.29600000000005,
+     "mcts: backpropagation (+solver)": 0.615,
+     "mcts: other (now)": 2.807,
+     "gc": 1.555,
+     "mcts: trace snapshots": 1.197,
+     "mcts: expansion (actions, priors, child state)": 0.85,
+     "outside search": 1.266
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "early (4–8)",
+   "budgetMs": 300,
+   "elapsedMs": 354.5008000000016,
+   "stats": {
+    "depth": 6,
+    "decided": false,
+    "nodes": 12160,
+    "leaves": 8562,
+    "orderingEvals": 2428,
+    "cutoffs": 2127,
+    "prunedMoves": 18943,
+    "ttProbes": 3485,
+    "ttHits": 1410,
+    "ttCutoffs": 611,
+    "legal": 115,
+    "searched": 10
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.812000036239624
+   },
+   "heapDeltaMB": 7.37225341796875,
+   "profile": {
+    "totalMs": 301.9000000000002,
+    "samples": 480,
+    "selfByComponent": {
+     "board-primitives (canStep/isBlocked/hasWall)": 18.538000000000007,
+     "bfs-distance": 193.05999999999992,
+     "alphabeta-control (negamax/expand/ordering/TT)": 28.639,
+     "candidate-generation": 12.343999999999996,
+     "wall-geometry (conflicts/withWall/path-cut)": 8.546,
+     "evaluation": 22.634,
+     "hashing": 7.389000000000001,
+     "notation/encoding": 0.618,
+     "state-transition": 2.367,
+     "native:now": 0.54,
+     "other-js": 3.5389999999999997,
+     "legal-move-generation": 0.578,
+     "gc": 1.1680000000000001,
+     "agent-other": 1.328,
+     "native:dispatch": 0.612
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 105.52099999999994,
+     "hasPathToRow": 71.71500000000003,
+     "isCandidateLegal": 72.29300000000002,
+     "materialize": 77.33300000000001,
+     "negamax": 298.7660000000002,
+     "distanceMap": 44.021,
+     "childEvaluator": 57.46099999999999,
+     "pseudoCandidates": 59.56799999999999,
+     "expand": 95.96499999999995,
+     "shortestPath": 48.81999999999999,
+     "wallConflicts": 3.06,
+     "hashState": 7.389000000000001,
+     "applyActionUnchecked": 2.367,
+     "legalPawnMoves": 0.578
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 100.96299999999995
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 43.432
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 36.798000000000016
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 13.44
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 12.686
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 12.343999999999996
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 11.259999999999998
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 9.007999999999997
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 7.389000000000001
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 6.437
+     },
+     {
+      "fn": "(anonymous) @search/minimax.ts:127",
+      "ms": 6.183999999999999
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 5.902
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 3.982
+     },
+     {
+      "fn": "wallConflicts @engine/walls.ts:14",
+      "ms": 3.06
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 2.96
+     }
+    ],
+    "phases": {
+     "ab: materialize (child state + wall legality)": 65.77100000000006,
+     "ab: leaf evaluation": 112.11299999999996,
+     "ab: expand (candidates + ordering evals)": 95.96499999999995,
+     "negamax (self: loop, TT map, bookkeeping)": 12.686,
+     "ab: hashing": 7.389000000000001,
+     "outside search": 1.9660000000000002,
+     "ab: time/abort check": 3.066,
+     "ab: trace recording": 0.593,
+     "ab: other (get)": 0.608,
+     "ab: other (leafEvaluator)": 0.575,
+     "gc": 1.1680000000000001
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "early (4–8)",
+   "budgetMs": 300,
+   "elapsedMs": 357.18979999999647,
+   "stats": {
+    "simulations": 1022,
+    "treeNodes": 1021,
+    "maxTreeDepth": 10,
+    "stopReason": "time",
+    "rollouts": 1018,
+    "avgRolloutPlies": 3.970530451866405,
+    "legal": 115,
+    "searched": 10,
+    "topShare": 0.48043052837573386
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.5808999538421631
+   },
+   "heapDeltaMB": 6.32623291015625,
+   "profile": {
+    "totalMs": 299.05599999999987,
+    "samples": 493,
+    "selfByComponent": {
+     "evaluation": 17.048,
+     "mcts-evaluation (rollout/cutoff)": 22.778999999999996,
+     "bfs-distance": 195.87599999999992,
+     "mcts-expansion (priors/ordering)": 11.089999999999998,
+     "mcts-selection": 2.3529999999999998,
+     "board-primitives (canStep/isBlocked/hasWall)": 13.354000000000001,
+     "legal-move-generation": 3.13,
+     "wall-geometry (conflicts/withWall/path-cut)": 17.697000000000003,
+     "mcts-loop": 5.233,
+     "other-js": 2.918,
+     "candidate-generation": 4.602,
+     "mcts-backpropagation": 0.597,
+     "gc": 1.227,
+     "state-transition": 0.57,
+     "native:dispatch": 0.582
+    },
+    "inclusiveByFunction": {
+     "evaluate": 7.506,
+     "truncatedValue": 7.506,
+     "heuristicAction": 156.62999999999997,
+     "distanceToRow": 115.31899999999999,
+     "hasPathToRow": 54.482000000000006,
+     "isCandidateLegal": 33.653000000000006,
+     "searchCandidates": 45.384000000000015,
+     "priorOrder": 72.54099999999998,
+     "selectChild": 2.3529999999999998,
+     "shortestPath": 35.25500000000001,
+     "childEvaluator": 15.752999999999997,
+     "distanceMap": 51.00599999999999,
+     "legalPawnMoves": 3.7279999999999998,
+     "pseudoCandidates": 9.943,
+     "wallConflicts": 6.114,
+     "withWall": 2.8970000000000002,
+     "applyActionUnchecked": 0.57,
+     "legalWallPlacements": 0.626,
+     "legalActions": 0.626
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 112.291
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 45.491
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 32.283
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 18.619
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 7.96
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 7.748
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 6.5200000000000005
+     },
+     {
+      "fn": "wallConflicts @engine/walls.ts:14",
+      "ms": 6.114
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 5.811
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 4.029
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 3.651
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 3.5389999999999997
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 3.503
+     },
+     {
+      "fn": "actions @mcts/quoridor.ts:56",
+      "ms": 3.4369999999999994
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 3.13
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 164.697,
+     "mcts: expansion (actions, priors, child state)": 121.36199999999991,
+     "mcts: selection": 2.3529999999999998,
+     "mcts: other (now)": 1.153,
+     "runMcts (self: loop, TT map, bookkeeping)": 4.029,
+     "mcts: other (winner)": 0.569,
+     "outside search": 2.449,
+     "mcts: trace snapshots": 0.62,
+     "mcts: other (updateProof)": 0.597,
+     "gc": 1.227
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "early (4–8)",
+   "budgetMs": 300,
+   "elapsedMs": 366.4656000000032,
+   "stats": {
+    "simulations": 181,
+    "treeNodes": 182,
+    "maxTreeDepth": 3,
+    "stopReason": "time",
+    "rollouts": 178,
+    "avgRolloutPlies": 40.60112359550562,
+    "legal": 115,
+    "searched": 10,
+    "topShare": 0.20994475138121546
+   },
+   "gc": {
+    "count": 2,
+    "ms": 1.3782999515533447
+   },
+   "heapDeltaMB": 3.6908493041992188,
+   "profile": {
+    "totalMs": 301.7359999999999,
+    "samples": 488,
+    "selfByComponent": {
+     "bfs-distance": 222.09999999999977,
+     "board-primitives (canStep/isBlocked/hasWall)": 15.443,
+     "mcts-evaluation (rollout/cutoff)": 35.083000000000006,
+     "wall-geometry (conflicts/withWall/path-cut)": 12.943,
+     "other-js": 3.098,
+     "agent-other": 1.896,
+     "mcts-loop": 1.18,
+     "gc": 0.805,
+     "legal-move-generation": 2.9819999999999998,
+     "candidate-generation": 3.302,
+     "mcts-selection": 0.598,
+     "mcts-expansion (priors/ordering)": 0.564,
+     "state-transition": 0.566,
+     "native:dispatch": 1.176
+    },
+    "inclusiveByFunction": {
+     "shortestPath": 39.344000000000015,
+     "heuristicAction": 283.913,
+     "distanceToRow": 124.68099999999998,
+     "hasPathToRow": 68.36200000000002,
+     "distanceMap": 66.421,
+     "legalPawnMoves": 4.170999999999999,
+     "withWall": 3.491,
+     "isCandidateLegal": 4.8149999999999995,
+     "searchCandidates": 9.881,
+     "pseudoCandidates": 2.9610000000000003,
+     "selectChild": 0.598,
+     "wallConflicts": 1.1869999999999998,
+     "applyActionUnchecked": 0.566
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 123.47799999999998
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 57.496000000000016
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 35.216000000000015
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 25.767999999999994
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 12.438
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 5.345
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.779999999999999
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 3.491
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 3.3780000000000006
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 3.098
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 2.992
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 2.401
+     },
+     {
+      "fn": "searchCandidates @search/candidates.ts:67",
+      "ms": 2.105
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 1.896
+     },
+     {
+      "fn": "wallsCuttingPath @engine/walls.ts:62",
+      "ms": 1.8279999999999998
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 2.662,
+     "outside search": 298.2689999999998,
+     "gc": 0.805
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "middle (9–14)",
+   "budgetMs": 300,
+   "elapsedMs": 352.3709999999992,
+   "stats": {
+    "depth": 5,
+    "decided": false,
+    "nodes": 10176,
+    "leaves": 7928,
+    "orderingEvals": 2334,
+    "cutoffs": 1331,
+    "prunedMoves": 24293,
+    "ttProbes": 2241,
+    "ttHits": 929,
+    "ttCutoffs": 286,
+    "legal": 76,
+    "searched": 14
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.6403999328613281
+   },
+   "heapDeltaMB": 5.4747772216796875,
+   "profile": {
+    "totalMs": 304.66300000000024,
+    "samples": 487,
+    "selfByComponent": {
+     "bfs-distance": 212.55700000000007,
+     "alphabeta-control (negamax/expand/ordering/TT)": 25.173,
+     "candidate-generation": 8.455,
+     "wall-geometry (conflicts/withWall/path-cut)": 14.167000000000002,
+     "evaluation": 14.079,
+     "board-primitives (canStep/isBlocked/hasWall)": 16.319000000000003,
+     "hashing": 4.212999999999999,
+     "other-js": 6.487,
+     "state-transition": 0.664,
+     "gc": 1.9380000000000002,
+     "native:dispatch": 0.611
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 144.38499999999993,
+     "hasPathToRow": 94.65399999999994,
+     "isCandidateLegal": 94.65399999999994,
+     "shortestPath": 44.213999999999984,
+     "pseudoCandidates": 54.746999999999986,
+     "distanceMap": 28.75400000000001,
+     "childEvaluator": 34.755,
+     "hashState": 4.212999999999999,
+     "wallConflicts": 3.359,
+     "expand": 84.29799999999992,
+     "negamax": 95.9189999999999,
+     "materialize": 25.386000000000006,
+     "applyActionUnchecked": 0.664
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 140.22299999999993
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 37.07900000000001
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 23.870000000000008
+     },
+     {
+      "fn": "searchRoot @search/minimax.ts:329",
+      "ms": 11.253999999999998
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 10.803999999999998
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 9.637
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 8.455
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 8.078
+     },
+     {
+      "fn": "(anonymous) @search/minimax.ts:127",
+      "ms": 5.97
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 5.901
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 4.815
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 4.212999999999999
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 4.184
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 4.122
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 3.6310000000000002
+     }
+    ],
+    "phases": {
+     "ab: other (isCandidateLegal)": 54.98399999999999,
+     "ab: other (pseudoCandidates)": 12.493999999999998,
+     "negamax (self: loop, TT map, bookkeeping)": 15.437999999999999,
+     "ab: leaf evaluation": 90.80699999999992,
+     "ab: other (distanceToRow)": 10.270000000000001,
+     "ab: other (wallCutsEdges)": 1.184,
+     "ab: hashing": 4.212999999999999,
+     "ab: other (get)": 1.036,
+     "ab: expand (candidates + ordering evals)": 84.29799999999992,
+     "ab: other (toTT)": 0.699,
+     "ab: time/abort check": 0.586,
+     "outside search": 1.33,
+     "ab: materialize (child state + wall legality)": 25.386000000000006,
+     "gc": 1.9380000000000002
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "middle (9–14)",
+   "budgetMs": 300,
+   "elapsedMs": 352.1328999999969,
+   "stats": {
+    "simulations": 923,
+    "treeNodes": 924,
+    "maxTreeDepth": 8,
+    "stopReason": "time",
+    "rollouts": 923,
+    "avgRolloutPlies": 4,
+    "legal": 76,
+    "searched": 14,
+    "topShare": 0.20368364030335862
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.8524000644683838
+   },
+   "heapDeltaMB": 1.0539016723632812,
+   "profile": {
+    "totalMs": 301.6649999999999,
+    "samples": 490,
+    "selfByComponent": {
+     "bfs-distance": 212.75499999999997,
+     "wall-geometry (conflicts/withWall/path-cut)": 5.3500000000000005,
+     "candidate-generation": 17.018,
+     "mcts-evaluation (rollout/cutoff)": 12.094,
+     "mcts-expansion (priors/ordering)": 14.570999999999998,
+     "board-primitives (canStep/isBlocked/hasWall)": 17.243,
+     "agent-other": 10.992,
+     "other-js": 3.7039999999999997,
+     "evaluation": 3.5829999999999997,
+     "state-transition": 1.328,
+     "native:now": 0.573,
+     "mcts-selection": 0.599,
+     "gc": 1.213,
+     "native:dispatch": 0.642
+    },
+    "inclusiveByFunction": {
+     "distanceMap": 43.32999999999998,
+     "heuristicAction": 120.63999999999992,
+     "distanceToRow": 157.09899999999996,
+     "priorOrder": 93.76199999999999,
+     "searchCandidates": 59.66600000000002,
+     "shortestPath": 24.028,
+     "childEvaluator": 14.863,
+     "hasPathToRow": 21.521,
+     "wallConflicts": 1.1749999999999998,
+     "pseudoCandidates": 3.688999999999999,
+     "withWall": 1.256,
+     "legalPawnMoves": 1.236,
+     "applyActionUnchecked": 1.328,
+     "selectChild": 0.599
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 152.40899999999993
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 35.051999999999985
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 21.570999999999998
+     },
+     {
+      "fn": "searchCandidates @search/candidates.ts:67",
+      "ms": 15.853999999999997
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 14.570999999999998
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 12.000000000000002
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 10.391
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 9.816999999999998
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 3.7039999999999997
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 3.4589999999999996
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 3.154
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 1.738
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 1.328
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 1.256
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 1.213
+     }
+    ],
+    "phases": {
+     "outside search": 300.45199999999994,
+     "gc": 1.213
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "middle (9–14)",
+   "budgetMs": 300,
+   "elapsedMs": 352.0202999999965,
+   "stats": {
+    "simulations": 470,
+    "treeNodes": 471,
+    "maxTreeDepth": 3,
+    "stopReason": "time",
+    "rollouts": 470,
+    "avgRolloutPlies": 26.197872340425533,
+    "legal": 76,
+    "searched": 14,
+    "topShare": 0.09148936170212765
+   },
+   "gc": {
+    "count": 1,
+    "ms": 1.9523000717163086
+   },
+   "heapDeltaMB": 0.6627655029296875,
+   "profile": {
+    "totalMs": 298.78799999999995,
+    "samples": 487,
+    "selfByComponent": {
+     "bfs-distance": 207.65199999999993,
+     "mcts-evaluation (rollout/cutoff)": 42.92899999999999,
+     "legal-move-generation": 3.0540000000000003,
+     "board-primitives (canStep/isBlocked/hasWall)": 29.13,
+     "state-transition": 1.758,
+     "mcts-loop": 1.206,
+     "other-js": 5.308,
+     "agent-other": 2.379,
+     "wall-geometry (conflicts/withWall/path-cut)": 2.359,
+     "candidate-generation": 0.7490000000000001,
+     "gc": 1.657,
+     "native:dispatch": 0.607
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 96.77899999999997,
+     "heuristicAction": 263.49699999999996,
+     "distanceMap": 120.94399999999995,
+     "shortestPath": 12.564000000000002,
+     "hasPathToRow": 32.99699999999999,
+     "isCandidateLegal": 16.54,
+     "searchCandidates": 20.243,
+     "legalPawnMoves": 3.0540000000000003,
+     "pureOrder": 3.2319999999999998,
+     "applyActionUnchecked": 1.758,
+     "pseudoCandidates": 3.7030000000000003,
+     "withWall": 0.569
+    },
+    "topSelf": [
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 101.78899999999996
+     },
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 92.59499999999996
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 36.300000000000004
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 21.448
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 10.864000000000003
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 5.308
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 3.0140000000000002
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 2.9210000000000003
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 2.459
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 2.404
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 1.8070000000000002
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 1.7970000000000002
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 1.758
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 1.657
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 1.188
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 1.004,
+     "outside search": 296.1269999999999,
+     "gc": 1.657
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "middle (9–14)",
+   "budgetMs": 300,
+   "elapsedMs": 352.4180999999953,
+   "stats": {
+    "depth": 5,
+    "decided": false,
+    "nodes": 12480,
+    "leaves": 10564,
+    "orderingEvals": 1418,
+    "cutoffs": 1103,
+    "prunedMoves": 13058,
+    "ttProbes": 1907,
+    "ttHits": 817,
+    "ttCutoffs": 269,
+    "legal": 96,
+    "searched": 6
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.7982001304626465
+   },
+   "heapDeltaMB": 1.3202133178710938,
+   "profile": {
+    "totalMs": 301.4030000000002,
+    "samples": 495,
+    "selfByComponent": {
+     "alphabeta-control (negamax/expand/ordering/TT)": 43.33100000000002,
+     "bfs-distance": 213.46300000000014,
+     "candidate-generation": 11.98,
+     "hashing": 1.1099999999999999,
+     "board-primitives (canStep/isBlocked/hasWall)": 16.898999999999997,
+     "legal-move-generation": 0.599,
+     "wall-geometry (conflicts/withWall/path-cut)": 5.740999999999999,
+     "other-js": 1.766,
+     "gc": 2.968,
+     "evaluation": 2.936,
+     "native:dispatch": 0.61
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 156.02600000000012,
+     "hasPathToRow": 95.28699999999999,
+     "isCandidateLegal": 97.67799999999998,
+     "negamax": 293.4580000000002,
+     "distanceMap": 33.584999999999994,
+     "pseudoCandidates": 38.537,
+     "shortestPath": 26.89,
+     "hashState": 1.1099999999999999,
+     "legalPawnMoves": 0.599,
+     "childEvaluator": 3.0159999999999996,
+     "wallConflicts": 1.088
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 150.7640000000001
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 41.49700000000001
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 29.550999999999995
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 21.797000000000004
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 11.350999999999999
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 10.158000000000001
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 8.482
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 3.242
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 2.968
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 2.936
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 2.7629999999999995
+     },
+     {
+      "fn": "isCandidateLegal @search/candidates.ts:57",
+      "ms": 1.822
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 1.767
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 1.766
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 1.7320000000000002
+     }
+    ],
+    "phases": {
+     "ab: trace recording": 0.975,
+     "ab: other (isCandidateLegal)": 97.67799999999998,
+     "negamax (self: loop, TT map, bookkeeping)": 41.75900000000001,
+     "ab: other (distanceMap)": 30.569000000000003,
+     "ab: other (pseudoCandidates)": 38.537,
+     "ab: hashing": 1.1099999999999999,
+     "ab: other (distanceToRow)": 72.09,
+     "outside search": 3.1199999999999997,
+     "ab: other (toTT)": 0.597,
+     "ab: leaf evaluation": 10.711999999999998,
+     "ab: other (get)": 0.632,
+     "gc": 2.968,
+     "ab: other (wallCutsEdges)": 0.656
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "middle (9–14)",
+   "budgetMs": 300,
+   "elapsedMs": 352.6975999999995,
+   "stats": {
+    "simulations": 836,
+    "treeNodes": 835,
+    "maxTreeDepth": 9,
+    "stopReason": "time",
+    "rollouts": 831,
+    "avgRolloutPlies": 3.937424789410349,
+    "legal": 96,
+    "searched": 6,
+    "topShare": 0.4688995215311005
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.9839000701904297
+   },
+   "heapDeltaMB": 5.031341552734375,
+   "profile": {
+    "totalMs": 302.27199999999993,
+    "samples": 499,
+    "selfByComponent": {
+     "state-transition": 2.694,
+     "bfs-distance": 203.2290000000002,
+     "board-primitives (canStep/isBlocked/hasWall)": 21.876999999999992,
+     "candidate-generation": 11.651999999999997,
+     "mcts-expansion (priors/ordering)": 15.072000000000001,
+     "wall-geometry (conflicts/withWall/path-cut)": 10.207,
+     "other-js": 3.374,
+     "mcts-evaluation (rollout/cutoff)": 19.208000000000002,
+     "legal-move-generation": 0.6,
+     "agent-other": 6.625,
+     "evaluation": 3.535,
+     "mcts-loop": 0.588,
+     "mcts-selection": 1.525,
+     "gc": 0.891,
+     "native:dispatch": 1.1949999999999998
+    },
+    "inclusiveByFunction": {
+     "applyActionUnchecked": 2.694,
+     "priorOrder": 66.85899999999997,
+     "distanceToRow": 133.918,
+     "heuristicAction": 155.35300000000007,
+     "searchCandidates": 59.137,
+     "shortestPath": 37.909,
+     "hasPathToRow": 25.855999999999995,
+     "distanceMap": 46.75,
+     "pseudoCandidates": 8.735999999999997,
+     "legalPawnMoves": 1.8239999999999998,
+     "wallConflicts": 1.691,
+     "childEvaluator": 8.681999999999999,
+     "selectChild": 1.525,
+     "withWall": 0.582
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 127.444
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 40.31399999999999
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 31.310999999999996
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 13.876999999999999
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 13.225
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 13.084
+     },
+     {
+      "fn": "searchCandidates @search/candidates.ts:67",
+      "ms": 11.651999999999997
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 6.625
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 4.16
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.114999999999999
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 3.374
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 2.977
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 2.9179999999999997
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 2.694
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 2.5229999999999997
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 0.845,
+     "outside search": 300.53599999999994,
+     "gc": 0.891
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "middle (9–14)",
+   "budgetMs": 300,
+   "elapsedMs": 359.8604999999952,
+   "stats": {
+    "simulations": 191,
+    "treeNodes": 192,
+    "maxTreeDepth": 3,
+    "stopReason": "time",
+    "rollouts": 191,
+    "avgRolloutPlies": 43.4869109947644,
+    "legal": 96,
+    "searched": 6,
+    "topShare": 0.33507853403141363
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.7330000400543213
+   },
+   "heapDeltaMB": 2.13018798828125,
+   "profile": {
+    "totalMs": 300.5459999999999,
+    "samples": 492,
+    "selfByComponent": {
+     "board-primitives (canStep/isBlocked/hasWall)": 27.368999999999996,
+     "mcts-evaluation (rollout/cutoff)": 41.87999999999999,
+     "bfs-distance": 201.9430000000001,
+     "agent-other": 3.65,
+     "mcts-expansion (priors/ordering)": 1.295,
+     "wall-geometry (conflicts/withWall/path-cut)": 10.915999999999999,
+     "other-js": 5.502000000000001,
+     "legal-move-generation": 2.9629999999999996,
+     "state-transition": 1.835,
+     "mcts-loop": 0.608,
+     "gc": 0.843,
+     "native:now": 0.547,
+     "mcts-selection": 0.587,
+     "native:dispatch": 0.608
+    },
+    "inclusiveByFunction": {
+     "shortestPath": 37.205,
+     "heuristicAction": 282.04,
+     "distanceToRow": 108.36399999999996,
+     "hasPathToRow": 52.32800000000001,
+     "distanceMap": 75.71999999999997,
+     "pureOrder": 1.8719999999999999,
+     "isCandidateLegal": 2.396,
+     "searchCandidates": 2.9619999999999997,
+     "withWall": 3.255,
+     "legalPawnMoves": 4.972,
+     "applyActionUnchecked": 1.835,
+     "pseudoCandidates": 0.566,
+     "wallConflicts": 0.567
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 105.39399999999996
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 62.56199999999999
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 31.572
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 29.151000000000003
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 23.215
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 4.8790000000000004
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 4.836
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.206
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 3.5370000000000004
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 3.255
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 3.053
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 2.9629999999999996
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 2.925
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:226",
+      "ms": 2.532
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 1.835
+     }
+    ],
+    "phases": {
+     "outside search": 299.70299999999986,
+     "gc": 0.843
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "late (15–20)",
+   "budgetMs": 300,
+   "elapsedMs": 359.1064000000042,
+   "stats": {
+    "depth": 7,
+    "decided": false,
+    "nodes": 9920,
+    "leaves": 5060,
+    "orderingEvals": 5340,
+    "cutoffs": 2280,
+    "prunedMoves": 12835,
+    "ttProbes": 4851,
+    "ttHits": 2987,
+    "ttCutoffs": 1473,
+    "legal": 73,
+    "searched": 15
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.6686999797821045
+   },
+   "heapDeltaMB": 0.7800827026367188,
+   "profile": {
+    "totalMs": 301.291,
+    "samples": 475,
+    "selfByComponent": {
+     "alphabeta-control (negamax/expand/ordering/TT)": 41.74899999999999,
+     "bfs-distance": 195.47899999999993,
+     "board-primitives (canStep/isBlocked/hasWall)": 21.591,
+     "candidate-generation": 8.524,
+     "hashing": 7.370000000000001,
+     "wall-geometry (conflicts/withWall/path-cut)": 12.907,
+     "gc": 1.782,
+     "evaluation": 3.517,
+     "other-js": 2.426,
+     "legal-move-generation": 3.5289999999999995,
+     "agent-other": 0.597,
+     "native:now": 0.628,
+     "native:dispatch": 1.192
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 112.40999999999991,
+     "hasPathToRow": 71.97899999999996,
+     "isCandidateLegal": 73.24699999999996,
+     "distanceMap": 57.498000000000026,
+     "pseudoCandidates": 40.584,
+     "hashState": 7.370000000000001,
+     "shortestPath": 31.538000000000007,
+     "childEvaluator": 24.651,
+     "wallConflicts": 3.0279999999999996,
+     "legalPawnMoves": 3.5289999999999995,
+     "materialize": 8.58,
+     "negamax": 21.703000000000003
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 108.5929999999999
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 48.90900000000001
+     },
+     {
+      "fn": "searchRoot @search/minimax.ts:329",
+      "ms": 39.154999999999994
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 25.977999999999998
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 13.566
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 11.999
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 7.370000000000001
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 7.255999999999999
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 5.598999999999999
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 3.517
+     },
+     {
+      "fn": "wallConflicts @engine/walls.ts:14",
+      "ms": 3.0279999999999996
+     },
+     {
+      "fn": "wallCutsEdges @engine/walls.ts:55",
+      "ms": 3.027
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 2.44
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 2.426
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 1.818
+     }
+    ],
+    "phases": {
+     "negamax (self: loop, TT map, bookkeeping)": 39.31099999999999,
+     "ab: other (isCandidateLegal)": 64.66699999999997,
+     "ab: other (distanceMap)": 37.007,
+     "ab: other (toTT)": 0.607,
+     "ab: other (pseudoCandidates)": 40.584,
+     "ab: other (distanceToRow)": 52.43000000000001,
+     "ab: hashing": 7.370000000000001,
+     "ab: trace recording": 0.595,
+     "ab: other (wallCutsEdges)": 3.027,
+     "gc": 1.782,
+     "ab: leaf evaluation": 30.825000000000006,
+     "ab: other (shortestPath)": 10.405999999999999,
+     "ab: other (pathEdgeSet)": 1.8399999999999999,
+     "outside search": 3.578,
+     "ab: other (get)": 1.799,
+     "ab: time/abort check": 1.225,
+     "ab: other (isBlocked)": 0.596,
+     "ab: materialize (child state + wall legality)": 3.026,
+     "ab: other (fromTT)": 0.616
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "late (15–20)",
+   "budgetMs": 300,
+   "elapsedMs": 360.6273000000001,
+   "stats": {
+    "simulations": 856,
+    "treeNodes": 857,
+    "maxTreeDepth": 17,
+    "stopReason": "time",
+    "rollouts": 856,
+    "avgRolloutPlies": 4,
+    "legal": 73,
+    "searched": 15,
+    "topShare": 0.5584112149532711
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.6142001152038574
+   },
+   "heapDeltaMB": -0.31656646728515625,
+   "profile": {
+    "totalMs": 300.31800000000027,
+    "samples": 474,
+    "selfByComponent": {
+     "bfs-distance": 198.84400000000002,
+     "state-transition": 0.616,
+     "mcts-expansion (priors/ordering)": 13.852000000000002,
+     "mcts-evaluation (rollout/cutoff)": 23.935000000000006,
+     "candidate-generation": 11.414,
+     "board-primitives (canStep/isBlocked/hasWall)": 22.063,
+     "mcts-loop": 2.4029999999999996,
+     "other-js": 3.7729999999999997,
+     "agent-other": 5.361,
+     "wall-geometry (conflicts/withWall/path-cut)": 8.447,
+     "mcts-selection": 1.184,
+     "legal-move-generation": 3.683,
+     "evaluation": 1.2469999999999999,
+     "gc": 2.283,
+     "native:now": 0.589,
+     "native:dispatch": 0.624
+    },
+    "inclusiveByFunction": {
+     "distanceMap": 57.481,
+     "heuristicAction": 175.39599999999996,
+     "distanceToRow": 123.15699999999993,
+     "hasPathToRow": 41.292,
+     "childEvaluator": 17.443999999999996,
+     "priorOrder": 50.59499999999999,
+     "applyActionUnchecked": 0.616,
+     "searchCandidates": 49.042000000000016,
+     "pseudoCandidates": 14.149,
+     "shortestPath": 37.17600000000001,
+     "selectChild": 1.184,
+     "withWall": 1.411,
+     "legalPawnMoves": 4.286,
+     "legalWallPlacements": 1.251,
+     "legalActions": 1.251
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 118.30499999999992
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 47.43299999999999
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 31.916999999999994
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 18.096000000000004
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 15.986999999999997
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 11.969
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 6.111000000000001
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 5.361
+     },
+     {
+      "fn": "searchCandidates @search/candidates.ts:67",
+      "ms": 5.302999999999999
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.12
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 3.7729999999999997
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 3.08
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 2.4379999999999997
+     },
+     {
+      "fn": "takeSnapshot @mcts/core.ts:119",
+      "ms": 2.4029999999999996
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 2.371
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 0.881,
+     "outside search": 297.15400000000034,
+     "gc": 2.283
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "late (15–20)",
+   "budgetMs": 300,
+   "elapsedMs": 360.64740000000165,
+   "stats": {
+    "simulations": 305,
+    "treeNodes": 306,
+    "maxTreeDepth": 3,
+    "stopReason": "time",
+    "rollouts": 305,
+    "avgRolloutPlies": 34.337704918032784,
+    "legal": 73,
+    "searched": 15,
+    "topShare": 0.16065573770491803
+   },
+   "gc": {
+    "count": 3,
+    "ms": 6.146199941635132
+   },
+   "heapDeltaMB": 3.349151611328125,
+   "profile": {
+    "totalMs": 300.7980000000001,
+    "samples": 484,
+    "selfByComponent": {
+     "bfs-distance": 213.54399999999995,
+     "board-primitives (canStep/isBlocked/hasWall)": 29.595999999999997,
+     "mcts-evaluation (rollout/cutoff)": 33.33800000000001,
+     "agent-other": 2.4429999999999996,
+     "wall-geometry (conflicts/withWall/path-cut)": 10.611,
+     "other-js": 2.465,
+     "legal-move-generation": 3.0810000000000004,
+     "mcts-selection": 0.625,
+     "gc": 1.9579999999999997,
+     "mcts-loop": 1.2469999999999999,
+     "state-transition": 1.279,
+     "native:dispatch": 0.611
+    },
+    "inclusiveByFunction": {
+     "hasPathToRow": 50.34499999999998,
+     "heuristicAction": 283.2010000000002,
+     "distanceMap": 124.877,
+     "shortestPath": 29.611000000000004,
+     "distanceToRow": 76.54599999999999,
+     "isCandidateLegal": 5.083,
+     "searchCandidates": 6.905,
+     "legalPawnMoves": 3.0810000000000004,
+     "selectChild": 0.625,
+     "withWall": 2.6470000000000002,
+     "applyActionUnchecked": 1.279,
+     "pseudoCandidates": 1.822,
+     "wallConflicts": 0.594
+    },
+    "topSelf": [
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 104.22100000000005
+     },
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 75.31
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 27.787000000000003
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 23.369000000000007
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 23.263999999999996
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 9.544
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 3.0349999999999997
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 2.6470000000000002
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:11",
+      "ms": 2.537
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 2.465
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 2.4619999999999997
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 2.458
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 2.4429999999999996
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 2.439
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 1.9579999999999997
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 1.634,
+     "outside search": 297.20600000000013,
+     "gc": 1.9579999999999997
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "late (15–20)",
+   "budgetMs": 300,
+   "elapsedMs": 348.3018000000011,
+   "stats": {
+    "depth": 8,
+    "decided": false,
+    "nodes": 6144,
+    "leaves": 2422,
+    "orderingEvals": 7719,
+    "cutoffs": 1588,
+    "prunedMoves": 23910,
+    "ttProbes": 3712,
+    "ttHits": 2596,
+    "ttCutoffs": 1138,
+    "legal": 64,
+    "searched": 7
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.9441001415252686
+   },
+   "heapDeltaMB": 13.031402587890625,
+   "profile": {
+    "totalMs": 302.25300000000004,
+    "samples": 478,
+    "selfByComponent": {
+     "wall-geometry (conflicts/withWall/path-cut)": 16.723,
+     "bfs-distance": 179.22099999999975,
+     "alphabeta-control (negamax/expand/ordering/TT)": 33.790000000000006,
+     "board-primitives (canStep/isBlocked/hasWall)": 19.341,
+     "candidate-generation": 12.390000000000002,
+     "state-transition": 3.6729999999999996,
+     "notation/encoding": 0.637,
+     "hashing": 1.7739999999999998,
+     "evaluation": 24.858000000000004,
+     "gc": 1.831,
+     "other-js": 5.567,
+     "agent-other": 0.597,
+     "native:now": 0.614,
+     "legal-move-generation": 0.649,
+     "native:dispatch": 0.588
+    },
+    "inclusiveByFunction": {
+     "negamax": 298.62100000000004,
+     "distanceToRow": 103.73,
+     "hasPathToRow": 73.054,
+     "isCandidateLegal": 74.91200000000002,
+     "materialize": 81.039,
+     "shortestPath": 46.06499999999999,
+     "pseudoCandidates": 54.15999999999998,
+     "expand": 218.7899999999999,
+     "applyActionUnchecked": 3.6729999999999996,
+     "distanceMap": 36.479000000000006,
+     "childEvaluator": 52.14500000000002,
+     "hashState": 1.7739999999999998,
+     "legalPawnMoves": 0.649
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 100.09200000000001
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 37.36799999999999
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 30.073999999999998
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 15.665999999999997
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 14.586
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 12.390000000000002
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 12.231
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 11.542
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 11.069
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 6.758999999999999
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 5.567
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 5.503
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 3.6729999999999996
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 3.643
+     },
+     {
+      "fn": "edgeKey @engine/walls.ts:43",
+      "ms": 3.3449999999999998
+     }
+    ],
+    "phases": {
+     "ab: leaf evaluation": 40.25200000000001,
+     "ab: materialize (child state + wall legality)": 19.399999999999995,
+     "ab: expand (candidates + ordering evals)": 218.7899999999999,
+     "negamax (self: loop, TT map, bookkeeping)": 15.187000000000001,
+     "ab: hashing": 1.7739999999999998,
+     "ab: killer moves": 0.597,
+     "gc": 1.831,
+     "ab: time/abort check": 1.2109999999999999,
+     "ab: other (toTT)": 0.635,
+     "outside search": 1.2,
+     "ab: other (fromTT)": 0.78,
+     "ab: other (get)": 0.596
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "late (15–20)",
+   "budgetMs": 300,
+   "elapsedMs": 356.4724999999962,
+   "stats": {
+    "simulations": 1051,
+    "treeNodes": 1052,
+    "maxTreeDepth": 15,
+    "stopReason": "time",
+    "rollouts": 1051,
+    "avgRolloutPlies": 4,
+    "legal": 64,
+    "searched": 7,
+    "topShare": 0.780209324452902
+   },
+   "gc": {
+    "count": 1,
+    "ms": 0.7170000076293945
+   },
+   "heapDeltaMB": 7.6177215576171875,
+   "profile": {
+    "totalMs": 299.48800000000017,
+    "samples": 484,
+    "selfByComponent": {
+     "mcts-evaluation (rollout/cutoff)": 24.283000000000005,
+     "mcts-expansion (priors/ordering)": 9.250000000000002,
+     "bfs-distance": 201.693,
+     "state-transition": 1.236,
+     "evaluation": 7.941999999999999,
+     "wall-geometry (conflicts/withWall/path-cut)": 10.185,
+     "native:now": 1.904,
+     "mcts-loop": 3.745,
+     "board-primitives (canStep/isBlocked/hasWall)": 20.36,
+     "other-js": 1.9169999999999998,
+     "candidate-generation": 9.077,
+     "mcts-selection": 4.844,
+     "gc": 0.631,
+     "mcts-expansion": 0.608,
+     "legal-move-generation": 1.197,
+     "native:dispatch": 0.616
+    },
+    "inclusiveByFunction": {
+     "heuristicAction": 179.57199999999995,
+     "priorOrder": 39.722999999999985,
+     "distanceToRow": 91.95599999999996,
+     "distanceMap": 63.02799999999998,
+     "childEvaluator": 16.046,
+     "applyActionUnchecked": 1.236,
+     "shortestPath": 52.17700000000001,
+     "hasPathToRow": 59.899000000000015,
+     "isCandidateLegal": 31.027,
+     "searchCandidates": 47.270000000000024,
+     "evaluate": 13.948,
+     "truncatedValue": 13.948,
+     "withWall": 2.3659999999999997,
+     "pseudoCandidates": 13.252999999999998,
+     "legalPawnMoves": 3.582,
+     "selectChild": 1.83,
+     "wallConflicts": 0.618
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 90.19799999999996
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 53.372999999999976
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 45.633
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 17.088999999999995
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 16.761000000000006
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 11.311
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 4.795
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 4.705
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 4.265
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 4.247
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 3.745
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 3.009
+     },
+     {
+      "fn": "searchCandidates @search/candidates.ts:67",
+      "ms": 2.9899999999999998
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 2.4179999999999997
+     },
+     {
+      "fn": "actions @mcts/quoridor.ts:56",
+      "ms": 2.3739999999999997
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 195.32,
+     "mcts: expansion (actions, priors, child state)": 90.65699999999994,
+     "mcts: other (now)": 2.479,
+     "runMcts (self: loop, TT map, bookkeeping)": 3.745,
+     "mcts: selection": 4.844,
+     "outside search": 1.8119999999999998,
+     "gc": 0.631
+    }
+   }
+  },
+  {
+   "agent": "mcts-pure",
+   "phase": "late (15–20)",
+   "budgetMs": 300,
+   "elapsedMs": 361.6935999999987,
+   "stats": {
+    "simulations": 303,
+    "treeNodes": 304,
+    "maxTreeDepth": 3,
+    "stopReason": "time",
+    "rollouts": 303,
+    "avgRolloutPlies": 32.59405940594059,
+    "legal": 64,
+    "searched": 7,
+    "topShare": 0.15841584158415842
+   },
+   "gc": {
+    "count": 2,
+    "ms": 1.5592000484466553
+   },
+   "heapDeltaMB": 11.0115966796875,
+   "profile": {
+    "totalMs": 300.524,
+    "samples": 499,
+    "selfByComponent": {
+     "mcts-evaluation (rollout/cutoff)": 30.101,
+     "bfs-distance": 206.96400000000008,
+     "board-primitives (canStep/isBlocked/hasWall)": 29.448,
+     "legal-move-generation": 4.676,
+     "state-transition": 1.17,
+     "mcts-loop": 1.171,
+     "wall-geometry (conflicts/withWall/path-cut)": 11.079,
+     "agent-other": 5.486000000000001,
+     "native:now": 0.6,
+     "other-js": 2.961,
+     "mcts-selection": 0.631,
+     "gc": 1.4049999999999998,
+     "mcts-backpropagation": 1.263,
+     "candidate-generation": 1.808,
+     "mcts-expansion (priors/ordering)": 1.143,
+     "native:dispatch": 0.618
+    },
+    "inclusiveByFunction": {
+     "heuristicAction": 271.38100000000003,
+     "distanceToRow": 75.70500000000001,
+     "hasPathToRow": 54.934000000000005,
+     "shortestPath": 43.01100000000002,
+     "distanceMap": 105.50099999999992,
+     "legalPawnMoves": 4.676,
+     "applyActionUnchecked": 1.17,
+     "isCandidateLegal": 6.871,
+     "searchCandidates": 9.842000000000002,
+     "wallConflicts": 1.1709999999999998,
+     "withWall": 2.332,
+     "backpropagate": 1.263,
+     "pureOrder": 3.456,
+     "pseudoCandidates": 2.971
+    },
+    "topSelf": [
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 85.18399999999991
+     },
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 74.07300000000002
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 37.23700000000001
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 22.439000000000004
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 21.801000000000002
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 9.872
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 5.486000000000001
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 4.776000000000001
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 4.067
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 3.5090000000000003
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 2.961
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 2.743
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 2.339
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 2.332
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 1.808
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 1.6,
+     "outside search": 297.519,
+     "gc": 1.4049999999999998
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "initial",
+   "budgetMs": 2000,
+   "elapsedMs": 2056.201699999998,
+   "stats": {
+    "depth": 6,
+    "decided": false,
+    "nodes": 65600,
+    "leaves": 49811,
+    "orderingEvals": 19355,
+    "cutoffs": 9876,
+    "prunedMoves": 186441,
+    "ttProbes": 15781,
+    "ttHits": 6312,
+    "ttCutoffs": 2785,
+    "legal": 131,
+    "searched": 19
+   },
+   "gc": {
+    "count": 7,
+    "ms": 7.594899654388428
+   },
+   "heapDeltaMB": 4.5706787109375,
+   "profile": {
+    "totalMs": 1994.1140000000019,
+    "samples": 3213,
+    "selfByComponent": {
+     "wall-geometry (conflicts/withWall/path-cut)": 58.88499999999998,
+     "bfs-distance": 1419.4650000000006,
+     "candidate-generation": 66.77299999999995,
+     "board-primitives (canStep/isBlocked/hasWall)": 104.449,
+     "alphabeta-control (negamax/expand/ordering/TT)": 194.65099999999993,
+     "legal-move-generation": 7.283999999999999,
+     "other-js": 23.379999999999995,
+     "evaluation": 83.45099999999998,
+     "hashing": 13.823999999999998,
+     "gc": 7.936999999999999,
+     "state-transition": 10.441999999999998,
+     "notation/encoding": 0.598,
+     "agent-other": 0.576,
+     "native:now": 1.791,
+     "native:dispatch": 0.608
+    },
+    "inclusiveByFunction": {
+     "pseudoCandidates": 330.7719999999997,
+     "distanceToRow": 949.5600000000009,
+     "hasPathToRow": 584.6810000000006,
+     "isCandidateLegal": 593.5180000000004,
+     "distanceMap": 234.95699999999997,
+     "childEvaluator": 279.48999999999995,
+     "shortestPath": 249.4440000000002,
+     "legalPawnMoves": 9.27,
+     "wallConflicts": 15.557000000000002,
+     "hashState": 13.823999999999998,
+     "negamax": 1636.9920000000009,
+     "materialize": 484.5020000000001,
+     "expand": 626.3939999999998,
+     "applyActionUnchecked": 10.441999999999998
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 913.7940000000006
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 218.35200000000012
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 211.01700000000008
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 73.964
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 59.71199999999998
+     },
+     {
+      "fn": "(anonymous) @search/minimax.ts:127",
+      "ms": 55.504999999999995
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 54.441
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 51.487000000000016
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 40.186
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 30.24
+     },
+     {
+      "fn": "searchRoot @search/minimax.ts:329",
+      "ms": 29.631999999999994
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 29.292000000000005
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 22.756999999999998
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 17.736999999999995
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 15.711999999999998
+     }
+    ],
+    "phases": {
+     "ab: other (pseudoCandidates)": 58.996000000000016,
+     "ab: other (isCandidateLegal)": 129.18399999999986,
+     "ab: leaf evaluation": 621.9270000000008,
+     "negamax (self: loop, TT map, bookkeeping)": 84.073,
+     "ab: other (distanceToRow)": 82.14499999999992,
+     "ab: other (wallCutsEdges)": 0.604,
+     "ab: hashing": 13.823999999999998,
+     "ab: other (get)": 4.723,
+     "ab: trace recording": 1.212,
+     "outside search": 11.052999999999999,
+     "ab: other (now)": 0.623,
+     "gc": 7.936999999999999,
+     "ab: materialize (child state + wall legality)": 347.78900000000016,
+     "ab: expand (candidates + ordering evals)": 626.3939999999998,
+     "ab: other (fromTT)": 0.59,
+     "ab: time/abort check": 3.04
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "initial",
+   "budgetMs": 2000,
+   "elapsedMs": 2056.5044000000053,
+   "stats": {
+    "simulations": 3152,
+    "treeNodes": 3153,
+    "maxTreeDepth": 14,
+    "stopReason": "time",
+    "rollouts": 3152,
+    "avgRolloutPlies": 3.999048223350254,
+    "legal": 131,
+    "searched": 19,
+    "topShare": 0.8968908629441624
+   },
+   "gc": {
+    "count": 4,
+    "ms": 7.7064995765686035
+   },
+   "heapDeltaMB": 55.29869842529297,
+   "profile": {
+    "totalMs": 1995.1340000000027,
+    "samples": 3163,
+    "selfByComponent": {
+     "bfs-distance": 1497.4080000000026,
+     "board-primitives (canStep/isBlocked/hasWall)": 86.71299999999998,
+     "wall-geometry (conflicts/withWall/path-cut)": 68.29599999999999,
+     "mcts-evaluation (rollout/cutoff)": 167.96699999999984,
+     "mcts-expansion (priors/ordering)": 37.717,
+     "other-js": 15.759000000000002,
+     "gc": 8.238,
+     "evaluation": 44.777000000000015,
+     "mcts-loop": 3.01,
+     "state-transition": 7.372999999999999,
+     "native:now": 4.059,
+     "agent-other": 25.135,
+     "candidate-generation": 13.811999999999998,
+     "mcts-selection": 2.9499999999999997,
+     "mcts-backpropagation": 5.4990000000000006,
+     "legal-move-generation": 5.861,
+     "native:dispatch": 0.56
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 1127.8800000000008,
+     "priorOrder": 270.2189999999999,
+     "hasPathToRow": 600.3190000000003,
+     "heuristicAction": 1409.1700000000042,
+     "isCandidateLegal": 161.1669999999999,
+     "searchCandidates": 203.71799999999988,
+     "withWall": 25.046999999999993,
+     "shortestPath": 202.89700000000005,
+     "pseudoCandidates": 38.172,
+     "distanceMap": 150.25199999999995,
+     "evaluate": 38.408,
+     "truncatedValue": 38.99400000000001,
+     "childEvaluator": 36.55900000000001,
+     "applyActionUnchecked": 7.372999999999999,
+     "legalPawnMoves": 8.296,
+     "wallConflicts": 7.394999999999998,
+     "selectChild": 2.9499999999999997,
+     "backpropagate": 5.4990000000000006
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 1089.3370000000004
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 184.65899999999996
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 136.25699999999992
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 132.4759999999999
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 89.12100000000002
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 32.378
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 31.946000000000005
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 25.973999999999997
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 25.046999999999993
+     },
+     {
+      "fn": "decideMcts @ai/mctsAgent.ts:84",
+      "ms": 23.391000000000002
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 20.017
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 15.846999999999996
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 14.334
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 14.14
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 13.915000000000001
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 1.054,
+     "mcts: evaluation (rollout / cutoff eval)": 0.618,
+     "outside search": 1985.224000000003,
+     "gc": 8.238
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 2000,
+   "elapsedMs": 2114.8691000000035,
+   "stats": {
+    "depth": 7,
+    "decided": false,
+    "nodes": 74688,
+    "leaves": 51704,
+    "orderingEvals": 24001,
+    "cutoffs": 15094,
+    "prunedMoves": 163031,
+    "ttProbes": 22786,
+    "ttHits": 8875,
+    "ttCutoffs": 3293,
+    "legal": 125,
+    "searched": 16
+   },
+   "gc": {
+    "count": 4,
+    "ms": 6.933300018310547
+   },
+   "heapDeltaMB": -10.080184936523438,
+   "profile": {
+    "totalMs": 2001.403000000002,
+    "samples": 2733,
+    "selfByComponent": {
+     "other-js": 50.80700000000001,
+     "bfs-distance": 1297.9490000000005,
+     "gc": 8.024000000000001,
+     "board-primitives (canStep/isBlocked/hasWall)": 113.77999999999996,
+     "state-transition": 14.970000000000002,
+     "alphabeta-control (negamax/expand/ordering/TT)": 157.37699999999998,
+     "candidate-generation": 99.96499999999996,
+     "hashing": 19.153000000000002,
+     "evaluation": 141.50100000000012,
+     "wall-geometry (conflicts/withWall/path-cut)": 63.579,
+     "legal-move-generation": 20.537999999999997,
+     "agent-other": 10.717,
+     "notation/encoding": 0.585,
+     "native:now": 1.221,
+     "native:dispatch": 1.237
+    },
+    "inclusiveByFunction": {
+     "materialize": 447.5390000000008,
+     "negamax": 1985.642000000002,
+     "shortestPath": 330.44599999999974,
+     "distanceMap": 376.7420000000004,
+     "childEvaluator": 443.92999999999995,
+     "pseudoCandidates": 467.4610000000001,
+     "expand": 831.4960000000002,
+     "distanceToRow": 651.7630000000007,
+     "hasPathToRow": 388.43800000000044,
+     "isCandidateLegal": 396.71600000000046,
+     "applyActionUnchecked": 14.970000000000002,
+     "hashState": 19.846000000000004,
+     "legalPawnMoves": 21.740999999999996,
+     "wallConflicts": 14.151000000000002
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 635.6890000000004
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 328.4760000000001
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 285.4079999999998
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 94.07199999999997
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 91.39699999999999
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 75.56300000000002
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 62.92
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 49.547000000000004
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 48.09999999999999
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 43.732000000000006
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 41.08099999999998
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 23.009999999999998
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 19.153000000000002
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 17.907000000000004
+     },
+     {
+      "fn": "pawnMovesAmong @engine/rules.ts:34",
+      "ms": 15.910000000000002
+     }
+    ],
+    "phases": {
+     "ab: materialize (child state + wall legality)": 367.6310000000004,
+     "ab: leaf evaluation": 660.2789999999995,
+     "gc": 8.024000000000001,
+     "ab: expand (candidates + ordering evals)": 831.4960000000002,
+     "negamax (self: loop, TT map, bookkeeping)": 91.39699999999999,
+     "ab: hashing": 19.846000000000004,
+     "ab: time/abort check": 13.782,
+     "outside search": 7.737000000000001,
+     "ab: other (get)": 0.589,
+     "ab: other (toTT)": 0.622
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 2000,
+   "elapsedMs": 2090.1222999999954,
+   "stats": {
+    "simulations": 6457,
+    "treeNodes": 6458,
+    "maxTreeDepth": 9,
+    "stopReason": "time",
+    "rollouts": 6452,
+    "avgRolloutPlies": 3.97179169249845,
+    "legal": 125,
+    "searched": 16,
+    "topShare": 0.13969335604770017
+   },
+   "gc": {
+    "count": 5,
+    "ms": 9.365000247955322
+   },
+   "heapDeltaMB": -2.9012451171875,
+   "profile": {
+    "totalMs": 1999.1459999999984,
+    "samples": 3214,
+    "selfByComponent": {
+     "bfs-distance": 1387.8289999999997,
+     "state-transition": 13.539000000000001,
+     "mcts-evaluation (rollout/cutoff)": 169.3309999999999,
+     "board-primitives (canStep/isBlocked/hasWall)": 100.00399999999998,
+     "wall-geometry (conflicts/withWall/path-cut)": 89.02499999999999,
+     "mcts-loop": 31.512,
+     "mcts-selection": 12.84,
+     "mcts-expansion (priors/ordering)": 32.531,
+     "evaluation": 61.49800000000002,
+     "candidate-generation": 32.599,
+     "other-js": 27.476000000000003,
+     "legal-move-generation": 14.061,
+     "gc": 11.987,
+     "mcts-backpropagation": 3.6710000000000003,
+     "agent-other": 5.963999999999999,
+     "mcts-expansion": 1.9689999999999999,
+     "native:now": 2.46,
+     "native:dispatch": 0.85
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 880.6079999999994,
+     "hasPathToRow": 432.98700000000025,
+     "isCandidateLegal": 178.96899999999988,
+     "searchCandidates": 248.34800000000004,
+     "applyActionUnchecked": 13.539000000000001,
+     "priorOrder": 326.91100000000023,
+     "distanceMap": 340.22699999999975,
+     "heuristicAction": 1269.2229999999975,
+     "childEvaluator": 60.63700000000001,
+     "shortestPath": 192.534,
+     "pseudoCandidates": 58.81399999999999,
+     "evaluate": 47.60699999999999,
+     "truncatedValue": 49.699000000000005,
+     "withWall": 28.771999999999995,
+     "selectChild": 10.489999999999998,
+     "legalPawnMoves": 17.156000000000002,
+     "wallConflicts": 8.169,
+     "backpropagate": 3.6710000000000003
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 851.6549999999996
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 304.73899999999986
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 168.51299999999992
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 124.96200000000003
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 59.171
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 51.86600000000001
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 34.366
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 29.233000000000004
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 28.771999999999995
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 26.227
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 21.872
+     },
+     {
+      "fn": "wallCutsEdges @engine/walls.ts:55",
+      "ms": 17.573
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 16.98
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 15.612000000000002
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 15.107999999999999
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 583.8459999999992,
+     "mcts: evaluation (rollout / cutoff eval)": 1335.9539999999974,
+     "runMcts (self: loop, TT map, bookkeeping)": 29.233000000000004,
+     "mcts: selection": 12.84,
+     "mcts: other (now)": 5.9879999999999995,
+     "outside search": 14.798999999999996,
+     "gc": 11.987,
+     "mcts: other (winner)": 0.828,
+     "mcts: backpropagation (+solver)": 3.6710000000000003
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 2000,
+   "elapsedMs": 2097.7583000000013,
+   "stats": {
+    "depth": 10,
+    "decided": false,
+    "nodes": 96960,
+    "leaves": 66380,
+    "orderingEvals": 29902,
+    "cutoffs": 17898,
+    "prunedMoves": 190673,
+    "ttProbes": 29431,
+    "ttHits": 10041,
+    "ttCutoffs": 3728,
+    "legal": 120,
+    "searched": 6
+   },
+   "gc": {
+    "count": 6,
+    "ms": 13.310699701309204
+   },
+   "heapDeltaMB": -30.692115783691406,
+   "profile": {
+    "totalMs": 1997.3049999999942,
+    "samples": 3262,
+    "selfByComponent": {
+     "alphabeta-control (negamax/expand/ordering/TT)": 172.3649999999998,
+     "gc": 16.784,
+     "bfs-distance": 1252.8709999999978,
+     "board-primitives (canStep/isBlocked/hasWall)": 136.14099999999996,
+     "candidate-generation": 85.09199999999997,
+     "state-transition": 24.962999999999994,
+     "evaluation": 161.64300000000003,
+     "other-js": 28.972999999999992,
+     "wall-geometry (conflicts/withWall/path-cut)": 81.04099999999998,
+     "legal-move-generation": 7.3660000000000005,
+     "hashing": 22.902,
+     "notation/encoding": 4.061999999999999,
+     "native:now": 1.847,
+     "agent-other": 0.656,
+     "native:dispatch": 0.599
+    },
+    "inclusiveByFunction": {
+     "expand": 730.7159999999988,
+     "negamax": 1969.544999999994,
+     "shortestPath": 305.6290000000001,
+     "pseudoCandidates": 365.4580000000001,
+     "distanceMap": 410.9430000000006,
+     "childEvaluator": 487.2300000000009,
+     "distanceToRow": 595.1000000000007,
+     "hasPathToRow": 383.93400000000014,
+     "isCandidateLegal": 394.11700000000025,
+     "materialize": 432.69900000000047,
+     "applyActionUnchecked": 24.962999999999994,
+     "wallConflicts": 17.748,
+     "legalPawnMoves": 10.354,
+     "hashState": 24.666000000000004
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 567.0270000000006
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 356.5800000000004
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 263.938
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 96.43299999999994
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 92.295
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 78.48899999999999
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 67.257
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 61.56400000000002
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 60.87499999999998
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 45.953
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 28.34699999999999
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 24.962999999999994
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 22.902
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 19.666
+     },
+     {
+      "fn": "wallCutsEdges @engine/walls.ts:55",
+      "ms": 18.317999999999994
+     }
+    ],
+    "phases": {
+     "outside search": 10.975999999999999,
+     "gc": 16.784,
+     "ab: expand (candidates + ordering evals)": 730.7159999999988,
+     "ab: leaf evaluation": 779.8240000000004,
+     "ab: materialize (child state + wall legality)": 327.96400000000017,
+     "negamax (self: loop, TT map, bookkeeping)": 96.43299999999994,
+     "ab: other (toTT)": 2.427,
+     "ab: hashing": 24.666000000000004,
+     "ab: other (get)": 2.942,
+     "ab: time/abort check": 4.573
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "opening (0–3 walls on board)",
+   "budgetMs": 2000,
+   "elapsedMs": 2054.5768000000025,
+   "stats": {
+    "simulations": 5819,
+    "treeNodes": 5815,
+    "maxTreeDepth": 18,
+    "stopReason": "time",
+    "rollouts": 5787,
+    "avgRolloutPlies": 3.971315016416105,
+    "legal": 120,
+    "searched": 6,
+    "topShare": 0.9926104141605087
+   },
+   "gc": {
+    "count": 5,
+    "ms": 10.070799827575684
+   },
+   "heapDeltaMB": 10.996208190917969,
+   "profile": {
+    "totalMs": 1994.3660000000066,
+    "samples": 3072,
+    "selfByComponent": {
+     "wall-geometry (conflicts/withWall/path-cut)": 79.45200000000001,
+     "mcts-expansion (priors/ordering)": 49.198,
+     "bfs-distance": 1391.6540000000007,
+     "board-primitives (canStep/isBlocked/hasWall)": 128.52399999999992,
+     "evaluation": 68.55300000000001,
+     "mcts-evaluation (rollout/cutoff)": 153.01899999999992,
+     "mcts-loop": 27.349000000000007,
+     "mcts-selection": 9.088000000000001,
+     "state-transition": 11.229000000000001,
+     "candidate-generation": 20.435,
+     "legal-move-generation": 7.052,
+     "mcts-expansion": 2.277,
+     "other-js": 17.456999999999997,
+     "mcts-backpropagation": 5.648,
+     "gc": 8.767999999999999,
+     "agent-other": 5.3709999999999996,
+     "native:now": 8.652999999999999,
+     "native:dispatch": 0.639
+    },
+    "inclusiveByFunction": {
+     "heuristicAction": 1153.0180000000014,
+     "priorOrder": 374.4899999999996,
+     "distanceToRow": 866.0220000000021,
+     "hasPathToRow": 461.0190000000001,
+     "isCandidateLegal": 236.31199999999984,
+     "searchCandidates": 97.10899999999995,
+     "childEvaluator": 88.99799999999998,
+     "shortestPath": 234.58600000000024,
+     "distanceMap": 332.263,
+     "applyActionUnchecked": 11.925,
+     "pseudoCandidates": 60.27600000000001,
+     "evaluate": 61.445,
+     "truncatedValue": 63.335,
+     "selectChild": 8.471,
+     "withWall": 24.646,
+     "legalPawnMoves": 8.170999999999998,
+     "backpropagate": 5.648,
+     "wallConflicts": 5.869,
+     "legalActions": 1.214
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 832.2400000000018
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 284.32800000000003
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 203.29600000000013
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 105.24099999999997
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 75.67800000000001
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 67.64399999999998
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 37.01200000000001
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 26.161000000000005
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 24.646
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 24.581
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 21.226000000000006
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 21.007999999999996
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 19.782999999999998
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 17.529
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 16.813
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 1227.0240000000008,
+     "mcts: expansion (actions, priors, child state)": 688.1880000000015,
+     "mcts: other (now)": 10.485,
+     "mcts: selection": 9.088000000000001,
+     "runMcts (self: loop, TT map, bookkeeping)": 26.161000000000005,
+     "outside search": 19.004,
+     "mcts: backpropagation (+solver)": 5.648,
+     "gc": 8.767999999999999
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "early (4–8)",
+   "budgetMs": 2000,
+   "elapsedMs": 2071.512299999995,
+   "stats": {
+    "depth": 8,
+    "decided": false,
+    "nodes": 88000,
+    "leaves": 61587,
+    "orderingEvals": 23465,
+    "cutoffs": 14065,
+    "prunedMoves": 125594,
+    "ttProbes": 25089,
+    "ttHits": 12337,
+    "ttCutoffs": 5358,
+    "legal": 109,
+    "searched": 10
+   },
+   "gc": {
+    "count": 6,
+    "ms": 9.67960000038147
+   },
+   "heapDeltaMB": 35.98772430419922,
+   "profile": {
+    "totalMs": 1997.3990000000033,
+    "samples": 2961,
+    "selfByComponent": {
+     "evaluation": 150.54499999999987,
+     "gc": 7.746999999999999,
+     "bfs-distance": 1335.8079999999986,
+     "candidate-generation": 72.032,
+     "board-primitives (canStep/isBlocked/hasWall)": 143.718,
+     "wall-geometry (conflicts/withWall/path-cut)": 56.61899999999998,
+     "other-js": 28.392000000000014,
+     "legal-move-generation": 7.378000000000001,
+     "hashing": 15.579,
+     "alphabeta-control (negamax/expand/ordering/TT)": 158.44100000000006,
+     "state-transition": 14.033999999999999,
+     "native:now": 3.818,
+     "notation/encoding": 0.7989999999999999,
+     "agent-other": 1.8809999999999998,
+     "native:dispatch": 0.608
+    },
+    "inclusiveByFunction": {
+     "negamax": 1973.3150000000037,
+     "distanceMap": 304.8420000000004,
+     "childEvaluator": 376.4870000000005,
+     "distanceToRow": 776.0119999999994,
+     "hasPathToRow": 546.4690000000006,
+     "isCandidateLegal": 554.6730000000007,
+     "materialize": 586.3160000000004,
+     "pseudoCandidates": 362.1589999999999,
+     "expand": 723.1439999999998,
+     "shortestPath": 304.5060000000001,
+     "legalPawnMoves": 9.222000000000001,
+     "hashState": 15.579,
+     "applyActionUnchecked": 14.033999999999999,
+     "wallConflicts": 12.05
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 725.0299999999996
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 273.0800000000001
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 259.36500000000024
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 87.76899999999995
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 73.62199999999997
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 69.78
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 66.008
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 64.087
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 53.89100000000003
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 44.793000000000006
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:18",
+      "ms": 37.916000000000004
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 28.392000000000014
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 15.579
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 14.427999999999999
+     },
+     {
+      "fn": "(anonymous) @engine/board.ts:0",
+      "ms": 14.057
+     }
+    ],
+    "phases": {
+     "ab: leaf evaluation": 678.5959999999997,
+     "gc": 7.746999999999999,
+     "ab: materialize (child state + wall legality)": 459.57100000000037,
+     "ab: expand (candidates + ordering evals)": 723.1439999999998,
+     "ab: other (get)": 1.79,
+     "ab: hashing": 15.579,
+     "negamax (self: loop, TT map, bookkeeping)": 87.76899999999995,
+     "ab: trace recording": 0.6,
+     "outside search": 15.736999999999998,
+     "ab: time/abort check": 6.273,
+     "ab: other (toTT)": 0.593
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "early (4–8)",
+   "budgetMs": 2000,
+   "elapsedMs": 2042.8852000000043,
+   "stats": {
+    "simulations": 6073,
+    "treeNodes": 6070,
+    "maxTreeDepth": 15,
+    "stopReason": "time",
+    "rollouts": 6052,
+    "avgRolloutPlies": 3.96645736946464,
+    "legal": 109,
+    "searched": 10,
+    "topShare": 0.8774905318623415
+   },
+   "gc": {
+    "count": 6,
+    "ms": 11.668600082397461
+   },
+   "heapDeltaMB": 54.33258819580078,
+   "profile": {
+    "totalMs": 1992.5320000000027,
+    "samples": 3163,
+    "selfByComponent": {
+     "mcts-expansion (priors/ordering)": 50.26199999999999,
+     "bfs-distance": 1389.4460000000036,
+     "gc": 13.286000000000001,
+     "evaluation": 77.06999999999998,
+     "board-primitives (canStep/isBlocked/hasWall)": 113.42099999999998,
+     "mcts-loop": 29.072000000000003,
+     "candidate-generation": 23.363000000000007,
+     "agent-other": 4.247999999999999,
+     "other-js": 29.67,
+     "wall-geometry (conflicts/withWall/path-cut)": 65.009,
+     "mcts-selection": 10.762,
+     "mcts-expansion": 3.551,
+     "mcts-evaluation (rollout/cutoff)": 139.53599999999994,
+     "native:now": 3.602,
+     "mcts-backpropagation": 11.130999999999998,
+     "legal-move-generation": 13.074,
+     "state-transition": 14.797000000000004,
+     "native:dispatch": 1.232
+    },
+    "inclusiveByFunction": {
+     "priorOrder": 438.0160000000006,
+     "distanceToRow": 881.8220000000013,
+     "evaluate": 57.81100000000001,
+     "truncatedValue": 58.97700000000002,
+     "childEvaluator": 86.89299999999999,
+     "distanceMap": 320.1929999999999,
+     "heuristicAction": 1051.1640000000018,
+     "hasPathToRow": 441.30800000000005,
+     "isCandidateLegal": 252.52499999999992,
+     "searchCandidates": 332.69400000000024,
+     "shortestPath": 224.276,
+     "pseudoCandidates": 75.493,
+     "selectChild": 10.157,
+     "wallConflicts": 9.711,
+     "withWall": 19.875,
+     "legalPawnMoves": 16.135,
+     "applyActionUnchecked": 14.797000000000004,
+     "backpropagate": 10.508
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 853.6850000000015
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 272.27299999999997
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 196.496
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 101.6379999999999
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 69.74099999999999
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 63.49599999999999
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 41.20900000000001
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 29.157
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 27.388
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 25.327999999999996
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 19.875
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 19.008000000000003
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 16.375999999999998
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 16.026000000000003
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 15.278999999999998
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 785.8070000000013,
+     "mcts: evaluation (rollout / cutoff eval)": 1122.847,
+     "gc": 13.286000000000001,
+     "runMcts (self: loop, TT map, bookkeeping)": 25.327999999999996,
+     "outside search": 13.161999999999997,
+     "mcts: selection": 10.762,
+     "mcts: other (now)": 7.080000000000001,
+     "mcts: other (updateProof)": 0.623,
+     "mcts: other (winner)": 0.581,
+     "mcts: trace snapshots": 2.548,
+     "mcts: backpropagation (+solver)": 10.508
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "early (4–8)",
+   "budgetMs": 2000,
+   "elapsedMs": 2049.9699000000037,
+   "stats": {
+    "depth": 8,
+    "decided": false,
+    "nodes": 71872,
+    "leaves": 43107,
+    "orderingEvals": 19196,
+    "cutoffs": 17543,
+    "prunedMoves": 155341,
+    "ttProbes": 28216,
+    "ttHits": 11213,
+    "ttCutoffs": 6593,
+    "legal": 115,
+    "searched": 10
+   },
+   "gc": {
+    "count": 5,
+    "ms": 11.105499744415283
+   },
+   "heapDeltaMB": 19.91643524169922,
+   "profile": {
+    "totalMs": 1997.6100000000026,
+    "samples": 3182,
+    "selfByComponent": {
+     "alphabeta-control (negamax/expand/ordering/TT)": 175.504,
+     "gc": 14.059000000000001,
+     "evaluation": 157.77599999999993,
+     "bfs-distance": 1277.7730000000026,
+     "board-primitives (canStep/isBlocked/hasWall)": 138.801,
+     "native:now": 3.703,
+     "wall-geometry (conflicts/withWall/path-cut)": 79.53700000000002,
+     "candidate-generation": 76.32399999999994,
+     "state-transition": 16.310999999999996,
+     "hashing": 19.435000000000002,
+     "other-js": 27.465,
+     "legal-move-generation": 9.719999999999999,
+     "notation/encoding": 0.598,
+     "native:dispatch": 0.604
+    },
+    "inclusiveByFunction": {
+     "negamax": 1969.6140000000025,
+     "distanceToRow": 594.3410000000018,
+     "hasPathToRow": 427.87200000000007,
+     "isCandidateLegal": 435.85000000000014,
+     "materialize": 467.5240000000003,
+     "shortestPath": 330.5330000000005,
+     "childEvaluator": 509.14300000000014,
+     "distanceMap": 420.325,
+     "pseudoCandidates": 410.4960000000006,
+     "expand": 715.7880000000013,
+     "applyActionUnchecked": 16.310999999999996,
+     "wallConflicts": 13.251999999999999,
+     "hashState": 19.435000000000002,
+     "legalPawnMoves": 10.264
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 578.5070000000018
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 350.6970000000001
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 286.19500000000033
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 96.89899999999997
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 83.99099999999994
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 71.42899999999997
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 59.80099999999997
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 56.851
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 53.57000000000001
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 53.448999999999984
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 30.464
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 26.872
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 20.281999999999996
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 19.435000000000002
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 18.474999999999998
+     }
+    ],
+    "phases": {
+     "negamax (self: loop, TT map, bookkeeping)": 86.25299999999994,
+     "gc": 14.059000000000001,
+     "ab: leaf evaluation": 747.0820000000012,
+     "ab: materialize (child state + wall legality)": 394.66199999999986,
+     "ab: expand (candidates + ordering evals)": 715.7880000000013,
+     "ab: time/abort check": 6.095000000000001,
+     "ab: hashing": 19.435000000000002,
+     "outside search": 11.674999999999999,
+     "ab: killer moves": 0.595,
+     "ab: other (get)": 1.966
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "early (4–8)",
+   "budgetMs": 2000,
+   "elapsedMs": 2063.849599999994,
+   "stats": {
+    "simulations": 5881,
+    "treeNodes": 5878,
+    "maxTreeDepth": 13,
+    "stopReason": "time",
+    "rollouts": 5871,
+    "avgRolloutPlies": 3.9819451541475046,
+    "legal": 115,
+    "searched": 10,
+    "topShare": 0.6510797483421187
+   },
+   "gc": {
+    "count": 5,
+    "ms": 10.421900033950806
+   },
+   "heapDeltaMB": -2.6453018188476562,
+   "profile": {
+    "totalMs": 1995.5559999999975,
+    "samples": 3171,
+    "selfByComponent": {
+     "bfs-distance": 1378.0219999999986,
+     "mcts-expansion (priors/ordering)": 36.43799999999999,
+     "mcts-selection": 14.41,
+     "board-primitives (canStep/isBlocked/hasWall)": 122.38299999999994,
+     "mcts-evaluation (rollout/cutoff)": 147.92499999999993,
+     "evaluation": 92.01499999999996,
+     "wall-geometry (conflicts/withWall/path-cut)": 77.49599999999998,
+     "mcts-loop": 24.592,
+     "candidate-generation": 27.39399999999999,
+     "legal-move-generation": 15.722999999999997,
+     "agent-other": 4.3629999999999995,
+     "state-transition": 11.004000000000003,
+     "other-js": 24.759999999999994,
+     "gc": 10.512,
+     "mcts-expansion": 1.2389999999999999,
+     "native:now": 1.798,
+     "mcts-backpropagation": 4.225999999999999,
+     "native:dispatch": 1.256
+    },
+    "inclusiveByFunction": {
+     "distanceMap": 306.9880000000003,
+     "childEvaluator": 71.25,
+     "priorOrder": 406.0010000000003,
+     "heuristicAction": 1029.7370000000012,
+     "selectChild": 14.41,
+     "distanceToRow": 877.9470000000014,
+     "hasPathToRow": 513.5770000000005,
+     "isCandidateLegal": 322.4850000000003,
+     "searchCandidates": 401.0340000000003,
+     "shortestPath": 229.56499999999988,
+     "pseudoCandidates": 71.43299999999996,
+     "withWall": 25.105999999999998,
+     "legalPawnMoves": 17.476999999999997,
+     "applyActionUnchecked": 11.004000000000003,
+     "evaluate": 65.15,
+     "truncatedValue": 65.73700000000001,
+     "wallConflicts": 10.552000000000001,
+     "backpropagate": 4.225999999999999
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 848.8280000000012
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 252.73099999999997
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 200.3489999999999
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 102.73799999999994
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 76.10300000000002
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 72.00199999999998
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 47.99100000000001
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 24.508
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 23.991999999999997
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 23.58
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 20.672000000000004
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 18.008
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 17.003999999999998
+     },
+     {
+      "fn": "wallIsLegal @mcts/rollout.ts:23",
+      "ms": 16.522
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 15.995
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 821.4510000000006,
+     "mcts: evaluation (rollout / cutoff eval)": 1104.6889999999996,
+     "mcts: selection": 14.41,
+     "outside search": 12.698,
+     "runMcts (self: loop, TT map, bookkeeping)": 23.991999999999997,
+     "mcts: other (get)": 0.588,
+     "mcts: trace snapshots": 0.6,
+     "gc": 10.512,
+     "mcts: other (now)": 2.39,
+     "mcts: backpropagation (+solver)": 4.225999999999999
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "middle (9–14)",
+   "budgetMs": 2000,
+   "elapsedMs": 2067.9642999999996,
+   "stats": {
+    "depth": 7,
+    "decided": false,
+    "nodes": 60992,
+    "leaves": 44896,
+    "orderingEvals": 22195,
+    "cutoffs": 8707,
+    "prunedMoves": 144428,
+    "ttProbes": 16087,
+    "ttHits": 8081,
+    "ttCutoffs": 3527,
+    "legal": 76,
+    "searched": 14
+   },
+   "gc": {
+    "count": 4,
+    "ms": 7.694200038909912
+   },
+   "heapDeltaMB": 22.799148559570312,
+   "profile": {
+    "totalMs": 1995.4110000000012,
+    "samples": 3194,
+    "selfByComponent": {
+     "alphabeta-control (negamax/expand/ordering/TT)": 132.49900000000002,
+     "bfs-distance": 1377.3360000000011,
+     "gc": 8.289,
+     "wall-geometry (conflicts/withWall/path-cut)": 65.148,
+     "legal-move-generation": 9.898,
+     "board-primitives (canStep/isBlocked/hasWall)": 123.8509999999999,
+     "evaluation": 128.56399999999988,
+     "candidate-generation": 82.51399999999995,
+     "other-js": 35.614999999999995,
+     "native:now": 3.029,
+     "hashing": 12.364000000000003,
+     "state-transition": 11.392,
+     "agent-other": 3.1559999999999997,
+     "notation/encoding": 1.174,
+     "native:dispatch": 0.582
+    },
+    "inclusiveByFunction": {
+     "hasPathToRow": 614.8000000000004,
+     "isCandidateLegal": 630.9810000000003,
+     "materialize": 656.1080000000003,
+     "negamax": 1966.1510000000005,
+     "distanceToRow": 896.8230000000023,
+     "pseudoCandidates": 338.0659999999999,
+     "expand": 821.612,
+     "distanceMap": 213.90800000000016,
+     "childEvaluator": 249.47000000000017,
+     "shortestPath": 264.7950000000001,
+     "legalPawnMoves": 11.735000000000001,
+     "wallConflicts": 17.288,
+     "hashState": 12.931000000000003,
+     "applyActionUnchecked": 11.392
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 866.4970000000021
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 225.035
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 179.8690000000001
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 99.83400000000003
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 78.40399999999997
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 69.29899999999999
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 66.43700000000001
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 62.25
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 36.11100000000001
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 34.381
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 26.179000000000013
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 24.143
+     },
+     {
+      "fn": "wallConflicts @engine/walls.ts:14",
+      "ms": 17.288
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 16.922
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 15.963999999999997
+     }
+    ],
+    "phases": {
+     "outside search": 19.808000000000007,
+     "ab: materialize (child state + wall legality)": 466.0939999999999,
+     "gc": 8.289,
+     "ab: expand (candidates + ordering evals)": 821.612,
+     "ab: leaf evaluation": 592.8479999999998,
+     "negamax (self: loop, TT map, bookkeeping)": 62.82600000000001,
+     "ab: time/abort check": 9.23,
+     "ab: other (get)": 1.773,
+     "ab: hashing": 12.931000000000003
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "middle (9–14)",
+   "budgetMs": 2000,
+   "elapsedMs": 2090.4913000000015,
+   "stats": {
+    "simulations": 6616,
+    "treeNodes": 6617,
+    "maxTreeDepth": 13,
+    "stopReason": "time",
+    "rollouts": 6616,
+    "avgRolloutPlies": 4,
+    "legal": 76,
+    "searched": 14,
+    "topShare": 0.4241233373639661
+   },
+   "gc": {
+    "count": 5,
+    "ms": 10.759099960327148
+   },
+   "heapDeltaMB": -31.04387664794922,
+   "profile": {
+    "totalMs": 1999.6829999999986,
+    "samples": 3141,
+    "selfByComponent": {
+     "bfs-distance": 1399.2299999999975,
+     "evaluation": 87.52599999999998,
+     "board-primitives (canStep/isBlocked/hasWall)": 125.66399999999985,
+     "mcts-selection": 15.290999999999997,
+     "mcts-loop": 37.544999999999995,
+     "agent-other": 2.8939999999999997,
+     "mcts-evaluation (rollout/cutoff)": 120.4059999999999,
+     "wall-geometry (conflicts/withWall/path-cut)": 69.69499999999996,
+     "mcts-expansion (priors/ordering)": 47.946999999999996,
+     "gc": 14.873999999999999,
+     "candidate-generation": 36.757000000000005,
+     "other-js": 15.347999999999999,
+     "state-transition": 10.934,
+     "mcts-backpropagation": 3.0759999999999996,
+     "legal-move-generation": 7.513999999999999,
+     "native:now": 3.125,
+     "mcts-expansion": 1.251,
+     "native:dispatch": 0.606
+    },
+    "inclusiveByFunction": {
+     "shortestPath": 165.92799999999986,
+     "heuristicAction": 836.1900000000002,
+     "priorOrder": 500.5289999999999,
+     "distanceToRow": 934.9500000000004,
+     "hasPathToRow": 453.4359999999999,
+     "isCandidateLegal": 361.76600000000025,
+     "searchCandidates": 388.5289999999996,
+     "distanceMap": 349.583,
+     "childEvaluator": 85.37400000000001,
+     "evaluate": 87.95500000000003,
+     "truncatedValue": 89.69200000000004,
+     "withWall": 18.398,
+     "pseudoCandidates": 89.17399999999999,
+     "applyActionUnchecked": 9.716,
+     "backpropagate": 3.0759999999999996,
+     "wallConflicts": 7.978,
+     "legalPawnMoves": 10.486999999999998,
+     "selectChild": 14.138999999999998
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 898.7690000000005
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 297.6690000000002
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 141.8899999999999
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 98.08199999999998
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 74.07499999999999
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 59.112
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 48.258
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 32.718999999999994
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 23.340999999999998
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 20.988000000000003
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 20.723
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 18.398
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 18.177000000000003
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 17.063000000000002
+     },
+     {
+      "fn": "(garbage collector) @:-1",
+      "ms": 14.873999999999999
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 936.871,
+     "mcts: expansion (actions, priors, child state)": 977.1520000000033,
+     "outside search": 11.140999999999998,
+     "mcts: other (now)": 8.362,
+     "mcts: selection": 14.720999999999997,
+     "gc": 14.873999999999999,
+     "mcts: backpropagation (+solver)": 3.0759999999999996,
+     "runMcts (self: loop, TT map, bookkeeping)": 32.718999999999994,
+     "mcts: trace snapshots": 0.7669999999999999
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "middle (9–14)",
+   "budgetMs": 2000,
+   "elapsedMs": 2065.4703999999983,
+   "stats": {
+    "depth": 7,
+    "decided": false,
+    "nodes": 70336,
+    "leaves": 48133,
+    "orderingEvals": 16601,
+    "cutoffs": 11489,
+    "prunedMoves": 150986,
+    "ttProbes": 22177,
+    "ttHits": 10961,
+    "ttCutoffs": 6542,
+    "legal": 96,
+    "searched": 6
+   },
+   "gc": {
+    "count": 5,
+    "ms": 9.588200092315674
+   },
+   "heapDeltaMB": -6.707267761230469,
+   "profile": {
+    "totalMs": 1993.405000000004,
+    "samples": 3161,
+    "selfByComponent": {
+     "bfs-distance": 1339.7529999999995,
+     "gc": 11.840999999999998,
+     "other-js": 31.639999999999997,
+     "state-transition": 16.196,
+     "candidate-generation": 86.029,
+     "alphabeta-control (negamax/expand/ordering/TT)": 133.08199999999988,
+     "evaluation": 122.65299999999996,
+     "board-primitives (canStep/isBlocked/hasWall)": 138.62099999999987,
+     "wall-geometry (conflicts/withWall/path-cut)": 74.69199999999998,
+     "native:now": 3.125,
+     "hashing": 23.393000000000004,
+     "legal-move-generation": 5.565000000000001,
+     "agent-other": 3.1189999999999998,
+     "notation/encoding": 3.043,
+     "native:dispatch": 0.653
+    },
+    "inclusiveByFunction": {
+     "distanceMap": 291.4780000000001,
+     "childEvaluator": 341.8189999999999,
+     "negamax": 1966.7820000000033,
+     "hasPathToRow": 540.9450000000005,
+     "isCandidateLegal": 555.0530000000006,
+     "materialize": 583.4900000000005,
+     "applyActionUnchecked": 16.196,
+     "distanceToRow": 790.7710000000013,
+     "pseudoCandidates": 410.6060000000005,
+     "expand": 748.0060000000012,
+     "shortestPath": 296.7550000000004,
+     "hashState": 24.669000000000008,
+     "legalPawnMoves": 6.171000000000001,
+     "wallConflicts": 12.748000000000001
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 765.5410000000012
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 248.13000000000014
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 238.26400000000027
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 92.56699999999995
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 80.42499999999993
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 76.06700000000001
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 72.44799999999998
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 64.24000000000001
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 39.28899999999999
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 34.617000000000004
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 29.753
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 23.393000000000004
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 19.845000000000002
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 16.196
+     },
+     {
+      "fn": "hasHWall @engine/board.ts:78",
+      "ms": 15.717000000000002
+     }
+    ],
+    "phases": {
+     "ab: leaf evaluation": 640.4810000000009,
+     "ab: materialize (child state + wall legality)": 469.3660000000007,
+     "gc": 11.840999999999998,
+     "ab: expand (candidates + ordering evals)": 748.0060000000012,
+     "ab: time/abort check": 8.716000000000001,
+     "ab: hashing": 24.669000000000008,
+     "ab: other (get)": 1.2,
+     "outside search": 14.782000000000002,
+     "negamax (self: loop, TT map, bookkeeping)": 72.44799999999998,
+     "ab: trace recording": 0.589,
+     "ab: other (toTT)": 1.307
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "middle (9–14)",
+   "budgetMs": 2000,
+   "elapsedMs": 2050.608,
+   "stats": {
+    "simulations": 5381,
+    "treeNodes": 5377,
+    "maxTreeDepth": 15,
+    "stopReason": "time",
+    "rollouts": 5361,
+    "avgRolloutPlies": 3.968662562954673,
+    "legal": 96,
+    "searched": 6,
+    "topShare": 0.6078795762869356
+   },
+   "gc": {
+    "count": 5,
+    "ms": 7.802800178527832
+   },
+   "heapDeltaMB": 52.99546813964844,
+   "profile": {
+    "totalMs": 1994.6890000000042,
+    "samples": 3096,
+    "selfByComponent": {
+     "board-primitives (canStep/isBlocked/hasWall)": 137.20999999999984,
+     "bfs-distance": 1346.9790000000007,
+     "mcts-expansion (priors/ordering)": 43.90700000000001,
+     "evaluation": 85.73199999999999,
+     "wall-geometry (conflicts/withWall/path-cut)": 89.36900000000003,
+     "mcts-evaluation (rollout/cutoff)": 148.61799999999997,
+     "candidate-generation": 32.348,
+     "other-js": 20.471999999999998,
+     "mcts-selection": 16.495,
+     "mcts-loop": 23.657999999999994,
+     "agent-other": 2.418,
+     "state-transition": 15.367999999999999,
+     "gc": 9.408999999999999,
+     "mcts-expansion": 1.849,
+     "legal-move-generation": 10.366,
+     "mcts-backpropagation": 6.137,
+     "native:now": 3.0389999999999997,
+     "native:dispatch": 1.315
+    },
+    "inclusiveByFunction": {
+     "distanceMap": 278.46600000000024,
+     "childEvaluator": 68.239,
+     "priorOrder": 419.2330000000005,
+     "distanceToRow": 908.9540000000002,
+     "hasPathToRow": 490.88000000000005,
+     "isCandidateLegal": 305.54300000000023,
+     "searchCandidates": 389.1770000000001,
+     "heuristicAction": 1009.7150000000013,
+     "withWall": 23.073999999999998,
+     "shortestPath": 211.048,
+     "evaluate": 78.92800000000001,
+     "truncatedValue": 79.50600000000001,
+     "pseudoCandidates": 70.60900000000002,
+     "wallConflicts": 10.064,
+     "applyActionUnchecked": 15.367999999999999,
+     "legalPawnMoves": 13.531,
+     "backpropagate": 6.137,
+     "selectChild": 14.009999999999996,
+     "legalWallPlacements": 0.609,
+     "legalActions": 0.609
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 878.8929999999998
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 224.51300000000003
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 170.479
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 112.27499999999998
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 88.687
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 67.738
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 37.35599999999999
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 25.650999999999993
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 23.657999999999994
+     },
+     {
+      "fn": "withWall @engine/walls.ts:21",
+      "ms": 23.073999999999998
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 19.908
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 19.843999999999998
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 19.712
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 16.924
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 15.626
+     }
+    ],
+    "phases": {
+     "mcts: expansion (actions, priors, child state)": 820.079,
+     "mcts: evaluation (rollout / cutoff eval)": 1099.703000000001,
+     "mcts: selection": 16.495,
+     "outside search": 15.541,
+     "runMcts (self: loop, TT map, bookkeeping)": 23.657999999999994,
+     "gc": 9.408999999999999,
+     "mcts: backpropagation (+solver)": 6.137,
+     "mcts: other (now)": 3.667
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "late (15–20)",
+   "budgetMs": 2000,
+   "elapsedMs": 2055.687300000005,
+   "stats": {
+    "depth": 11,
+    "decided": false,
+    "nodes": 70208,
+    "leaves": 22332,
+    "orderingEvals": 68909,
+    "cutoffs": 18265,
+    "prunedMoves": 100752,
+    "ttProbes": 47863,
+    "ttHits": 37336,
+    "ttCutoffs": 18595,
+    "legal": 73,
+    "searched": 15
+   },
+   "gc": {
+    "count": 5,
+    "ms": 11.013499975204468
+   },
+   "heapDeltaMB": 52.66474151611328,
+   "profile": {
+    "totalMs": 1993.8040000000024,
+    "samples": 3117,
+    "selfByComponent": {
+     "bfs-distance": 1289.9940000000004,
+     "evaluation": 162.43399999999986,
+     "gc": 11.149,
+     "board-primitives (canStep/isBlocked/hasWall)": 151.20999999999992,
+     "hashing": 38.815,
+     "candidate-generation": 59.781000000000006,
+     "wall-geometry (conflicts/withWall/path-cut)": 53.781,
+     "alphabeta-control (negamax/expand/ordering/TT)": 174.38500000000002,
+     "state-transition": 14.640999999999996,
+     "other-js": 20.104,
+     "notation/encoding": 1.821,
+     "legal-move-generation": 12.668999999999999,
+     "native:now": 1.8130000000000002,
+     "agent-other": 0.622,
+     "native:dispatch": 0.585
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 704.4230000000015,
+     "hasPathToRow": 477.6780000000001,
+     "isCandidateLegal": 486.58000000000004,
+     "materialize": 515.8749999999999,
+     "negamax": 1967.7880000000016,
+     "shortestPath": 216.99000000000004,
+     "pseudoCandidates": 247.03400000000005,
+     "expand": 1385.3000000000015,
+     "distanceMap": 432.8060000000005,
+     "childEvaluator": 521.7100000000008,
+     "hashState": 38.815,
+     "applyActionUnchecked": 14.640999999999996,
+     "wallConflicts": 13.234999999999998,
+     "legalPawnMoves": 13.841999999999999
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 682.2500000000013
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 367.8630000000002
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 175.35499999999996
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 104.872
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 87.45099999999996
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 66.87700000000001
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 62.729
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 57.830999999999975
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 54.733000000000004
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 52.40899999999999
+     },
+     {
+      "fn": "hashState @engine/zobrist.ts:31",
+      "ms": 38.815
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 29.557
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 20.447
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 19.492
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 14.870999999999999
+     }
+    ],
+    "phases": {
+     "ab: leaf evaluation": 330.8550000000002,
+     "ab: expand (candidates + ordering evals)": 1385.3000000000015,
+     "gc": 11.149,
+     "ab: materialize (child state + wall legality)": 120.33199999999995,
+     "ab: hashing": 38.815,
+     "ab: trace recording": 0.638,
+     "outside search": 13.251999999999999,
+     "negamax (self: loop, TT map, bookkeeping)": 87.45099999999996,
+     "ab: other (get)": 2.3899999999999997,
+     "ab: time/abort check": 3.622
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "late (15–20)",
+   "budgetMs": 2000,
+   "elapsedMs": 2051.319800000012,
+   "stats": {
+    "simulations": 9418,
+    "treeNodes": 9419,
+    "maxTreeDepth": 30,
+    "stopReason": "time",
+    "rollouts": 9418,
+    "avgRolloutPlies": 4,
+    "legal": 73,
+    "searched": 15,
+    "topShare": 0.6259290719898067
+   },
+   "gc": {
+    "count": 5,
+    "ms": 13.751199960708618
+   },
+   "heapDeltaMB": 67.38826751708984,
+   "profile": {
+    "totalMs": 1996.2060000000015,
+    "samples": 3113,
+    "selfByComponent": {
+     "gc": 15.628,
+     "bfs-distance": 1290.4930000000002,
+     "board-primitives (canStep/isBlocked/hasWall)": 166.6609999999999,
+     "mcts-evaluation (rollout/cutoff)": 183.05299999999997,
+     "candidate-generation": 27.985999999999994,
+     "mcts-selection": 18.689000000000007,
+     "evaluation": 73.81399999999995,
+     "wall-geometry (conflicts/withWall/path-cut)": 71.71200000000002,
+     "mcts-expansion (priors/ordering)": 33.732,
+     "agent-other": 5.511,
+     "other-js": 20.616,
+     "mcts-loop": 42.12000000000002,
+     "legal-move-generation": 22.794,
+     "state-transition": 10.341,
+     "mcts-expansion": 1.2189999999999999,
+     "native:now": 3.246,
+     "mcts-backpropagation": 7.9990000000000006,
+     "native:dispatch": 0.592
+    },
+    "inclusiveByFunction": {
+     "distanceToRow": 655.911,
+     "priorOrder": 326.28300000000036,
+     "evaluate": 131.13499999999985,
+     "truncatedValue": 134.67099999999982,
+     "hasPathToRow": 293.7069999999999,
+     "heuristicAction": 1205.2410000000013,
+     "distanceMap": 489.2069999999998,
+     "childEvaluator": 138.12999999999985,
+     "isCandidateLegal": 119.07599999999994,
+     "searchCandidates": 201.309,
+     "shortestPath": 249.70600000000033,
+     "pseudoCandidates": 78.536,
+     "legalPawnMoves": 35.208,
+     "wallConflicts": 8.450000000000001,
+     "selectChild": 16.279,
+     "applyActionUnchecked": 10.341,
+     "withWall": 9.702999999999998,
+     "backpropagate": 7.9990000000000006
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 633.9500000000003
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 408.597
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 204.81900000000024
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 133.09499999999997
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 129.13299999999987
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 41.369
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 40.91000000000001
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 32.831
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 24.288999999999998
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 22.643999999999995
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 21.712999999999997
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 20.296000000000003
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 20.151999999999997
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 20.026
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 19.9
+     }
+    ],
+    "phases": {
+     "gc": 15.628,
+     "mcts: expansion (actions, priors, child state)": 541.8710000000001,
+     "mcts: evaluation (rollout / cutoff eval)": 1352.7890000000018,
+     "mcts: selection": 18.689000000000007,
+     "outside search": 13.274,
+     "runMcts (self: loop, TT map, bookkeeping)": 40.91000000000001,
+     "mcts: trace snapshots": 0.59,
+     "mcts: other (now)": 4.456,
+     "mcts: backpropagation (+solver)": 7.9990000000000006
+    }
+   }
+  },
+  {
+   "agent": "alphabeta",
+   "phase": "late (15–20)",
+   "budgetMs": 2000,
+   "elapsedMs": 2060.4326,
+   "stats": {
+    "depth": 13,
+    "decided": false,
+    "nodes": 37312,
+    "leaves": 8945,
+    "orderingEvals": 75667,
+    "cutoffs": 10089,
+    "prunedMoves": 122828,
+    "ttProbes": 28352,
+    "ttHits": 23850,
+    "ttCutoffs": 11072,
+    "legal": 64,
+    "searched": 7
+   },
+   "gc": {
+    "count": 5,
+    "ms": 6.680999994277954
+   },
+   "heapDeltaMB": 22.236801147460938,
+   "profile": {
+    "totalMs": 1996.6210000000015,
+    "samples": 3196,
+    "selfByComponent": {
+     "gc": 11.518999999999998,
+     "alphabeta-control (negamax/expand/ordering/TT)": 129.53599999999992,
+     "bfs-distance": 1342.8699999999983,
+     "candidate-generation": 86.08999999999999,
+     "evaluation": 135.00199999999998,
+     "board-primitives (canStep/isBlocked/hasWall)": 136.14499999999992,
+     "other-js": 26.840999999999998,
+     "wall-geometry (conflicts/withWall/path-cut)": 81.85799999999993,
+     "hashing": 13.732999999999999,
+     "state-transition": 19.916000000000004,
+     "native:now": 1.875,
+     "legal-move-generation": 5.140999999999999,
+     "agent-other": 2.993,
+     "notation/encoding": 1.895,
+     "native:dispatch": 1.2069999999999999
+    },
+    "inclusiveByFunction": {
+     "expand": 1718.8949999999977,
+     "negamax": 1971.8590000000006,
+     "distanceToRow": 809.4540000000001,
+     "hasPathToRow": 606.301,
+     "isCandidateLegal": 623.0110000000002,
+     "materialize": 661.5640000000003,
+     "pseudoCandidates": 326.62300000000016,
+     "shortestPath": 273.678,
+     "distanceMap": 294.8899999999997,
+     "childEvaluator": 372.04100000000017,
+     "wallConflicts": 14.741000000000001,
+     "legalPawnMoves": 8.328999999999999,
+     "hashState": 13.732999999999999,
+     "applyActionUnchecked": 19.322000000000003,
+     "formatAction": 0.648
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 778.6269999999998
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 244.176
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 233.09500000000014
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 84.95099999999994
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 81.14299999999999
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 73.61900000000001
+     },
+     {
+      "fn": "negamax @search/minimax.ts:220",
+      "ms": 53.85799999999998
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 53.39300000000001
+     },
+     {
+      "fn": "expand @search/minimax.ts:148",
+      "ms": 52.09499999999999
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:84",
+      "ms": 41.565000000000005
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 32.940000000000005
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 26.840999999999998
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:93",
+      "ms": 19.995000000000008
+     },
+     {
+      "fn": "applyActionUnchecked @engine/game.ts:80",
+      "ms": 19.322000000000003
+     },
+     {
+      "fn": "(anonymous) @search/evaluation.ts:81",
+      "ms": 18.247999999999994
+     }
+    ],
+    "phases": {
+     "gc": 11.518999999999998,
+     "ab: expand (candidates + ordering evals)": 1718.8949999999977,
+     "ab: materialize (child state + wall legality)": 55.53099999999996,
+     "ab: leaf evaluation": 123.21900000000001,
+     "negamax (self: loop, TT map, bookkeeping)": 53.85799999999998,
+     "outside search": 12.595,
+     "ab: other (get)": 0.582,
+     "ab: hashing": 13.732999999999999,
+     "ab: time/abort check": 4.868,
+     "ab: other (toTT)": 0.587,
+     "ab: trace recording": 0.648,
+     "ab: other (fromTT)": 0.586
+    }
+   }
+  },
+  {
+   "agent": "mcts-guided",
+   "phase": "late (15–20)",
+   "budgetMs": 2000,
+   "elapsedMs": 2071.4118000000017,
+   "stats": {
+    "simulations": 8211,
+    "treeNodes": 8212,
+    "maxTreeDepth": 20,
+    "stopReason": "time",
+    "rollouts": 8211,
+    "avgRolloutPlies": 4,
+    "legal": 64,
+    "searched": 7,
+    "topShare": 0.8718791864571915
+   },
+   "gc": {
+    "count": 6,
+    "ms": 10.288899660110474
+   },
+   "heapDeltaMB": -23.1422119140625,
+   "profile": {
+    "totalMs": 1995.9680000000058,
+    "samples": 3102,
+    "selfByComponent": {
+     "bfs-distance": 1297.0290000000034,
+     "board-primitives (canStep/isBlocked/hasWall)": 159.775,
+     "mcts-evaluation (rollout/cutoff)": 165.63399999999996,
+     "state-transition": 9.913000000000002,
+     "mcts-expansion (priors/ordering)": 46.882999999999996,
+     "mcts-backpropagation": 10.108,
+     "agent-other": 7.123,
+     "wall-geometry (conflicts/withWall/path-cut)": 99.19899999999996,
+     "candidate-generation": 24.612999999999996,
+     "evaluation": 67.55300000000001,
+     "mcts-loop": 36.858000000000004,
+     "mcts-selection": 13.929999999999998,
+     "legal-move-generation": 16.141999999999996,
+     "other-js": 27.837,
+     "gc": 9.541,
+     "mcts-expansion": 1.955,
+     "native:now": 0.613,
+     "native:dispatch": 1.262
+    },
+    "inclusiveByFunction": {
+     "shortestPath": 323.15000000000026,
+     "heuristicAction": 1237.7040000000031,
+     "distanceToRow": 620.8410000000006,
+     "evaluate": 125.01299999999996,
+     "truncatedValue": 64.551,
+     "hasPathToRow": 376.8810000000002,
+     "isCandidateLegal": 141.62099999999992,
+     "searchCandidates": 82.79099999999997,
+     "applyActionUnchecked": 10.530000000000001,
+     "priorOrder": 294.9879999999999,
+     "backpropagate": 10.108,
+     "distanceMap": 442.163,
+     "pseudoCandidates": 83.257,
+     "childEvaluator": 119.84999999999997,
+     "legalPawnMoves": 19.191,
+     "withWall": 15.350999999999997,
+     "wallConflicts": 12.031000000000002,
+     "selectChild": 12.043
+    },
+    "topSelf": [
+     {
+      "fn": "distanceToRow @engine/pathfinding.ts:55",
+      "ms": 599.2650000000007
+     },
+     {
+      "fn": "distanceMap @engine/pathfinding.ts:90",
+      "ms": 361.832
+     },
+     {
+      "fn": "shortestPath @engine/pathfinding.ts:20",
+      "ms": 268.92300000000023
+     },
+     {
+      "fn": "isBlocked @engine/board.ts:88",
+      "ms": 122.52599999999994
+     },
+     {
+      "fn": "heuristicAction @mcts/rollout.ts:113",
+      "ms": 117.481
+     },
+     {
+      "fn": "hasPathToRow @engine/pathfinding.ts:82",
+      "ms": 60.90599999999997
+     },
+     {
+      "fn": "runMcts @mcts/core.ts:90",
+      "ms": 34.518000000000015
+     },
+     {
+      "fn": "pathEdgeSet @engine/walls.ts:47",
+      "ms": 29.094999999999988
+     },
+     {
+      "fn": "get @node/module-runner.js:1296",
+      "ms": 27.837
+     },
+     {
+      "fn": "childEvaluator @search/evaluation.ts:76",
+      "ms": 27.273999999999997
+     },
+     {
+      "fn": "priorOrder @mcts/quoridor.ts:31",
+      "ms": 26.426
+     },
+     {
+      "fn": "(anonymous) @mcts/rollout.ts:34",
+      "ms": 25.526000000000007
+     },
+     {
+      "fn": "add @engine/walls.ts:65",
+      "ms": 20.831999999999997
+     },
+     {
+      "fn": "pseudoCandidates @search/candidates.ts:20",
+      "ms": 20.446000000000005
+     },
+     {
+      "fn": "evaluate @search/evaluation.ts:69",
+      "ms": 17.970999999999993
+     }
+    ],
+    "phases": {
+     "mcts: evaluation (rollout / cutoff eval)": 1375.9020000000041,
+     "mcts: expansion (actions, priors, child state)": 538.7410000000006,
+     "mcts: backpropagation (+solver)": 10.108,
+     "outside search": 10.274999999999999,
+     "runMcts (self: loop, TT map, bookkeeping)": 34.518000000000015,
+     "mcts: selection": 13.929999999999998,
+     "gc": 9.541,
+     "mcts: trace snapshots": 1.7409999999999999,
+     "mcts: other (now)": 1.212
+    }
+   }
+  }
+ ],
+ "sink": 7511189
+}
