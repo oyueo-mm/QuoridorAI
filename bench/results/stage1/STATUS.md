@@ -1,6 +1,12 @@
 # Stage 1 benchmark status
 
-Last updated: 2026-11-11 19:12 (KST) · branch `stage1-benchmark`
+Last updated: 2026-11-11 19:42 (KST) · branch `stage1-benchmark`
+
+> **Stage 2 pipeline** (`bench/stage2-pipeline.ps1`, PID 42340, started 19:41, hidden window) waits for the
+> stage-1 shards below to exit, then: collects the stage-1 report → `npm test` on the idle machine →
+> stage-2 component bench → tactics with stage-2 agents → `stage2` A/B suite (4 shards).
+> Progress: `bench/results/stage2/pipeline.log`. If it died, re-run the same script: it waits for running
+> workers and every step is resumable (finished games are skipped).
 
 | Suite | Matchup | State | Games | Raw data |
 |---|---|---|---:|---|
@@ -9,10 +15,10 @@ Last updated: 2026-11-11 19:12 (KST) · branch `stage1-benchmark`
 | tactics | 12 agents × 226 positions | **complete** | — | `tactics/tactics-2026-11-11T09-54-28-289Z.*` |
 | profile | primitives + search profiles | **complete** | — | `profile/profile-*.md` |
 | stage1-time | T300-ab-vs-guided | **complete** | 200 / 200 | `stage1-time/T300-ab-vs-guided/` |
-| stage1-time | T300-ab-vs-pure | running at last update | 14 / 100 | `stage1-time/T300-ab-vs-pure/` |
-| stage1-time | T300-ab-vs-bfs | not started at last update | 0 / 100 | |
-| stage1-time | T2000-ab-vs-guided | not started at last update | 0 / 40 | |
-| stage1-time | T10000-ab-vs-guided | not started at last update | 0 / 8 | |
+| stage1-time | T300-ab-vs-pure | **complete** | 100 / 100 | `stage1-time/T300-ab-vs-pure/` |
+| stage1-time | T300-ab-vs-bfs | **complete** | 100 / 100 | `stage1-time/T300-ab-vs-bfs/` |
+| stage1-time | T2000-ab-vs-guided | running at last update | 38 / 40 | |
+| stage1-time | T10000-ab-vs-guided | running at last update (est. finish ≈ 20:07) | 0 / 8 | |
 
 The equal-time suite was started at 18:54 as 4 independent shard processes
 (`bench/run-shards.ps1 -Suite stage1-time -Shards 4`). Estimated finish ≈ 20:00–20:15 on this laptop
