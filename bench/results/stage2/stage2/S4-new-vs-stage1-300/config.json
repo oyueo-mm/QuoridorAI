@@ -1,0 +1,44 @@
+{
+ "id": "S4-new-vs-stage1-300",
+ "question": "Both changes: AB (masked + path-defense) vs stage-1 AB (reference + opponent-path), 300 ms per move",
+ "configHash": "441dd16c8db4d64f",
+ "games": 200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "stage 2",
+    "minimax": {
+     "wallFilter": "path-defense",
+     "pathKernel": "masked"
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "stage 1",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "reference"
+    }
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 100,
+  "seed": 92004,
+  "maxGameMs": 120000
+ }
+}

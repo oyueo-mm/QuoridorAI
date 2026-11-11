@@ -5,3 +5,11 @@
 2026-11-11 20:01:22 stage-2 component benchmark: exit 0
 2026-11-11 20:10:18 tactics (stage-2 agents): exit 0
 2026-11-11 23:59:04 [2b] stage2b start
+2026-11-12 00:03:38 [2b] S2 200/200, S3 200/200 ??stopping stage2 shards (S4/S5 skipped)
+2026-11-12 00:03:43 stage2 suite: exit 1
+2026-11-12 00:03:43 pipeline done
+2026-11-12 00:03:46 [2b] stage2 shards stopped; S4 games on disk: 15 (aborted matchup, not analysed)
+2026-11-12 00:03:46 [2b] keep-awake PID 36480
+2026-11-12 00:05:06 [2b] tactics (pd3 agents): exit 0
+2026-11-12 00:36:20 [2b] stage2b suite: exit 0
+2026-11-12 00:36:21 [2b] stage2b done

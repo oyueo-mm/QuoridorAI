@@ -1,0 +1,45 @@
+{
+ "id": "S6-defense3-vs-path-300",
+ "question": "AB (path-defense within 3 steps) vs AB (opponent-path), both masked BFS, 300 ms per move",
+ "configHash": "0c80509e5db033b8",
+ "games": 200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "defense≤3",
+    "minimax": {
+     "wallFilter": "path-defense",
+     "pathKernel": "masked",
+     "defenseMaxDistance": 3
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "opponent-path",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 100,
+  "seed": 92006,
+  "maxGameMs": 120000
+ }
+}

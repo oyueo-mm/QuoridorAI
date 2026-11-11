@@ -1,0 +1,39 @@
+{
+ "id": "S7-masked-vs-guided-300",
+ "question": "Default AB (masked BFS, opponent-path) vs Guided MCTS (masked BFS), 300 ms per move",
+ "configHash": "5638a49c4bbb0c16",
+ "games": 200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "masked BFS",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   },
+   {
+    "kind": "mcts-guided",
+    "depth": 0,
+    "simulations": 3000
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 100,
+  "seed": 92007,
+  "maxGameMs": 120000
+ }
+}
