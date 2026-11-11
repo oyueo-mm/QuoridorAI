@@ -242,6 +242,8 @@ const AGENTS: Record<string, { spec: AgentSpec; budget: Budget }> = {
   'ab4-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'fixed', timeMs: 0 } },
   'ab5-pd': { spec: { kind: 'alphabeta', depth: 5, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'fixed', timeMs: 0 } },
   'ab-300ms-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'equal-time', timeMs: 300 } },
+  'ab5-pd3': { spec: { kind: 'alphabeta', depth: 5, simulations: 0, minimax: { wallFilter: 'path-defense', defenseMaxDistance: 3 } }, budget: { mode: 'fixed', timeMs: 0 } },
+  'ab-300ms-pd3': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense', defenseMaxDistance: 3 } }, budget: { mode: 'equal-time', timeMs: 300 } },
   'ab-2s-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'equal-time', timeMs: 2000 } },
 };
 

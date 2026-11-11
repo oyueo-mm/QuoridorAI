@@ -17,6 +17,7 @@ const abv = (depth: number, tag: string, minimax: NonNullable<AgentSpec['minimax
 const AB_STAGE1 = { wallFilter: 'opponent-path', pathKernel: 'reference' } as const;
 const AB_MASKED = { wallFilter: 'opponent-path', pathKernel: 'masked' } as const;
 const AB_DEFENSE = { wallFilter: 'path-defense', pathKernel: 'masked' } as const;
+const AB_DEFENSE3 = { wallFilter: 'path-defense', pathKernel: 'masked', defenseMaxDistance: 3 } as const;
 const mm = (depth: number): AgentSpec => ({ kind: 'minimax', depth, simulations: 0 });
 const guided = (simulations: number): AgentSpec => ({ kind: 'mcts-guided', depth: 0, simulations });
 const pure = (simulations: number): AgentSpec => ({ kind: 'mcts', depth: 0, simulations });
@@ -93,6 +94,19 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
       { id: 'S3-defense-vs-path-d4', question: 'Wall filter at equal depth: AB depth 4 path-defense vs opponent-path (fixed budget)', config: fixed(abv(4, 'path-defense', AB_DEFENSE), abv(4, 'opponent-path', AB_MASKED), 100, 92003) },
       { id: 'S4-new-vs-stage1-300', question: 'Both changes: AB (masked + path-defense) vs stage-1 AB (reference + opponent-path), 300 ms per move', config: timed(abv(4, 'stage 2', AB_DEFENSE), abv(4, 'stage 1', AB_STAGE1), 300, 100, 92004) },
       { id: 'S5-new-vs-guided-300', question: 'AB (masked + path-defense) vs Guided MCTS (masked BFS), 300 ms per move', config: timed(abv(4, 'stage 2', AB_DEFENSE), guided(3000), 300, 100, 92005) },
+    ],
+  },
+  /**
+   * Stage 2b, after S2 rejected always-on protection (36 %): protection only within 3 steps of
+   * the goal, and the default Alpha-Beta (masked BFS) against Guided MCTS (masked BFS).
+   * Run with OUT=bench/results/stage2.
+   */
+  'stage2b': {
+    description: 'Stage-2b A/B: end-of-race protective walls; default Alpha-Beta vs Guided MCTS, both with bitboard BFS.',
+    maxGames: 1000,
+    matchups: [
+      { id: 'S6-defense3-vs-path-300', question: 'AB (path-defense within 3 steps) vs AB (opponent-path), both masked BFS, 300 ms per move', config: timed(abv(4, 'defense≤3', AB_DEFENSE3), abv(4, 'opponent-path', AB_MASKED), 300, 100, 92006) },
+      { id: 'S7-masked-vs-guided-300', question: 'Default AB (masked BFS, opponent-path) vs Guided MCTS (masked BFS), 300 ms per move', config: timed(abv(4, 'masked BFS', AB_MASKED), guided(3000), 300, 100, 92007) },
     ],
   },
   /** Tiny configuration for the harness self-test. */

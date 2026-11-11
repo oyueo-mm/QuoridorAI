@@ -45,7 +45,11 @@ function blockersOf(o: Orientation, row: number, col: number): { orientation: Or
  * current shortest path (the only walls that can lengthen it immediately); 'path-defense' =
  * 'opponent-path' plus protective walls (see below) while the opponent still has walls.
  */
-export function pseudoCandidates(state: GameState, wallFilter: MinimaxSettings['wallFilter']): PseudoCandidate[] {
+export function pseudoCandidates(
+  state: GameState,
+  wallFilter: MinimaxSettings['wallFilter'],
+  defenseMaxDistance: number = Infinity,
+): PseudoCandidate[] {
   if (state.winner !== null) return [];
   if (wallFilter === 'all') return legalActions(state).map((action) => ({ action, check: 0 }));
 
@@ -66,7 +70,8 @@ export function pseudoCandidates(state: GameState, wallFilter: MinimaxSettings['
     const check = CHECK_OPPONENT | (wallCutsEdges(myEdges, w.orientation, w.row, w.col) ? CHECK_SELF : 0);
     out.push({ action: { type: 'wall', ...w }, check });
   }
-  if (wallFilter !== 'path-defense' || state.wallsRemaining[opp] <= 0) return out;
+  // Only while the opponent can still place walls, and (optionally) only near the end of my race.
+  if (wallFilter !== 'path-defense' || state.wallsRemaining[opp] <= 0 || myPath.length - 1 > defenseMaxDistance) return out;
 
   // Protective walls: walls that make a slot the opponent could use to cut my current
   // shortest path illegal (by overlapping or crossing it), without occupying that slot myself.
@@ -100,8 +105,8 @@ export function isCandidateLegal(state: GameState, c: PseudoCandidate, child?: G
 }
 
 /** Fully verified candidate list (same set the search explores). */
-export function searchCandidates(state: GameState, wallFilter: MinimaxSettings['wallFilter']): Action[] {
-  return pseudoCandidates(state, wallFilter)
+export function searchCandidates(state: GameState, wallFilter: MinimaxSettings['wallFilter'], defenseMaxDistance?: number): Action[] {
+  return pseudoCandidates(state, wallFilter, defenseMaxDistance)
     .filter((c) => isCandidateLegal(state, c))
     .map((c) => c.action);
 }

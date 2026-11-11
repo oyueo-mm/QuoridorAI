@@ -147,6 +147,12 @@ export interface MinimaxSettings {
    * opponent's current shortest path (the only walls that can lengthen it immediately).
    */
   wallFilter: 'all' | 'opponent-path' | 'path-defense';
+  /**
+   * 'path-defense' only: add protective walls only while the side to move is at most this many
+   * steps from its goal (undefined = always). Stage 2: always-on protection cost ~1 ply and
+   * lost 36 % of equal-time games against 'opponent-path'.
+   */
+  defenseMaxDistance?: number;
   evaluation: MinimaxEvalWeights;
   /**
    * BFS implementation used during this search: 'masked' (row-mask bitboards, default) or

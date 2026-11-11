@@ -71,6 +71,28 @@ describe('stage 2: path-defense wall filter', () => {
   });
 });
 
+describe('stage 2: path-defense limited to the end of the race', () => {
+  it('still finds the win-in-5 (side to move is 2 steps from goal) with defenseMaxDistance 3', () => {
+    const s = parseMoveList(WIN5).positions.at(-1)!;
+    const r = search(s, { maxDepth: 5, wallFilter: 'path-defense', defenseMaxDistance: 3 });
+    expect(r.decided).toBe(true);
+    expect(['f1h', 'e1v', 'f1v']).toContain(formatAction(r.bestAction));
+  });
+
+  it('equals opponent-path while the side to move is farther than the limit', () => {
+    for (const s of positions(15)) {
+      const near = pseudoCandidates(s, 'path-defense', 3).map((c) => formatAction(c.action));
+      const narrow = pseudoCandidates(s, 'opponent-path').map((c) => formatAction(c.action));
+      const wide = pseudoCandidates(s, 'path-defense').map((c) => formatAction(c.action));
+      expect(near.length).toBeGreaterThanOrEqual(narrow.length);
+      expect(near.length).toBeLessThanOrEqual(wide.length);
+      for (const n of narrow) expect(near).toContain(n);
+    }
+    const start = createInitialState(); // 8 steps from goal
+    expect(pseudoCandidates(start, 'path-defense', 3)).toEqual(pseudoCandidates(start, 'opponent-path'));
+  });
+});
+
 describe('stage 2: arena agent overrides', () => {
   it('passes Alpha-Beta overrides through while the budget keeps depth and time', () => {
     const spec = { kind: 'alphabeta' as const, depth: 3, simulations: 0, minimax: { wallFilter: 'path-defense' as const, pathKernel: 'reference' as const }, tag: 'pd' };

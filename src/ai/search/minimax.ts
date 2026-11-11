@@ -241,7 +241,7 @@ function runSearchImpl(
 
   /** Candidate list ordered best-first for the side to move. Unverified walls stay lazy. */
   const expand = (state: GameState, side: PlayerId, depth: number, ply: number, ttBest: number): Child[] => {
-    let items: Child[] = pseudoCandidates(state, settings.wallFilter).map((c) => ({
+    let items: Child[] = pseudoCandidates(state, settings.wallFilter, settings.defenseMaxDistance).map((c) => ({
       action: c.action,
       index: encodeAction(c.action),
       check: c.check,
