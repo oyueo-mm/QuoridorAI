@@ -17,8 +17,9 @@ Last updated: 2026-11-11 19:42 (KST) · branch `stage1-benchmark`
 | stage1-time | T300-ab-vs-guided | **complete** | 200 / 200 | `stage1-time/T300-ab-vs-guided/` |
 | stage1-time | T300-ab-vs-pure | **complete** | 100 / 100 | `stage1-time/T300-ab-vs-pure/` |
 | stage1-time | T300-ab-vs-bfs | **complete** | 100 / 100 | `stage1-time/T300-ab-vs-bfs/` |
-| stage1-time | T2000-ab-vs-guided | running at last update | 38 / 40 | |
-| stage1-time | T10000-ab-vs-guided | running at last update (est. finish ≈ 20:07) | 0 / 8 | |
+| stage1-time | T2000-ab-vs-guided | **complete** | 40 / 40 | `stage1-time/T2000-ab-vs-guided/` |
+| stage1-time | T10000-ab-vs-guided | **complete** (19:59) | 8 / 8 | `stage1-time/T10000-ab-vs-guided/` |
+| npm test, idle | — | **458 passed, 1 skipped, 0 failed** (19:59) | — | `../stage2/pipeline-npm-test.log` |
 
 The equal-time suite was started at 18:54 as 4 independent shard processes
 (`bench/run-shards.ps1 -Suite stage1-time -Shards 4`). Estimated finish ≈ 20:00–20:15 on this laptop

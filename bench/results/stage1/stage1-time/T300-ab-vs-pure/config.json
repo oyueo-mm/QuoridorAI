@@ -1,0 +1,34 @@
+{
+ "id": "T300-ab-vs-pure",
+ "question": "Alpha-Beta vs Pure MCTS, 300 ms per move",
+ "configHash": "5115477bb8547b3f",
+ "games": 100,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0
+   },
+   {
+    "kind": "mcts",
+    "depth": 0,
+    "simulations": 500
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 50,
+  "seed": 82002,
+  "maxGameMs": 120000
+ }
+}
