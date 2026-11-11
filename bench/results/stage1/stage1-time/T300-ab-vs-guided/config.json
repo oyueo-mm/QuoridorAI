@@ -1,0 +1,34 @@
+{
+ "id": "T300-ab-vs-guided",
+ "question": "Alpha-Beta vs Guided MCTS, 300 ms per move",
+ "configHash": "0c6f5d3f8f4b4a8a",
+ "games": 200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 6,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0
+   },
+   {
+    "kind": "mcts-guided",
+    "depth": 0,
+    "simulations": 3000
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 100,
+  "seed": 82001,
+  "maxGameMs": 120000
+ }
+}
