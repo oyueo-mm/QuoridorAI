@@ -1,6 +1,6 @@
 import { createAgent } from '../ai/registry';
 import type { AgentId, AgentSettings } from '../ai/registry';
-import type { Agent } from '../ai/types';
+import type { Agent, MinimaxSettings } from '../ai/types';
 
 /**
  * Agents available in the Arena / Compare / Experiments views and how a search budget is
@@ -23,6 +23,13 @@ export interface AgentSpec {
   depth: number;
   /** Fixed-budget simulations (MCTS). */
   simulations: number;
+  /**
+   * Batch experiments only (the browser never sets it): Alpha-Beta/Minimax setting overrides
+   * for A/B comparisons of search variants. The budget still decides depth and time limit.
+   */
+  minimax?: Partial<Omit<MinimaxSettings, 'maxDepth' | 'timeLimitMs' | 'algorithm'>>;
+  /** Short label suffix distinguishing variants of the same kind in reports. */
+  tag?: string;
 }
 
 export interface Budget {
@@ -61,6 +68,11 @@ export const DEFAULT_BUDGET: Budget = { mode: 'equal-time', timeMs: 300 };
 
 /** Human-readable label including the budget actually applied. */
 export function agentLabel(spec: AgentSpec, budget: Budget): string {
+  const base = baseLabel(spec, budget);
+  return spec.tag ? `${base} [${spec.tag}]` : base;
+}
+
+function baseLabel(spec: AgentSpec, budget: Budget): string {
   const info = ARENA_AGENTS[spec.kind];
   if (info.budget === 'none') return info.name;
   if (budget.mode === 'equal-time') return `${info.name} (${budget.timeMs} ms)`;
@@ -83,6 +95,7 @@ export function agentSettings(spec: AgentSpec, budget: Budget, seed: number): { 
         settings: {
           seed,
           minimax: {
+            ...spec.minimax,
             algorithm: alphabeta ? 'alphabeta' : 'minimax',
             moveOrdering: alphabeta,
             transpositionTable: alphabeta,

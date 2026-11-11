@@ -5,6 +5,7 @@
 export * from './types';
 export * from './board';
 export * from './pathfinding';
+export * from './rowMasks';
 export * from './walls';
 export * from './rules';
 export * from './game';

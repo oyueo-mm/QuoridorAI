@@ -146,8 +146,14 @@ export interface MinimaxSettings {
    * Wall candidates searched at every node: all legal walls, or only legal walls that cut the
    * opponent's current shortest path (the only walls that can lengthen it immediately).
    */
-  wallFilter: 'all' | 'opponent-path';
+  wallFilter: 'all' | 'opponent-path' | 'path-defense';
   evaluation: MinimaxEvalWeights;
+  /**
+   * BFS implementation used during this search: 'masked' (row-mask bitboards, default) or
+   * 'reference' (original cell-by-cell BFS). Identical results; only speed differs. Kept for
+   * A/B benchmarks. Undefined = the engine default.
+   */
+  pathKernel?: 'masked' | 'reference';
 }
 
 /** How a score relates to the true minimax value (alpha-beta may only prove a bound). */

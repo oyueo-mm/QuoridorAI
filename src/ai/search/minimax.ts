@@ -8,6 +8,7 @@ import {
   isLegalAction,
   legalActions,
   opponentOf,
+  withPathKernel,
 } from '../../engine';
 import type { Action, GameState, PlayerId } from '../../engine';
 import { now } from '../common';
@@ -141,6 +142,19 @@ export function runSearch(
   settings: MinimaxSettings,
   evaluator: Evaluator,
   hooks: SearchHooks = {},
+): SearchResult {
+  // The kernel only changes how BFS distances are computed (identical values), so a search
+  // with 'reference' and one with 'masked' visit exactly the same nodes.
+  return settings.pathKernel
+    ? withPathKernel(settings.pathKernel, () => runSearchImpl(root, settings, evaluator, hooks))
+    : runSearchImpl(root, settings, evaluator, hooks);
+}
+
+function runSearchImpl(
+  root: GameState,
+  settings: MinimaxSettings,
+  evaluator: Evaluator,
+  hooks: SearchHooks,
 ): SearchResult {
   if (root.winner !== null) throw new Error('Cannot search a finished game');
   const clock = hooks.clock ?? now;

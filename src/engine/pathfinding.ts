@@ -6,7 +6,51 @@ import {
   cellFromIndex,
   cellIndex,
 } from './board';
+import { distanceMapMasked, distanceToRowMasked, hasPathToRowMasked, shortestPathMasked } from './rowMasks';
 import type { Coord, Goal, WallLayout } from './types';
+
+/**
+ * Two interchangeable implementations of the row-goal functions with identical results:
+ * 'masked' (row-mask bitboards, rowMasks.ts — the default) and 'reference' (the original
+ * cell-by-cell BFS below). The switch exists for equivalence tests and A/B benchmarks.
+ */
+export type PathKernel = 'masked' | 'reference';
+let kernel: PathKernel = 'masked';
+
+export function getPathKernel(): PathKernel {
+  return kernel;
+}
+
+export function setPathKernel(k: PathKernel): void {
+  kernel = k;
+}
+
+/** Runs `fn` with `k` as the active kernel (synchronous code only) and restores the previous one. */
+export function withPathKernel<T>(k: PathKernel, fn: () => T): T {
+  const prev = kernel;
+  kernel = k;
+  try {
+    return fn();
+  } finally {
+    kernel = prev;
+  }
+}
+
+export function shortestPath(walls: WallLayout, start: Coord, targetRow: number): Coord[] | null {
+  return kernel === 'masked' ? shortestPathMasked(walls, start, targetRow) : shortestPathReference(walls, start, targetRow);
+}
+
+export function distanceToRow(walls: WallLayout, start: Coord, targetRow: number): number {
+  return kernel === 'masked' ? distanceToRowMasked(walls, start, targetRow) : distanceToRowReference(walls, start, targetRow);
+}
+
+export function hasPathToRow(walls: WallLayout, start: Coord, targetRow: number): boolean {
+  return kernel === 'masked' ? hasPathToRowMasked(walls, start, targetRow) : distanceToRowReference(walls, start, targetRow) !== Infinity;
+}
+
+export function distanceMap(walls: WallLayout, targetRow: number): Int16Array {
+  return kernel === 'masked' ? distanceMapMasked(walls, targetRow) : distanceMapReference(walls, targetRow);
+}
 
 /**
  * Pathfinding ignores pawns: in Quoridor a pawn never permanently blocks a route,
@@ -20,7 +64,7 @@ const UNREACHABLE = -1;
  * Returns the cells visited in order (including `start` and the goal cell), or null if unreachable.
  * Neighbours are expanded in the fixed DIRECTIONS order, so the result is deterministic.
  */
-export function shortestPath(walls: WallLayout, start: Coord, targetRow: number): Coord[] | null {
+export function shortestPathReference(walls: WallLayout, start: Coord, targetRow: number): Coord[] | null {
   if (start.row === targetRow) return [start];
 
   const parent = new Int16Array(NUM_CELLS).fill(UNREACHABLE);
@@ -59,7 +103,7 @@ function reconstruct(parent: Int16Array, end: number, startIdx: number): Coord[]
 }
 
 /** Number of steps on the shortest route to `targetRow`, or Infinity if none exists. */
-export function distanceToRow(walls: WallLayout, start: Coord, targetRow: number): number {
+export function distanceToRowReference(walls: WallLayout, start: Coord, targetRow: number): number {
   if (start.row === targetRow) return 0;
   // Hot path for search evaluation: reuse module-level buffers, no path reconstruction.
   const dist = scratchDist.fill(UNREACHABLE);
@@ -88,16 +132,12 @@ export function distanceToRow(walls: WallLayout, start: Coord, targetRow: number
 const scratchDist = new Int16Array(NUM_CELLS);
 const scratchQueue = new Int16Array(NUM_CELLS);
 
-export function hasPathToRow(walls: WallLayout, start: Coord, targetRow: number): boolean {
-  return distanceToRow(walls, start, targetRow) !== Infinity;
-}
-
 /**
  * Multi-source BFS from every cell of `targetRow`: distance (in steps) from each cell to that row.
  * Indexed by `row * 9 + col`; -1 marks cells that cannot reach the row.
  * Useful for heuristics and for heat-map style visualisation.
  */
-export function distanceMap(walls: WallLayout, targetRow: number): Int16Array {
+export function distanceMapReference(walls: WallLayout, targetRow: number): Int16Array {
   const dist = new Int16Array(NUM_CELLS).fill(UNREACHABLE);
   const queue = new Int16Array(NUM_CELLS);
   let head = 0;

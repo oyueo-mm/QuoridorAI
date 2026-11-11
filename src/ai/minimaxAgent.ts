@@ -103,7 +103,7 @@ function explain(trace: MinimaxTrace, result: SearchResult): string[] {
         ` → ${num(e.score)}${e.matchesScore ? ' (탐색 점수와 일치)' : ''}.`,
     );
   }
-  if (trace.settings.wallFilter === 'opponent-path' && result.legalActionCount > result.searchedActionCount) {
+  if (trace.settings.wallFilter !== 'all' && result.legalActionCount > result.searchedActionCount) {
     lines.push(
       `벽 후보를 상대 최단 경로를 끊는 벽으로 제한해 루트에서 ${result.legalActionCount}개 중 ${result.searchedActionCount}개 행동을 탐색했습니다.`,
     );

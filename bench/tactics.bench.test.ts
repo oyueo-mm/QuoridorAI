@@ -238,6 +238,11 @@ const AGENTS: Record<string, { spec: AgentSpec; budget: Budget }> = {
   guided3000: { spec: { kind: 'mcts-guided', depth: 0, simulations: 3000 }, budget: { mode: 'fixed', timeMs: 0 } },
   'guided-300ms': { spec: { kind: 'mcts-guided', depth: 0, simulations: 3000 }, budget: { mode: 'equal-time', timeMs: 300 } },
   pure1000: { spec: { kind: 'mcts', depth: 0, simulations: 1000 }, budget: { mode: 'fixed', timeMs: 0 } },
+  // Stage 2 variants (masked BFS + path-defense wall filter).
+  'ab4-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'fixed', timeMs: 0 } },
+  'ab5-pd': { spec: { kind: 'alphabeta', depth: 5, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'fixed', timeMs: 0 } },
+  'ab-300ms-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'equal-time', timeMs: 300 } },
+  'ab-2s-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'equal-time', timeMs: 2000 } },
 };
 
 interface Answer {
@@ -290,7 +295,7 @@ async function run(positions: TacticPosition[], agentIds: string[]) {
           const mv = action.type === 'move' ? solver.moveValue(s, action.to) : null;
           a.optimal = mv !== null && mv.result === v.result && mv.plies === v.plies;
         }
-        if (!a.correct && p.solution && agentId.startsWith('ab')) {
+        if (!a.correct && p.solution && agentId.startsWith('ab') && !agentId.endsWith('-pd')) {
           a.filteredOut = !p.solution.some((n) => {
             const act = legalActions(s).find((x) => formatAction(x) === n);
             return act !== undefined && inAlphaBetaCandidates(s, act);
