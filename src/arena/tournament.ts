@@ -1,13 +1,13 @@
 import type { Agent, DecisionTrace } from '../ai/types';
-import { formatAction } from '../engine';
-import type { PlayerId } from '../engine';
+import { formatAction, hashState } from '../engine';
+import type { GameState, PlayerId } from '../engine';
 import { runMatch } from '../match/runMatch';
 import type { MatchStatus } from '../match/outcome';
 import { agentLabel, deriveSeed } from './agentSpec';
 import type { AgentFactory, AgentSpec, Budget } from './agentSpec';
-import { randomOpening } from './openings';
-import { mean, median, wilson } from './stats';
-import type { Proportion } from './stats';
+import { parseMoveList, randomMixedOpening, randomOpening } from './openings';
+import { eloEstimate, mean, meanInterval, median, percentile, wilson } from './stats';
+import type { EloEstimate, MeanInterval, Proportion } from './stats';
 
 /**
  * Tournament between two agents A and B: `pairs` openings, each played twice with the seats
@@ -29,7 +29,26 @@ export interface TournamentConfig {
   repetitionLimit: number | null;
   /** Wall-clock budget per game (halted as 'time-limit' when exceeded). */
   maxGameMs: number | null;
+  /**
+   * How start positions are drawn (default 'pawn': `openingPlies` random pawn moves, the
+   * original behaviour). 'mixed': random pawn moves or walls (see randomMixedOpening).
+   * 'book': the move lists of `openingBook`, one per pair (cycled).
+   */
+  openingMode?: OpeningMode;
+  /** 'mixed' only: probability of a wall per opening ply (default 0.25). */
+  openingWallProbability?: number;
+  /** 'mixed' only: largest accepted |shortest-path difference| after the opening (default 2). */
+  openingMaxImbalance?: number;
+  /** 'book' only: opening move lists in notation ("e2 e8 e3h"). */
+  openingBook?: string[];
+  /**
+   * Re-draw random openings whose position already occurred in this schedule, so
+   * deterministic agents never replay an identical game (default false = original behaviour).
+   */
+  uniqueOpenings?: boolean;
 }
+
+export type OpeningMode = 'pawn' | 'mixed' | 'book';
 
 export type GameOutcome =
   | 'a-win'
@@ -49,6 +68,26 @@ export interface MoveWork {
   simulations: number | null;
   /** Minimax: completed depth; MCTS: max tree depth. */
   depth: number | null;
+  /** Algorithm-specific details (absent in records written before they were collected). */
+  detail?: MoveDetail;
+}
+
+export interface MoveDetail {
+  /** Legal actions at the root and actions the agent actually considered there. */
+  legal?: number;
+  searched?: number;
+  /** Alpha-Beta / Minimax. */
+  ttProbes?: number;
+  ttHits?: number;
+  cutoffs?: number;
+  leaves?: number;
+  timedOut?: boolean;
+  /** Search stopped early on a proven result. */
+  decided?: boolean;
+  /** MCTS: share of root visits of the most visited move, and the visit entropy in bits. */
+  topShare?: number;
+  entropyBits?: number;
+  stopReason?: string;
 }
 
 export interface AgentGameStats {
@@ -61,7 +100,8 @@ export interface ScheduledGame {
   pair: number;
   /** Seat of agent A (0 = moves first). */
   aSeat: PlayerId;
-  opening: { seed: number; plies: number; moves: string[] };
+  /** `mode` is absent for the original pawn-only openings. */
+  opening: { seed: number; plies: number; moves: string[]; mode?: OpeningMode };
   /** Seeds of [A, B]. */
   agentSeeds: [number, number];
 }
@@ -78,29 +118,117 @@ export interface TournamentGame extends ScheduledGame {
 export function traceWork(trace: DecisionTrace, ms: number): MoveWork {
   switch (trace.algorithm) {
     case 'random':
-      return { ms, nodes: null, simulations: null, depth: null };
+      return { ms, nodes: null, simulations: null, depth: null, detail: { legal: trace.candidateCount, searched: 1 } };
     case 'bfs':
-      return { ms, nodes: trace.candidates.length, simulations: null, depth: 1 };
+      return {
+        ms,
+        nodes: trace.candidates.length,
+        simulations: null,
+        depth: 1,
+        detail: { legal: trace.candidates.length, searched: trace.candidates.length },
+      };
     case 'minimax':
-      return { ms, nodes: trace.stats.nodes, simulations: null, depth: trace.completedDepth };
-    case 'mcts':
-      return { ms, nodes: trace.treeNodes, simulations: trace.simulations, depth: trace.maxTreeDepth };
+      return {
+        ms,
+        nodes: trace.stats.nodes,
+        simulations: null,
+        depth: trace.completedDepth,
+        detail: {
+          legal: trace.legalActionCount,
+          searched: trace.searchedActionCount,
+          ttProbes: trace.stats.ttProbes,
+          ttHits: trace.stats.ttHits,
+          cutoffs: trace.stats.cutoffs,
+          leaves: trace.stats.leaves,
+          timedOut: trace.timedOut,
+          decided: trace.decided,
+        },
+      };
+    case 'mcts': {
+      const total = trace.candidates.reduce((sum, c) => sum + c.visits, 0);
+      let entropy = 0;
+      for (const c of trace.candidates) {
+        if (c.visits > 0 && total > 0) entropy -= (c.visits / total) * Math.log2(c.visits / total);
+      }
+      return {
+        ms,
+        nodes: trace.treeNodes,
+        simulations: trace.simulations,
+        depth: trace.maxTreeDepth,
+        detail: {
+          legal: trace.legalActionCount,
+          searched: trace.searchedActionCount,
+          topShare: total > 0 ? Math.max(...trace.candidates.map((c) => c.visits)) / total : undefined,
+          entropyBits: total > 0 ? entropy : undefined,
+          stopReason: trace.stopReason,
+          decided: trace.stopReason === 'proven-win' || trace.stopReason === 'proven-loss',
+        },
+      };
+    }
   }
 }
 
-export function schedule(config: TournamentConfig): ScheduledGame[] {
-  const pairs = Math.max(1, Math.min(Math.floor(config.pairs), MAX_TOURNAMENT_GAMES / 2));
+const positionKey = (state: GameState) => {
+  const h = hashState(state);
+  return `${h.key}:${h.check}`;
+};
+
+/** Start position of a scheduled game (pawn openings are regenerated, the others replayed). */
+export function openingState(opening: ScheduledGame['opening']): GameState {
+  if (!opening.mode || opening.mode === 'pawn') return randomOpening({ seed: opening.seed, plies: opening.plies }).state;
+  const parsed = parseMoveList(opening.moves.join(' '));
+  if (parsed.error) throw new Error(`Illegal opening move ${parsed.error.notation} in "${opening.moves.join(' ')}"`);
+  return parsed.positions[parsed.positions.length - 1];
+}
+
+/** Opening of one pair; `attempt` > 0 is an independent re-draw (used for uniqueness). */
+function drawOpening(config: TournamentConfig, pair: number, attempt: number): ScheduledGame['opening'] {
+  const mode = config.openingMode ?? 'pawn';
+  const seed = attempt === 0 ? deriveSeed(config.seed, pair, 1) : deriveSeed(config.seed, pair, 1, attempt);
+  if (mode === 'book') {
+    const book = config.openingBook ?? [];
+    if (book.length === 0) throw new Error('openingMode "book" needs a non-empty openingBook');
+    const parsed = parseMoveList(book[(pair + attempt * 7919) % book.length]);
+    if (parsed.error) throw new Error(`Illegal book move ${parsed.error.notation}`);
+    return { seed: 0, plies: parsed.moves.length, moves: parsed.moves, mode };
+  }
+  if (mode === 'mixed') {
+    const { moves } = randomMixedOpening({
+      seed,
+      plies: config.openingPlies,
+      wallProbability: config.openingWallProbability ?? 0.25,
+      maxImbalance: config.openingMaxImbalance ?? 2,
+    });
+    return { seed, plies: moves.length, moves, mode };
+  }
+  const { moves } = randomOpening({ seed, plies: config.openingPlies });
+  return { seed, plies: config.openingPlies, moves };
+}
+
+/**
+ * Paired schedule: one opening per pair, played once with A first and once with A second.
+ * `maxGames` caps the size (the browser Arena keeps MAX_TOURNAMENT_GAMES; batch runs may
+ * ask for more).
+ */
+export function schedule(config: TournamentConfig, maxGames: number = MAX_TOURNAMENT_GAMES): ScheduledGame[] {
+  const pairs = Math.max(1, Math.min(Math.floor(config.pairs), Math.floor(maxGames / 2)));
   const games: ScheduledGame[] = [];
+  const seen = new Set<string>();
   for (let pair = 0; pair < pairs; pair++) {
-    const openingSeed = deriveSeed(config.seed, pair, 1);
-    const { moves } = randomOpening({ seed: openingSeed, plies: config.openingPlies });
+    let opening = drawOpening(config, pair, 0);
+    if (config.uniqueOpenings) {
+      for (let attempt = 1; seen.has(positionKey(openingState(opening))) && attempt <= 200; attempt++) {
+        opening = drawOpening(config, pair, attempt);
+      }
+      seen.add(positionKey(openingState(opening)));
+    }
     for (const aSeat of [0, 1] as const) {
       const index = games.length;
       games.push({
         index,
         pair,
         aSeat,
-        opening: { seed: openingSeed, plies: config.openingPlies, moves },
+        opening,
         agentSeeds: [deriveSeed(config.seed, index, 2), deriveSeed(config.seed, index, 3)],
       });
     }
@@ -125,7 +253,7 @@ export async function playScheduledGame(
   const a = factory(specA, config.budget, game.agentSeeds[0]);
   const b = factory(specB, config.budget, game.agentSeeds[1]);
   const seats: [Agent, Agent] = game.aSeat === 0 ? [a, b] : [b, a];
-  const start = randomOpening({ seed: game.opening.seed, plies: game.opening.plies }).state;
+  const start = openingState(game.opening);
   const stats: [AgentGameStats, AgentGameStats] = [
     { moves: [], wallsUsed: 0 },
     { moves: [], wallsUsed: 0 },
@@ -280,11 +408,29 @@ export interface AgentSummary {
   winsAsSecond: number;
   decisionMsMean: number | null;
   decisionMsMedian: number | null;
+  decisionMsP95?: number | null;
+  decisionMsMax?: number | null;
   wallsUsedMean: number | null;
   nodesMean: number | null;
   simulationsMean: number | null;
   depthMean: number | null;
+  /** Median completed depth (Minimax) / max tree depth (MCTS). */
+  depthMedian?: number | null;
   moves: number;
+  /** Σ nodes / Σ seconds over moves that report nodes (algorithm-specific unit). */
+  nodesPerSecond?: number | null;
+  /** Σ simulations / Σ seconds (MCTS). */
+  simulationsPerSecond?: number | null;
+  /** Σ TT hits / Σ TT probes (Alpha-Beta). */
+  ttHitRate?: number | null;
+  cutoffsMean?: number | null;
+  /** Share of moves whose last iteration was interrupted by the time limit. */
+  timedOutShare?: number | null;
+  /** Share of moves that stopped on a proven result. */
+  decidedShare?: number | null;
+  /** MCTS root visit concentration. */
+  topShareMean?: number | null;
+  entropyBitsMean?: number | null;
 }
 
 export interface TournamentSummary {
@@ -302,6 +448,16 @@ export interface TournamentSummary {
   medianPlies: number | null;
   /** [A, B]. */
   agents: [AgentSummary, AgentSummary];
+  /** A's Elo relative to B from the decisive games (halts excluded). */
+  aElo?: EloEstimate | null;
+  /** A's mean score per complete, halt-free pair (0 / 0.5 / 1), with a pair-level interval. */
+  aPairScore?: MeanInterval | null;
+  /** A's win rate split by seat (decisive games only). */
+  aWinRateAsFirst?: Proportion | null;
+  aWinRateAsSecond?: Proportion | null;
+  /** Distinct start positions, and games whose full move list duplicates an earlier game. */
+  uniqueOpenings?: number;
+  duplicateGames?: number;
 }
 
 export function summarize(config: TournamentConfig, games: readonly TournamentGame[]): TournamentSummary {
@@ -322,24 +478,52 @@ export function summarize(config: TournamentConfig, games: readonly TournamentGa
       winsAsSecond: games.filter((g) => won(g) && seat(g) === 1).length,
       decisionMsMean: mean(moves.map((m) => m.ms)),
       decisionMsMedian: median(moves.map((m) => m.ms)),
+      decisionMsP95: percentile(moves.map((m) => m.ms), 0.95),
+      decisionMsMax: moves.length ? Math.max(...moves.map((m) => m.ms)) : null,
       wallsUsedMean: mean(games.map((g) => g.agents[who].wallsUsed)),
       nodesMean: mean(nums((m) => m.nodes)),
       simulationsMean: mean(nums((m) => m.simulations)),
       depthMean: mean(nums((m) => m.depth)),
+      depthMedian: median(nums((m) => m.depth)),
       moves: moves.length,
+      nodesPerSecond: rate(moves, (m) => m.nodes),
+      simulationsPerSecond: rate(moves, (m) => m.simulations),
+      ttHitRate: ratio(moves, (d) => d.ttHits, (d) => d.ttProbes),
+      cutoffsMean: mean(details(moves, (d) => d.cutoffs)),
+      timedOutShare: share(moves, (d) => d.timedOut),
+      decidedShare: share(moves, (d) => d.decided),
+      topShareMean: mean(details(moves, (d) => d.topShare)),
+      entropyBitsMean: mean(details(moves, (d) => d.entropyBits)),
     };
   };
 
   const byPair = new Map<number, TournamentGame[]>();
   for (const g of games) byPair.set(g.pair, [...(byPair.get(g.pair) ?? []), g]);
   const pairs = { complete: 0, aSweeps: 0, bSweeps: 0, split: 0, withHalt: 0 };
+  const pairScores: number[] = [];
   for (const pg of byPair.values()) {
     if (pg.length < 2) continue;
     pairs.complete++;
     if (pg.some((g) => HALT_OUTCOMES.includes(g.outcome))) pairs.withHalt++;
-    else if (pg.every((g) => g.outcome === 'a-win')) pairs.aSweeps++;
-    else if (pg.every((g) => g.outcome === 'b-win')) pairs.bSweeps++;
-    else pairs.split++;
+    else {
+      if (pg.every((g) => g.outcome === 'a-win')) pairs.aSweeps++;
+      else if (pg.every((g) => g.outcome === 'b-win')) pairs.bSweeps++;
+      else pairs.split++;
+      pairScores.push(pg.filter((g) => g.outcome === 'a-win').length / pg.length);
+    }
+  }
+  const aSeatRate = (seat: PlayerId) => {
+    const d = decisive.filter((g) => g.aSeat === seat);
+    return wilson(d.filter((g) => g.outcome === 'a-win').length, d.length);
+  };
+  const startKeys = new Set<string>();
+  for (const g of games) startKeys.add(positionKey(openingState(g.opening)));
+  const seenGames = new Set<string>();
+  let duplicateGames = 0;
+  for (const g of games) {
+    const key = `${g.aSeat}|${g.opening.moves.join(' ')}|${g.moves.join(' ')}`;
+    if (seenGames.has(key)) duplicateGames++;
+    else seenGames.add(key);
   }
 
   return {
@@ -358,5 +542,44 @@ export function summarize(config: TournamentConfig, games: readonly TournamentGa
     avgPlies: mean(games.map((g) => g.plies)),
     medianPlies: median(games.map((g) => g.plies)),
     agents: [agentSummary(0), agentSummary(1)],
+    aElo: eloEstimate(aWins, decisive.length),
+    aPairScore: meanInterval(pairScores),
+    aWinRateAsFirst: aSeatRate(0),
+    aWinRateAsSecond: aSeatRate(1),
+    uniqueOpenings: startKeys.size,
+    duplicateGames,
   };
+}
+
+function details(moves: readonly MoveWork[], f: (d: MoveDetail) => number | undefined): number[] {
+  const out: number[] = [];
+  for (const m of moves) {
+    const v = m.detail ? f(m.detail) : undefined;
+    if (v !== undefined && Number.isFinite(v)) out.push(v);
+  }
+  return out;
+}
+
+/** Σ f / Σ seconds over moves where f is reported and time was spent. */
+function rate(moves: readonly MoveWork[], f: (m: MoveWork) => number | null): number | null {
+  let work = 0;
+  let ms = 0;
+  for (const m of moves) {
+    const v = f(m);
+    if (v === null || m.ms <= 0) continue;
+    work += v;
+    ms += m.ms;
+  }
+  return ms > 0 ? (work * 1000) / ms : null;
+}
+
+function ratio(moves: readonly MoveWork[], num: (d: MoveDetail) => number | undefined, den: (d: MoveDetail) => number | undefined): number | null {
+  const n = details(moves, num).reduce((a, b) => a + b, 0);
+  const d = details(moves, den).reduce((a, b) => a + b, 0);
+  return d > 0 ? n / d : null;
+}
+
+function share(moves: readonly MoveWork[], f: (d: MoveDetail) => boolean | undefined): number | null {
+  const xs = moves.map((m) => (m.detail ? f(m.detail) : undefined)).filter((x): x is boolean => x !== undefined);
+  return xs.length ? xs.filter(Boolean).length / xs.length : null;
 }

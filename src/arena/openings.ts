@@ -1,6 +1,15 @@
 import { createRng } from '../ai/rng';
-import { applyAction, createInitialState, formatAction, legalPawnMoves, parseAction } from '../engine';
-import type { GameState } from '../engine';
+import {
+  applyAction,
+  createInitialState,
+  distanceToRow,
+  formatAction,
+  goalRow,
+  legalPawnMoves,
+  legalWallPlacements,
+  parseAction,
+} from '../engine';
+import type { Action, GameState } from '../engine';
 import type { RecordedAction } from '../match/wallOwners';
 
 /** A start position: `plies` random pawn moves (no walls) drawn with `seed`. plies 0 = standard start. */
@@ -20,6 +29,49 @@ export function randomOpening({ seed, plies }: OpeningSpec): { state: GameState;
     state = applyAction(state, action);
   }
   return { state, moves };
+}
+
+export interface MixedOpeningSpec extends OpeningSpec {
+  /** Probability that a ply places a random legal wall instead of a random pawn move. */
+  wallProbability: number;
+  /**
+   * Largest accepted |race margin| after the opening (shortest-path difference, tempo
+   * ignored). Openings outside it are re-drawn from a derived seed (seat swapping already
+   * cancels any imbalance, but lopsided starts carry little information per game).
+   */
+  maxImbalance: number;
+}
+
+/**
+ * Wider-variety start positions than pawn-only openings: each ply is a random pawn move or,
+ * with `wallProbability`, a random legal wall. Deterministic for a seed. Pawn-only openings
+ * of a few plies repeat a lot (31 distinct positions in 100 draws at 4 plies), which turns
+ * games between deterministic agents into exact duplicates.
+ */
+export function randomMixedOpening(spec: MixedOpeningSpec): { state: GameState; moves: string[]; attempts: number } {
+  for (let attempt = 0; attempt < 64; attempt++) {
+    const rng = createRng(attempt === 0 ? spec.seed : (spec.seed ^ Math.imul(attempt, 0x9e3779b1)) >>> 0);
+    let state = createInitialState();
+    const moves: string[] = [];
+    for (let i = 0; i < spec.plies && state.winner === null; i++) {
+      let action: Action | null = null;
+      if (rng() < spec.wallProbability) {
+        const walls = legalWallPlacements(state);
+        if (walls.length > 0) action = walls[Math.floor(rng() * walls.length)];
+      }
+      if (!action) {
+        const options = legalPawnMoves(state);
+        action = { type: 'move', to: options[Math.floor(rng() * options.length)] };
+      }
+      moves.push(formatAction(action));
+      state = applyAction(state, action);
+    }
+    if (state.winner !== null) continue;
+    const d0 = distanceToRow(state, state.pawns[0], goalRow(0));
+    const d1 = distanceToRow(state, state.pawns[1], goalRow(1));
+    if (Math.abs(d0 - d1) <= spec.maxImbalance) return { state, moves, attempts: attempt + 1 };
+  }
+  throw new Error(`No balanced opening found for seed ${spec.seed}`);
 }
 
 export interface ParsedGame {

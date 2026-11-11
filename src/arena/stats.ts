@@ -39,3 +39,81 @@ export function formatProportion(x: Proportion | null): string {
   const pct = (v: number) => `${(100 * v).toFixed(0)}%`;
   return `${pct(x.p)} (${x.successes}/${x.trials}, 95% CI ${pct(x.low)}–${pct(x.high)})`;
 }
+
+/** q-quantile (0 ≤ q ≤ 1) with linear interpolation between order statistics; null when empty. */
+export function percentile(xs: readonly number[], q: number): number | null {
+  if (!xs.length) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  const pos = Math.min(1, Math.max(0, q)) * (s.length - 1);
+  const lo = Math.floor(pos);
+  const hi = Math.ceil(pos);
+  return s[lo] + (s[hi] - s[lo]) * (pos - lo);
+}
+
+/**
+ * Logistic Elo difference implied by an expected score p (0 < p < 1).
+ * Returns ±Infinity at p = 1 / p = 0: a perfect score only bounds the difference from one side.
+ */
+export function eloFromScore(p: number): number {
+  if (p <= 0) return -Infinity;
+  if (p >= 1) return Infinity;
+  return -400 * Math.log10(1 / p - 1);
+}
+
+export interface EloEstimate {
+  /** Elo of A relative to B; null when unbounded (A won or lost every decisive game). */
+  elo: number | null;
+  /** 95 % interval from the Wilson bounds of the score; null = unbounded on that side. */
+  low: number | null;
+  high: number | null;
+  /** Decisive games the estimate rests on. */
+  n: number;
+}
+
+const finiteOrNull = (x: number) => (Number.isFinite(x) ? x : null);
+
+/**
+ * Elo difference from decisive games only (halted games have no result and are excluded).
+ * The interval maps the Wilson score interval through the logistic curve, so it is
+ * asymmetric and never claims a finite bound that the data cannot support.
+ */
+export function eloEstimate(wins: number, decisive: number): EloEstimate | null {
+  const w = wilson(wins, decisive);
+  if (!w) return null;
+  // A perfect (or zero) score leaves that side unbounded; don't let rounding of the Wilson
+  // bound (0.99999…) turn it into a huge finite number.
+  return {
+    elo: finiteOrNull(eloFromScore(w.p)),
+    low: wins === 0 ? null : finiteOrNull(eloFromScore(w.low)),
+    high: wins === decisive ? null : finiteOrNull(eloFromScore(w.high)),
+    n: decisive,
+  };
+}
+
+export interface MeanInterval {
+  mean: number;
+  /** Normal-approximation 95 % interval of the mean (t ≈ z; use only for n ≳ 20). */
+  low: number;
+  high: number;
+  n: number;
+  sd: number;
+}
+
+/**
+ * Mean of per-pair scores (0, 0.5 or 1 for a pair of games with seats swapped) with a 95 %
+ * interval. Treating the pair as the unit respects the correlation between the two games of
+ * one opening, which a per-game Wilson interval ignores.
+ */
+export function meanInterval(xs: readonly number[], z = 1.959964): MeanInterval | null {
+  if (!xs.length) return null;
+  const m = xs.reduce((a, b) => a + b, 0) / xs.length;
+  const sd = xs.length > 1 ? Math.sqrt(xs.reduce((a, b) => a + (b - m) ** 2, 0) / (xs.length - 1)) : 0;
+  const half = xs.length > 1 ? (z * sd) / Math.sqrt(xs.length) : Infinity;
+  return { mean: m, low: Math.max(0, m - half), high: Math.min(1, m + half), n: xs.length, sd };
+}
+
+export function formatElo(e: EloEstimate | null): string {
+  if (!e) return '—';
+  const f = (x: number | null, inf: string) => (x === null ? inf : `${x >= 0 ? '+' : ''}${x.toFixed(0)}`);
+  return `${f(e.elo, e.high === null ? '+∞' : '−∞')} (95% CI ${f(e.low, '−∞')} … ${f(e.high, '+∞')}, n=${e.n})`;
+}
