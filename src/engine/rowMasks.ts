@@ -222,6 +222,129 @@ export function distanceWithExtraWall(walls: WallLayout, start: Coord, targetRow
   return Infinity;
 }
 
+// Layered BFS of the unmodified layout, kept for the extra-wall queries below.
+const layerFront = new Int32Array((NUM_CELLS + 1) * BOARD_SIZE);
+const layerSeen = new Int32Array((NUM_CELLS + 1) * BOARD_SIZE);
+const cellLayer = new Int16Array(NUM_CELLS);
+// Private copies of the prepared layout's masks (queries cut edges in place and restore them).
+const pEast = new Int32Array(BOARD_SIZE);
+const pWest = new Int32Array(BOARD_SIZE);
+const pSouth = new Int32Array(BOARD_SIZE);
+const pNorth = new Int32Array(BOARD_SIZE);
+let prepTarget = 0;
+let prepDistance = 0;
+
+/**
+ * Prepares many distanceWithExtraWall queries for one (layout, start, target): runs the BFS once
+ * and stores every frontier. Returns the plain distance (Infinity when unreachable). Valid until
+ * the next call of this function.
+ */
+export function prepareExtraWallDistances(walls: WallLayout, start: Coord, targetRow: number): number {
+  const masks = rowMasks(walls);
+  pEast.set(masks.east);
+  pWest.set(masks.west);
+  pSouth.set(masks.south);
+  pNorth.set(masks.north);
+  prepTarget = targetRow;
+  cellLayer.fill(0x7fff);
+  if (start.row === targetRow) return (prepDistance = 0);
+  const { east, west, south, north } = masks;
+  layerFront.fill(0, 0, BOARD_SIZE);
+  layerFront[start.row] = 1 << start.col;
+  for (let r = 0; r < BOARD_SIZE; r++) layerSeen[r] = layerFront[r];
+  cellLayer[cellIndex(start.row, start.col)] = 0;
+  for (let d = 1; d <= NUM_CELLS; d++) {
+    const f = (d - 1) * BOARD_SIZE;
+    const g = d * BOARD_SIZE;
+    let any = 0;
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      const fr = layerFront[f + r];
+      let n = ((fr & east[r]) << 1) | ((fr & west[r]) >> 1);
+      if (r > 0) n |= layerFront[f + r - 1] & south[r - 1];
+      if (r < BOARD_SIZE - 1) n |= layerFront[f + r + 1] & north[r + 1];
+      n &= ~layerSeen[f + r] & FULL_ROW;
+      layerFront[g + r] = n;
+      layerSeen[g + r] = layerSeen[f + r] | n;
+      any |= n;
+      for (let m = n; m !== 0; m &= m - 1) cellLayer[r * BOARD_SIZE + (31 - Math.clz32(m & -m))] = d;
+    }
+    if (layerFront[g + targetRow] !== 0) return (prepDistance = d);
+    if (any === 0) return (prepDistance = Infinity);
+  }
+  return (prepDistance = Infinity);
+}
+
+/**
+ * distanceWithExtraWall for the (layout, start, target) of the last prepareExtraWallDistances
+ * call — same result. BFS layers before the first one touching a cut edge cannot change (no
+ * earlier expansion uses that edge), so the search resumes from that stored layer.
+ */
+export function preparedDistanceWithExtraWall(o: 'h' | 'v', row: number, col: number): number {
+  if (prepDistance === 0) return 0;
+  // Either orientation cuts two edges among the 2×2 cells anchored at (row, col); the earliest
+  // layer of those cells is where the BFS can first diverge.
+  const a = cellIndex(row, col);
+  const k = Math.min(cellLayer[a], cellLayer[a + 1], cellLayer[a + BOARD_SIZE], cellLayer[a + BOARD_SIZE + 1]);
+  // Unreached cells (or reached only in the final layer) are expanded after the target is found.
+  if (k >= prepDistance) return prepDistance;
+  // Cut the two edges in the prepared copies, run, then restore (no per-query copies).
+  const r1 = row + 1;
+  const sR = pSouth[row];
+  const nR1 = pNorth[r1];
+  const eR = pEast[row];
+  const eR1 = pEast[r1];
+  const wR = pWest[row];
+  const wR1 = pWest[r1];
+  if (o === 'h') {
+    const bits = ~((1 << col) | (1 << (col + 1)));
+    pSouth[row] &= bits;
+    pNorth[r1] &= bits;
+  } else {
+    const e = ~(1 << col);
+    const w = ~(1 << (col + 1));
+    pEast[row] &= e;
+    pEast[r1] &= e;
+    pWest[row] &= w;
+    pWest[r1] &= w;
+  }
+  let f = frontA;
+  let g = frontB;
+  const base = k * BOARD_SIZE;
+  for (let r = 0; r < BOARD_SIZE; r++) {
+    f[r] = layerFront[base + r];
+    seen[r] = layerSeen[base + r];
+  }
+  let result = Infinity;
+  for (let d = k + 1; d <= NUM_CELLS; d++) {
+    let any = 0;
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      const fr = f[r];
+      let n = ((fr & pEast[r]) << 1) | ((fr & pWest[r]) >> 1);
+      if (r > 0) n |= f[r - 1] & pSouth[r - 1];
+      if (r < BOARD_SIZE - 1) n |= f[r + 1] & pNorth[r + 1];
+      n &= ~seen[r] & FULL_ROW;
+      g[r] = n;
+      any |= n;
+    }
+    if (g[prepTarget] !== 0) {
+      result = d;
+      break;
+    }
+    if (any === 0) break;
+    for (let r = 0; r < BOARD_SIZE; r++) seen[r] |= g[r];
+    const t = f;
+    f = g;
+    g = t;
+  }
+  pSouth[row] = sR;
+  pNorth[r1] = nR1;
+  pEast[row] = eR;
+  pEast[r1] = eR1;
+  pWest[row] = wR;
+  pWest[r1] = wR1;
+  return result;
+}
+
 const UNREACHABLE = -1;
 const parent = new Int16Array(NUM_CELLS);
 const queue = new Int16Array(NUM_CELLS);

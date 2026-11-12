@@ -122,7 +122,11 @@ export function pairPrefix(games: readonly RecordedGame[], pairs: number, opts: 
 
 export function sprtStatus(m: Matchup, games: readonly RecordedGame[]): SprtResult | null {
   if (!m.sprt) return null;
-  return sequentialTest(pairPrefix(games, m.sprt.maxPairs).scores, m.sprt);
+  const prefix = pairPrefix(games, m.sprt.maxPairs);
+  const r = sequentialTest(prefix.scores, m.sprt);
+  // Every scheduled pair is final but excluded pairs (repetition halts) left fewer than maxPairs
+  // valid ones: no more games will be played, so the undecided test is truncated, not running.
+  return r.status === 'continue' && prefix.nextPair >= m.sprt.maxPairs ? { ...r, status: 'inconclusive' } : r;
 }
 
 /** Machine-wide CPU busy share between two os.cpus() snapshots. */

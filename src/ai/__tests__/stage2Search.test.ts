@@ -5,11 +5,11 @@ import { applyAction, createInitialState, formatAction, isLegalAction, legalActi
 import type { GameState } from '../../engine';
 import { DEFAULT_MINIMAX_SETTINGS } from '../minimaxAgent';
 import { isCandidateLegal, pseudoCandidates, searchCandidates } from '../search/candidates';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../search/evaluation';
 import { runSearch } from '../search/minimax';
 import type { MinimaxSettings } from '../types';
 
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 const search = (s: GameState, patch: Partial<MinimaxSettings>) =>
   runSearch(s, { ...DEFAULT_MINIMAX_SETTINGS, timeLimitMs: 0, ...patch }, evaluator);
 

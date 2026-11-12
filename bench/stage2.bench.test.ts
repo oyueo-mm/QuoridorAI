@@ -11,7 +11,7 @@ import { it } from 'vitest';
 import { createBfsAgent } from '../src/ai/bfsAgent';
 import { DEFAULT_MINIMAX_SETTINGS, createMinimaxAgent } from '../src/ai/minimaxAgent';
 import { pseudoCandidates } from '../src/ai/search/candidates';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { MinimaxSettings } from '../src/ai/types';
 import { randomMixedOpening } from '../src/arena/openings';
@@ -136,7 +136,7 @@ it('stage-2 components', async () => {
   log();
 
   // ---------------------------------------------------------------- 2. fixed-depth search
-  const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+  const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
   const pick = (p: Phase, n: number) => {
     const xs = buckets.get(p)!;
     return Array.from({ length: n }, (_, i) => xs[Math.floor(((i + 0.5) * xs.length) / n)]);

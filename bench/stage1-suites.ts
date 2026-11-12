@@ -2,7 +2,8 @@ import type { AgentSpec } from '../src/arena/agentSpec';
 import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
-import { EVAL_CANDIDATES, LEDGER_3A } from './stage3b-candidates';
+import { ALPHA_BETA_EVAL } from '../src/ai/search/evaluation';
+import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B } from './stage3b-candidates';
 
 /**
  * Stage-1 experiment definitions. Changing a config changes its hash: results already in a
@@ -38,6 +39,9 @@ const base = {
 
 /** Stage 3-B: stage-3 opening policy and no opening used before (ledger). */
 const fresh = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3A });
+
+/** Follow-up runs after 3-B: also disjoint from every 3-B opening. */
+const fresh3b = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3B });
 
 /** Stage-3 opening policy: mirror-invariant unique openings of 4–8 plies. */
 const sprtCfg = (c: TournamentConfig): TournamentConfig => ({ ...c, openingPlies: 4, openingPliesMax: 8, openingDedupe: 'mirror' });
@@ -160,6 +164,23 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
       config: fresh(timed(abv(4, id, { ...AB_MASKED, evaluation: w }), abv(4, 'current eval', AB_MASKED), 300, DEFAULT_SPRT.maxPairs, 95001 + i)),
       sprt: DEFAULT_SPRT,
     })),
+  },
+  /**
+   * After 3-B (E5 adopted as the Alpha-Beta default). Weights are written out explicitly, so these
+   * configurations do not change if the default changes again. Openings disjoint from all of 3-B.
+   *   P-E6-300  pilot, fixed 40 pairs, never counted in the SPRT: screens for clear harm or bugs.
+   *   T-E6-300  SPRT (unchanged H0 0 / H1 +30, α = β = 0.05), only if the pilot gate says go.
+   *   G-E5-…    final comparison: adopted Alpha-Beta vs Guided MCTS, 300 ms, 100 pairs
+   *             (same design as stage 2's S7, which measured the old evaluation at +73 Elo).
+   */
+  'stage3b-next': {
+    description: 'After 3-B: E6 pilot + SPRT vs adopted E5, and adopted Alpha-Beta vs Guided MCTS (300 ms).',
+    maxGames: 2000,
+    matchups: [
+      { id: 'P-E6-300', question: 'Pilot (40 pairs): E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, 40, 96001)) },
+      { id: 'T-E6-300', question: 'SPRT: E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, DEFAULT_SPRT.maxPairs, 96002)), sprt: DEFAULT_SPRT },
+      { id: 'G-E5-vs-guided-300', question: 'Adopted Alpha-Beta (E5) vs Guided MCTS, 300 ms per move, 100 pairs', config: fresh3b(timed(abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), guided(3000), 300, 100, 96003)) },
+    ],
   },
   /** Tiny configuration for the harness self-test. */
   'smoke': {

@@ -9,7 +9,7 @@ import { it } from 'vitest';
 import { createBfsAgent } from '../src/ai/bfsAgent';
 import { DEFAULT_MINIMAX_SETTINGS, createMinimaxAgent } from '../src/ai/minimaxAgent';
 import { createRng } from '../src/ai/rng';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { SearchHooks } from '../src/ai/search/minimax';
 import type { MinimaxSettings } from '../src/ai/types';
@@ -48,7 +48,7 @@ async function middlegame(seed: number, plies: number): Promise<GameState> {
   return s;
 }
 
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 const search = (s: GameState, patch: Partial<MinimaxSettings>, hooks: SearchHooks = {}) =>
   runSearch(s, { ...DEFAULT_MINIMAX_SETTINGS, timeLimitMs: 0, ...patch }, evaluator, hooks);
 
@@ -67,7 +67,7 @@ it('search benchmark', async () => {
   log('# Search benchmark');
   log();
   log(`- Date: ${new Date().toISOString().slice(0, 10)} · Node ${process.version} · CPU: ${cpus()[0]?.model ?? 'unknown'}`);
-  log(`- Evaluation: distance race, weights \`${JSON.stringify(DEFAULT_MINIMAX_EVAL)}\``);
+  log(`- Evaluation: distance race, weights \`${JSON.stringify(RACE_EVAL_V1)}\``);
   log('- Node counts include every iteration of iterative deepening (depth 1..d). Timings are single runs (ms).');
   log();
 
@@ -185,8 +185,8 @@ it('search benchmark', async () => {
     ['depth 3', { maxDepth: 3 }],
     ['depth 4', { maxDepth: 4 }],
     ['default (depth 5, 2000 ms)', { maxDepth: 5, timeLimitMs: 2000 }],
-    ['depth 3, wall value 0.4 (before tuning)', { maxDepth: 3, evaluation: { ...DEFAULT_MINIMAX_EVAL, wallDifference: 0.4 } }],
-    ['depth 4, wall value 0.4 (before tuning)', { maxDepth: 4, evaluation: { ...DEFAULT_MINIMAX_EVAL, wallDifference: 0.4 } }],
+    ['depth 3, wall value 0.4 (before tuning)', { maxDepth: 3, evaluation: { ...RACE_EVAL_V1, wallDifference: 0.4 } }],
+    ['depth 4, wall value 0.4 (before tuning)', { maxDepth: 4, evaluation: { ...RACE_EVAL_V1, wallDifference: 0.4 } }],
   ];
   for (const [label, patch] of rows) {
     let w = 0;

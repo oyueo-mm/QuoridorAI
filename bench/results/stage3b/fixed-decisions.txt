@@ -1,0 +1,5 @@
+F-E1-d4: H0 accepted — reject · LLR -2.99 in [-2.94, 2.94] · 37 pairs (LL 16 / split 20 / WW 1) · pair score 0.297 (95% CI 0.209–0.386) · Elo -149 (-232 … -81) · H0: Elo=0 vs H1: Elo=30, α=0.05, β=0.05
+F-E2-d4: H0 accepted — reject · LLR -2.96 in [-2.94, 2.94] · 117 pairs (LL 37 / split 56 / WW 24) · pair score 0.444 (95% CI 0.380–0.509) · Elo -39 (-85 … +7) · H0: Elo=0 vs H1: Elo=30, α=0.05, β=0.05
+F-E3-d4: INCONCLUSIVE — 600 pairs could not separate H0 from H1 · LLR 0.95 in [-2.94, 2.94] · 577 pairs (LL 120 / split 307 / WW 150) · pair score 0.526 (95% CI 0.498–0.554) · Elo +18 (-1 … +38) · H0: Elo=0 vs H1: Elo=30, α=0.05, β=0.05
+F-E4-d4: H1 accepted — promote · LLR 2.98 in [-2.94, 2.94] · 89 pairs (LL 12 / split 44 / WW 33) · pair score 0.618 (95% CI 0.548–0.688) · Elo +84 (+33 … +137) · H0: Elo=0 vs H1: Elo=30, α=0.05, β=0.05
+F-E5-d4: H1 accepted — promote · LLR 2.97 in [-2.94, 2.94] · 190 pairs (LL 32 / split 102 / WW 56) · pair score 0.563 (95% CI 0.515–0.611) · Elo +44 (+11 … +78) · H0: Elo=0 vs H1: Elo=30, α=0.05, β=0.05

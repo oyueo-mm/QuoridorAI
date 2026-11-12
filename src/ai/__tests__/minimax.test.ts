@@ -16,13 +16,13 @@ import type { Action, Coord, GameState } from '../../engine';
 import { DEFAULT_MINIMAX_SETTINGS, createMinimaxAgent, decideMinimax } from '../minimaxAgent';
 import { createRandomAgent } from '../randomAgent';
 import { searchCandidates } from '../search/candidates';
-import { DEFAULT_MINIMAX_EVAL, WIN_SCORE, createDistanceEvaluator } from '../search/evaluation';
+import { RACE_EVAL_V1, WIN_SCORE, createDistanceEvaluator } from '../search/evaluation';
 import { runSearch } from '../search/minimax';
 import type { MinimaxSettings } from '../types';
 
 const at = (row: number, col: number): Coord => ({ row, col });
 const move = (row: number, col: number): Action => ({ type: 'move', to: at(row, col) });
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 
 const settings = (patch: Partial<MinimaxSettings>): MinimaxSettings => ({
   ...DEFAULT_MINIMAX_SETTINGS,

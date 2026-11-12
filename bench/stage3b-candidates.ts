@@ -1,9 +1,9 @@
-import { DEFAULT_MINIMAX_EVAL } from '../src/ai/search/evaluation';
+import { ALPHA_BETA_EVAL, RACE_EVAL_V1 } from '../src/ai/search/evaluation';
 import type { MinimaxEvalWeights } from '../src/ai/types';
 
 /**
  * Stage 3-B evaluation candidates. Parameters were fixed before any candidate game was played
- * (no tuning on SPRT data). Each candidate changes one thing relative to DEFAULT_MINIMAX_EVAL.
+ * (no tuning on SPRT data). Each candidate changes one thing relative to RACE_EVAL_V1.
  *
  * E1 walls in hand: diminishing returns (k-th wall worth 0.85^(k−1)) and worth less as the race
  *    ends (× min(1, (d_self + d_opp) / 10)) — stage 1 showed Alpha-Beta losing with walls unused.
@@ -13,13 +13,24 @@ import type { MinimaxEvalWeights } from '../src/ai/types';
  * E5 linear weights fitted to recorded outcomes (bench/results/stage3b/e5-fit-*.md).
  */
 export const EVAL_CANDIDATES: Record<string, MinimaxEvalWeights> = {
-  E1: { ...DEFAULT_MINIMAX_EVAL, wallDecay: 0.85, wallPhaseSum: 10 },
-  E2: { ...DEFAULT_MINIMAX_EVAL, distanceCurve: 6 },
-  E3: { ...DEFAULT_MINIMAX_EVAL, vulnerability: 0.5 },
-  E4: { ...DEFAULT_MINIMAX_EVAL, vulnerabilityThreat: 0.5 },
+  E1: { ...RACE_EVAL_V1, wallDecay: 0.85, wallPhaseSum: 10 },
+  E2: { ...RACE_EVAL_V1, distanceCurve: 6 },
+  E3: { ...RACE_EVAL_V1, vulnerability: 0.5 },
+  E4: { ...RACE_EVAL_V1, vulnerabilityThreat: 0.5 },
   // From e5-fit (validation log-loss 0.4557 vs 0.4897 for the current weights, split by opening).
-  E5: { selfDistance: 1.001, opponentDistance: 1, wallDifference: 1.503, tempo: 0.482 },
+  E5: { selfDistance: 1.001, opponentDistance: 1, wallDifference: 1.503, tempo: 0.482 }, // adopted: ALPHA_BETA_EVAL
 };
 
 /** Openings used by any experiment up to stage 3-A (incl. E5's training games): excluded from 3-B. */
 export const LEDGER_3A = 'bench/openings/ledger-626fec59.txt';
+
+/** Openings used by any experiment up to stage 3-B: excluded from the follow-up runs. */
+export const LEDGER_3B = 'bench/openings/ledger-7ca328c9.txt';
+
+/**
+ * E6 = E4 on top of the adopted E5 weights (a combination is a new candidate with its own games).
+ * Parameters fixed before any E6 game: E4's term unchanged (0.5). Reason for the re-test: E4 won at
+ * depth 4 (+84 Elo) but lost ~2 ply at 300 ms (5× cost per node); the exact vulnerability cache and
+ * resumed BFS cut that to ~2× (~0.7 ply). See docs/stage3b-eval-report.md.
+ */
+export const E6: MinimaxEvalWeights = { ...ALPHA_BETA_EVAL, vulnerabilityThreat: 0.5 };

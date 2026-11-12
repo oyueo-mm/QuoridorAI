@@ -23,7 +23,7 @@ import { createBfsAgent } from '../src/ai/bfsAgent';
 import { createMctsAgent, decideMcts, resolveMctsSettings } from '../src/ai/mctsAgent';
 import { DEFAULT_MINIMAX_SETTINGS, createMinimaxAgent } from '../src/ai/minimaxAgent';
 import { createRng } from '../src/ai/rng';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { MctsSettings } from '../src/ai/types';
 import { applyAction, createInitialState, formatAction, legalPawnMoves } from '../src/engine';
@@ -55,7 +55,7 @@ async function middlegame(seed: number, plies: number): Promise<GameState> {
   return s;
 }
 
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 const ab = (s: GameState, depth: number, p: 0 | 1) => {
   if (s.winner !== null) return s.winner === p ? 10_000 : -10_000;
   const r = runSearch(s, { ...DEFAULT_MINIMAX_SETTINGS, maxDepth: depth, timeLimitMs: 0 }, evaluator);

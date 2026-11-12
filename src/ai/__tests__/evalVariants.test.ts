@@ -10,23 +10,25 @@ import {
   goalRow,
   legalActions,
   opponentOf,
+  prepareExtraWallDistances,
+  preparedDistanceWithExtraWall,
   wallConflicts,
   withWall,
 } from '../../engine';
 import type { GameState, Orientation, PlayerId } from '../../engine';
 import { createRng } from '../rng';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator, vulnerability } from '../search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator, vulnerability } from '../search/evaluation';
 import { runSearch } from '../search/minimax';
 import { DEFAULT_MINIMAX_SETTINGS } from '../minimaxAgent';
 import type { MinimaxEvalWeights } from '../types';
 
 export const VARIANTS: Record<string, MinimaxEvalWeights> = {
-  base: DEFAULT_MINIMAX_EVAL,
-  e1: { ...DEFAULT_MINIMAX_EVAL, wallDecay: 0.85, wallPhaseSum: 10 },
-  e2: { ...DEFAULT_MINIMAX_EVAL, distanceCurve: 6 },
-  e3: { ...DEFAULT_MINIMAX_EVAL, vulnerability: 0.5 },
-  e4: { ...DEFAULT_MINIMAX_EVAL, vulnerabilityThreat: 0.5 },
-  all: { ...DEFAULT_MINIMAX_EVAL, wallDecay: 0.85, wallPhaseSum: 10, distanceCurve: 6, vulnerability: 0.5, vulnerabilityThreat: 0.5 },
+  base: RACE_EVAL_V1,
+  e1: { ...RACE_EVAL_V1, wallDecay: 0.85, wallPhaseSum: 10 },
+  e2: { ...RACE_EVAL_V1, distanceCurve: 6 },
+  e3: { ...RACE_EVAL_V1, vulnerability: 0.5 },
+  e4: { ...RACE_EVAL_V1, vulnerabilityThreat: 0.5 },
+  all: { ...RACE_EVAL_V1, wallDecay: 0.85, wallPhaseSum: 10, distanceCurve: 6, vulnerability: 0.5, vulnerabilityThreat: 0.5 },
 };
 
 /** Positions with walls from random play after mixed openings (non-terminal). */
@@ -47,7 +49,7 @@ const POS = positions(60);
 
 describe('stage 3-B evaluation variants', () => {
   it('default weights give exactly the original formula', () => {
-    const ev = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+    const ev = createDistanceEvaluator(RACE_EVAL_V1);
     for (const s of POS) {
       for (const p of [0, 1] as const) {
         const o = opponentOf(p);
@@ -83,7 +85,7 @@ describe('stage 3-B evaluation variants', () => {
   }
 
   it('variants change the evaluation (they are not no-ops)', () => {
-    const base = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+    const base = createDistanceEvaluator(RACE_EVAL_V1);
     for (const name of ['e1', 'e2', 'e3', 'e4']) {
       const ev = createDistanceEvaluator(VARIANTS[name]);
       expect(POS.some((s) => Math.abs(ev.evaluate(s, 0) - base.evaluate(s, 0)) > 1e-6)).toBe(true);
@@ -137,5 +139,32 @@ describe('path vulnerability', () => {
       }
     }
     expect(NUM_WALL_SLOTS).toBe(64);
+  });
+
+  it('prepared (resumed-BFS) extra-wall distance equals distanceWithExtraWall for every wall', () => {
+    for (const s of POS.slice(0, 40)) {
+      for (const p of [0, 1] as const) {
+        const d = prepareExtraWallDistances(s, s.pawns[p], goalRow(p));
+        expect(d).toBe(distanceToRow(s, s.pawns[p], goalRow(p)));
+        for (const o of ['h', 'v'] as Orientation[]) {
+          for (let r = 0; r < WALL_GRID; r++) {
+            for (let c = 0; c < WALL_GRID; c++) {
+              expect(preparedDistanceWithExtraWall(o, r, c)).toBe(distanceWithExtraWall(s, s.pawns[p], goalRow(p), o, r, c));
+            }
+          }
+        }
+      }
+    }
+  });
+
+  it('the vulnerability cache gives the same scores warm as cold (exact layout keys)', () => {
+    for (const w of [VARIANTS.e3, VARIANTS.e4]) {
+      const shared = createDistanceEvaluator(w);
+      for (let round = 0; round < 2; round++) {
+        for (const s of POS) {
+          for (const p of [0, 1] as const) expect(shared.evaluate(s, p)).toBe(createDistanceEvaluator(w).evaluate(s, p));
+        }
+      }
+    }
   });
 });

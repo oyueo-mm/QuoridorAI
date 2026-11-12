@@ -17,7 +17,7 @@ import {
 } from '../../engine';
 import type { Action, Coord, GameState, Orientation, PlayerId } from '../../engine';
 import type { Rng } from '../rng';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../search/evaluation';
 import type { MctsSettings, RolloutPolicy } from '../types';
 import type { LeafEvaluator, LeafResult } from './core';
 
@@ -184,7 +184,7 @@ const EVAL_SCALE = 3;
 /** Value shaping: estimates live in (−SHAPE_CAP, SHAPE_CAP); rollout wins in (SHAPE_CAP, 1). */
 export const SHAPE_CAP = 0.9;
 const SHAPE_K = 4;
-const minimaxEval = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const minimaxEval = createDistanceEvaluator(RACE_EVAL_V1);
 
 /**
  * Maps a heuristic score (player 0's view, ≈ steps) to a value.

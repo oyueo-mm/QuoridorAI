@@ -13,7 +13,7 @@
  * Heuristic categories have no proven answer; they are scored by stated 1-ply measures.
  */
 import { pseudoCandidates } from '../../src/ai/search/candidates';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator, isDecisive } from '../../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator, isDecisive } from '../../src/ai/search/evaluation';
 import { runSearch } from '../../src/ai/search/minimax';
 import { DEFAULT_MINIMAX_SETTINGS } from '../../src/ai/minimaxAgent';
 import {
@@ -69,7 +69,7 @@ export function winIn3Actions(state: GameState): Action[] {
   });
 }
 
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 
 /**
  * Proof search: full width (every legal wall), fixed depth, no time limit. A decisive score is

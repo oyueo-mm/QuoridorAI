@@ -17,7 +17,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { join } from 'node:path';
 import { it } from 'vitest';
 import { DEFAULT_MINIMAX_SETTINGS } from '../src/ai/minimaxAgent';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { MinimaxEvalWeights } from '../src/ai/types';
 import { parseMoveList, randomMixedOpening } from '../src/arena/openings';
@@ -28,7 +28,7 @@ import { applyActionUnchecked, distanceToRow, goalRow, opponentOf } from '../src
 import type { GameState, PlayerId } from '../src/engine';
 import { collectProvenance } from './lib/provenance';
 import { hashOf } from './lib/provenance';
-import { effectiveGames, readGames, scheduleFor, sprtStatus } from './lib/suite';
+import { effectiveGames, pairPrefix, readGames, scheduleFor, sprtStatus } from './lib/suite';
 import { describeSprt } from '../src/arena/sprt';
 import type { RecordedGame } from './lib/suite';
 import { EVAL_CANDIDATES } from './stage3b-candidates';
@@ -36,9 +36,12 @@ import { SUITES } from './stage1-suites';
 
 const ROOTS = ['bench/results/stage1/stage1-fixed', 'bench/results/stage1/stage1-time', 'bench/results/stage2/stage2', 'bench/results/stage2/stage2b', 'bench/results/stage3a/stage3a'];
 
-function recorded(includeRunning: boolean): { id: string; config: TournamentConfig; games: RecordedGame[] }[] {
+/** Stage 3-B result roots: added to the follow-up ledger (not to E5's training data). */
+const ROOTS_3B = ['bench/results/stage3b/stage3b-fixed', 'bench/results/stage3b/stage3b-time'];
+
+function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { id: string; config: TournamentConfig; games: RecordedGame[] }[] {
   const out = [];
-  for (const root of ROOTS) {
+  for (const root of roots) {
     if (!existsSync(root)) continue;
     for (const id of readdirSync(root).sort()) {
       const p = join(root, id, 'config.json');
@@ -54,9 +57,9 @@ function recorded(includeRunning: boolean): { id: string; config: TournamentConf
 const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
 
 // ---------------------------------------------------------------- ledger
-function buildLedger() {
+function buildLedger(upTo3B: boolean) {
   const keys = new Set<string>();
-  for (const e of recorded(true)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
+  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
   // Full schedules of stage-3A matchups (V2 may still be adding pairs).
   for (const m of SUITES['stage3a'].matchups) for (const g of scheduleFor(m.config, SUITES['stage3a'].maxGames)) keys.add(mirrorInvariantKey(openingState(g.opening)));
   const sorted = [...keys].sort();
@@ -169,7 +172,7 @@ function e5fit() {
   if (overlap !== 0) throw new Error('opening leaked across the split');
 
   // Baseline: current weights, one fitted scale k (training data only).
-  const base = DEFAULT_MINIMAX_EVAL;
+  const base = RACE_EVAL_V1;
   const baseScore = (x: number[]) => base.tempo * x[0] + base.opponentDistance * x[1] - base.selfDistance * x[2] + base.wallDifference * x[3];
   let k = 0.1;
   {
@@ -225,7 +228,7 @@ function e5fit() {
     `| current weights × fitted scale k = ${k.toFixed(3)} | ${out.validationLogLoss.baseline.toFixed(4)} | ${out.trainLogLoss.baseline.toFixed(4)} |`,
     `| fitted weights | ${out.validationLogLoss.fitted.toFixed(4)} | ${out.trainLogLoss.fitted.toFixed(4)} |`,
     '',
-    `Fitted evaluation weights (opponentDistance normalised to 1): \`${JSON.stringify(weights)}\` — current: \`${JSON.stringify(DEFAULT_MINIMAX_EVAL)}\`.`,
+    `Fitted evaluation weights (opponentDistance normalised to 1): \`${JSON.stringify(weights)}\` — current: \`${JSON.stringify(RACE_EVAL_V1)}\`.`,
     '',
     'Caveat: labels are outcomes of games between these engines. A lower log-loss means the weights *predict* those outcomes better; it is not evidence that moves chosen with them are better. Only the SPRT games decide.',
   ];
@@ -243,13 +246,13 @@ function cost() {
     let s = randomMixedOpening({ seed: 500 + seed, plies: 8, wallProbability: 0.35, maxImbalance: 3 }).state;
     for (let i = 0; i < 20 && s.winner === null; i++) {
       if (i % 4 === 0) positions.push(s);
-      s = applyActionUnchecked(s, runSearch(s, { ...DEFAULT_MINIMAX_SETTINGS, maxDepth: 2, timeLimitMs: 0 }, createDistanceEvaluator(DEFAULT_MINIMAX_EVAL)).bestAction);
+      s = applyActionUnchecked(s, runSearch(s, { ...DEFAULT_MINIMAX_SETTINGS, maxDepth: 2, timeLimitMs: 0 }, createDistanceEvaluator(RACE_EVAL_V1)).bestAction);
     }
   }
   const L = ['# Stage 3-B — evaluation cost per candidate', '', `- ${prov.timestamp} · commit ${prov.git.commit?.slice(0, 10)} · power ${prov.power} · ${prov.cpu}`, `- ${positions.length} positions; µs = median of 5 timing runs; search: depth 4, opponent-path, 12 positions.`, '', '| Candidate | evaluate µs | ×base | depth-4 search: nodes | ms | ×base time |', '|---|---:|---:|---:|---:|---:|'];
   let baseUs = 0;
   let baseMs = 0;
-  for (const [id, w] of Object.entries({ base: DEFAULT_MINIMAX_EVAL, ...EVAL_CANDIDATES })) {
+  for (const [id, w] of Object.entries({ base: RACE_EVAL_V1, ...EVAL_CANDIDATES })) {
     const ev = createDistanceEvaluator(w);
     const runs: number[] = [];
     for (let r = 0; r < 6; r++) {
@@ -295,11 +298,47 @@ function select() {
   process.stdout.write(lines.join(NL) + `${NL}promoted: ${promoted.join(',') || '(none)'}${NL}`);
 }
 
+/**
+ * Pilot gate for T-E6-300 (rule fixed before the pilot): STOP only on clear harm — the pilot's
+ * pair-score 95% CI lies entirely below 0.5 — or when over 10 % of pilot pairs are unusable
+ * (halts / suspect games: an engineering problem). Otherwise GO. The pilot never enters the SPRT
+ * (different seed and openings) and the SPRT bounds are unchanged; "no significant pilot result"
+ * is the expected outcome for a small effect and is not a reason to stop.
+ * → bench/results/stage3b/gate-E6.txt ("go" or "stop" on the first line, then the reason).
+ */
+function gate() {
+  const m = SUITES['stage3b-next'].matchups.find((x) => x.id === 'P-E6-300')!;
+  const games = readGames(join('bench/results/stage3b/stage3b-next', m.id)).filter((g) => g.configHash === hashOf(m.config));
+  const pre = pairPrefix(games, m.config.pairs);
+  const n = pre.scores.length;
+  const unusable = pre.excludedHalted + pre.excludedSuspect;
+  const NL = String.fromCharCode(10);
+  let verdict = 'go';
+  let reason: string;
+  if (pre.nextPair < m.config.pairs) {
+    verdict = 'stop';
+    reason = `pilot incomplete: ${pre.nextPair}/${m.config.pairs} pairs`;
+  } else {
+    const mean = pre.scores.reduce((a, b) => a + b, 0) / n;
+    const sd = Math.sqrt(pre.scores.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, n - 1));
+    const hi = mean + (1.96 * sd) / Math.sqrt(n);
+    const lo = mean - (1.96 * sd) / Math.sqrt(n);
+    reason = `pilot ${n} valid pairs, pair score ${mean.toFixed(3)} (95% CI ${lo.toFixed(3)}–${hi.toFixed(3)}), unusable pairs ${unusable}`;
+    if (hi < 0.5) verdict = 'stop';
+    if (unusable > 0.1 * m.config.pairs) verdict = 'stop';
+  }
+  mkdirSync('bench/results/stage3b', { recursive: true });
+  writeFileSync('bench/results/stage3b/gate-E6.txt', verdict + NL + reason + NL);
+  process.stdout.write(`gate: ${verdict} — ${reason}${NL}`);
+}
+
 it('stage 3-B tooling', () => {
   const mode = process.env.STAGE3B ?? '';
-  if (mode === 'ledger') buildLedger();
+  if (mode === 'ledger') buildLedger(false);
+  else if (mode === 'ledger3b') buildLedger(true);
   else if (mode === 'e5fit') e5fit();
   else if (mode === 'cost') cost();
   else if (mode === 'select') select();
-  else throw new Error('STAGE3B must be ledger, e5fit, cost or select');
+  else if (mode === 'gate') gate();
+  else throw new Error('STAGE3B must be ledger, ledger3b, e5fit, cost, select or gate');
 }, 60 * 60 * 1000);

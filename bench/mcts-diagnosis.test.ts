@@ -9,7 +9,7 @@ import { DEFAULT_MINIMAX_SETTINGS } from '../src/ai/minimaxAgent';
 import { decideMcts, resolveMctsSettings } from '../src/ai/mctsAgent';
 import { createRolloutEvaluator, rolloutAction } from '../src/ai/mcts/rollout';
 import { createRng } from '../src/ai/rng';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { MctsSettings, RolloutPolicy } from '../src/ai/types';
 import { applyActionUnchecked, applyAction, createInitialState, distanceToRow, formatAction, goalRow, hashState, legalActions, legalPawnMoves } from '../src/engine';
@@ -21,7 +21,7 @@ const log = (l = '') => {
   process.stdout.write(l + '\n');
 };
 const f2 = (x: number) => (x < 0 ? '−' : '+') + Math.abs(x).toFixed(2);
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 /** Alpha-Beta reference value of a position for `perspective` (depth plies). */
 function abValue(s: GameState, depth: number, perspective: 0 | 1): { score: number; best: Action } | null {
   if (s.winner !== null) return { score: s.winner === perspective ? 10_000 : -10_000, best: null as unknown as Action };

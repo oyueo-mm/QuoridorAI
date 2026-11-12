@@ -1,11 +1,11 @@
 import { applyActionUnchecked, cellIndex, distanceMap, goalRow } from '../../engine';
 import type { Action, GameState } from '../../engine';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../search/evaluation';
 import { searchCandidates } from '../search/candidates';
 import type { MctsSettings } from '../types';
 import type { MctsGame } from './core';
 
-const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
 /** Score given to an immediately winning move before the softmax. */
 const WIN_PRIOR_SCORE = 100;
 

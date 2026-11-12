@@ -17,7 +17,7 @@ import { createBfsAgent } from '../src/ai/bfsAgent';
 import { DEFAULT_GUIDED_MCTS_SETTINGS, DEFAULT_MCTS_SETTINGS, decideMcts } from '../src/ai/mctsAgent';
 import { DEFAULT_MINIMAX_SETTINGS, createMinimaxAgent } from '../src/ai/minimaxAgent';
 import { pseudoCandidates } from '../src/ai/search/candidates';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { MctsSettings, MinimaxSettings } from '../src/ai/types';
 import { randomMixedOpening } from '../src/arena/openings';
@@ -150,7 +150,7 @@ it('stage-1 profile', async () => {
   log();
 
   // ---------------------------------------------------------------- 1. micro
-  const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
+  const evaluator = createDistanceEvaluator(RACE_EVAL_V1);
   type Op = [string, (s: GameState) => unknown, number?];
   // Actions are chosen before timing so the transition cost is measured alone.
   const moveOf = new Map<GameState, Action>();

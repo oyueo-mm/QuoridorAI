@@ -1,0 +1,54 @@
+{
+ "id": "F-E2-d4",
+ "question": "Evaluation E2 vs current evaluation, both Alpha-Beta depth 4 (fixed budget)",
+ "configHash": "3c576a438b7d511f",
+ "games": 1200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 4,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "E2",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked",
+     "evaluation": {
+      "selfDistance": 1,
+      "opponentDistance": 1,
+      "wallDifference": 1,
+      "tempo": 0.5,
+      "distanceCurve": 6
+     }
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "current eval",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   }
+  ],
+  "budget": {
+   "mode": "fixed",
+   "timeMs": 0
+  },
+  "pairs": 600,
+  "seed": 94002,
+  "maxGameMs": null,
+  "openingPliesMax": 8,
+  "openingDedupe": "mirror",
+  "excludeOpeningsFile": "bench/openings/ledger-626fec59.txt"
+ }
+}

@@ -1,7 +1,7 @@
 import { applyActionUnchecked, formatAction } from '../engine';
 import type { GameState } from '../engine';
 import { assertCanDecide } from './common';
-import { DEFAULT_MINIMAX_EVAL, createDistanceEvaluator, isDecisive, pathsOf, pliesToResult } from './search/evaluation';
+import { ALPHA_BETA_EVAL, createDistanceEvaluator, isDecisive, pathsOf, pliesToResult } from './search/evaluation';
 import { runSearch } from './search/minimax';
 import type { SearchResult } from './search/minimax';
 import type { Agent, AgentContext, AgentDecision, MinimaxSettings, MinimaxTrace } from './types';
@@ -13,14 +13,14 @@ export const DEFAULT_MINIMAX_SETTINGS: MinimaxSettings = {
   moveOrdering: true,
   transpositionTable: true,
   wallFilter: 'opponent-path',
-  evaluation: { ...DEFAULT_MINIMAX_EVAL },
+  evaluation: { ...ALPHA_BETA_EVAL },
 };
 
 export function resolveMinimaxSettings(partial?: Partial<MinimaxSettings>): MinimaxSettings {
   return {
     ...DEFAULT_MINIMAX_SETTINGS,
     ...partial,
-    evaluation: { ...DEFAULT_MINIMAX_EVAL, ...partial?.evaluation },
+    evaluation: { ...ALPHA_BETA_EVAL, ...partial?.evaluation },
   };
 }
 

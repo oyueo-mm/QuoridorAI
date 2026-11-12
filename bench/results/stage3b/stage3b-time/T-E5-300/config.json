@@ -1,0 +1,53 @@
+{
+ "id": "T-E5-300",
+ "question": "Evaluation E5 vs current evaluation, Alpha-Beta 300 ms per move",
+ "configHash": "7e763f31a7025bf2",
+ "games": 1200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 4,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "E5",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked",
+     "evaluation": {
+      "selfDistance": 1.001,
+      "opponentDistance": 1,
+      "wallDifference": 1.503,
+      "tempo": 0.482
+     }
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "current eval",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 600,
+  "seed": 95005,
+  "maxGameMs": 120000,
+  "openingPliesMax": 8,
+  "openingDedupe": "mirror",
+  "excludeOpeningsFile": "bench/openings/ledger-626fec59.txt"
+ }
+}
