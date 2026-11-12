@@ -14,7 +14,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { it } from 'vitest';
 import { DEFAULT_MINIMAX_SETTINGS } from '../src/ai/minimaxAgent';
-import { ALPHA_BETA_EVAL, RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
+import { ALPHA_BETA_EVAL, FITTED_EVAL_E5, RACE_EVAL_V1, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { MinimaxEvalWeights } from '../src/ai/types';
 import { parseMoveList } from '../src/arena/openings';
@@ -23,7 +23,7 @@ import type { GameState } from '../src/engine';
 import { collectProvenance } from './lib/provenance';
 import { E6, EVAL_CANDIDATES } from './stage3b-candidates';
 
-const NAMED: Record<string, MinimaxEvalWeights> = { v1: RACE_EVAL_V1, E5: ALPHA_BETA_EVAL, E6, ...EVAL_CANDIDATES };
+const NAMED: Record<string, MinimaxEvalWeights> = { v1: RACE_EVAL_V1, E5: FITTED_EVAL_E5, E6, default: ALPHA_BETA_EVAL, ...EVAL_CANDIDATES };
 const GAMES = 'bench/results/stage3b/stage3b-fixed/F-E4-d4/games.s0of3.jsonl';
 
 function gamePositions(): GameState[] {

@@ -2,7 +2,7 @@ import type { AgentSpec } from '../src/arena/agentSpec';
 import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
-import { ALPHA_BETA_EVAL } from '../src/ai/search/evaluation';
+import { FITTED_EVAL_E5 } from '../src/ai/search/evaluation';
 import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B, LEDGER_3B_NEXT } from './stage3b-candidates';
 
 /**
@@ -177,9 +177,9 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
     description: 'After 3-B: E6 pilot + SPRT vs adopted E5, and adopted Alpha-Beta vs Guided MCTS (300 ms).',
     maxGames: 2000,
     matchups: [
-      { id: 'P-E6-300', question: 'Pilot (40 pairs): E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, 40, 96001)) },
-      { id: 'T-E6-300', question: 'SPRT: E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, DEFAULT_SPRT.maxPairs, 96002)), sprt: DEFAULT_SPRT },
-      { id: 'G-E5-vs-guided-300', question: 'Adopted Alpha-Beta (E5) vs Guided MCTS, 300 ms per move, 100 pairs', config: fresh3b(timed(abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), guided(3000), 300, 100, 96003)) },
+      { id: 'P-E6-300', question: 'Pilot (40 pairs): E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: FITTED_EVAL_E5 }), 300, 40, 96001)) },
+      { id: 'T-E6-300', question: 'SPRT: E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: FITTED_EVAL_E5 }), 300, DEFAULT_SPRT.maxPairs, 96002)), sprt: DEFAULT_SPRT },
+      { id: 'G-E5-vs-guided-300', question: 'Adopted Alpha-Beta (E5) vs Guided MCTS, 300 ms per move, 100 pairs', config: fresh3b(timed(abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: FITTED_EVAL_E5 }), guided(3000), 300, 100, 96003)) },
     ],
   },
   /**
@@ -192,7 +192,7 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
     description: 'E6 confirmation SPRT vs adopted E5, 300 ms, AC power, new openings.',
     maxGames: 2000,
     matchups: [
-      { id: 'C-E6-300', question: 'Confirmation SPRT: E6 vs adopted E5, Alpha-Beta 300 ms (AC power)', config: { ...sprtCfg(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, DEFAULT_SPRT.maxPairs, 96005)), excludeOpeningsFile: LEDGER_3B_NEXT }, sprt: DEFAULT_SPRT },
+      { id: 'C-E6-300', question: 'Confirmation SPRT: E6 vs adopted E5, Alpha-Beta 300 ms (AC power)', config: { ...sprtCfg(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: FITTED_EVAL_E5 }), 300, DEFAULT_SPRT.maxPairs, 96005)), excludeOpeningsFile: LEDGER_3B_NEXT }, sprt: DEFAULT_SPRT },
     ],
   },
   /** Tiny configuration for the harness self-test. */

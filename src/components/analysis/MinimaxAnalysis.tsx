@@ -146,7 +146,11 @@ export function MinimaxAnalysis({ entry, trace, bind }: Props) {
         )}
         <p className="mt-1 font-mono text-[11px] text-faint">
           평가식: −{settings.evaluation.selfDistance}·d내 + {settings.evaluation.opponentDistance}·d상대 +{' '}
-          {settings.evaluation.wallDifference}·(벽내 − 벽상대) ± {settings.evaluation.tempo}(차례) · 점수는 {PLAYER_LABEL[me]} 관점
+          {settings.evaluation.wallDifference}·(벽내 − 벽상대) ± {settings.evaluation.tempo}(차례)
+          {settings.evaluation.vulnerabilityThreat
+            ? ` + ${settings.evaluation.vulnerabilityThreat}·(취약성상대·min(벽내,3)/3 − 취약성내·min(벽상대,3)/3)`
+            : ''}{' '}
+          · 점수는 {PLAYER_LABEL[me]} 관점
         </p>
       </div>
 

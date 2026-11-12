@@ -1,0 +1,48 @@
+{
+ "id": "G-E5-vs-guided-300",
+ "question": "Adopted Alpha-Beta (E5) vs Guided MCTS, 300 ms per move, 100 pairs",
+ "configHash": "7cf3e57114d16830",
+ "games": 200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 4,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "E5 (default)",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked",
+     "evaluation": {
+      "selfDistance": 1.001,
+      "opponentDistance": 1,
+      "wallDifference": 1.503,
+      "tempo": 0.482
+     }
+    }
+   },
+   {
+    "kind": "mcts-guided",
+    "depth": 0,
+    "simulations": 3000
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 100,
+  "seed": 96003,
+  "maxGameMs": 120000,
+  "openingPliesMax": 8,
+  "openingDedupe": "mirror",
+  "excludeOpeningsFile": "bench/openings/ledger-7ca328c9.txt"
+ }
+}

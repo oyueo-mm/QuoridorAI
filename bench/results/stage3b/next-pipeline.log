@@ -1,0 +1,7 @@
+2026-11-12 17:18:43 next pipeline start
+2026-11-12 17:20:52 tactics: exit 0
+2026-11-12 17:27:00 pilot P-E6-300: exit 0
+2026-11-12 17:27:01 gate: go | pilot 37 valid pairs, pair score 0.500 (95% CI 0.386??.614), unusable pairs 3
+2026-11-12 17:42:05 final comparison G-E5-vs-guided-300: exit 0
+2026-11-12 17:55:23 SPRT T-E6-300: exit 0
+2026-11-12 17:55:23 next pipeline done

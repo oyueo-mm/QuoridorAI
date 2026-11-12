@@ -14,6 +14,7 @@ const EVAL_FIELDS: { key: keyof MinimaxEvalWeights; label: string }[] = [
   { key: 'opponentDistance', label: '상대 거리 가중치' },
   { key: 'wallDifference', label: '남은 벽 차이 가치' },
   { key: 'tempo', label: '차례(템포) 보너스' },
+  { key: 'vulnerabilityThreat', label: '경로 취약성 × 상대 벽' },
 ];
 
 export function MinimaxSettingsForm({ value, onChange }: Props) {
@@ -108,7 +109,7 @@ export function MinimaxSettingsForm({ value, onChange }: Props) {
                 type="number"
                 step={0.1}
                 min={0}
-                value={value.evaluation[f.key]}
+                value={value.evaluation[f.key] ?? 0}
                 onChange={(e) =>
                   set({ evaluation: { ...value.evaluation, [f.key]: Math.max(0, Number(e.target.value) || 0) } })
                 }

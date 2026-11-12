@@ -35,16 +35,25 @@ export const RACE_EVAL_V1: MinimaxEvalWeights = {
 };
 
 /**
- * Alpha-Beta default since stage 3-B (candidate E5): the same linear terms with weights fitted to
- * recorded game outcomes, split by opening (docs/stage3b-eval-report.md). Beat RACE_EVAL_V1 in two
- * independent SPRTs on new openings: depth 4 +44 Elo (+11 … +78), 300 ms +55 Elo (+16 … +96).
+ * Candidate E5 (stage 3-B): the linear terms with weights fitted to recorded game outcomes, split
+ * by opening (docs/stage3b-eval-report.md). Beat RACE_EVAL_V1 in two independent SPRTs on new
+ * openings: depth 4 +44 Elo (+11 … +78), 300 ms +55 Elo (+16 … +96). Kept separately so the
+ * stage-3B experiment definitions keep their exact weights.
  */
-export const ALPHA_BETA_EVAL: MinimaxEvalWeights = {
+export const FITTED_EVAL_E5: MinimaxEvalWeights = {
   selfDistance: 1.001,
   opponentDistance: 1,
   wallDifference: 1.503,
   tempo: 0.482,
 };
+
+/**
+ * Alpha-Beta default since stage 3-B (candidate E6): E5 plus the path-vulnerability threat term
+ * (E4). Beat E5 in two independent 300 ms SPRTs on new openings: +86 Elo (+36 … +140, battery)
+ * and +89 Elo (+37 … +145, AC power). Costs ~2.2× per node (vulnerability BFS), already paid for
+ * in those equal-time results.
+ */
+export const ALPHA_BETA_EVAL: MinimaxEvalWeights = { ...FITTED_EVAL_E5, vulnerabilityThreat: 0.5 };
 
 /**
  * Static evaluation used at search leaves. Implementations must be deterministic functions

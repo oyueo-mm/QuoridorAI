@@ -1,0 +1,2 @@
+go
+pilot 37 valid pairs, pair score 0.500 (95% CI 0.386–0.614), unusable pairs 3
