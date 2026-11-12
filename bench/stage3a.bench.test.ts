@@ -19,11 +19,11 @@ import { createRng } from '../src/ai/rng';
 import { DEFAULT_SPRT, eloToScore, sequentialTest, simulateSprt } from '../src/arena/sprt';
 import type { SprtConfig } from '../src/arena/sprt';
 import { wilson } from '../src/arena/stats';
-import { mirrorInvariantKey, openingState, schedule } from '../src/arena/tournament';
+import { mirrorInvariantKey, openingState } from '../src/arena/tournament';
 import type { TournamentConfig } from '../src/arena/tournament';
 import { distanceToRow, hashState } from '../src/engine';
 import { collectProvenance } from './lib/provenance';
-import { effectiveGames, pairPrefix, readGames } from './lib/suite';
+import { effectiveGames, pairPrefix, readGames, scheduleFor } from './lib/suite';
 import type { RecordedGame } from './lib/suite';
 import { SUITES } from './stage1-suites';
 
@@ -231,7 +231,7 @@ it('stage 3-A validation', () => {
   }
   // The stage-3A schedule (not played yet): novelty against everything above.
   for (const m of SUITES['stage3a']?.matchups ?? []) {
-    const sched = schedule(m.config, SUITES['stage3a'].maxGames).filter((g) => g.aSeat === 0);
+    const sched = scheduleFor(m.config, SUITES['stage3a'].maxGames).filter((g) => g.aSeat === 0);
     const keys = sched.map((g) => mirrorInvariantKey(openingState(g.opening)));
     const fresh = keys.filter((k) => !seenBefore.has(k)).length;
     log(`| (planned) ${m.id} | ${keys.length} | — | ${new Set(keys).size} | ${fresh} (${pct(fresh / keys.length, 0)}) | ${Math.min(...sched.map((g) => g.opening.moves.length))}–${Math.max(...sched.map((g) => g.opening.moves.length))} | — | — | — |`);

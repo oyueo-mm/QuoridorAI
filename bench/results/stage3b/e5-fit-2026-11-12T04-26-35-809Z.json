@@ -1,0 +1,83 @@
+{
+ "provenance": {
+  "timestamp": "2026-11-12T04:24:29.840Z",
+  "git": {
+   "commit": "9a19610ddbda99054a72de8cd6561e789c437ae0",
+   "branch": "stage1-benchmark",
+   "dirty": true,
+   "srcDirty": true,
+   "srcDirtyFiles": [
+    "src/ai/search/evaluation.ts",
+    "src/ai/types.ts",
+    "src/arena/tournament.ts",
+    "src/engine/rowMasks.ts",
+    "src/ai/__tests__/evalVariants.test.ts"
+   ]
+  },
+  "node": "v24.19.0",
+  "v8": "13.6.233.17-node.51",
+  "platform": "win32",
+  "osRelease": "10.0.26200",
+  "arch": "x64",
+  "cpu": "Intel(R) Core(TM) Ultra 7 256V",
+  "logicalCores": 8,
+  "totalMemGB": 15.5,
+  "power": "battery"
+ },
+ "experiments": [
+  "F0-bfs-vs-random",
+  "F1-ab2-vs-bfs",
+  "F2-ab3-vs-ab2",
+  "F3-ab4-vs-ab3",
+  "F4-ab5-vs-ab4",
+  "F5-ab4-vs-guided3000",
+  "F6-guided3000-vs-pure1000",
+  "F7-minimax3-vs-ab3",
+  "T10000-ab-vs-guided",
+  "T2000-ab-vs-guided",
+  "T300-ab-vs-bfs",
+  "T300-ab-vs-guided",
+  "T300-ab-vs-pure",
+  "S1-masked-vs-reference-300",
+  "S2-defense-vs-path-300",
+  "S3-defense-vs-path-d4",
+  "S4-new-vs-stage1-300",
+  "S6-defense3-vs-path-300",
+  "S7-masked-vs-guided-300",
+  "V1-sprt-ab3-vs-ab2",
+  "V1b-sprt-ab3-vs-ab2-repeat"
+ ],
+ "games": 2839,
+ "positions": {
+  "train": 152244,
+  "validation": 35821,
+  "droppedAsDuplicates": 1089
+ },
+ "openings": {
+  "train": 964,
+  "validation": 216,
+  "overlap": 0
+ },
+ "baselineScale": 0.30996765798420606,
+ "coefficients": [
+  0.17420141734356845,
+  0.3613688772403598,
+  -0.3616849945669338,
+  0.5430725363869056
+ ],
+ "weights": {
+  "tempo": 0.482,
+  "opponentDistance": 1,
+  "selfDistance": 1.001,
+  "wallDifference": 1.503
+ },
+ "validationLogLoss": {
+  "constant": 0.6931102609741452,
+  "baseline": 0.489650566510336,
+  "fitted": 0.45568529881653824
+ },
+ "trainLogLoss": {
+  "baseline": 0.5188425723602585,
+  "fitted": 0.4969960227468394
+ }
+}

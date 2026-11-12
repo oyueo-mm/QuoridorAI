@@ -54,6 +54,12 @@ export interface TournamentConfig {
   openingDedupe?: 'exact' | 'mirror';
   /** 'mixed' only: opening length drawn uniformly from [openingPlies, openingPliesMax] per pair. */
   openingPliesMax?: number;
+  /**
+   * Batch runs only: name of a committed ledger of opening keys that must not be used (e.g. all
+   * openings of earlier experiments and of training data). The runner loads it and passes the
+   * keys to `schedule`; the name (with its content hash) is part of the config hash.
+   */
+  excludeOpeningsFile?: string;
 }
 
 export type OpeningMode = 'pawn' | 'mixed' | 'book';
@@ -227,15 +233,21 @@ function drawOpening(config: TournamentConfig, pair: number, attempt: number): S
  * `maxGames` caps the size (the browser Arena keeps MAX_TOURNAMENT_GAMES; batch runs may
  * ask for more).
  */
-export function schedule(config: TournamentConfig, maxGames: number = MAX_TOURNAMENT_GAMES): ScheduledGame[] {
+export function schedule(
+  config: TournamentConfig,
+  maxGames: number = MAX_TOURNAMENT_GAMES,
+  /** Opening keys (mirror-invariant when openingDedupe is 'mirror', else exact) never to use. */
+  exclude?: ReadonlySet<string>,
+): ScheduledGame[] {
+  if (config.excludeOpeningsFile && !exclude) throw new Error(`config names ${config.excludeOpeningsFile}: pass its keys to schedule()`);
   const pairs = Math.max(1, Math.min(Math.floor(config.pairs), Math.floor(maxGames / 2)));
   const games: ScheduledGame[] = [];
-  const seen = new Set<string>();
+  const seen = new Set<string>(exclude ?? []);
   for (let pair = 0; pair < pairs; pair++) {
     let opening = drawOpening(config, pair, 0);
     if (config.uniqueOpenings) {
       const key = config.openingDedupe === 'mirror' ? mirrorInvariantKey : positionKey;
-      for (let attempt = 1; seen.has(key(openingState(opening))) && attempt <= 200; attempt++) {
+      for (let attempt = 1; seen.has(key(openingState(opening))) && attempt <= (exclude ? 2000 : 200); attempt++) {
         opening = drawOpening(config, pair, attempt);
       }
       seen.add(key(openingState(opening)));

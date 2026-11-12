@@ -166,6 +166,62 @@ export function distanceMapMasked(walls: WallLayout, targetRow: number): Int16Ar
   return dist;
 }
 
+const xEast = new Int32Array(BOARD_SIZE);
+const xWest = new Int32Array(BOARD_SIZE);
+const xSouth = new Int32Array(BOARD_SIZE);
+const xNorth = new Int32Array(BOARD_SIZE);
+
+/**
+ * Distance to `targetRow` as if one more wall (orientation, row, col) stood on the board —
+ * without copying the layout or touching the mask cache (used to measure how much a single
+ * wall can lengthen a path). The wall's legality is not checked.
+ */
+export function distanceWithExtraWall(walls: WallLayout, start: Coord, targetRow: number, o: 'h' | 'v', row: number, col: number): number {
+  if (start.row === targetRow) return 0;
+  const m = rowMasks(walls);
+  xEast.set(m.east);
+  xWest.set(m.west);
+  xSouth.set(m.south);
+  xNorth.set(m.north);
+  if (o === 'h') {
+    // Cuts the south edges of (row, col) and (row, col + 1).
+    const bits = (1 << col) | (1 << (col + 1));
+    xSouth[row] &= ~bits;
+    xNorth[row + 1] &= ~bits;
+  } else {
+    // Cuts the east edges of (row, col) and (row + 1, col).
+    xEast[row] &= ~(1 << col);
+    xEast[row + 1] &= ~(1 << col);
+    xWest[row] &= ~(1 << (col + 1));
+    xWest[row + 1] &= ~(1 << (col + 1));
+  }
+  let f = frontA;
+  let g = frontB;
+  f.fill(0);
+  seen.fill(0);
+  f[start.row] = 1 << start.col;
+  seen[start.row] = f[start.row];
+  for (let d = 1; d <= NUM_CELLS; d++) {
+    let any = 0;
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      const fr = f[r];
+      let n = ((fr & xEast[r]) << 1) | ((fr & xWest[r]) >> 1);
+      if (r > 0) n |= f[r - 1] & xSouth[r - 1];
+      if (r < BOARD_SIZE - 1) n |= f[r + 1] & xNorth[r + 1];
+      n &= ~seen[r] & FULL_ROW;
+      g[r] = n;
+      any |= n;
+    }
+    if (g[targetRow] !== 0) return d;
+    if (any === 0) return Infinity;
+    for (let r = 0; r < BOARD_SIZE; r++) seen[r] |= g[r];
+    const t = f;
+    f = g;
+    g = t;
+  }
+  return Infinity;
+}
+
 const UNREACHABLE = -1;
 const parent = new Int16Array(NUM_CELLS);
 const queue = new Int16Array(NUM_CELLS);

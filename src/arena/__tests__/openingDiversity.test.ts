@@ -42,6 +42,16 @@ describe('mirror symmetry of openings', () => {
     expect(schedule(base, 1000).map((g) => g.opening.moves.join(' '))).toEqual(schedule({ ...base, openingDedupe: 'exact' }, 1000).map((g) => g.opening.moves.join(' ')));
   });
 
+  it('an exclusion set keeps the listed openings out of the schedule', () => {
+    const cfg = { ...base, openingDedupe: 'mirror' as const };
+    const first = new Set(schedule(cfg, 1000).map((g) => mirrorInvariantKey(openingState(g.opening))));
+    const second = schedule({ ...cfg, excludeOpeningsFile: 'test-ledger' }, 1000, first);
+    const keys = second.filter((g) => g.aSeat === 0).map((g) => mirrorInvariantKey(openingState(g.opening)));
+    expect(keys.filter((k) => first.has(k))).toHaveLength(0);
+    expect(new Set(keys).size).toBe(keys.length);
+    expect(() => schedule({ ...cfg, excludeOpeningsFile: 'test-ledger' }, 1000)).toThrow(/pass its keys/);
+  });
+
   it('variable opening length stays within the range and is deterministic', () => {
     const cfg = { ...base, openingPlies: 4, openingPliesMax: 10, openingDedupe: 'mirror' as const };
     const a = schedule(cfg, 1000);

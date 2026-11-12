@@ -2,6 +2,7 @@ import type { AgentSpec } from '../src/arena/agentSpec';
 import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
+import { EVAL_CANDIDATES, LEDGER_3A } from './stage3b-candidates';
 
 /**
  * Stage-1 experiment definitions. Changing a config changes its hash: results already in a
@@ -34,6 +35,9 @@ const base = {
   maxPlies: 300,
   repetitionLimit: 3,
 } as const;
+
+/** Stage 3-B: stage-3 opening policy and no opening used before (ledger). */
+const fresh = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3A });
 
 /** Stage-3 opening policy: mirror-invariant unique openings of 4–8 plies. */
 const sprtCfg = (c: TournamentConfig): TournamentConfig => ({ ...c, openingPlies: 4, openingPliesMax: 8, openingDedupe: 'mirror' });
@@ -127,6 +131,35 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
       { id: 'V1b-sprt-ab3-vs-ab2-repeat', question: 'Reproducibility: identical configuration to V1 (decision and pair count must match)', config: sprtCfg(fixed(ab(3), ab(2), DEFAULT_SPRT.maxPairs, 93001)), sprt: DEFAULT_SPRT },
       { id: 'V2-sprt-null-ab-vs-ab-300', question: 'SPRT null test: identical Alpha-Beta (default settings) on both sides, 300 ms per move', config: sprtCfg(timed(abv(4, 'A', AB_MASKED), abv(4, 'B', AB_MASKED), 300, DEFAULT_SPRT.maxPairs, 93002)), sprt: DEFAULT_SPRT },
     ],
+  },
+  /**
+   * Stage 3-B, step 1: each evaluation candidate vs the current evaluation at equal depth 4
+   * (deterministic; measures judgement without the cost). New openings disjoint from every earlier
+   * experiment and from E5's training games. Run with OUT=bench/results/stage3b.
+   */
+  'stage3b-fixed': {
+    description: 'Stage 3-B: evaluation candidates vs current evaluation, fixed depth 4, SPRT (H0 0 / H1 +30).',
+    maxGames: 2000,
+    matchups: Object.entries(EVAL_CANDIDATES).map(([id, w], i) => ({
+      id: `F-${id}-d4`,
+      question: `Evaluation ${id} vs current evaluation, both Alpha-Beta depth 4 (fixed budget)`,
+      config: fresh(fixed(abv(4, id, { ...AB_MASKED, evaluation: w }), abv(4, 'current eval', AB_MASKED), DEFAULT_SPRT.maxPairs, 94001 + i)),
+      sprt: DEFAULT_SPRT,
+    })),
+  },
+  /**
+   * Stage 3-B, step 2: equal time (300 ms), for candidates promoted in step 1. Different seeds →
+   * openings independent of step 1 (and still disjoint from the ledger).
+   */
+  'stage3b-time': {
+    description: 'Stage 3-B: evaluation candidates vs current evaluation, 300 ms per move, SPRT (H0 0 / H1 +30).',
+    maxGames: 2000,
+    matchups: Object.entries(EVAL_CANDIDATES).map(([id, w], i) => ({
+      id: `T-${id}-300`,
+      question: `Evaluation ${id} vs current evaluation, Alpha-Beta 300 ms per move`,
+      config: fresh(timed(abv(4, id, { ...AB_MASKED, evaluation: w }), abv(4, 'current eval', AB_MASKED), 300, DEFAULT_SPRT.maxPairs, 95001 + i)),
+      sprt: DEFAULT_SPRT,
+    })),
   },
   /** Tiny configuration for the harness self-test. */
   'smoke': {

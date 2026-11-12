@@ -55,6 +55,22 @@ export interface RecordedGame extends TournamentGame {
 }
 
 export const isSuspect = (g: RecordedGame) => g.overBudgetMoves > 0;
+
+const ledgers = new Map<string, Set<string>>();
+/** Opening keys of a committed ledger file (one key per line, '#' comments). */
+export function loadOpeningLedger(path: string): Set<string> {
+  let keys = ledgers.get(path);
+  if (!keys) {
+    keys = new Set(readFileSync(path, 'utf8').split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith('#')));
+    ledgers.set(path, keys);
+  }
+  return keys;
+}
+
+/** schedule() with the config's excluded-openings ledger applied (bench runs only). */
+export function scheduleFor(config: TournamentConfig, maxGames: number) {
+  return schedule(config, maxGames, config.excludeOpeningsFile ? loadOpeningLedger(config.excludeOpeningsFile) : undefined);
+}
 const attemptOf = (g: RecordedGame) => g.attempt ?? 1;
 
 /** Latest attempt of every game index (the record every analysis uses). */
@@ -160,7 +176,7 @@ export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> 
   const dir = join(opts.root, m.id);
   mkdirSync(dir, { recursive: true });
   const configHash = hashOf(m.config);
-  const scheduled = schedule(m.config, opts.maxGames);
+  const scheduled = scheduleFor(m.config, opts.maxGames);
   const configPath = join(dir, 'config.json');
   if (existsSync(configPath)) {
     const prev = JSON.parse(readFileSync(configPath, 'utf8')) as { configHash: string };
@@ -302,7 +318,7 @@ export function buildReport(m: Matchup, root: string, maxGames: number): Matchup
     question: m.question,
     configHash,
     labels: [agentLabel(m.config.agents[0], m.config.budget), agentLabel(m.config.agents[1], m.config.budget)],
-    scheduled: schedule(m.config, maxGames).length,
+    scheduled: scheduleFor(m.config, maxGames).length,
     completed: unique.length,
     summary: summarize(m.config, unique),
     strategy: [strategyOf(unique, 0), strategyOf(unique, 1)],

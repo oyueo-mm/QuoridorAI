@@ -131,6 +131,20 @@ export interface MinimaxEvalWeights {
   wallDifference: number;
   /** Bonus for being the side to move (worth roughly half a step in a race). */
   tempo: number;
+  // Stage 3-B extensions. All optional: when every one is undefined the evaluation is exactly
+  // the original distance race (tested), so existing settings and saved traces are unchanged.
+  /**
+   * E1: walls in hand have diminishing value (the k-th wall is worth wallDecay^(k−1)) and lose
+   * value as the race ends: × min(1, (d_self + d_opp) / wallPhaseSum).
+   */
+  wallDecay?: number;
+  wallPhaseSum?: number;
+  /** E2: distances enter as K·ln(1 + d/K) instead of d — one step near the goal weighs more. */
+  distanceCurve?: number;
+  /** E3: weight of (opponent's − own) path vulnerability: the largest increase one legal-looking wall causes. */
+  vulnerability?: number;
+  /** E4: weight of vulnerability × the other side's walls in hand (min(walls, 3) / 3). */
+  vulnerabilityThreat?: number;
 }
 
 export interface MinimaxSettings {
@@ -240,7 +254,8 @@ export interface EvalBreakdown {
   selfWalls: number;
   opponentWalls: number;
   toMove: PlayerId;
-  terms: { self: number; opponent: number; walls: number; tempo: number };
+  /** `extra`: stage 3-B vulnerability terms (absent for the original evaluation). */
+  terms: { self: number; opponent: number; walls: number; tempo: number; extra?: number };
   score: number;
 }
 

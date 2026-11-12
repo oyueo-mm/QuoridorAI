@@ -27,6 +27,7 @@ import {
 } from '../src/engine';
 import type { GameState, WallLayout } from '../src/engine';
 import { readGames } from './lib/suite';
+import { EVAL_CANDIDATES } from './stage3b-candidates';
 import { collectProvenance } from './lib/provenance';
 import {
   NoWallSolver,
@@ -246,6 +247,12 @@ const AGENTS: Record<string, { spec: AgentSpec; budget: Budget }> = {
   'ab-300ms-pd3': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense', defenseMaxDistance: 3 } }, budget: { mode: 'equal-time', timeMs: 300 } },
   'ab-2s-pd': { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { wallFilter: 'path-defense' } }, budget: { mode: 'equal-time', timeMs: 2000 } },
 };
+
+// Stage 3-B evaluation candidates: depth 4 and 300 ms, default search settings otherwise.
+for (const [id, evaluation] of Object.entries(EVAL_CANDIDATES)) {
+  AGENTS[`${id}-d4`] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation } }, budget: { mode: 'fixed', timeMs: 0 } };
+  AGENTS[`${id}-300ms`] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation } }, budget: { mode: 'equal-time', timeMs: 300 } };
+}
 
 interface Answer {
   agent: string;

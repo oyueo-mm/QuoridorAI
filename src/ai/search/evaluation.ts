@@ -1,6 +1,10 @@
 import {
   cellIndex,
   distanceMap,
+  distanceWithExtraWall,
+  isWallAnchorInBounds,
+  wallConflicts,
+  wallsCuttingPath,
   distanceToRow,
   goalRow,
   opponentOf,
@@ -69,27 +73,62 @@ export function createDistanceEvaluator(weights: MinimaxEvalWeights): Evaluator 
     }
     const selfDistance = distanceToRow(state, state.pawns[perspective], goalRow(perspective));
     const opponentDistance = distanceToRow(state, state.pawns[opp], goalRow(opp));
-    const terms = {
-      self: -weights.selfDistance * selfDistance,
-      opponent: weights.opponentDistance * opponentDistance,
-      walls: weights.wallDifference * (base.selfWalls - base.opponentWalls),
-      tempo: state.currentPlayer === perspective ? weights.tempo : -weights.tempo,
-    };
+    const terms = termsOf(state, perspective, selfDistance, opponentDistance);
     return {
       ...base,
       terminal: null,
       selfDistance,
       opponentDistance,
       terms,
-      score: terms.self + terms.opponent + terms.walls + terms.tempo,
+      score: terms.self + terms.opponent + terms.walls + terms.tempo + (terms.extra ?? 0),
     };
   };
 
-  const score = (state: GameState, perspective: PlayerId, dSelf: number, dOpp: number) =>
-    weights.opponentDistance * dOpp -
-    weights.selfDistance * dSelf +
-    weights.wallDifference * (state.wallsRemaining[perspective] - state.wallsRemaining[opponentOf(perspective)]) +
-    (state.currentPlayer === perspective ? weights.tempo : -weights.tempo);
+  const extended =
+    weights.wallDecay !== undefined ||
+    weights.distanceCurve !== undefined ||
+    weights.vulnerability !== undefined ||
+    weights.vulnerabilityThreat !== undefined;
+  const curve = (d: number) => (weights.distanceCurve === undefined ? d : weights.distanceCurve * Math.log1p(d / weights.distanceCurve));
+  const wallValue = (walls: number, phase: number) => {
+    if (weights.wallDecay === undefined) return weights.wallDifference * walls;
+    const r = weights.wallDecay;
+    const h = r === 1 ? walls : (1 - Math.pow(r, walls)) / (1 - r);
+    return weights.wallDifference * h * phase;
+  };
+
+  /** Score parts (all from `perspective`'s point of view). */
+  function termsOf(state: GameState, perspective: PlayerId, dSelf: number, dOpp: number) {
+    const opp = opponentOf(perspective);
+    const wSelf = state.wallsRemaining[perspective];
+    const wOpp = state.wallsRemaining[opp];
+    const phase = weights.wallPhaseSum === undefined ? 1 : Math.min(1, (dSelf + dOpp) / weights.wallPhaseSum);
+    let extra = 0;
+    if (weights.vulnerability !== undefined || weights.vulnerabilityThreat !== undefined) {
+      const vSelf = vulnerability(state, perspective);
+      const vOpp = vulnerability(state, opp);
+      extra += (weights.vulnerability ?? 0) * (vOpp - vSelf);
+      extra += (weights.vulnerabilityThreat ?? 0) * ((vOpp * Math.min(wSelf, 3)) / 3 - (vSelf * Math.min(wOpp, 3)) / 3);
+    }
+    return {
+      self: -weights.selfDistance * curve(dSelf),
+      opponent: weights.opponentDistance * curve(dOpp),
+      walls: wallValue(wSelf, phase) - wallValue(wOpp, phase),
+      tempo: state.currentPlayer === perspective ? weights.tempo : -weights.tempo,
+      ...(extended ? { extra } : {}),
+    };
+  }
+
+  const score = extended
+    ? (state: GameState, perspective: PlayerId, dSelf: number, dOpp: number) => {
+        const t = termsOf(state, perspective, dSelf, dOpp);
+        return t.self + t.opponent + t.walls + t.tempo + (t.extra ?? 0);
+      }
+    : (state: GameState, perspective: PlayerId, dSelf: number, dOpp: number) =>
+        weights.opponentDistance * dOpp -
+        weights.selfDistance * dSelf +
+        weights.wallDifference * (state.wallsRemaining[perspective] - state.wallsRemaining[opponentOf(perspective)]) +
+        (state.currentPlayer === perspective ? weights.tempo : -weights.tempo);
 
   return {
     id: 'distance',
@@ -129,6 +168,25 @@ export function createDistanceEvaluator(weights: MinimaxEvalWeights): Evaluator 
       };
     },
   };
+}
+
+/**
+ * Path vulnerability of `player`: the largest increase of its shortest-path length that a single
+ * wall cutting its current shortest path can cause (pawns ignored, walls that would disconnect it
+ * are illegal and skipped; legality for the other player is not checked — a heuristic).
+ */
+export function vulnerability(state: GameState, player: PlayerId): number {
+  const goal = goalRow(player);
+  const path = shortestPath(state, state.pawns[player], goal);
+  if (!path) return 0;
+  const d = path.length - 1;
+  let worst = 0;
+  for (const w of wallsCuttingPath(path)) {
+    if (!isWallAnchorInBounds(w.row, w.col) || wallConflicts(state, w.orientation, w.row, w.col)) continue;
+    const d2 = distanceWithExtraWall(state, state.pawns[player], goal, w.orientation, w.row, w.col);
+    if (Number.isFinite(d2) && d2 - d > worst) worst = d2 - d;
+  }
+  return worst;
 }
 
 export function pathsOf(state: GameState, perspective: PlayerId): { selfPath: Coord[]; opponentPath: Coord[] } {

@@ -12,9 +12,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { it } from 'vitest';
 import { inProcessFactory } from '../src/arena/agentSpec';
-import { playScheduledGame, schedule } from '../src/arena/tournament';
+import { playScheduledGame } from '../src/arena/tournament';
 import { collectProvenance, hashOf } from './lib/provenance';
-import { readGames } from './lib/suite';
+import { readGames, scheduleFor } from './lib/suite';
 import { SUITES } from './stage1-suites';
 
 it('reproducibility audit', async () => {
@@ -31,7 +31,7 @@ it('reproducibility audit', async () => {
     const hash = hashOf(m.config);
     const games = readGames(join(root, m.id)).filter((g) => g.configHash === hash);
     if (games.length === 0) continue;
-    const scheduled = schedule(m.config, suite.maxGames);
+    const scheduled = scheduleFor(m.config, suite.maxGames);
     const picks = Array.from({ length: Math.min(sample, games.length) }, (_, i) => games[Math.floor((i * games.length) / Math.min(sample, games.length))]);
     let ok = 0;
     for (const g of picks) {
