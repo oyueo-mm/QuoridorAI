@@ -1,12 +1,12 @@
 # Stage 3-A run status
 
-Last updated: 2026-11-12 12:50 (KST) · branch `stage1-benchmark` · report: `docs/stage3a-evaluation-report.md`
+Last updated: 2026-11-12 13:40 (KST) — **stage 3-A complete, no process running** · branch `stage1-benchmark` · report: `docs/stage3a-evaluation-report.md`
 
 | Matchup | State | Result |
 |---|---|---|
 | V1-sprt-ab3-vs-ab2 | complete | H1 accepted after 45 pairs, Elo +166 (+97 … +249) |
 | V1b-sprt-ab3-vs-ab2-repeat | complete | identical to V1 (decision, LLR, all 116 games) |
-| V2-sprt-null-ab-vs-ab-300 | running (`run-shards` PID 9588, 4 shards, keep-awake) | — |
+| V2-sprt-null-ab-vs-ab-300 | complete (13:32) | H0 accepted after 220 pairs (LL 10 / split 195 / WW 15), Elo +8 (−8 … +23); 6 suspect games replayed |
 
 Laptop was on battery when V2 started (recorded in sessions.jsonl as `power`). Plug in for faster, steadier runs.
 

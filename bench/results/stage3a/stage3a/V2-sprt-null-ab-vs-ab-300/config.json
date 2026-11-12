@@ -1,0 +1,46 @@
+{
+ "id": "V2-sprt-null-ab-vs-ab-300",
+ "question": "SPRT null test: identical Alpha-Beta (default settings) on both sides, 300 ms per move",
+ "configHash": "8e3e1ddec674353b",
+ "games": 1200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 4,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "A",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "B",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked"
+    }
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 600,
+  "seed": 93002,
+  "maxGameMs": 120000,
+  "openingPliesMax": 8,
+  "openingDedupe": "mirror"
+ }
+}

@@ -1,5 +1,6 @@
 # Stage 3-B measurement pipeline (independent of any Claude session; resumable — re-run to continue).
-#   cmd /c start "" /belownormal powershell -ExecutionPolicy Bypass -File bench/stage3b-pipeline.ps1
+#   $p = Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File',"$PWD/bench/stage3b-pipeline.ps1" -WindowStyle Hidden -PassThru; $p.PriorityClass = 'BelowNormal'
+# (-NoProfile matters: with the user profile the hidden process hung before its first line.)
 # Started at below-normal priority so a concurrently running equal-time suite (V2) keeps precedence;
 # fixed-depth games are deterministic, so their results do not depend on load.
 #   1. stage3b-fixed: every candidate vs current evaluation at depth 4 (SPRT), 3 shards
