@@ -25,6 +25,11 @@ $p = Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Byp
 
 Collect: `$env:OUT='bench/results/stage3b'; $env:REPORT='only'; foreach ($s in 'stage3b-fixed','stage3b-time') { $env:SUITE=$s; npx vitest run --config vitest.bench.config.ts bench/stage1.bench.test.ts }`
 
+Snapshot 2026-11-12 14:55 KST (pipeline still at step 1): F-E1 rejected (37 pairs, Elo −149),
+F-E2 rejected (117 pairs, Elo −39), F-E3 running (571 of max 600 pairs, interim +10 Elo),
+F-E4 and F-E5 not started. Interim check without disturbing the run: tail
+`stage3b-fixed/progress.s*of3.log` (lines with `SPRT decided`).
+
 Pending after the pipeline: combination of promoted candidates as a new candidate (new seeds), final
 comparison against Guided MCTS, `npm test` on an idle machine (the obstacle-map test timed out under
 load at 13:41 — engine code untouched).
