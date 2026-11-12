@@ -38,6 +38,8 @@ const ROOTS = ['bench/results/stage1/stage1-fixed', 'bench/results/stage1/stage1
 
 /** Stage 3-B result roots: added to the follow-up ledger (not to E5's training data). */
 const ROOTS_3B = ['bench/results/stage3b/stage3b-fixed', 'bench/results/stage3b/stage3b-time'];
+/** Follow-up roots (E6 pilot/SPRT, Guided comparison): added for the E6 confirmation ledger. */
+const ROOTS_NEXT = ['bench/results/stage3b/stage3b-next'];
 
 function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { id: string; config: TournamentConfig; games: RecordedGame[] }[] {
   const out = [];
@@ -57,9 +59,9 @@ function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { 
 const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
 
 // ---------------------------------------------------------------- ledger
-function buildLedger(upTo3B: boolean) {
+function buildLedger(upTo3B: boolean, next = false) {
   const keys = new Set<string>();
-  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
+  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B, ...(next ? ROOTS_NEXT : [])] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
   // Full schedules of stage-3A matchups (V2 may still be adding pairs).
   for (const m of SUITES['stage3a'].matchups) for (const g of scheduleFor(m.config, SUITES['stage3a'].maxGames)) keys.add(mirrorInvariantKey(openingState(g.opening)));
   const sorted = [...keys].sort();
@@ -336,6 +338,7 @@ it('stage 3-B tooling', () => {
   const mode = process.env.STAGE3B ?? '';
   if (mode === 'ledger') buildLedger(false);
   else if (mode === 'ledger3b') buildLedger(true);
+  else if (mode === 'ledger3b-next') buildLedger(true, true);
   else if (mode === 'e5fit') e5fit();
   else if (mode === 'cost') cost();
   else if (mode === 'select') select();

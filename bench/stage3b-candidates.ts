@@ -27,6 +27,9 @@ export const LEDGER_3A = 'bench/openings/ledger-626fec59.txt';
 /** Openings used by any experiment up to stage 3-B: excluded from the follow-up runs. */
 export const LEDGER_3B = 'bench/openings/ledger-7ca328c9.txt';
 
+/** Openings up to the 3-B follow-up (incl. the E6 pilot/SPRT and the Guided comparison). */
+export const LEDGER_3B_NEXT = 'bench/openings/ledger-ffcd0dde.txt';
+
 /**
  * E6 = E4 on top of the adopted E5 weights (a combination is a new candidate with its own games).
  * Parameters fixed before any E6 game: E4's term unchanged (0.5). Reason for the re-test: E4 won at

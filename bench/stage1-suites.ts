@@ -3,7 +3,7 @@ import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
 import { ALPHA_BETA_EVAL } from '../src/ai/search/evaluation';
-import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B } from './stage3b-candidates';
+import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B, LEDGER_3B_NEXT } from './stage3b-candidates';
 
 /**
  * Stage-1 experiment definitions. Changing a config changes its hash: results already in a
@@ -180,6 +180,19 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
       { id: 'P-E6-300', question: 'Pilot (40 pairs): E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, 40, 96001)) },
       { id: 'T-E6-300', question: 'SPRT: E6 (E5 + E4 term) vs adopted E5, Alpha-Beta 300 ms', config: fresh3b(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, DEFAULT_SPRT.maxPairs, 96002)), sprt: DEFAULT_SPRT },
       { id: 'G-E5-vs-guided-300', question: 'Adopted Alpha-Beta (E5) vs Guided MCTS, 300 ms per move, 100 pairs', config: fresh3b(timed(abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), guided(3000), 300, 100, 96003)) },
+    ],
+  },
+  /**
+   * Independent confirmation of T-E6-300 before E6 becomes the default: its pilot (AC power, 37
+   * pairs) scored 0.500 while the SPRT (battery, shallower searches) scored 0.622. Same test and
+   * bounds, new seed, openings disjoint from everything up to the follow-up (ledger-ffcd0dde).
+   * Run on AC power. Both SPRTs are reported whatever this one decides.
+   */
+  'stage3b-confirm': {
+    description: 'E6 confirmation SPRT vs adopted E5, 300 ms, AC power, new openings.',
+    maxGames: 2000,
+    matchups: [
+      { id: 'C-E6-300', question: 'Confirmation SPRT: E6 vs adopted E5, Alpha-Beta 300 ms (AC power)', config: { ...sprtCfg(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: ALPHA_BETA_EVAL }), 300, DEFAULT_SPRT.maxPairs, 96005)), excludeOpeningsFile: LEDGER_3B_NEXT }, sprt: DEFAULT_SPRT },
     ],
   },
   /** Tiny configuration for the harness self-test. */
