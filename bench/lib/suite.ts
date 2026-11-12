@@ -11,9 +11,17 @@
  * with the same config hash; a different config in an existing directory is refused.
  * Shards split the schedule by pair (both games of a pair always run in the same process),
  * so several processes can share one matchup.
+ *
+ * Equal-time games with a move over 3× the budget (machine sleep or stall) are "suspect": they
+ * are replayed as a new attempt (appended, the old line stays) up to MAX_ATTEMPTS times, and
+ * every analysis uses the latest attempt of each game. Matchups with an `sprt` configuration
+ * stop as soon as the sequential test over the consecutive prefix of finished pairs decides.
  */
 import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { cpus } from 'node:os';
 import { join } from 'node:path';
+import { describeSprt, sequentialTest } from '../../src/arena/sprt';
+import type { SprtConfig, SprtResult } from '../../src/arena/sprt';
 import { inProcessFactory, agentLabel } from '../../src/arena/agentSpec';
 import { analyzeGame, mergeSides } from '../../src/arena/gameAnalysis';
 import type { GameAnalysis, SideAnalysis } from '../../src/arena/gameAnalysis';
@@ -27,7 +35,12 @@ export interface Matchup {
   id: string;
   question: string;
   config: TournamentConfig;
+  /** Sequential test: stop when decided. `config.pairs` must equal `sprt.maxPairs`. */
+  sprt?: SprtConfig;
 }
+
+/** Attempts per game when the previous attempt was suspect (machine sleep / stall). */
+export const MAX_ATTEMPTS = 3;
 
 export interface RecordedGame extends TournamentGame {
   configHash: string;
@@ -35,6 +48,76 @@ export interface RecordedGame extends TournamentGame {
   analysis: GameAnalysis;
   /** Equal-time decisions that took more than 3× the budget (machine stalls, GC, contention). */
   overBudgetMoves: number;
+  /** 1-based attempt number (absent = 1, records written before retries existed). */
+  attempt?: number;
+  /** Machine-wide CPU busy share while the game ran (all processes, all cores). */
+  cpuBusy?: number;
+}
+
+export const isSuspect = (g: RecordedGame) => g.overBudgetMoves > 0;
+const attemptOf = (g: RecordedGame) => g.attempt ?? 1;
+
+/** Latest attempt of every game index (the record every analysis uses). */
+export function effectiveGames(games: readonly RecordedGame[]): RecordedGame[] {
+  const best = new Map<number, RecordedGame>();
+  for (const g of games) {
+    const prev = best.get(g.index);
+    if (!prev || attemptOf(g) > attemptOf(prev)) best.set(g.index, g);
+  }
+  return [...best.values()].sort((a, b) => a.index - b.index);
+}
+
+/** Final = will not be replayed: not suspect, or out of attempts. */
+const isFinal = (g: RecordedGame) => !isSuspect(g) || attemptOf(g) >= MAX_ATTEMPTS;
+
+export interface PairPrefix {
+  /** A's pair scores of the consecutive completed prefix, valid pairs only, in pair order. */
+  scores: number[];
+  /** Pairs in the prefix excluded from the test: a halted game, or still suspect after all attempts. */
+  excludedHalted: number;
+  excludedSuspect: number;
+  /** First pair index not yet complete (the prefix ends before it). */
+  nextPair: number;
+}
+
+/**
+ * Pair scores over the longest run of consecutive pairs whose two games are final. Using the
+ * prefix makes the sequential decision independent of which shard finished first.
+ */
+export function pairPrefix(games: readonly RecordedGame[], pairs: number, opts: { noRetries?: boolean } = {}): PairPrefix {
+  // Without retries (finished/old experiments) a suspect game is final: its pair is excluded.
+  const final = opts.noRetries ? () => true : isFinal;
+  const byPair = new Map<number, RecordedGame[]>();
+  for (const g of effectiveGames(games)) byPair.set(g.pair, [...(byPair.get(g.pair) ?? []), g]);
+  const out: PairPrefix = { scores: [], excludedHalted: 0, excludedSuspect: 0, nextPair: 0 };
+  for (let p = 0; p < pairs; p++) {
+    const pg = byPair.get(p) ?? [];
+    if (pg.length < 2 || !pg.every(final)) {
+      out.nextPair = p;
+      return out;
+    }
+    if (pg.some(isSuspect)) out.excludedSuspect++;
+    else if (pg.some((g) => g.outcome !== 'a-win' && g.outcome !== 'b-win')) out.excludedHalted++;
+    else out.scores.push(pg.filter((g) => g.outcome === 'a-win').length / 2);
+  }
+  out.nextPair = pairs;
+  return out;
+}
+
+export function sprtStatus(m: Matchup, games: readonly RecordedGame[]): SprtResult | null {
+  if (!m.sprt) return null;
+  return sequentialTest(pairPrefix(games, m.sprt.maxPairs).scores, m.sprt);
+}
+
+/** Machine-wide CPU busy share between two os.cpus() snapshots. */
+function cpuSnapshot() {
+  let idle = 0;
+  let total = 0;
+  for (const c of cpus()) {
+    idle += c.times.idle;
+    total += c.times.user + c.times.nice + c.times.sys + c.times.idle + c.times.irq;
+  }
+  return { idle, total };
 }
 
 export interface Shard {
@@ -92,26 +175,52 @@ export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> 
   const session = hashOf({ t: provenance.timestamp, shard: opts.shard, r: Math.random() });
   appendFileSync(join(dir, 'sessions.jsonl'), JSON.stringify({ session, shard: opts.shard, provenance }) + '\n');
 
-  const done = new Set(readGames(dir).filter((g) => g.configHash === configHash).map((g) => g.index));
-  const todo = scheduled.filter((g) => inShard(g, opts.shard) && !done.has(g.index));
+  if (m.sprt && m.config.pairs !== m.sprt.maxPairs) throw new Error(`${m.id}: config.pairs must equal sprt.maxPairs`);
   const file = join(dir, `games.s${opts.shard.index}of${opts.shard.count}.jsonl`);
   const limit = opts.limit ?? Infinity;
   const budgetMs = m.config.budget.mode === 'equal-time' ? m.config.budget.timeMs : null;
+  const mine = scheduled.filter((g) => inShard(g, opts.shard));
+  const load = () => readGames(dir).filter((g) => g.configHash === configHash);
+  /** Next game of this shard: never played, or latest attempt suspect with attempts left. */
+  const nextGame = (games: RecordedGame[]) => {
+    const latest = new Map(effectiveGames(games).map((g) => [g.index, g]));
+    for (const g of mine) {
+      const r = latest.get(g.index);
+      if (!r) return { game: g, attempt: 1 };
+      if (!isFinal(r)) return { game: g, attempt: attemptOf(r) + 1 };
+    }
+    return null;
+  };
   let played = 0;
-  opts.log?.(`[${m.id}] shard ${opts.shard.index}/${opts.shard.count}: ${done.size} done, ${todo.length} to play`);
-  for (const g of todo) {
-    if (played >= limit) break;
+  {
+    const games = load();
+    const st = sprtStatus(m, games);
+    opts.log?.(`[${m.id}] shard ${opts.shard.index}/${opts.shard.count}: ${effectiveGames(games).length} games recorded${st ? ` · SPRT ${st.status} after ${st.pairs} pairs` : ''}`);
+  }
+  while (played < limit) {
+    const games = load();
+    const st = sprtStatus(m, games);
+    if (st && st.status !== 'continue') {
+      opts.log?.(`[${m.id}] SPRT decided: ${describeSprt(st)}`);
+      break;
+    }
+    const next = nextGame(games);
+    if (!next) break;
+    const { game: g, attempt } = next;
     const t0 = performance.now();
+    const c0 = cpuSnapshot();
     const result = await playScheduledGame(m.config, g, inProcessFactory);
+    const c1 = cpuSnapshot();
     const analysis = analyzeGame(openingState(g.opening), result.moves);
     const overBudgetMoves =
       budgetMs === null ? 0 : result.agents.flatMap((a) => a.moves).filter((mv) => mv.ms > 3 * budgetMs).length;
-    const rec: RecordedGame = { ...result, configHash, session, analysis, overBudgetMoves };
+    const cpuBusy = c1.total > c0.total ? 1 - (c1.idle - c0.idle) / (c1.total - c0.total) : undefined;
+    const rec: RecordedGame = { ...result, configHash, session, analysis, overBudgetMoves, attempt, cpuBusy };
     appendFileSync(file, JSON.stringify(rec) + '\n');
     played++;
     opts.log?.(
-      `[${m.id}] game ${g.index} (pair ${g.pair}, A seat ${g.aSeat}) → ${result.outcome} in ${result.plies} plies, ` +
-        `${((performance.now() - t0) / 1000).toFixed(1)} s`,
+      `[${m.id}] game ${g.index} (pair ${g.pair}, A seat ${g.aSeat}${attempt > 1 ? `, attempt ${attempt}` : ''}) → ${result.outcome} in ${result.plies} plies, ` +
+        `${((performance.now() - t0) / 1000).toFixed(1)} s${overBudgetMoves ? ` · SUSPECT (${overBudgetMoves} over-budget moves)` : ''}`,
     );
   }
   return played;
@@ -134,6 +243,13 @@ export interface MatchupReport {
   sessions: { session: string; shard: Shard; provenance: Provenance }[];
   /** Per opening pair: A's results with A first and A second. */
   openings: { pair: number; moves: string; aFirst: string | null; aSecond: string | null }[];
+  /** Sequential test result (matchups with an sprt configuration). */
+  sprt?: SprtResult | null;
+  /** Retries: games that needed more than one attempt, and games still suspect. */
+  retriedGames?: number;
+  suspectGames?: number;
+  /** Machine-wide CPU busy share during games (mean / max), when recorded. */
+  cpuBusy?: { mean: number | null; max: number | null };
 }
 
 export interface StrategySummary {
@@ -172,8 +288,9 @@ export function buildReport(m: Matchup, root: string, maxGames: number): Matchup
   const dir = join(root, m.id);
   const configHash = hashOf(m.config);
   const games = readGames(dir).filter((g) => g.configHash === configHash);
-  // A resumed shard can never write an index twice, but guard against manual merges.
-  const unique = [...new Map(games.map((g) => [g.index, g])).values()];
+  // Latest attempt per game index (retries of suspect games, or manual merges).
+  const unique = effectiveGames(games);
+  const busy = unique.map((g) => g.cpuBusy).filter((x): x is number => x !== undefined);
   const sessions = existsSync(join(dir, 'sessions.jsonl'))
     ? readFileSync(join(dir, 'sessions.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))
     : [];
@@ -203,6 +320,10 @@ export function buildReport(m: Matchup, root: string, maxGames: number): Matchup
         aFirst: res(pg.find((g) => g.aSeat === 0)),
         aSecond: res(pg.find((g) => g.aSeat === 1)),
       })),
+    sprt: sprtStatus(m, games),
+    retriedGames: unique.filter((g) => attemptOf(g) > 1).length,
+    suspectGames: unique.filter(isSuspect).length,
+    cpuBusy: { mean: mean(busy), max: busy.length ? Math.max(...busy) : null },
   };
 }
 
@@ -253,6 +374,9 @@ export function reportMarkdown(r: MatchupReport): string {
   L.push(`${r.question}`);
   L.push('');
   L.push(`- Completed ${r.completed} / ${r.scheduled} scheduled games · config \`${r.configHash}\` · budget ${s.budgetMode}`);
+  if (r.sprt) L.push(`- **SPRT: ${describeSprt(r.sprt)}**`);
+  if (r.retriedGames || r.suspectGames) L.push(`- Replayed suspect games: ${r.retriedGames ?? 0} · still suspect after ${MAX_ATTEMPTS} attempts: ${r.suspectGames ?? 0}`);
+  if (r.cpuBusy && r.cpuBusy.mean !== null) L.push(`- Machine CPU busy during games: mean ${(100 * r.cpuBusy.mean).toFixed(0)}%, max ${(100 * (r.cpuBusy.max ?? 0)).toFixed(0)}%`);
   L.push(`- Decisive ${s.decisive}; halted: repetition ${s.halted.repetition}, max plies ${s.halted['max-plies']}, game time ${s.halted['time-limit']}, user ${s.halted['user-stopped']}`);
   L.push(`- Distinct start positions ${s.uniqueOpenings ?? '—'} · games duplicating an earlier game move-for-move ${s.duplicateGames ?? '—'}`);
   L.push(`- **A (${r.labels[0]}) win rate: ${formatProportion(s.aWinRate)}** · Elo(A−B) ${formatElo(s.aElo ?? null)}`);
@@ -284,7 +408,7 @@ export function reportMarkdown(r: MatchupReport): string {
   L.push('');
   const sess = r.sessions.map((x) => x.provenance);
   const commits = [...new Set(sess.map((p) => `${p.git.commit?.slice(0, 10) ?? '?'}${p.git.srcDirty ? '+dirty-src' : ''}`))];
-  const machines = [...new Set(sess.map((p) => `${p.cpu} · ${p.logicalCores} threads · Node ${p.node}`))];
+  const machines = [...new Set(sess.map((p) => `${p.cpu} · ${p.logicalCores} threads · Node ${p.node}${p.power ? ` · power ${p.power}` : ''}`))];
   L.push(`- Sessions ${r.sessions.length} · commits ${commits.join(', ') || '—'} · ${machines.join(' | ') || '—'}`);
   L.push('');
   return L.join('\n');

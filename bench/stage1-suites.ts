@@ -1,4 +1,5 @@
 import type { AgentSpec } from '../src/arena/agentSpec';
+import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
 
@@ -33,6 +34,9 @@ const base = {
   maxPlies: 300,
   repetitionLimit: 3,
 } as const;
+
+/** Stage-3 opening policy: mirror-invariant unique openings of 4–8 plies. */
+const sprtCfg = (c: TournamentConfig): TournamentConfig => ({ ...c, openingPlies: 4, openingPliesMax: 8, openingDedupe: 'mirror' });
 
 const fixed = (a: AgentSpec, b: AgentSpec, pairs: number, seed: number): TournamentConfig => ({
   ...base,
@@ -107,6 +111,21 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
     matchups: [
       { id: 'S6-defense3-vs-path-300', question: 'AB (path-defense within 3 steps) vs AB (opponent-path), both masked BFS, 300 ms per move', config: timed(abv(4, 'defense≤3', AB_DEFENSE3), abv(4, 'opponent-path', AB_MASKED), 300, 100, 92006) },
       { id: 'S7-masked-vs-guided-300', question: 'Default AB (masked BFS, opponent-path) vs Guided MCTS (masked BFS), 300 ms per move', config: timed(abv(4, 'masked BFS', AB_MASKED), guided(3000), 300, 100, 92007) },
+    ],
+  },
+  /**
+   * Stage 3-A: validation of the SPRT evaluation system on fresh openings (mirror-invariant
+   * unique, 4–8 plies). V1/V1b: a known large difference (fixed budget, deterministic: V1b must
+   * reproduce V1 exactly). V2: a null test — identical Alpha-Beta on both sides at 300 ms.
+   * Run with OUT=bench/results/stage3a.
+   */
+  'stage3a': {
+    description: 'Stage 3-A: SPRT validation (H0 Elo 0 vs H1 Elo +30, α = β = 0.05, 30–600 pairs).',
+    maxGames: 2000,
+    matchups: [
+      { id: 'V1-sprt-ab3-vs-ab2', question: 'SPRT on a known large difference: Alpha-Beta depth 3 vs depth 2 (fixed budget)', config: sprtCfg(fixed(ab(3), ab(2), DEFAULT_SPRT.maxPairs, 93001)), sprt: DEFAULT_SPRT },
+      { id: 'V1b-sprt-ab3-vs-ab2-repeat', question: 'Reproducibility: identical configuration to V1 (decision and pair count must match)', config: sprtCfg(fixed(ab(3), ab(2), DEFAULT_SPRT.maxPairs, 93001)), sprt: DEFAULT_SPRT },
+      { id: 'V2-sprt-null-ab-vs-ab-300', question: 'SPRT null test: identical Alpha-Beta (default settings) on both sides, 300 ms per move', config: sprtCfg(timed(abv(4, 'A', AB_MASKED), abv(4, 'B', AB_MASKED), 300, DEFAULT_SPRT.maxPairs, 93002)), sprt: DEFAULT_SPRT },
     ],
   },
   /** Tiny configuration for the harness self-test. */

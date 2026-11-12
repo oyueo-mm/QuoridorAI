@@ -22,6 +22,8 @@ for ($i = 0; $i -lt $Shards; $i++) {
   $procs += Start-Process -FilePath 'npx.cmd' -ArgumentList @('vitest', 'run', '--config', 'vitest.bench.config.ts', 'bench/stage1.bench.test.ts') `
     -NoNewWindow -PassThru -RedirectStandardOutput $log -RedirectStandardError "$log.err"
 }
+# Block idle sleep while the shards run (equal-time games are invalid across sleep; lid close is not covered).
+$awake = Start-Process powershell -ArgumentList '-ExecutionPolicy', 'Bypass', '-File', (Join-Path $PSScriptRoot 'keep-awake.ps1'), '-WatchPid', $PID -WindowStyle Hidden -PassThru
 $procs | Wait-Process
 $failed = @($procs | Where-Object { $_.ExitCode -ne 0 })
 Write-Output "suite $Suite finished: $($Shards - $failed.Count)/$Shards shards OK"

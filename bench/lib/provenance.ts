@@ -25,6 +25,8 @@ export interface Provenance {
   cpu: string;
   logicalCores: number;
   totalMemGB: number;
+  /** Windows power source at session start: battery throttles the CPU and distorts timed runs. */
+  power?: 'ac' | 'battery' | 'unknown';
 }
 
 const git = (args: string): string | null => {
@@ -34,6 +36,17 @@ const git = (args: string): string | null => {
     return null;
   }
 };
+
+function powerSource(): Provenance['power'] {
+  if (platform() !== 'win32') return 'unknown';
+  try {
+    const out = execSync('powershell -NoProfile -Command "(Get-CimInstance Win32_Battery).BatteryStatus"', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 10_000 }).trim();
+    if (out === '') return 'ac'; // no battery
+    return out.split(/\s+/)[0] === '1' ? 'battery' : 'ac'; // 1 = discharging
+  } catch {
+    return 'unknown';
+  }
+}
 
 export function collectProvenance(): Provenance {
   const status = git('status --porcelain') ?? '';
@@ -56,6 +69,7 @@ export function collectProvenance(): Provenance {
     cpu: cpus()[0]?.model?.trim() ?? 'unknown',
     logicalCores: cpus().length,
     totalMemGB: Math.round((totalmem() / 2 ** 30) * 10) / 10,
+    power: powerSource(),
   };
 }
 

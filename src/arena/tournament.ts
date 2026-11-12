@@ -5,7 +5,8 @@ import { runMatch } from '../match/runMatch';
 import type { MatchStatus } from '../match/outcome';
 import { agentLabel, deriveSeed } from './agentSpec';
 import type { AgentFactory, AgentSpec, Budget } from './agentSpec';
-import { parseMoveList, randomMixedOpening, randomOpening } from './openings';
+import { createRng } from '../ai/rng';
+import { mirrorState, parseMoveList, randomMixedOpening, randomOpening } from './openings';
 import { eloEstimate, mean, meanInterval, median, percentile, wilson } from './stats';
 import type { EloEstimate, MeanInterval, Proportion } from './stats';
 
@@ -46,6 +47,13 @@ export interface TournamentConfig {
    * deterministic agents never replay an identical game (default false = original behaviour).
    */
   uniqueOpenings?: boolean;
+  /**
+   * With uniqueOpenings: 'mirror' also treats left–right mirror images as the same opening
+   * (strategically identical positions); default 'exact' keeps old schedules unchanged.
+   */
+  openingDedupe?: 'exact' | 'mirror';
+  /** 'mixed' only: opening length drawn uniformly from [openingPlies, openingPliesMax] per pair. */
+  openingPliesMax?: number;
 }
 
 export type OpeningMode = 'pawn' | 'mixed' | 'book';
@@ -168,6 +176,13 @@ export function traceWork(trace: DecisionTrace, ms: number): MoveWork {
   }
 }
 
+/** Key of a position up to left–right mirroring (the smaller of the two hashes). */
+export function mirrorInvariantKey(state: GameState): string {
+  const a = positionKey(state);
+  const b = positionKey(mirrorState(state));
+  return a < b ? a : b;
+}
+
 const positionKey = (state: GameState) => {
   const h = hashState(state);
   return `${h.key}:${h.check}`;
@@ -193,9 +208,11 @@ function drawOpening(config: TournamentConfig, pair: number, attempt: number): S
     return { seed: 0, plies: parsed.moves.length, moves: parsed.moves, mode };
   }
   if (mode === 'mixed') {
+    const span = Math.max(0, (config.openingPliesMax ?? config.openingPlies) - config.openingPlies);
+    const plies = config.openingPlies + (span > 0 ? Math.floor(createRng(seed ^ 0x51ed270b)() * (span + 1)) : 0);
     const { moves } = randomMixedOpening({
       seed,
-      plies: config.openingPlies,
+      plies,
       wallProbability: config.openingWallProbability ?? 0.25,
       maxImbalance: config.openingMaxImbalance ?? 2,
     });
@@ -217,10 +234,11 @@ export function schedule(config: TournamentConfig, maxGames: number = MAX_TOURNA
   for (let pair = 0; pair < pairs; pair++) {
     let opening = drawOpening(config, pair, 0);
     if (config.uniqueOpenings) {
-      for (let attempt = 1; seen.has(positionKey(openingState(opening))) && attempt <= 200; attempt++) {
+      const key = config.openingDedupe === 'mirror' ? mirrorInvariantKey : positionKey;
+      for (let attempt = 1; seen.has(key(openingState(opening))) && attempt <= 200; attempt++) {
         opening = drawOpening(config, pair, attempt);
       }
-      seen.add(positionKey(openingState(opening)));
+      seen.add(key(openingState(opening)));
     }
     for (const aSeat of [0, 1] as const) {
       const index = games.length;

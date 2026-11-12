@@ -4,8 +4,8 @@ import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { TournamentConfig } from '../../src/arena/tournament';
 import { hashOf, stableStringify } from './provenance';
-import { buildReport, gamesCsv, inShard, parseShard, readGames, runMatchup } from './suite';
-import type { Matchup } from './suite';
+import { buildReport, effectiveGames, gamesCsv, inShard, pairPrefix, parseShard, readGames, runMatchup } from './suite';
+import type { Matchup, RecordedGame } from './suite';
 
 const config: TournamentConfig = {
   agents: [{ kind: 'alphabeta', depth: 1, simulations: 0 }, { kind: 'bfs', depth: 0, simulations: 0 }],
@@ -34,6 +34,32 @@ describe('provenance helpers', () => {
     expect(hashOf({ x: 1, y: 2 })).toBe(hashOf({ y: 2, x: 1 }));
     expect(hashOf({ x: 1 })).not.toBe(hashOf({ x: 2 }));
   });
+});
+
+describe('pair prefix, retries and SPRT stop', () => {
+  const rec = (index: number, outcome: RecordedGame['outcome'], extra: Partial<RecordedGame> = {}): RecordedGame =>
+    ({ index, pair: Math.floor(index / 2), aSeat: (index % 2) as 0 | 1, outcome, overBudgetMoves: 0, ...extra }) as RecordedGame;
+
+  it('uses the latest attempt and the consecutive prefix of final pairs', () => {
+    const games = [
+      rec(0, 'a-win'), rec(1, 'a-win'), // pair 0: WW
+      rec(2, 'b-win', { overBudgetMoves: 1 }), rec(2, 'a-win', { attempt: 2 }), rec(3, 'b-win'), // pair 1: split after retry
+      rec(4, 'halted-repetition'), rec(5, 'a-win'), // pair 2: halted → excluded
+      rec(6, 'a-win', { overBudgetMoves: 2 }), rec(7, 'a-win'), // pair 3: suspect, retries left → not final
+      rec(8, 'a-win'), rec(9, 'a-win'), // pair 4: beyond the prefix
+    ];
+    expect(effectiveGames(games).find((g) => g.index === 2)!.attempt).toBe(2);
+    const p = pairPrefix(games, 10);
+    expect(p.scores).toEqual([1, 0.5]);
+    expect(p.excludedHalted).toBe(1);
+    expect(p.nextPair).toBe(3);
+    // Out of attempts: the pair is final but excluded as suspect, and the prefix moves on.
+    const exhausted = [...games, rec(6, 'a-win', { attempt: 2, overBudgetMoves: 1 }), rec(6, 'b-win', { attempt: 3, overBudgetMoves: 1 })];
+    const q = pairPrefix(exhausted, 10);
+    expect(q.excludedSuspect).toBe(1);
+    expect(q.scores).toEqual([1, 0.5, 1]);
+  });
+
 });
 
 describe('batch runner', () => {

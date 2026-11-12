@@ -1,0 +1,1010 @@
+{
+ "provenance": {
+  "timestamp": "2026-11-12T03:38:18.936Z",
+  "git": {
+   "commit": "1f35a102b9b38cc1e940aa8599e785e81ba27717",
+   "branch": "stage1-benchmark",
+   "dirty": true,
+   "srcDirty": true,
+   "srcDirtyFiles": [
+    "src/arena/openings.ts",
+    "src/arena/tournament.ts",
+    "src/arena/__tests__/openingDiversity.test.ts",
+    "src/arena/__tests__/sprt.test.ts",
+    "src/arena/sprt.ts"
+   ]
+  },
+  "node": "v24.19.0",
+  "v8": "13.6.233.17-node.51",
+  "platform": "win32",
+  "osRelease": "10.0.26200",
+  "arch": "x64",
+  "cpu": "Intel(R) Core(TM) Ultra 7 256V",
+  "logicalCores": 8,
+  "totalMemGB": 15.5
+ },
+ "monteCarlo": {
+  "splitRate": 0.5175644028103045,
+  "sigma": 75,
+  "sims": {
+   "0": {
+    "runs": 1000,
+    "acceptH1": 40,
+    "acceptH0": 826,
+    "inconclusive": 134,
+    "meanPairs": 320.297,
+    "p90Pairs": 600
+   },
+   "10": {
+    "runs": 1000,
+    "acceptH1": 185,
+    "acceptH0": 483,
+    "inconclusive": 332,
+    "meanPairs": 405.875,
+    "p90Pairs": 600
+   },
+   "15": {
+    "runs": 1000,
+    "acceptH1": 323,
+    "acceptH0": 320,
+    "inconclusive": 357,
+    "meanPairs": 414.451,
+    "p90Pairs": 600
+   },
+   "20": {
+    "runs": 1000,
+    "acceptH1": 493,
+    "acceptH0": 164,
+    "inconclusive": 343,
+    "meanPairs": 407.834,
+    "p90Pairs": 600
+   },
+   "30": {
+    "runs": 1000,
+    "acceptH1": 815,
+    "acceptH0": 41,
+    "inconclusive": 144,
+    "meanPairs": 313.166,
+    "p90Pairs": 600
+   },
+   "45": {
+    "runs": 1000,
+    "acceptH1": 990,
+    "acceptH0": 1,
+    "inconclusive": 9,
+    "meanPairs": 196.113,
+    "p90Pairs": 342
+   },
+   "-30": {
+    "runs": 1000,
+    "acceptH1": 1,
+    "acceptH0": 999,
+    "inconclusive": 0,
+    "meanPairs": 133.454,
+    "p90Pairs": 220
+   }
+  }
+ },
+ "retro": {
+  "F0-bfs-vs-random": {
+   "decision": {
+    "status": "continue",
+    "pairs": 20,
+    "counts": {
+     "ll": 0,
+     "split": 0,
+     "ww": 20
+    },
+    "llr": 1.652473351314372,
+    "llrNormal": 412117.69287112675,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 1,
+    "scoreLow": 1,
+    "scoreHigh": 1,
+    "elo": null,
+    "eloLow": null,
+    "eloHigh": null,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 30
+    }
+   },
+   "valid": 20,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "F1-ab2-vs-bfs": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 100,
+    "counts": {
+     "ll": 24,
+     "split": 46,
+     "ww": 30
+    },
+    "llr": 0.27021576151372706,
+    "llrNormal": 0.2719115534054717,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.53,
+    "scoreLow": 0.4578651910206816,
+    "scoreHigh": 0.6021348089793185,
+    "elo": 20.87120466602867,
+    "eloLow": -29.347866108151848,
+    "eloHigh": 71.98311581234161,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 100
+    }
+   },
+   "valid": 100,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "F2-ab3-vs-ab2": {
+   "decision": {
+    "status": "accept-H1",
+    "pairs": 57,
+    "counts": {
+     "ll": 5,
+     "split": 26,
+     "ww": 26
+    },
+    "llr": 3.014623308758012,
+    "llrNormal": 3.9138793615418757,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.6842105263157895,
+    "scoreLow": 0.600549923099438,
+    "scoreHigh": 0.767871129532141,
+    "elo": 134.3168407692773,
+    "eloLow": 70.8346426365359,
+    "eloHigh": 207.8236724485377,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 100
+    }
+   },
+   "valid": 100,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "F3-ab4-vs-ab3": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 99,
+    "counts": {
+     "ll": 14,
+     "split": 56,
+     "ww": 29
+    },
+    "llr": 2.163828852815974,
+    "llrNormal": 2.247909082093963,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.5757575757575758,
+    "scoreLow": 0.5122639499704675,
+    "scoreHigh": 0.6392512015446841,
+    "elo": 53.050226109836416,
+    "eloLow": 8.523574863599412,
+    "eloHigh": 99.38666389585882,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 99
+    }
+   },
+   "valid": 99,
+   "excludedHalted": 1,
+   "excludedSuspect": 0
+  },
+  "F4-ab5-vs-ab4": {
+   "decision": {
+    "status": "accept-H1",
+    "pairs": 83,
+    "counts": {
+     "ll": 9,
+     "split": 46,
+     "ww": 28
+    },
+    "llr": 3.05850833917816,
+    "llrNormal": 3.3774980507344265,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.6144578313253012,
+    "scoreLow": 0.5465815992876378,
+    "scoreHigh": 0.6823340633629645,
+    "elo": 80.96807911121215,
+    "eloLow": 32.46234651000843,
+    "eloHigh": 132.81056189178793,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 99
+    }
+   },
+   "valid": 99,
+   "excludedHalted": 1,
+   "excludedSuspect": 0
+  },
+  "F5-ab4-vs-guided3000": {
+   "decision": {
+    "status": "accept-H0",
+    "pairs": 43,
+    "counts": {
+     "ll": 22,
+     "split": 18,
+     "ww": 3
+    },
+    "llr": -3.0259070752777086,
+    "llrNormal": -4.651071069276925,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.27906976744186046,
+    "scoreLow": 0.1851030395999059,
+    "scoreHigh": 0.373036495283815,
+    "elo": -164.87217911465913,
+    "eloLow": -257.47565898221274,
+    "eloHigh": -90.19637569666806,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 99
+    }
+   },
+   "valid": 99,
+   "excludedHalted": 1,
+   "excludedSuspect": 0
+  },
+  "F6-guided3000-vs-pure1000": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 49,
+    "counts": {
+     "ll": 4,
+     "split": 23,
+     "ww": 22
+    },
+    "llr": 2.652506761433216,
+    "llrNormal": 3.4590344782195,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.6836734693877551,
+    "scoreLow": 0.5946994515341654,
+    "scoreHigh": 0.7726474872413448,
+    "elo": 133.8852435466215,
+    "eloLow": 66.60813860992228,
+    "eloHigh": 212.51265521970114,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 49
+    }
+   },
+   "valid": 49,
+   "excludedHalted": 1,
+   "excludedSuspect": 0
+  },
+  "F7-minimax3-vs-ab3": {
+   "decision": {
+    "status": "continue",
+    "pairs": 20,
+    "counts": {
+     "ll": 5,
+     "split": 9,
+     "ww": 6
+    },
+    "llr": 0.021603793248620717,
+    "llrNormal": 0.02181566144375199,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.525,
+    "scoreLow": 0.35864595707104086,
+    "scoreHigh": 0.6913540429289592,
+    "elo": 17.386277512436145,
+    "eloLow": -100.97275890400905,
+    "eloHigh": 140.0959657286541,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 30
+    }
+   },
+   "valid": 20,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "T2000-ab-vs-guided": {
+   "decision": {
+    "status": "continue",
+    "pairs": 20,
+    "counts": {
+     "ll": 3,
+     "split": 14,
+     "ww": 3
+    },
+    "llr": -0.24354835765681915,
+    "llrNormal": -0.24729636467989893,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.5,
+    "scoreLow": 0.3768592127733463,
+    "scoreHigh": 0.6231407872266537,
+    "elo": 0,
+    "eloLow": -87.36281681186703,
+    "eloHigh": 87.36281681186698,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 30
+    }
+   },
+   "valid": 20,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "T300-ab-vs-bfs": {
+   "decision": {
+    "status": "accept-H1",
+    "pairs": 39,
+    "counts": {
+     "ll": 1,
+     "split": 9,
+     "ww": 29
+    },
+    "llr": 2.991674043759699,
+    "llrNormal": 8.933137120821781,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.8589743589743589,
+    "scoreLow": 0.7788885907738665,
+    "scoreHigh": 0.9390601271748513,
+    "elo": 313.8728470170405,
+    "eloLow": 218.74567591692963,
+    "eloHigh": 475.11674283149193,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 50
+    }
+   },
+   "valid": 50,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "T300-ab-vs-guided": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 99,
+    "counts": {
+     "ll": 18,
+     "split": 54,
+     "ww": 27
+    },
+    "llr": 0.9035692566804658,
+    "llrNormal": 0.9141365247568479,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.5454545454545454,
+    "scoreLow": 0.4793229111232611,
+    "scoreHigh": 0.6115861797858297,
+    "elo": 31.672498419049898,
+    "eloLow": -14.376111891235224,
+    "eloHigh": 78.86519549745135,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 99
+    }
+   },
+   "valid": 99,
+   "excludedHalted": 1,
+   "excludedSuspect": 0
+  },
+  "T300-ab-vs-pure": {
+   "decision": {
+    "status": "accept-H1",
+    "pairs": 36,
+    "counts": {
+     "ll": 0,
+     "split": 3,
+     "ww": 33
+    },
+    "llr": 2.9744520201033064,
+    "llrNormal": 35.46128862378142,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.9583333333333334,
+    "scoreLow": 0.912550868220386,
+    "scoreHigh": 1,
+    "elo": 544.6911344070372,
+    "eloLow": 407.40063223896306,
+    "eloHigh": null,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 46
+    }
+   },
+   "valid": 46,
+   "excludedHalted": 4,
+   "excludedSuspect": 0
+  },
+  "S1-masked-vs-reference-300": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 90,
+    "counts": {
+     "ll": 16,
+     "split": 61,
+     "ww": 13
+    },
+    "llr": -1.8012828449184655,
+    "llrNormal": -1.8443741868720467,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.48333333333333334,
+    "scoreLow": 0.4244691989281511,
+    "scoreHigh": 0.5421974677385156,
+    "elo": -11.585478374126659,
+    "eloLow": -52.8889557310549,
+    "eloHigh": 29.39171774347833,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 90
+    }
+   },
+   "valid": 90,
+   "excludedHalted": 1,
+   "excludedSuspect": 9
+  },
+  "S2-defense-vs-path-300": {
+   "decision": {
+    "status": "accept-H0",
+    "pairs": 46,
+    "counts": {
+     "ll": 15,
+     "split": 28,
+     "ww": 3
+    },
+    "llr": -2.9467039850845165,
+    "llrNormal": -3.725367419800072,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.3695652173913043,
+    "scoreLow": 0.2865071042120471,
+    "scoreHigh": 0.45262333057056153,
+    "elo": -92.77963060827287,
+    "eloLow": -158.50170321957657,
+    "eloHigh": -33.01973869746738,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 94
+    }
+   },
+   "valid": 94,
+   "excludedHalted": 1,
+   "excludedSuspect": 5
+  },
+  "S3-defense-vs-path-d4": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 100,
+    "counts": {
+     "ll": 6,
+     "split": 76,
+     "ww": 18
+    },
+    "llr": 2.882416362225796,
+    "llrNormal": 2.9372839606083287,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.56,
+    "scoreLow": 0.5132189409708391,
+    "scoreHigh": 0.606781059029161,
+    "elo": 41.89414020800522,
+    "eloLow": 9.1876019851813,
+    "eloHigh": 75.35903456236974,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 100
+    }
+   },
+   "valid": 100,
+   "excludedHalted": 0,
+   "excludedSuspect": 0
+  },
+  "S6-defense3-vs-path-300": {
+   "decision": {
+    "status": "inconclusive",
+    "pairs": 93,
+    "counts": {
+     "ll": 14,
+     "split": 66,
+     "ww": 13
+    },
+    "llr": -1.4550821455353269,
+    "llrNormal": -1.4855309199492686,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.4946236559139785,
+    "scoreLow": 0.4395836974741688,
+    "scoreHigh": 0.5496636143537882,
+    "elo": -3.736010501657373,
+    "eloLow": -42.18767310177197,
+    "eloHigh": 34.62398054973855,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 93
+    }
+   },
+   "valid": 93,
+   "excludedHalted": 3,
+   "excludedSuspect": 4
+  },
+  "S7-masked-vs-guided-300": {
+   "decision": {
+    "status": "accept-H1",
+    "pairs": 65,
+    "counts": {
+     "ll": 7,
+     "split": 30,
+     "ww": 28
+    },
+    "llr": 2.979569244940107,
+    "llrNormal": 3.6114735807460443,
+    "lower": -2.9444389791664403,
+    "upper": 2.9444389791664403,
+    "score": 0.6615384615384615,
+    "scoreLow": 0.5808308637837666,
+    "scoreHigh": 0.7422460592931565,
+    "elo": 116.4183099029521,
+    "eloLow": 56.664155145754926,
+    "eloHigh": 183.73703470217174,
+    "config": {
+     "elo0": 0,
+     "elo1": 30,
+     "alpha": 0.05,
+     "beta": 0.05,
+     "minPairs": 30,
+     "maxPairs": 99
+    }
+   },
+   "valid": 99,
+   "excludedHalted": 1,
+   "excludedSuspect": 0
+  }
+ },
+ "gameVsPair": {
+  "F3-ab4-vs-ab3": {
+   "games": 199,
+   "k": 114,
+   "wilson": {
+    "successes": 114,
+    "trials": 199,
+    "p": 0.5728643216080402,
+    "low": 0.503396842665469,
+    "high": 0.639571957499644
+   },
+   "pGame": 0.039805956888207976,
+   "ll": 14,
+   "sp": 56,
+   "ww": 29,
+   "mean": 0.5757575757575758,
+   "half": 0.06349362578710822,
+   "pPair": 0.019359426822072336,
+   "pSign": 0.03153949735315109,
+   "corr": -0.15649768504271472
+  },
+  "T300-ab-vs-guided": {
+   "games": 199,
+   "k": 108,
+   "wilson": {
+    "successes": 108,
+    "trials": 199,
+    "p": 0.542713567839196,
+    "low": 0.47334328274830584,
+    "high": 0.6104660139002088
+   },
+   "pGame": 0.22816558388544528,
+   "ll": 18,
+   "sp": 54,
+   "ww": 27,
+   "mean": 0.5454545454545454,
+   "half": 0.0661316343312843,
+   "pPair": 0.1779318520298358,
+   "pSign": 0.23269319190831084,
+   "corr": -0.09404525532744518
+  },
+  "S1-masked-vs-reference-300": {
+   "games": 188,
+   "k": 90,
+   "wilson": {
+    "successes": 90,
+    "trials": 188,
+    "p": 0.4787234042553192,
+    "low": 0.40845892720958665,
+    "high": 0.5498399720656211
+   },
+   "pGame": 0.559583616342484,
+   "ll": 16,
+   "sp": 61,
+   "ww": 13,
+   "mean": 0.48333333333333334,
+   "half": 0.058864134405182254,
+   "pPair": 0.578935596648245,
+   "pSign": 0.711071103811264,
+   "corr": -0.34731429283115944
+  },
+  "S3-defense-vs-path-d4": {
+   "games": 200,
+   "k": 112,
+   "wilson": {
+    "successes": 112,
+    "trials": 200,
+    "p": 0.56,
+    "low": 0.49071675280149213,
+    "high": 0.6270218079982324
+   },
+   "pGame": 0.08968596449378718,
+   "ll": 6,
+   "sp": 76,
+   "ww": 18,
+   "mean": 0.56,
+   "half": 0.04678105902916094,
+   "pPair": 0.011944129372025073,
+   "pSign": 0.022655844688415527,
+   "corr": -0.5376780936670966
+  },
+  "S6-defense3-vs-path-300": {
+   "games": 195,
+   "k": 97,
+   "wilson": {
+    "successes": 97,
+    "trials": 195,
+    "p": 0.49743589743589745,
+    "low": 0.42798955876134026,
+    "high": 0.5669813089559552
+   },
+   "pGame": 0.9429109599200334,
+   "ll": 14,
+   "sp": 66,
+   "ww": 13,
+   "mean": 0.4946236559139785,
+   "half": 0.05503995843980967,
+   "pPair": 0.8481725055837604,
+   "pSign": 1,
+   "corr": -0.40119264980044705
+  },
+  "S7-masked-vs-guided-300": {
+   "games": 199,
+   "k": 120,
+   "wilson": {
+    "successes": 120,
+    "trials": 199,
+    "p": 0.6030150753768844,
+    "low": 0.5337040011213071,
+    "high": 0.6684243025604043
+   },
+   "pGame": 0.0036561205679068293,
+   "ll": 15,
+   "sp": 48,
+   "ww": 36,
+   "mean": 0.6060606060606061,
+   "half": 0.06787754112554113,
+   "pPair": 0.002195102497433375,
+   "pSign": 0.0046013097117665325,
+   "corr": -0.011587244366483021
+  }
+ },
+ "openings": {
+  "F0-bfs-vs-random": {
+   "pairs": 20,
+   "exact": 20,
+   "mirror": 20,
+   "fresh": 20,
+   "firstMover": {
+    "successes": 20,
+    "trials": 40,
+    "p": 0.5,
+    "low": 0.35199526826950456,
+    "high": 0.6480047317304954
+   },
+   "split": 0
+  },
+  "F1-ab2-vs-bfs": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 97,
+   "fresh": 97,
+   "firstMover": {
+    "successes": 120,
+    "trials": 200,
+    "p": 0.6,
+    "low": 0.5308367198423567,
+    "high": 0.6653942148238507
+   },
+   "split": 0.46
+  },
+  "F2-ab3-vs-ab2": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 100,
+   "fresh": 90,
+   "firstMover": {
+    "successes": 91,
+    "trials": 200,
+    "p": 0.455,
+    "low": 0.3874821925827814,
+    "high": 0.5242138868174252
+   },
+   "split": 0.41
+  },
+  "F3-ab4-vs-ab3": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 98,
+   "fresh": 84,
+   "firstMover": {
+    "successes": 104,
+    "trials": 199,
+    "p": 0.5226130653266332,
+    "low": 0.4534457589993217,
+    "high": 0.5909238686381273
+   },
+   "split": 0.5656565656565656
+  },
+  "F4-ab5-vs-ab4": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 97,
+   "fresh": 86,
+   "firstMover": {
+    "successes": 112,
+    "trials": 199,
+    "p": 0.5628140703517588,
+    "low": 0.493351130622554,
+    "high": 0.6298978350370261
+   },
+   "split": 0.5555555555555556
+  },
+  "F5-ab4-vs-guided3000": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 100,
+   "fresh": 88,
+   "firstMover": {
+    "successes": 109,
+    "trials": 199,
+    "p": 0.5477386934673367,
+    "low": 0.4783348565804636,
+    "high": 0.6153343573208175
+   },
+   "split": 0.3939393939393939
+  },
+  "F6-guided3000-vs-pure1000": {
+   "pairs": 50,
+   "exact": 50,
+   "mirror": 50,
+   "fresh": 41,
+   "firstMover": {
+    "successes": 47,
+    "trials": 99,
+    "p": 0.47474747474747475,
+    "low": 0.37917455701614367,
+    "high": 0.5722069183694671
+   },
+   "split": 0.46938775510204084
+  },
+  "F7-minimax3-vs-ab3": {
+   "pairs": 20,
+   "exact": 20,
+   "mirror": 20,
+   "fresh": 18,
+   "firstMover": {
+    "successes": 19,
+    "trials": 40,
+    "p": 0.475,
+    "low": 0.329354700094151,
+    "high": 0.6250263800287721
+   },
+   "split": 0.45
+  },
+  "T10000-ab-vs-guided": {
+   "pairs": 4,
+   "exact": 4,
+   "mirror": 4,
+   "fresh": 4,
+   "firstMover": {
+    "successes": 3,
+    "trials": 8,
+    "p": 0.375,
+    "low": 0.13684428473912286,
+    "high": 0.694257607346229
+   },
+   "split": 0.75
+  },
+  "T2000-ab-vs-guided": {
+   "pairs": 20,
+   "exact": 20,
+   "mirror": 20,
+   "fresh": 17,
+   "firstMover": {
+    "successes": 14,
+    "trials": 40,
+    "p": 0.35,
+    "low": 0.22134528789169125,
+    "high": 0.5049411928458477
+   },
+   "split": 0.7
+  },
+  "T300-ab-vs-bfs": {
+   "pairs": 50,
+   "exact": 50,
+   "mirror": 49,
+   "fresh": 39,
+   "firstMover": {
+    "successes": 51,
+    "trials": 100,
+    "p": 0.51,
+    "low": 0.41348011860427875,
+    "high": 0.6057800114203413
+   },
+   "split": 0.26
+  },
+  "T300-ab-vs-guided": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 98,
+   "fresh": 89,
+   "firstMover": {
+    "successes": 107,
+    "trials": 199,
+    "p": 0.5376884422110553,
+    "low": 0.46835860149882674,
+    "high": 0.6055907778969215
+   },
+   "split": 0.5454545454545454
+  },
+  "T300-ab-vs-pure": {
+   "pairs": 50,
+   "exact": 50,
+   "mirror": 50,
+   "fresh": 41,
+   "firstMover": {
+    "successes": 51,
+    "trials": 96,
+    "p": 0.53125,
+    "low": 0.4321560193834188,
+    "high": 0.6279392563389997
+   },
+   "split": 0.08695652173913043
+  },
+  "S1-masked-vs-reference-300": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 99,
+   "fresh": 78,
+   "firstMover": {
+    "successes": 105,
+    "trials": 188,
+    "p": 0.5585106382978723,
+    "low": 0.48706203695695505,
+    "high": 0.6276159900362234
+   },
+   "split": 0.6777777777777778
+  },
+  "S2-defense-vs-path-300": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 97,
+   "fresh": 84,
+   "firstMover": {
+    "successes": 102,
+    "trials": 191,
+    "p": 0.5340314136125655,
+    "low": 0.46331353472359443,
+    "high": 0.603407378138796
+   },
+   "split": 0.5851063829787234
+  },
+  "S3-defense-vs-path-d4": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 100,
+   "fresh": 83,
+   "firstMover": {
+    "successes": 110,
+    "trials": 200,
+    "p": 0.55,
+    "low": 0.4807561508414703,
+    "high": 0.6173593164916334
+   },
+   "split": 0.76
+  },
+  "S6-defense3-vs-path-300": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 98,
+   "fresh": 88,
+   "firstMover": {
+    "successes": 101,
+    "trials": 195,
+    "p": 0.517948717948718,
+    "low": 0.44814911819393005,
+    "high": 0.587054807785002
+   },
+   "split": 0.7096774193548387
+  },
+  "S7-masked-vs-guided-300": {
+   "pairs": 100,
+   "exact": 100,
+   "mirror": 98,
+   "fresh": 72,
+   "firstMover": {
+    "successes": 94,
+    "trials": 199,
+    "p": 0.4723618090452261,
+    "low": 0.4041803080537952,
+    "high": 0.5415901470559895
+   },
+   "split": 0.48484848484848486
+  }
+ }
+}

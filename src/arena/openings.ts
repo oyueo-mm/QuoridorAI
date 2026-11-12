@@ -74,6 +74,30 @@ export function randomMixedOpening(spec: MixedOpeningSpec): { state: GameState; 
   throw new Error(`No balanced opening found for seed ${spec.seed}`);
 }
 
+/**
+ * Left–right mirror image (column c → 8 − c). Quoridor's rules are symmetric under it, so a
+ * position and its mirror are strategically identical openings.
+ */
+export function mirrorState(state: GameState): GameState {
+  const hWalls = new Uint8Array(state.hWalls.length);
+  const vWalls = new Uint8Array(state.vWalls.length);
+  for (let r = 0; r < 8; r++) {
+    for (let c = 0; c < 8; c++) {
+      hWalls[r * 8 + (7 - c)] = state.hWalls[r * 8 + c];
+      vWalls[r * 8 + (7 - c)] = state.vWalls[r * 8 + c];
+    }
+  }
+  return {
+    ...state,
+    pawns: [
+      { row: state.pawns[0].row, col: 8 - state.pawns[0].col },
+      { row: state.pawns[1].row, col: 8 - state.pawns[1].col },
+    ],
+    hWalls,
+    vWalls,
+  };
+}
+
 export interface ParsedGame {
   /** Positions after 0..k moves (positions[0] = start). */
   positions: GameState[];

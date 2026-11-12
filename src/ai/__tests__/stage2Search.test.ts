@@ -13,8 +13,10 @@ const evaluator = createDistanceEvaluator(DEFAULT_MINIMAX_EVAL);
 const search = (s: GameState, patch: Partial<MinimaxSettings>) =>
   runSearch(s, { ...DEFAULT_MINIMAX_SETTINGS, timeLimitMs: 0, ...patch }, evaluator);
 
-/** Positions from short Alpha-Beta self-play after mixed openings (walls on the board). */
+/** Positions from short Alpha-Beta self-play after mixed openings (walls on the board); built once. */
+let cache: GameState[] = [];
 function positions(n: number): GameState[] {
+  if (cache.length >= n) return cache.slice(0, n);
   const out: GameState[] = [createInitialState()];
   for (let seed = 1; out.length < n; seed++) {
     let s = randomMixedOpening({ seed, plies: 6, wallProbability: 0.3, maxImbalance: 2 }).state;
@@ -23,6 +25,7 @@ function positions(n: number): GameState[] {
       s = applyAction(s, search(s, { maxDepth: 2 }).bestAction);
     }
   }
+  cache = out;
   return out.slice(0, n);
 }
 
