@@ -1,5 +1,5 @@
 import { decideMcts } from '../mctsAgent';
-import { decideMinimax } from '../minimaxAgent';
+import { createMinimaxCache, decideMinimax } from '../minimaxAgent';
 import type { AgentContext } from '../types';
 import type { WorkerRequest, WorkerResponse, WorkerTrace } from './protocol';
 
@@ -8,6 +8,9 @@ import type { WorkerRequest, WorkerResponse, WorkerTrace } from './protocol';
  * Searches are synchronous inside the worker; cancellation happens by terminating the
  * worker from the main thread.
  */
+/** One worker serves one agent: its Alpha-Beta search state persists like the in-process agent's. */
+const minimaxCache = createMinimaxCache();
+
 export function handleWorkerRequest(request: WorkerRequest, post: (response: WorkerResponse) => void): void {
   const { id } = request;
   const context: AgentContext = { onProgress: (progress) => post({ type: 'progress', id, progress }) };
@@ -15,7 +18,7 @@ export function handleWorkerRequest(request: WorkerRequest, post: (response: Wor
     let trace: WorkerTrace;
     let action;
     if (request.agent === 'minimax') {
-      const t = decideMinimax(request.state, request.settings, context);
+      const t = decideMinimax(request.state, request.settings, context, minimaxCache);
       trace = t;
       action = t.pv[0];
     } else {

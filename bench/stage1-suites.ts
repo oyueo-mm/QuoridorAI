@@ -3,7 +3,7 @@ import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
 import { FITTED_EVAL_E5 } from '../src/ai/search/evaluation';
-import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B, LEDGER_3B_NEXT } from './stage3b-candidates';
+import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B, LEDGER_3B_NEXT, LEDGER_3C, SEARCH_C1 } from './stage3b-candidates';
 
 /**
  * Stage-1 experiment definitions. Changing a config changes its hash: results already in a
@@ -42,6 +42,9 @@ const fresh = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), exclu
 
 /** Follow-up runs after 3-B: also disjoint from every 3-B opening. */
 const fresh3b = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3B });
+
+/** Stage 3-C: disjoint from every stage 3-B opening. */
+const fresh3c = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3C });
 
 /** Stage-3 opening policy: mirror-invariant unique openings of 4–8 plies. */
 const sprtCfg = (c: TournamentConfig): TournamentConfig => ({ ...c, openingPlies: 4, openingPliesMax: 8, openingDedupe: 'mirror' });
@@ -193,6 +196,24 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
     maxGames: 2000,
     matchups: [
       { id: 'C-E6-300', question: 'Confirmation SPRT: E6 vs adopted E5, Alpha-Beta 300 ms (AC power)', config: { ...sprtCfg(timed(abv(4, 'E6', { ...AB_MASKED, evaluation: E6 }), abv(4, 'E5 (default)', { ...AB_MASKED, evaluation: FITTED_EVAL_E5 }), 300, DEFAULT_SPRT.maxPairs, 96005)), excludeOpeningsFile: LEDGER_3B_NEXT }, sprt: DEFAULT_SPRT },
+    ],
+  },
+  /**
+   * Stage 3-C: search optimisation. Both sides use E6 (frozen weights) and the masked kernel; the
+   * baseline has no 3-C options. Openings disjoint from every 3-B run (LEDGER_3C). AC power only.
+   *   G-E6-vs-guided-300  baseline: adopted Alpha-Beta vs Guided MCTS, 100 pairs fixed
+   *   P-C1-300            pilot, 40 pairs (screen only, never part of an SPRT)
+   *   T-C1-300            SPRT C1 vs baseline (H0 0 / H1 +30, α = β = 0.05)
+   *   C-C1-300            independent confirmation SPRT (new seed), only after T-C1 promotes
+   */
+  'stage3c': {
+    description: 'Stage 3-C: search package C1 (typed TT, PVS, persistent TT, verified partial iteration) vs baseline, 300 ms; E6 vs Guided baseline.',
+    maxGames: 2000,
+    matchups: [
+      { id: 'G-E6-vs-guided-300', question: 'Baseline: Alpha-Beta (E6) vs Guided MCTS, 300 ms per move, 100 pairs', config: fresh3c(timed(abv(4, 'E6 (default)', { ...AB_MASKED, evaluation: E6 }), guided(3000), 300, 100, 97001)) },
+      { id: 'P-C1-300', question: 'Pilot (40 pairs): search package C1 vs baseline search, both E6, 300 ms', config: fresh3c(timed(abv(4, 'C1', { ...AB_MASKED, evaluation: E6, ...SEARCH_C1 }), abv(4, 'baseline search', { ...AB_MASKED, evaluation: E6 }), 300, 40, 97002)) },
+      { id: 'T-C1-300', question: 'SPRT: search package C1 vs baseline search, both E6, 300 ms', config: fresh3c(timed(abv(4, 'C1', { ...AB_MASKED, evaluation: E6, ...SEARCH_C1 }), abv(4, 'baseline search', { ...AB_MASKED, evaluation: E6 }), 300, DEFAULT_SPRT.maxPairs, 97003)), sprt: DEFAULT_SPRT },
+      { id: 'C-C1-300', question: 'Confirmation SPRT (new openings): search package C1 vs baseline search, both E6, 300 ms', config: fresh3c(timed(abv(4, 'C1', { ...AB_MASKED, evaluation: E6, ...SEARCH_C1 }), abv(4, 'baseline search', { ...AB_MASKED, evaluation: E6 }), 300, DEFAULT_SPRT.maxPairs, 97004)), sprt: DEFAULT_SPRT },
     ],
   },
   /** Tiny configuration for the harness self-test. */

@@ -3,6 +3,8 @@ import type { GameState } from '../engine';
 import { assertCanDecide } from './common';
 import { ALPHA_BETA_EVAL, createDistanceEvaluator, isDecisive, pathsOf, pliesToResult } from './search/evaluation';
 import { runSearch } from './search/minimax';
+import { TranspositionTable } from './search/transposition';
+import type { Evaluator } from './search/evaluation';
 import type { SearchResult } from './search/minimax';
 import type { Agent, AgentContext, AgentDecision, MinimaxSettings, MinimaxTrace } from './types';
 
@@ -31,11 +33,40 @@ export function formatSearchScore(score: number): string {
   return num(score);
 }
 
+/**
+ * Search state one agent keeps between its decisions when settings.ttPersist is on: the typed
+ * transposition table and the evaluator (whose caches are exact functions of the position).
+ * Everything that changes stored values is in the signature — evaluation weights, candidate
+ * filter, algorithm, and the side to move at the root (leaf values are taken from the root side's
+ * view and the weights may be asymmetric) — and a mismatch starts empty.
+ */
+export interface MinimaxCache {
+  signature: string;
+  table: TranspositionTable | null;
+  evaluator: Evaluator | null;
+}
+
+export const createMinimaxCache = (): MinimaxCache => ({ signature: '', table: null, evaluator: null });
+
+function cacheFor(cache: MinimaxCache, state: GameState, settings: MinimaxSettings) {
+  const signature = JSON.stringify([settings.evaluation, settings.wallFilter, settings.defenseMaxDistance ?? null, settings.algorithm, state.currentPlayer]);
+  if (cache.signature !== signature) {
+    cache.signature = signature;
+    cache.table?.clear();
+    cache.evaluator = null;
+  }
+  cache.table ??= new TranspositionTable();
+  cache.evaluator ??= createDistanceEvaluator(settings.evaluation);
+  return { table: cache.table, evaluator: cache.evaluator };
+}
+
 /** Runs the search and packages the result as a MinimaxTrace. */
-export function decideMinimax(state: GameState, settings: MinimaxSettings, context?: AgentContext): MinimaxTrace {
+export function decideMinimax(state: GameState, settings: MinimaxSettings, context?: AgentContext, cache?: MinimaxCache): MinimaxTrace {
   assertCanDecide(state, context);
-  const evaluator = createDistanceEvaluator(settings.evaluation);
-  const result = runSearch(state, settings, evaluator, { signal: context?.signal, onProgress: context?.onProgress });
+  const persist = cache && settings.ttPersist && settings.ttKind === 'typed' && settings.algorithm === 'alphabeta' && settings.transpositionTable;
+  const kept = persist ? cacheFor(cache, state, settings) : null;
+  const evaluator = kept?.evaluator ?? createDistanceEvaluator(settings.evaluation);
+  const result = runSearch(state, settings, evaluator, { signal: context?.signal, onProgress: context?.onProgress, table: kept?.table });
   const me = state.currentPlayer;
 
   let leaf = state;
@@ -65,6 +96,7 @@ export function decideMinimax(state: GameState, settings: MinimaxSettings, conte
     rootEval: evaluator.explain(state, me),
     pvLeaf: { ...leafEval, ...pathsOf(leaf, me), matchesScore },
     rationale: [],
+    ...(result.partial ? { partial: result.partial } : {}),
   };
   trace.rationale = explain(trace, result);
   return trace;
@@ -74,10 +106,22 @@ function explain(trace: MinimaxTrace, result: SearchResult): string[] {
   const lines: string[] = [];
   const algo = trace.settings.algorithm === 'alphabeta' ? 'Alpha-Beta' : 'Minimax';
   const [best, second] = trace.rootCandidates;
-  lines.push(
-    `${best.notation} 선택 — ${algo} 깊이 ${trace.completedDepth} 탐색, 평가 ${formatSearchScore(trace.score)}.` +
-      (trace.timedOut ? ` 깊이 ${trace.completedDepth + 1}은 시간 제한(${trace.settings.timeLimitMs}ms)으로 중단되어 버렸습니다.` : ''),
-  );
+  const p = result.partial;
+  if (p?.switched) {
+    lines.push(
+      `${formatAction(p.action!)} 선택 — 깊이 ${p.depth} 탐색이 시간 제한으로 중단되었지만, 이 수는 그 깊이에서 끝까지 탐색되어 ` +
+        `깊이 ${trace.completedDepth}의 최선 수 ${best.notation}(깊이 ${p.depth}: ${formatSearchScore(p.firstScore)})보다 높은 ${formatSearchScore(trace.score)}로 확인되었습니다.`,
+    );
+  } else {
+    lines.push(
+      `${best.notation} 선택 — ${algo} 깊이 ${trace.completedDepth} 탐색, 평가 ${formatSearchScore(trace.score)}.` +
+        (trace.timedOut
+          ? p
+            ? ` 깊이 ${p.depth}은 시간 제한으로 중단되었습니다(끝난 수 ${p.completedMoves}개 중 더 좋은 수 없음).`
+            : ` 깊이 ${trace.completedDepth + 1}은 시간 제한(${trace.settings.timeLimitMs}ms)으로 중단되어 버렸습니다.`
+          : ''),
+    );
+  }
   if (isDecisive(trace.score)) {
     lines.push(
       trace.score > 0
@@ -113,10 +157,11 @@ function explain(trace: MinimaxTrace, result: SearchResult): string[] {
 
 export function createMinimaxAgent(partial?: Partial<MinimaxSettings>): Agent<MinimaxTrace> {
   const settings = resolveMinimaxSettings(partial);
+  const cache = createMinimaxCache();
   return {
     id: 'minimax',
     async decide(state: GameState, context?: AgentContext): Promise<AgentDecision<MinimaxTrace>> {
-      const trace = decideMinimax(state, settings, context);
+      const trace = decideMinimax(state, settings, context, cache);
       return { action: trace.pv[0], trace };
     },
   };

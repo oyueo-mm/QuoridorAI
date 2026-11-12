@@ -27,7 +27,7 @@ import {
 } from '../src/engine';
 import type { GameState, WallLayout } from '../src/engine';
 import { readGames } from './lib/suite';
-import { E6, EVAL_CANDIDATES } from './stage3b-candidates';
+import { E6, EVAL_CANDIDATES, SEARCH_C1 } from './stage3b-candidates';
 import { RACE_EVAL_V1 } from '../src/ai/search/evaluation';
 import { collectProvenance } from './lib/provenance';
 import {
@@ -255,6 +255,9 @@ for (const [id, evaluation] of Object.entries(EVAL_CANDIDATES)) {
   AGENTS[`${id}-300ms`] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation } }, budget: { mode: 'equal-time', timeMs: 300 } };
 }
 // After 3-B the plain ab* agents use the adopted E5 default; v1 = the evaluation before 3-B.
+// Stage 3-C search package (E6 evaluation): depth 4 must match ab4 exactly; 300 ms may differ.
+AGENTS['c1-d4'] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation: E6, ...SEARCH_C1 } }, budget: { mode: 'fixed', timeMs: 0 } };
+AGENTS['c1-300ms'] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation: E6, ...SEARCH_C1 } }, budget: { mode: 'equal-time', timeMs: 300 } };
 for (const [id, evaluation] of [['v1', RACE_EVAL_V1], ['E6', E6]] as const) {
   AGENTS[`${id}-d4`] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation } }, budget: { mode: 'fixed', timeMs: 0 } };
   AGENTS[`${id}-300ms`] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation } }, budget: { mode: 'equal-time', timeMs: 300 } };

@@ -23,6 +23,8 @@ import type {
 } from '../types';
 import { isCandidateLegal, pseudoCandidates } from './candidates';
 import { DECISIVE_SCORE, WIN_SCORE, isDecisive } from './evaluation';
+import { MapTable, TT_EXACT, TT_LOWER, TT_UPPER, TranspositionTable } from './transposition';
+import type { SearchTable } from './transposition';
 import type { Evaluator } from './evaluation';
 
 /**
@@ -61,6 +63,24 @@ export interface SearchHooks {
   disableLazyLegality?: boolean;
   /** Minimum remaining depth for static-evaluation ordering (default 3, chosen by benchmark). */
   staticOrderingMinDepth?: number;
+  /**
+   * Typed table kept by the caller between searches (settings.ttPersist). The caller must clear
+   * it when anything that changes stored values changes (evaluator, filters, root side).
+   */
+  table?: TranspositionTable;
+}
+
+/** What the search knows about an interrupted iteration (settings.partialIteration). */
+export interface PartialIteration {
+  depth: number;
+  /** Root moves whose search at this depth finished. */
+  completedMoves: number;
+  /** The previous iteration's best move, searched first: its exact score at this depth. */
+  firstScore: number;
+  /** Set when a later move finished with an exact score above firstScore: it was played. */
+  switched: boolean;
+  action?: Action;
+  score?: number;
 }
 
 export interface SearchResult {
@@ -77,26 +97,26 @@ export interface SearchResult {
   tree: SearchTreeNode;
   legalActionCount: number;
   searchedActionCount: number;
+  /** Present when settings.partialIteration and the last iteration was interrupted. */
+  partial?: PartialIteration;
+  /** Transposition-table entries and storage after the search. */
+  tt?: { kind: 'map' | 'typed'; entries: number; bytes: number };
 }
 
 const INF = 1e9;
-const TT_EXACT = 0;
-const TT_LOWER = 1;
-const TT_UPPER = 2;
-const TT_MAX_ENTRIES = 1_000_000;
+/**
+ * PVS zero-window width. Scores are sums of real-valued weights, so the window is (α, α + ε)
+ * rather than (α, α + 1); any ε > 0 is correct because a fail-high inside the full window is
+ * always re-searched.
+ */
+const PVS_EPS = 1e-6;
+
+let scratchTable: TranspositionTable | null = null;
 /** The tree is recorded for the root's children (ply 1) and grandchildren (ply 2). */
 export const TREE_RECORD_PLIES = 2;
 export const TREE_CHILD_LIMIT = 10;
 const TIME_CHECK_MASK = 63;
 const PROGRESS_INTERVAL_MS = 120;
-
-interface TTEntry {
-  check: number;
-  depth: number;
-  value: number;
-  flag: number;
-  best: number;
-}
 
 interface Child {
   action: Action;
@@ -165,7 +185,20 @@ function runSearchImpl(
   const ordering = prune && settings.moveOrdering;
   const rootSide = root.currentPlayer;
   const stats = emptyStats();
-  const tt = new Map<number, TTEntry>();
+  const typed = settings.ttKind === 'typed';
+  let tt: SearchTable;
+  if (typed && hooks.table) {
+    hooks.table.newSearch();
+    tt = hooks.table;
+  } else if (typed) {
+    // Not kept between searches: one shared table per thread, emptied for every search (the
+    // engine is single-threaded and searches never nest).
+    scratchTable ??= new TranspositionTable();
+    scratchTable.clear();
+    tt = scratchTable;
+  } else tt = new MapTable();
+  const pvs = prune && settings.pvs === true;
+  const ttDeeper = settings.ttDeeper === true;
   const killers: number[][] = [];
   const deadline = settings.timeLimitMs > 0 ? start + settings.timeLimitMs : Infinity;
   const incremental = !hooks.disableIncrementalEval && evaluator.childEvaluator !== undefined;
@@ -343,12 +376,15 @@ function runSearchImpl(
     if (useTT) {
       hash = hashState(state);
       stats.ttProbes++;
-      const e = tt.get(hash.key);
-      if (e && e.check === hash.check) {
+      const e = tt.lookup(hash.key, hash.check);
+      if (e) {
         stats.ttHits++;
         ttBest = e.best;
         // Recorded nodes are always searched so the tree view stays complete.
-        if (e.depth === depth && !rec) {
+        // Same remaining depth: the fixed-depth minimax value is unchanged. settings.ttDeeper also
+        // takes values of deeper searches (standard, but the result is then no longer the
+        // fixed-depth value: results-changing, measured separately).
+        if ((e.depth === depth || (ttDeeper && e.depth > depth)) && !rec) {
           const v = fromTT(e.value, ply);
           if (e.flag === TT_EXACT) {
             stats.ttCutoffs++;
@@ -384,10 +420,18 @@ function runSearchImpl(
       const childRec = recordChildren ? newRecord(it.action, side, depth - 1) : null;
       const before = stats.nodes;
       const child = it.child!;
-      const v = -negamax(child, opp, depth - 1, ply + 1, -b, -a, childPv, childRec, leafFor?.(child, it.action));
+      const leafThunk = leafFor?.(child, it.action);
+      let v: number;
+      let wa = a;
+      if (pvs && searched > 0 && depth > 1) {
+        // Zero window: prove the move is no better than alpha; re-search only if it is.
+        v = -negamax(child, opp, depth - 1, ply + 1, -(alpha + PVS_EPS), -alpha, childPv, childRec, leafThunk);
+        if (v > alpha && v < beta) v = -negamax(child, opp, depth - 1, ply + 1, -b, -a, childPv, childRec, leafThunk);
+        else if (v <= alpha) wa = alpha;
+      } else v = -negamax(child, opp, depth - 1, ply + 1, -b, -a, childPv, childRec, leafThunk);
       searched++;
       if (childRec) {
-        finishRecord(childRec, side, v, a, b, stats.nodes - before);
+        finishRecord(childRec, side, v, wa, b, stats.nodes - before);
         recorded.push(childRec);
       }
       if (v > best) {
@@ -418,11 +462,10 @@ function runSearchImpl(
       if (recordChildren) trimChildren(rec, recorded, side, TREE_CHILD_LIMIT);
     }
     if (useTT && hash) {
-      if (tt.size >= TT_MAX_ENTRIES) tt.clear();
       const flag = best <= alphaOrig ? TT_UPPER : best >= beta ? TT_LOWER : TT_EXACT;
       // After a fail-low every move was ≤ alpha, so "best" is arbitrary: keep the old TT move.
       const move = flag === TT_UPPER ? ttBest : bestIndex;
-      tt.set(hash.key, { check: hash.check, depth, value: toTT(best, ply), flag, best: move });
+      tt.store(hash.key, hash.check, depth, toTT(best, ply), flag, move);
     }
     return best;
   }
@@ -458,6 +501,7 @@ function runSearchImpl(
     let alpha = -INF;
     let best = -INF;
     let pv: Action[] = [];
+    progress = { depth, completedMoves: 0, firstScore: -INF, bestIndex: -1, best: -INF, pv: [] };
 
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
@@ -465,7 +509,12 @@ function runSearchImpl(
       const a = prune ? alpha : -INF;
       const childRec = newRecord(it.action, rootSide, depth - 1);
       const before = stats.nodes;
-      const v = -negamax(child, opp, depth - 1, 1, -INF, -a, childPv, childRec, rootLeaf?.(child, it.action));
+      const leafThunk = rootLeaf?.(child, it.action);
+      let v: number;
+      if (pvs && i > 0 && depth > 1) {
+        v = -negamax(child, opp, depth - 1, 1, -(a + PVS_EPS), -a, childPv, childRec, leafThunk);
+        if (v > a) v = -negamax(child, opp, depth - 1, 1, -INF, -a, childPv, childRec, leafThunk);
+      } else v = -negamax(child, opp, depth - 1, 1, -INF, -a, childPv, childRec, leafThunk);
       const bound: ScoreBound = prune && i > 0 && v <= a ? 'upper' : 'exact';
       finishRecord(childRec, rootSide, v, bound === 'upper' ? a : -INF, INF, stats.nodes - before);
       recorded.push(childRec);
@@ -480,11 +529,22 @@ function runSearchImpl(
         nodes: stats.nodes - before,
         rank: 0,
       });
-      if (v > best) {
+      const improved = v > best;
+      if (improved) {
         best = v;
         pv = [it.action, ...childPv];
       }
       if (prune && v > alpha) alpha = v;
+      // Interrupted-iteration bookkeeping: the first move's score is exact (full window); a later
+      // move's score is exact exactly when it beat every move before it.
+      progress.completedMoves = i + 1;
+      if (i === 0) progress.firstScore = v;
+      if (improved) {
+        // Ties do not count: a later move equal to the best is only an upper bound.
+        progress.best = v;
+        progress.bestIndex = i;
+        progress.pv = pv;
+      }
     }
 
     tree.score = best;
@@ -496,9 +556,12 @@ function runSearchImpl(
     return { score: best, pv, candidates, tree };
   };
 
+  let progress = { depth: 0, completedMoves: 0, firstScore: -INF, bestIndex: -1, best: -INF, pv: [] as Action[] };
   let result: ReturnType<typeof searchRoot> | null = null;
   let timedOut = false;
   let decided = false;
+  let partial: PartialIteration | undefined;
+  let partialPv: Action[] | null = null;
   const iterations: SearchIteration[] = [];
   const maxDepth = Math.max(1, Math.floor(settings.maxDepth));
 
@@ -512,6 +575,18 @@ function runSearchImpl(
     } catch (err) {
       if (err instanceof SearchTimeout) {
         timedOut = true;
+        if (settings.partialIteration && prune && ordering && result && progress.depth === depth && progress.completedMoves > 0) {
+          // The first root move is the previous iteration's best. Another move is played only if
+          // its search at this depth finished with a score above the first move's finished
+          // score: both values are exact at this depth. Unfinished moves are never used.
+          const switched = progress.bestIndex > 0 && progress.best > progress.firstScore;
+          partial = { depth, completedMoves: progress.completedMoves, firstScore: progress.firstScore, switched };
+          if (switched) {
+            partial.action = progress.pv[0];
+            partial.score = progress.best;
+            partialPv = progress.pv;
+          }
+        }
         break;
       }
       throw err;
@@ -540,13 +615,14 @@ function runSearchImpl(
   if (!result) throw new Error('Search produced no result');
 
   // Extend a PV truncated by TT cutoffs using stored best moves (validated for legality).
-  const pv = result.pv.slice();
+  const pv = (partialPv ?? result.pv).slice();
   let s = root;
   for (const a of pv) s = applyActionUnchecked(s, a);
-  while (useTT && pv.length < completedDepth && s.winner === null) {
+  const pvDepth = partialPv ? partial!.depth : completedDepth;
+  while (useTT && pv.length < pvDepth && s.winner === null) {
     const h = hashState(s);
-    const e = tt.get(h.key);
-    if (!e || e.check !== h.check || e.best < 0) break;
+    const e = tt.lookup(h.key, h.check);
+    if (!e || e.best < 0) break;
     const next = decodeAction(e.best);
     if (!isLegalAction(s, next)) break;
     pv.push(next);
@@ -555,10 +631,10 @@ function runSearchImpl(
 
   stats.elapsedMs = clock() - start;
   return {
-    bestAction: result.pv[0],
-    score: result.score,
+    bestAction: partialPv ? partialPv[0] : result.pv[0],
+    score: partialPv ? partial!.score! : result.score,
     pv,
-    pvComplete: pv.length >= completedDepth || s.winner !== null,
+    pvComplete: pv.length >= pvDepth || s.winner !== null,
     completedDepth,
     timedOut,
     decided,
@@ -568,5 +644,7 @@ function runSearchImpl(
     tree: result.tree,
     legalActionCount,
     searchedActionCount: result.candidates.length,
+    ...(partial ? { partial } : {}),
+    tt: useTT ? { kind: typed ? 'typed' : 'map', entries: tt.entries, bytes: tt.bytes } : undefined,
   };
 }

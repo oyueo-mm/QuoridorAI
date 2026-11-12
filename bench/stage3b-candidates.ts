@@ -37,3 +37,12 @@ export const LEDGER_3B_NEXT = 'bench/openings/ledger-ffcd0dde.txt';
  * resumed BFS cut that to ~2× (~0.7 ply). See docs/stage3b-eval-report.md.
  */
 export const E6: MinimaxEvalWeights = { ...FITTED_EVAL_E5, vulnerabilityThreat: 0.5 };
+
+/** Openings of every stage 3-B run (incl. the E6 confirmation): excluded from stage 3-C. */
+export const LEDGER_3C = 'bench/openings/ledger-418a1271.txt';
+
+/**
+ * Stage 3-C package C1 (search options only; evaluation E6 frozen as written here):
+ * typed table, PVS, table kept between moves, verified interrupted-iteration result.
+ */
+export const SEARCH_C1 = { ttKind: 'typed', pvs: true, ttPersist: true, partialIteration: true } as const;

@@ -174,6 +174,25 @@ export interface MinimaxSettings {
    * A/B benchmarks. Undefined = the engine default.
    */
   pathKernel?: 'masked' | 'reference';
+  /**
+   * Stage 3-C search options (Alpha-Beta only). Undefined = the original behaviour.
+   *  - pvs: principal variation search (zero-window probes, re-search on fail-high). Same root
+   *    score as plain alpha-beta at every fixed depth.
+   *  - ttKind: 'map' (original unbounded Map, cleared at 1M entries) or 'typed' (fixed-size
+   *    typed-array table with depth/generation replacement). Same root score either way.
+   *  - ttPersist: keep the typed table and evaluator caches between the searches of one agent
+   *    (same settings and side). Same root score at fixed depth; reaches deeper in timed play.
+   *  - ttDeeper: also cut with values stored by deeper searches. Standard in engines; changes
+   *    results (no longer the fixed-depth minimax value), so it is measured separately.
+   *  - partialIteration: when the last iteration times out, use its result only if it is
+   *    complete for the compared moves (see minimax.ts). Changes timed results only.
+   */
+  pvs?: boolean;
+  ttKind?: 'map' | 'typed';
+  ttPersist?: boolean;
+  partialIteration?: boolean;
+  /** Also cut with table values from deeper searches (results-changing; off = fixed-depth exact). */
+  ttDeeper?: boolean;
 }
 
 /** How a score relates to the true minimax value (alpha-beta may only prove a bound). */
@@ -276,6 +295,8 @@ export interface MinimaxTrace extends DecisionTraceBase {
   legalActionCount: number;
   searchedActionCount: number;
   iterations: SearchIteration[];
+  /** Interrupted last iteration (settings.partialIteration): what it verified, and whether it changed the move. */
+  partial?: { depth: number; completedMoves: number; firstScore: number; switched: boolean; action?: Action; score?: number };
   stats: SearchStats;
   tree: SearchTreeNode;
   rootEval: EvalBreakdown;

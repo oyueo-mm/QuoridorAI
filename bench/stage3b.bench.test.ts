@@ -40,6 +40,8 @@ const ROOTS = ['bench/results/stage1/stage1-fixed', 'bench/results/stage1/stage1
 const ROOTS_3B = ['bench/results/stage3b/stage3b-fixed', 'bench/results/stage3b/stage3b-time'];
 /** Follow-up roots (E6 pilot/SPRT, Guided comparison): added for the E6 confirmation ledger. */
 const ROOTS_NEXT = ['bench/results/stage3b/stage3b-next'];
+/** E6 confirmation: added for the stage 3-C ledger. */
+const ROOTS_CONFIRM = ['bench/results/stage3b/stage3b-confirm'];
 
 function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { id: string; config: TournamentConfig; games: RecordedGame[] }[] {
   const out = [];
@@ -59,9 +61,9 @@ function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { 
 const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
 
 // ---------------------------------------------------------------- ledger
-function buildLedger(upTo3B: boolean, next = false) {
+function buildLedger(upTo3B: boolean, next = false, upTo3C = false) {
   const keys = new Set<string>();
-  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B, ...(next ? ROOTS_NEXT : [])] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
+  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B, ...(next ? ROOTS_NEXT : []), ...(upTo3C ? ROOTS_CONFIRM : [])] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
   // Full schedules of stage-3A matchups (V2 may still be adding pairs).
   for (const m of SUITES['stage3a'].matchups) for (const g of scheduleFor(m.config, SUITES['stage3a'].maxGames)) keys.add(mirrorInvariantKey(openingState(g.opening)));
   const sorted = [...keys].sort();
@@ -69,7 +71,7 @@ function buildLedger(upTo3B: boolean, next = false) {
   const sha = createHash('sha256').update(body).digest('hex').slice(0, 8);
   mkdirSync('bench/openings', { recursive: true });
   const path = `bench/openings/ledger-${sha}.txt`;
-  writeFileSync(path, `# Mirror-invariant keys of every opening used up to stage 3-A (${sorted.length}). Content hash ${sha}. Do not edit.\n` + body);
+  writeFileSync(path, `# Mirror-invariant keys of every opening used up to ${upTo3C ? 'stage 3-B (all runs)' : next ? 'the 3-B follow-up' : upTo3B ? 'stage 3-B' : 'stage 3-A'} (${sorted.length}). Content hash ${sha}. Do not edit.\n` + body);
   process.stdout.write(`ledger ${path} with ${sorted.length} keys\n`);
 }
 
@@ -309,8 +311,13 @@ function select() {
  * → bench/results/stage3b/gate-E6.txt ("go" or "stop" on the first line, then the reason).
  */
 function gate() {
-  const m = SUITES['stage3b-next'].matchups.find((x) => x.id === 'P-E6-300')!;
-  const games = readGames(join('bench/results/stage3b/stage3b-next', m.id)).filter((g) => g.configHash === hashOf(m.config));
+  // Defaults: the stage 3-B E6 pilot. GATE_SUITE / GATE_MATCHUP / GATE_DIR / GATE_OUT reuse the same rule.
+  const suite = process.env.GATE_SUITE ?? 'stage3b-next';
+  const id = process.env.GATE_MATCHUP ?? 'P-E6-300';
+  const dir = process.env.GATE_DIR ?? 'bench/results/stage3b/stage3b-next';
+  const outFile = process.env.GATE_OUT ?? 'bench/results/stage3b/gate-E6.txt';
+  const m = SUITES[suite].matchups.find((x) => x.id === id)!;
+  const games = readGames(join(dir, m.id)).filter((g) => g.configHash === hashOf(m.config));
   const pre = pairPrefix(games, m.config.pairs);
   const n = pre.scores.length;
   const unusable = pre.excludedHalted + pre.excludedSuspect;
@@ -329,9 +336,17 @@ function gate() {
     if (hi < 0.5) verdict = 'stop';
     if (unusable > 0.1 * m.config.pairs) verdict = 'stop';
   }
-  mkdirSync('bench/results/stage3b', { recursive: true });
-  writeFileSync('bench/results/stage3b/gate-E6.txt', verdict + NL + reason + NL);
+  writeFileSync(outFile, verdict + NL + reason + NL);
   process.stdout.write(`gate: ${verdict} — ${reason}${NL}`);
+}
+
+/** SPRT status word of one matchup (STATUS_SUITE / STATUS_MATCHUP / STATUS_DIR) → STATUS_OUT. */
+function status() {
+  const m = SUITES[process.env.STATUS_SUITE!].matchups.find((x) => x.id === process.env.STATUS_MATCHUP)!;
+  const games = readGames(join(process.env.STATUS_DIR!, m.id)).filter((g) => g.configHash === hashOf(m.config));
+  const st = sprtStatus(m, games);
+  const NL = String.fromCharCode(10);
+  writeFileSync(process.env.STATUS_OUT!, (st ? st.status : 'none') + NL + (st ? describeSprt(st) : '') + NL);
 }
 
 it('stage 3-B tooling', () => {
@@ -339,9 +354,11 @@ it('stage 3-B tooling', () => {
   if (mode === 'ledger') buildLedger(false);
   else if (mode === 'ledger3b') buildLedger(true);
   else if (mode === 'ledger3b-next') buildLedger(true, true);
+  else if (mode === 'ledger3c') buildLedger(true, true, true);
   else if (mode === 'e5fit') e5fit();
   else if (mode === 'cost') cost();
   else if (mode === 'select') select();
   else if (mode === 'gate') gate();
+  else if (mode === 'status') status();
   else throw new Error('STAGE3B must be ledger, ledger3b, e5fit, cost, select or gate');
 }, 60 * 60 * 1000);
