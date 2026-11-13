@@ -1,0 +1,8 @@
+2026-11-12 19:06:53 stage3c pipeline start
+2026-11-12 19:18:01 profile: exit 0 (power 2)
+2026-11-12 19:19:28 tactics: exit 0
+2026-11-12 19:34:21 baseline G-E6-vs-guided-300: exit 0
+2026-11-12 19:40:34 pilot P-C1-300: exit 0
+2026-11-12 19:40:37 gate: go | pilot 36 valid pairs, pair score 0.597 (95% CI 0.495??.699), unusable pairs 4
+2026-11-13 01:08:50 SPRT T-C1-300: exit 1, status accept-H1
+2026-11-13 01:08:50 on battery: waiting for AC power

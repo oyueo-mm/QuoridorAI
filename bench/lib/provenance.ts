@@ -37,7 +37,8 @@ const git = (args: string): string | null => {
   }
 };
 
-function powerSource(): Provenance['power'] {
+/** Windows power source now ('unknown' elsewhere or on error). */
+export function powerSource(): Provenance['power'] {
   if (platform() !== 'win32') return 'unknown';
   try {
     const out = execSync('powershell -NoProfile -Command "(Get-CimInstance Win32_Battery).BatteryStatus"', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'], timeout: 10_000 }).trim();

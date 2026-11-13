@@ -48,4 +48,4 @@ it('stage-1 suite', async () => {
     if (r.completed > 0) md.push(reportMarkdown(r));
   }
   writeFileSync(join(root, 'REPORT.md'), md.join('\n') + '\n');
-});
+}, 24 * 60 * 60 * 1000); // long SPRTs: the 3 h default failed a finished run (stage 3-C)

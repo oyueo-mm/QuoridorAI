@@ -15,6 +15,11 @@ benchmark worker runs.
 
 Finished when `pipeline.log` ends with `stage3c pipeline done`.
 
+**State 2026-11-13**: steps 1–5 done (T-C1-300 accepted H1: 356 pairs, +29 Elo, but 220 of 357 pairs
+were played on battery after a 4 h 23 m sleep; AC part alone LLR +1.60). The pipeline (PID 33264)
+waits for AC power to run step 6 (C-C1-300); the runner now also checks AC before every timed game
+(`bench/lib/suite.ts`). C1 is adopted only if C-C1-300 accepts H1 on AC power.
+
 Check (read-only): `Get-Content bench/results/stage3c/pipeline.log`; workers:
 `Get-CimInstance Win32_Process -Filter "Name='node.exe'" | ? { $_.CommandLine -like '*QuoridorAI*forks.js*' }`.
 

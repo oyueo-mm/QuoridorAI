@@ -28,7 +28,7 @@ import type { GameAnalysis, SideAnalysis } from '../../src/arena/gameAnalysis';
 import { formatElo, formatProportion, mean, median, percentile } from '../../src/arena/stats';
 import { openingState, playScheduledGame, schedule, summarize } from '../../src/arena/tournament';
 import type { ScheduledGame, TournamentConfig, TournamentGame, TournamentSummary } from '../../src/arena/tournament';
-import { collectProvenance, hashOf } from './provenance';
+import { collectProvenance, hashOf, powerSource } from './provenance';
 import type { Provenance } from './provenance';
 
 export interface Matchup {
@@ -52,9 +52,21 @@ export interface RecordedGame extends TournamentGame {
   attempt?: number;
   /** Machine-wide CPU busy share while the game ran (all processes, all cores). */
   cpuBusy?: number;
+  /** Power source checked before (and after) an equal-time game; 'mixed' if it changed. */
+  power?: 'ac' | 'battery' | 'mixed' | 'unknown';
 }
 
-export const isSuspect = (g: RecordedGame) => g.overBudgetMoves > 0;
+/**
+ * Machine stall (sleep, heavy contention): a decision over 3× the budget, or a game stopped by the
+ * game-time guard (stage 3-C: a game spanning a 4-hour sleep hit the guard without any single
+ * over-budget move — it was excluded as a halted pair, but not replayed). Suspect games are
+ * replayed and never counted.
+ */
+export const isSuspect = (g: RecordedGame) =>
+  g.overBudgetMoves > 0 ||
+  // Only records written with the power guard (they carry `power`): finished experiments keep
+  // their original classification, so their recorded decisions do not change.
+  (g.outcome === 'halted-time-limit' && g.power !== undefined);
 
 const ledgers = new Map<string, Set<string>>();
 /** Opening keys of a committed ledger file (one key per line, '#' comments). */
@@ -227,6 +239,18 @@ export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> 
     const next = nextGame(games);
     if (!next) break;
     const { game: g, attempt } = next;
+    // Equal-time games only on AC power (battery throttles the CPU ~2.5×: stage 3-C T-C1 played
+    // 220 of 357 pairs on battery after a sleep). ALLOW_BATTERY=1 disables the wait.
+    let power: RecordedGame['power'];
+    if (budgetMs !== null) {
+      power = powerSource();
+      if (power === 'battery' && !process.env.ALLOW_BATTERY) {
+        opts.log?.(`[${m.id}] on battery: waiting for AC power before game ${g.index}`);
+        while (powerSource() === 'battery') await new Promise((r) => setTimeout(r, 60_000));
+        opts.log?.(`[${m.id}] AC power back`);
+        power = powerSource();
+      }
+    }
     const t0 = performance.now();
     const c0 = cpuSnapshot();
     const result = await playScheduledGame(m.config, g, inProcessFactory);
@@ -235,12 +259,17 @@ export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> 
     const overBudgetMoves =
       budgetMs === null ? 0 : result.agents.flatMap((a) => a.moves).filter((mv) => mv.ms > 3 * budgetMs).length;
     const cpuBusy = c1.total > c0.total ? 1 - (c1.idle - c0.idle) / (c1.total - c0.total) : undefined;
-    const rec: RecordedGame = { ...result, configHash, session, analysis, overBudgetMoves, attempt, cpuBusy };
+    if (budgetMs !== null) {
+      const after = powerSource();
+      if (after !== power) power = 'mixed';
+    }
+    const rec: RecordedGame = { ...result, configHash, session, analysis, overBudgetMoves, attempt, cpuBusy, ...(power ? { power } : {}) };
     appendFileSync(file, JSON.stringify(rec) + '\n');
     played++;
     opts.log?.(
       `[${m.id}] game ${g.index} (pair ${g.pair}, A seat ${g.aSeat}${attempt > 1 ? `, attempt ${attempt}` : ''}) → ${result.outcome} in ${result.plies} plies, ` +
-        `${((performance.now() - t0) / 1000).toFixed(1)} s${overBudgetMoves ? ` · SUSPECT (${overBudgetMoves} over-budget moves)` : ''}`,
+        `${((performance.now() - t0) / 1000).toFixed(1)} s${isSuspect(rec) ? ` · SUSPECT (${overBudgetMoves} over-budget moves${result.outcome === 'halted-time-limit' ? ', game-time guard' : ''})` : ''}` +
+        `${power && power !== 'ac' ? ` · power ${power}` : ''}`,
     );
   }
   return played;
