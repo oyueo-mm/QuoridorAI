@@ -16,7 +16,17 @@ export const DEFAULT_MINIMAX_SETTINGS: MinimaxSettings = {
   transpositionTable: true,
   wallFilter: 'opponent-path',
   evaluation: { ...ALPHA_BETA_EVAL },
+  // Stage 3-C package C1 (docs/stage3c-search-report.md): same fixed-depth root score as the
+  // original search; at 300 ms it beat it in two SPRTs on independent openings (+29 Elo, mixed
+  // power; +58 Elo (+19 … +100), AC power).
+  pvs: true,
+  ttKind: 'typed',
+  ttPersist: true,
+  partialIteration: true,
 };
+
+/** The search before stage 3-C (for comparisons: spread over settings to switch C1 off). */
+export const ORIGINAL_SEARCH = { pvs: false, ttKind: 'map', ttPersist: false, partialIteration: false } as const;
 
 export function resolveMinimaxSettings(partial?: Partial<MinimaxSettings>): MinimaxSettings {
   return {

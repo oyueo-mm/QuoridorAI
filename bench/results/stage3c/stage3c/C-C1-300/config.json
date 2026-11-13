@@ -1,0 +1,65 @@
+{
+ "id": "C-C1-300",
+ "question": "Confirmation SPRT (new openings): search package C1 vs baseline search, both E6, 300 ms",
+ "configHash": "c94c2f4bdd1845e8",
+ "games": 1200,
+ "config": {
+  "openingMode": "mixed",
+  "openingPlies": 4,
+  "openingWallProbability": 0.25,
+  "openingMaxImbalance": 2,
+  "uniqueOpenings": true,
+  "maxPlies": 300,
+  "repetitionLimit": 3,
+  "agents": [
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "C1",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked",
+     "evaluation": {
+      "selfDistance": 1.001,
+      "opponentDistance": 1,
+      "wallDifference": 1.503,
+      "tempo": 0.482,
+      "vulnerabilityThreat": 0.5
+     },
+     "ttKind": "typed",
+     "pvs": true,
+     "ttPersist": true,
+     "partialIteration": true
+    }
+   },
+   {
+    "kind": "alphabeta",
+    "depth": 4,
+    "simulations": 0,
+    "tag": "baseline search",
+    "minimax": {
+     "wallFilter": "opponent-path",
+     "pathKernel": "masked",
+     "evaluation": {
+      "selfDistance": 1.001,
+      "opponentDistance": 1,
+      "wallDifference": 1.503,
+      "tempo": 0.482,
+      "vulnerabilityThreat": 0.5
+     }
+    }
+   }
+  ],
+  "budget": {
+   "mode": "equal-time",
+   "timeMs": 300
+  },
+  "pairs": 600,
+  "seed": 97004,
+  "maxGameMs": 120000,
+  "openingPliesMax": 8,
+  "openingDedupe": "mirror",
+  "excludeOpeningsFile": "bench/openings/ledger-418a1271.txt"
+ }
+}

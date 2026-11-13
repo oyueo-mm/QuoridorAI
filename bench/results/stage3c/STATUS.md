@@ -15,19 +15,7 @@ benchmark worker runs.
 
 Finished when `pipeline.log` ends with `stage3c pipeline done`.
 
-**State 2026-11-13**: steps 1–5 done (T-C1-300 accepted H1: 356 pairs, +29 Elo, but 220 of 357 pairs
-were played on battery after a 4 h 23 m sleep; AC part alone LLR +1.60). The pipeline (PID 33264)
-waits for AC power to run step 6 (C-C1-300); the runner now also checks AC before every timed game
-(`bench/lib/suite.ts`). C1 is adopted only if C-C1-300 accepts H1 on AC power.
-
-Check (read-only): `Get-Content bench/results/stage3c/pipeline.log`; workers:
-`Get-CimInstance Win32_Process -Filter "Name='node.exe'" | ? { $_.CommandLine -like '*QuoridorAI*forks.js*' }`.
-
-Resume after an interruption (no worker running): start the pipeline again — finished steps and games
-are skipped, decided SPRTs stop at once:
-
-```powershell
-$p = Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File',"$PWD/bench/stage3c-pipeline.ps1" -WindowStyle Hidden -PassThru
-```
-
-Collect: `$env:OUT='bench/results/stage3c'; $env:REPORT='only'; $env:SUITE='stage3c'; npx vitest run --config vitest.bench.config.ts bench/stage1.bench.test.ts`
+**COMPLETE 2026-11-13 14:08 KST**: T-C1-300 accepted H1 (+29, 356 pairs, 220 on battery);
+C-C1-300 accepted H1 on AC power (+58 Elo (+19 … +100), 90 pairs, 217 games all AC, no suspect
+games). C1 is the default search (`DEFAULT_MINIMAX_SETTINGS`); the old search is `ORIGINAL_SEARCH`.
+No benchmark process is running.

@@ -8,14 +8,15 @@ import { describe, expect, it } from 'vitest';
 import { applyAction, createInitialState, encodeAction, formatAction } from '../../engine';
 import type { Action, GameState } from '../../engine';
 import { createRng } from '../rng';
-import { DEFAULT_MINIMAX_SETTINGS, createMinimaxCache, decideMinimax } from '../minimaxAgent';
+import { DEFAULT_MINIMAX_SETTINGS, ORIGINAL_SEARCH, createMinimaxCache, decideMinimax } from '../minimaxAgent';
 import { searchCandidates } from '../search/candidates';
 import { ALPHA_BETA_EVAL, RACE_EVAL_V1, WIN_SCORE, createDistanceEvaluator, isDecisive } from '../search/evaluation';
 import { runSearch } from '../search/minimax';
 import { TT_EXACT, TT_LOWER, TranspositionTable } from '../search/transposition';
 import type { MinimaxEvalWeights, MinimaxSettings } from '../types';
 
-const settings = (patch: Partial<MinimaxSettings>): MinimaxSettings => ({ ...DEFAULT_MINIMAX_SETTINGS, timeLimitMs: 0, ...patch });
+// Baseline = the original search (C1 is the default since stage 3-C); variants switch options on.
+const settings = (patch: Partial<MinimaxSettings>): MinimaxSettings => ({ ...DEFAULT_MINIMAX_SETTINGS, ...ORIGINAL_SEARCH, timeLimitMs: 0, ...patch });
 
 /** Positions from seeded random play over the search candidates (walls included). */
 function positions(n: number, seed: number): GameState[] {

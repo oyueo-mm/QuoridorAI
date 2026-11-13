@@ -6,3 +6,6 @@
 2026-11-12 19:40:37 gate: go | pilot 36 valid pairs, pair score 0.597 (95% CI 0.495??.699), unusable pairs 4
 2026-11-13 01:08:50 SPRT T-C1-300: exit 1, status accept-H1
 2026-11-13 01:08:50 on battery: waiting for AC power
+2026-11-13 13:50:49 AC power back
+2026-11-13 14:08:22 confirmation C-C1-300: exit 0, status accept-H1
+2026-11-13 14:08:22 stage3c pipeline done

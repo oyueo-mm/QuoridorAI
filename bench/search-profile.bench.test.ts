@@ -19,7 +19,7 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { cpus } from 'node:os';
 import { join } from 'node:path';
 import { it } from 'vitest';
-import { DEFAULT_MINIMAX_SETTINGS, createMinimaxCache, decideMinimax } from '../src/ai/minimaxAgent';
+import { DEFAULT_MINIMAX_SETTINGS, ORIGINAL_SEARCH, createMinimaxCache, decideMinimax } from '../src/ai/minimaxAgent';
 import { ALPHA_BETA_EVAL, createDistanceEvaluator } from '../src/ai/search/evaluation';
 import { runSearch } from '../src/ai/search/minimax';
 import type { SearchResult } from '../src/ai/search/minimax';
@@ -73,7 +73,8 @@ function sample(all: GameState[][], perPhase: number): Record<Phase, GameState[]
   return { opening: pick(by.opening), middle: pick(by.middle), endgame: pick(by.endgame) };
 }
 
-const cfg = (patch: Partial<MinimaxSettings>): MinimaxSettings => ({ ...DEFAULT_MINIMAX_SETTINGS, wallFilter: 'opponent-path', pathKernel: 'masked', evaluation: ALPHA_BETA_EVAL, ...patch });
+// Variants are switched on over the original (pre-3-C) search; C1 is the default since stage 3-C.
+const cfg = (patch: Partial<MinimaxSettings>): MinimaxSettings => ({ ...DEFAULT_MINIMAX_SETTINGS, ...ORIGINAL_SEARCH, wallFilter: 'opponent-path', pathKernel: 'masked', evaluation: ALPHA_BETA_EVAL, ...patch });
 
 interface TimedRow {
   depth: number;
