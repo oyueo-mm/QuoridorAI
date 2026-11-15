@@ -1,10 +1,10 @@
 <div align="center">
 
-# QuoridorAI
+# QuoridorAI — 쿼리도 AI · 무료 온라인 게임
 
 ### Play, Observe, Compare.
 
-**쿼리도 AI와 직접 대국하고, 각 알고리즘의 선택 과정을 관찰하고 비교하는 웹 기반 AI 실험실**
+**무료 온라인 쿼리도(Quoridor) 게임. 설치나 가입 없이 AI와 대국하고, 전략을 관찰하고 비교하세요.**
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Play_Now-64748b?style=for-the-badge&logo=githubpages&logoColor=white)](https://oyueo-mm.github.io/QuoridorAI/)
 [![GitHub Actions](https://github.com/oyueo-mm/QuoridorAI/actions/workflows/deploy.yml/badge.svg)](https://github.com/oyueo-mm/QuoridorAI/actions/workflows/deploy.yml)
@@ -17,6 +17,12 @@
 </div>
 
 ---
+
+## 무료 쿼리도 온라인 플레이
+
+[QuoridorAI에서 쿼리도 게임 시작하기](https://oyueo-mm.github.io/QuoridorAI/)
+
+브라우저에서 무료로 쿼리도 AI(Quoridor AI)와 대결할 수 있습니다. 친구와 함께할 때는 한 기기에서 로컬 2~4인 대국을 즐길 수 있습니다. 원격 사용자 간 온라인 매칭은 지원하지 않습니다.
 
 ## 소개
 
@@ -102,6 +108,20 @@ Minimax와 Alpha-Beta는 서로 완전히 별개의 학습 모델이 아니라, 
 | **학습 실행 환경** | VS Code + Google Colab 원격 GPU 커널 (검증 준비 완료) |
 | **테스트 · CI/CD** | Vitest, pytest, GitHub Actions |
 | **배포** | GitHub Pages |
+
+## 검색 및 공유
+
+홈 화면은 빌드 시 실제 React 컴포넌트에서 정적 HTML로 사전 렌더링합니다. 기존 문구와 디자인을 유지하면서 JavaScript 실행 전에도 제목, 내비게이션, 게임 모드와 보드를 읽을 수 있습니다. 앱이 시작되면 동일한 홈 화면을 인터랙티브 UI로 교체합니다.
+
+- 대표 URL: `https://oyueo-mm.github.io/QuoridorAI/`
+- 사이트맵: `https://oyueo-mm.github.io/QuoridorAI/sitemap.xml`
+- Google Search Console URL 접두어 속성에서 HTML 태그 인증 후 위 사이트맵을 제출할 수 있습니다.
+- 해시 화면은 별도 검색 페이지가 아니므로 사이트맵에는 대표 URL만 포함합니다.
+- 프로젝트의 `robots.txt`는 `/QuoridorAI/robots.txt`에 배포됩니다. 검색엔진이 사용하는 도메인 루트 `/robots.txt`는 이 저장소의 배포 범위 밖입니다. 루트 응답이 404이면 크롤링을 차단하지 않으며, 정책 변경 시 별도로 확인해야 합니다.
+- `npm run build`는 사전 렌더링, 메타데이터, 구조화 데이터, 사이트맵 및 에셋 경로를 검증합니다.
+- 관전·비교·실험·플레이 화면은 처음 방문할 때 로드하고, 이후에는 마운트를 유지해 진행 중인 대국을 보존합니다.
+
+인증 태그 배포와 Search Console 계정에서의 인증 완료·색인 요청은 별도 단계이며, 검색 순위를 보장하지 않습니다.
 
 ## 로컬에서 실행하기
 

@@ -47,12 +47,13 @@ async function open(viewport = { width: 1440, height: 1000 }) {
   page.on('pageerror', (e) => check('no page error', false, String(e)));
   await page.goto(BASE);
   await page.waitForSelector('header');
+  await page.locator('[data-prerender]').waitFor({ state: 'detached' });
   return { ctx, page };
 }
 
 const MB = 'main[data-view="mode-browser"]';
 const previewBoard = (page) => page.locator(`${MB} svg[aria-label="쿼리도 보드"]`);
-const gotoPlay = (page) => page.locator('header nav button', { hasText: '플레이' }).first().click();
+const gotoPlay = (page) => page.getByRole('navigation', { name: '보기 선택' }).getByRole('link', { name: '플레이', exact: true }).click();
 const openBrowser = async (page) => {
   if (!(await page.locator('[data-open-mode-browser]:visible').count())) await gotoPlay(page);
   await page.locator('[data-open-mode-browser]:visible').first().click();
@@ -81,7 +82,6 @@ const waitSettled = async (page) => {
 // ------------------------------------------------------------------ 1. entry points, tabs, previews
 {
   const { ctx, page } = await open();
-  await page.locator('[data-open-mode-browser]').first().waitFor({ state: 'attached' }).catch(() => {});
   check('home has no browser open', (await page.locator(MB).count()) === 0);
 
   // Home shortcut → browser preselected, nothing started
