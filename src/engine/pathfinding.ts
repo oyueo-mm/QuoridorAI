@@ -6,7 +6,7 @@ import {
   cellFromIndex,
   cellIndex,
 } from './board';
-import { distanceMapMasked, distanceToRowMasked, hasPathToRowMasked, shortestPathMasked } from './rowMasks';
+import { distanceMapMasked, distanceMapMaskedShared, distanceToRowMasked, hasPathToRowMasked, shortestPathMasked } from './rowMasks';
 import type { Coord, Goal, WallLayout } from './types';
 
 /**
@@ -50,6 +50,14 @@ export function hasPathToRow(walls: WallLayout, start: Coord, targetRow: number)
 
 export function distanceMap(walls: WallLayout, targetRow: number): Int16Array {
   return kernel === 'masked' ? distanceMapMasked(walls, targetRow) : distanceMapReference(walls, targetRow);
+}
+
+/**
+ * distanceMap whose result may be shared between calls on the same wall layout (memoised for the
+ * goal rows under the masked kernel). The array must not be modified.
+ */
+export function distanceMapShared(walls: WallLayout, targetRow: number): Int16Array {
+  return kernel === 'masked' ? distanceMapMaskedShared(walls, targetRow) : distanceMapReference(walls, targetRow);
 }
 
 /**

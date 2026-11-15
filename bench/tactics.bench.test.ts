@@ -257,6 +257,9 @@ for (const [id, evaluation] of Object.entries(EVAL_CANDIDATES)) {
 // After 3-B the plain ab* agents use the adopted E5 default; v1 = the evaluation before 3-B.
 // Stage 3-C search package (E6 evaluation): depth 4 must match ab4 exactly; 300 ms may differ.
 AGENTS['c1-d4'] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation: E6, ...SEARCH_C1 } }, budget: { mode: 'fixed', timeMs: 0 } };
+// Stage 3-D: the fast E6 evaluation must give the same tactical answers as the stage 3-C one.
+AGENTS['d-d4'] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation: E6, ...SEARCH_C1, evalKernel: 'fast' } }, budget: { mode: 'fixed', timeMs: 0 } };
+AGENTS['d-300ms'] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation: E6, ...SEARCH_C1, evalKernel: 'fast' } }, budget: { mode: 'equal-time', timeMs: 300 } };
 AGENTS['c1-300ms'] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation: E6, ...SEARCH_C1 } }, budget: { mode: 'equal-time', timeMs: 300 } };
 for (const [id, evaluation] of [['v1', RACE_EVAL_V1], ['E6', E6]] as const) {
   AGENTS[`${id}-d4`] = { spec: { kind: 'alphabeta', depth: 4, simulations: 0, minimax: { evaluation } }, budget: { mode: 'fixed', timeMs: 0 } };

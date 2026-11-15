@@ -31,6 +31,8 @@ export interface ProfileBreakdown {
   selfByComponent: Record<string, number>;
   /** Inclusive time of selected functions (a sample counts once per function on its stack). */
   inclusiveByFunction: Record<string, number>;
+  /** Self time of every function (ms), keyed `name @file:line`. */
+  selfByFunction: Record<string, number>;
   /** Top self-time functions. */
   topSelf: { fn: string; ms: number }[];
   /**
@@ -187,6 +189,7 @@ export function aggregate(p: CpuProfile): ProfileBreakdown {
     samples: p.samples.length,
     selfByComponent: self,
     inclusiveByFunction: incl,
+    selfByFunction: Object.fromEntries(fnSelf),
     topSelf: [...fnSelf.entries()].sort((a, b) => b[1] - a[1]).slice(0, 15).map(([fn, ms]) => ({ fn, ms })),
     phases,
   };

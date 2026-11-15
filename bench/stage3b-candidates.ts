@@ -46,3 +46,14 @@ export const LEDGER_3C = 'bench/openings/ledger-418a1271.txt';
  * typed table, PVS, table kept between moves, verified interrupted-iteration result.
  */
 export const SEARCH_C1 = { ttKind: 'typed', pvs: true, ttPersist: true, partialIteration: true } as const;
+
+/** Openings of every stage 3-C run (baseline, pilot, T-C1, C-C1): excluded from stage 3-D. */
+export const LEDGER_3D = 'bench/openings/ledger-1ef90bb0.txt';
+
+/**
+ * Stage 3-D: the stage 3-C search package C1 with the E6 evaluation computed by the stage 3-C
+ * implementation ('reference') or the stage 3-D one ('fast'). Both give identical values; only speed
+ * differs, so a strength difference between them is a speed effect.
+ */
+export const C1_REFERENCE_EVAL = { ...SEARCH_C1, evalKernel: 'reference' } as const;
+export const C1_FAST_EVAL = { ...SEARCH_C1, evalKernel: 'fast' } as const;

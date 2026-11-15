@@ -3,7 +3,7 @@ import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
 import type { Matchup } from './lib/suite';
 import { FITTED_EVAL_E5 } from '../src/ai/search/evaluation';
-import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B, LEDGER_3B_NEXT, LEDGER_3C, SEARCH_C1 } from './stage3b-candidates';
+import { E6, EVAL_CANDIDATES, LEDGER_3A, LEDGER_3B, LEDGER_3B_NEXT, LEDGER_3C, LEDGER_3D, SEARCH_C1, C1_FAST_EVAL, C1_REFERENCE_EVAL } from './stage3b-candidates';
 
 /**
  * Stage-1 experiment definitions. Changing a config changes its hash: results already in a
@@ -45,6 +45,9 @@ const fresh3b = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), exc
 
 /** Stage 3-C: disjoint from every stage 3-B opening. */
 const fresh3c = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3C });
+
+/** Stage 3-D: disjoint from every stage 3-B and 3-C opening. */
+const fresh3d = (c: TournamentConfig): TournamentConfig => ({ ...sprtCfg(c), excludeOpeningsFile: LEDGER_3D });
 
 /** Stage-3 opening policy: mirror-invariant unique openings of 4–8 plies. */
 const sprtCfg = (c: TournamentConfig): TournamentConfig => ({ ...c, openingPlies: 4, openingPliesMax: 8, openingDedupe: 'mirror' });
@@ -214,6 +217,23 @@ export const SUITES: Record<string, { description: string; maxGames: number; mat
       { id: 'P-C1-300', question: 'Pilot (40 pairs): search package C1 vs baseline search, both E6, 300 ms', config: fresh3c(timed(abv(4, 'C1', { ...AB_MASKED, evaluation: E6, ...SEARCH_C1 }), abv(4, 'baseline search', { ...AB_MASKED, evaluation: E6 }), 300, 40, 97002)) },
       { id: 'T-C1-300', question: 'SPRT: search package C1 vs baseline search, both E6, 300 ms', config: fresh3c(timed(abv(4, 'C1', { ...AB_MASKED, evaluation: E6, ...SEARCH_C1 }), abv(4, 'baseline search', { ...AB_MASKED, evaluation: E6 }), 300, DEFAULT_SPRT.maxPairs, 97003)), sprt: DEFAULT_SPRT },
       { id: 'C-C1-300', question: 'Confirmation SPRT (new openings): search package C1 vs baseline search, both E6, 300 ms', config: fresh3c(timed(abv(4, 'C1', { ...AB_MASKED, evaluation: E6, ...SEARCH_C1 }), abv(4, 'baseline search', { ...AB_MASKED, evaluation: E6 }), 300, DEFAULT_SPRT.maxPairs, 97004)), sprt: DEFAULT_SPRT },
+    ],
+  },
+  /**
+   * Stage 3-D: faster E6 evaluation (exact optimisations). Both sides: C1 search, E6 weights, masked
+   * kernel — they differ only in the evaluation implementation, which gives identical values, so
+   * any strength difference is the speed effect. Openings disjoint from every 3-B/3-C run. AC only.
+   *   P-D-300  pilot, 40 pairs (screen only, never part of an SPRT)
+   *   T-D-300  SPRT fast vs reference (H0 0 / H1 +30, α = β = 0.05)
+   *   C-D-300  independent confirmation SPRT (new seed), only after T-D-300 promotes
+   */
+  'stage3d': {
+    description: 'Stage 3-D: exact E6 evaluation optimisations (fast vs reference implementation), C1 search, 300 ms.',
+    maxGames: 2000,
+    matchups: [
+      { id: 'P-D-300', question: 'Pilot (40 pairs): fast E6 evaluation vs stage 3-C implementation, both C1 search, 300 ms', config: fresh3d(timed(abv(4, 'fast eval', { ...AB_MASKED, evaluation: E6, ...C1_FAST_EVAL }), abv(4, 'reference eval', { ...AB_MASKED, evaluation: E6, ...C1_REFERENCE_EVAL }), 300, 40, 98001)) },
+      { id: 'T-D-300', question: 'SPRT: fast E6 evaluation vs stage 3-C implementation, both C1 search, 300 ms', config: fresh3d(timed(abv(4, 'fast eval', { ...AB_MASKED, evaluation: E6, ...C1_FAST_EVAL }), abv(4, 'reference eval', { ...AB_MASKED, evaluation: E6, ...C1_REFERENCE_EVAL }), 300, DEFAULT_SPRT.maxPairs, 98002)), sprt: DEFAULT_SPRT },
+      { id: 'C-D-300', question: 'Confirmation SPRT (new openings): fast E6 evaluation vs stage 3-C implementation, 300 ms', config: fresh3d(timed(abv(4, 'fast eval', { ...AB_MASKED, evaluation: E6, ...C1_FAST_EVAL }), abv(4, 'reference eval', { ...AB_MASKED, evaluation: E6, ...C1_REFERENCE_EVAL }), 300, DEFAULT_SPRT.maxPairs, 98003)), sprt: DEFAULT_SPRT },
     ],
   },
   /** Tiny configuration for the harness self-test. */

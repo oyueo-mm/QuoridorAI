@@ -42,6 +42,8 @@ const ROOTS_3B = ['bench/results/stage3b/stage3b-fixed', 'bench/results/stage3b/
 const ROOTS_NEXT = ['bench/results/stage3b/stage3b-next'];
 /** E6 confirmation: added for the stage 3-C ledger. */
 const ROOTS_CONFIRM = ['bench/results/stage3b/stage3b-confirm'];
+/** Stage 3-C runs (baseline, pilot, T-C1, C-C1): added for the stage 3-D ledger. */
+const ROOTS_3C = ['bench/results/stage3c/stage3c'];
 
 function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { id: string; config: TournamentConfig; games: RecordedGame[] }[] {
   const out = [];
@@ -61,9 +63,9 @@ function recorded(includeRunning: boolean, roots: readonly string[] = ROOTS): { 
 const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
 
 // ---------------------------------------------------------------- ledger
-function buildLedger(upTo3B: boolean, next = false, upTo3C = false) {
+function buildLedger(upTo3B: boolean, next = false, upTo3C = false, upTo3D = false) {
   const keys = new Set<string>();
-  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B, ...(next ? ROOTS_NEXT : []), ...(upTo3C ? ROOTS_CONFIRM : [])] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
+  for (const e of recorded(true, upTo3B ? [...ROOTS, ...ROOTS_3B, ...(next ? ROOTS_NEXT : []), ...(upTo3C ? ROOTS_CONFIRM : []), ...(upTo3D ? ROOTS_3C : [])] : ROOTS)) for (const g of e.games) keys.add(mirrorInvariantKey(openingState(g.opening)));
   // Full schedules of stage-3A matchups (V2 may still be adding pairs).
   for (const m of SUITES['stage3a'].matchups) for (const g of scheduleFor(m.config, SUITES['stage3a'].maxGames)) keys.add(mirrorInvariantKey(openingState(g.opening)));
   const sorted = [...keys].sort();
@@ -71,7 +73,7 @@ function buildLedger(upTo3B: boolean, next = false, upTo3C = false) {
   const sha = createHash('sha256').update(body).digest('hex').slice(0, 8);
   mkdirSync('bench/openings', { recursive: true });
   const path = `bench/openings/ledger-${sha}.txt`;
-  writeFileSync(path, `# Mirror-invariant keys of every opening used up to ${upTo3C ? 'stage 3-B (all runs)' : next ? 'the 3-B follow-up' : upTo3B ? 'stage 3-B' : 'stage 3-A'} (${sorted.length}). Content hash ${sha}. Do not edit.\n` + body);
+  writeFileSync(path, `# Mirror-invariant keys of every opening used up to ${upTo3D ? 'stage 3-C (all runs)' : upTo3C ? 'stage 3-B (all runs)' : next ? 'the 3-B follow-up' : upTo3B ? 'stage 3-B' : 'stage 3-A'} (${sorted.length}). Content hash ${sha}. Do not edit.\n` + body);
   process.stdout.write(`ledger ${path} with ${sorted.length} keys\n`);
 }
 
@@ -355,6 +357,7 @@ it('stage 3-B tooling', () => {
   else if (mode === 'ledger3b') buildLedger(true);
   else if (mode === 'ledger3b-next') buildLedger(true, true);
   else if (mode === 'ledger3c') buildLedger(true, true, true);
+  else if (mode === 'ledger3d') buildLedger(true, true, true, true);
   else if (mode === 'e5fit') e5fit();
   else if (mode === 'cost') cost();
   else if (mode === 'select') select();

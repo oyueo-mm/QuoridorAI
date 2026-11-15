@@ -22,7 +22,7 @@ import type {
   SearchTreeNode,
 } from '../types';
 import { isCandidateLegal, pseudoCandidates } from './candidates';
-import { DECISIVE_SCORE, WIN_SCORE, isDecisive } from './evaluation';
+import { DECISIVE_SCORE, WIN_SCORE, isDecisive, withVulnerabilityKernel } from './evaluation';
 import { MapTable, TT_EXACT, TT_LOWER, TT_UPPER, TranspositionTable } from './transposition';
 import type { SearchTable } from './transposition';
 import type { Evaluator } from './evaluation';
@@ -165,9 +165,9 @@ export function runSearch(
 ): SearchResult {
   // The kernel only changes how BFS distances are computed (identical values), so a search
   // with 'reference' and one with 'masked' visit exactly the same nodes.
-  return settings.pathKernel
-    ? withPathKernel(settings.pathKernel, () => runSearchImpl(root, settings, evaluator, hooks))
-    : runSearchImpl(root, settings, evaluator, hooks);
+  const run = () => runSearchImpl(root, settings, evaluator, hooks);
+  const withEval = settings.evalKernel ? () => withVulnerabilityKernel(settings.evalKernel!, run) : run;
+  return settings.pathKernel ? withPathKernel(settings.pathKernel, withEval) : withEval();
 }
 
 function runSearchImpl(

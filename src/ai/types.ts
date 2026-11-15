@@ -175,6 +175,12 @@ export interface MinimaxSettings {
    */
   pathKernel?: 'masked' | 'reference';
   /**
+   * Stage 3-D: implementation of the E6 path-vulnerability term, 'fast' (layered extra-wall
+   * queries, no intermediate objects) or 'reference' (the stage 3-B/3-C implementation).
+   * Identical values; only speed differs. Undefined = the module default.
+   */
+  evalKernel?: 'fast' | 'reference';
+  /**
    * Stage 3-C search options (Alpha-Beta only). Undefined = the original behaviour.
    *  - pvs: principal variation search (zero-window probes, re-search on fail-high). Same root
    *    score as plain alpha-beta at every fixed depth.

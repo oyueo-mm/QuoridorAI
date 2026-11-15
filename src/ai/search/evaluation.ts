@@ -2,8 +2,14 @@ import {
   NUM_CELLS,
   cellIndex,
   distanceMap,
+  distanceMapShared,
   prepareExtraWallDistances,
   preparedDistanceWithExtraWall,
+  prepareLayers,
+  layeredDistanceWithExtraWall,
+  pathCells,
+  rowMasks,
+  shortestPathCells,
   isWallAnchorInBounds,
   wallConflicts,
   wallsCuttingPath,
@@ -78,7 +84,7 @@ export interface Evaluator {
  * Distance race evaluator built on the BFS shortest paths (same quantities as the BFS agent):
  *   w_opp·d_opp − w_self·d_self + w_wall·(walls_self − walls_opp) ± tempo
  */
-export function createDistanceEvaluator(weights: MinimaxEvalWeights): Evaluator {
+export function createDistanceEvaluator(weights: MinimaxEvalWeights, probe?: VulnerabilityProbe): Evaluator {
   const explain = (state: GameState, perspective: PlayerId): EvalBreakdown => {
     const opp = opponentOf(perspective);
     const base = {
@@ -116,7 +122,7 @@ export function createDistanceEvaluator(weights: MinimaxEvalWeights): Evaluator 
     weights.distanceCurve !== undefined ||
     weights.vulnerability !== undefined ||
     weights.vulnerabilityThreat !== undefined;
-  const vulnerabilityOf = createVulnerabilityCache();
+  const vulnerabilityOf = createVulnerabilityCache(probe);
   const curve = (d: number) => (weights.distanceCurve === undefined ? d : weights.distanceCurve * Math.log1p(d / weights.distanceCurve));
   const wallValue = (walls: number, phase: number) => {
     if (weights.wallDecay === undefined) return weights.wallDifference * walls;
@@ -176,7 +182,8 @@ export function createDistanceEvaluator(weights: MinimaxEvalWeights): Evaluator 
       // (read from the parent's distance map), and after a wall only a player whose current
       // shortest path the wall cuts can change (otherwise that path still exists).
       const players = [perspective, opponentOf(perspective)] as const;
-      const maps = players.map((q) => distanceMap(parent, goalRow(q)));
+      const mapOf = vulnerabilityKernel === 'fast' ? distanceMapShared : distanceMap;
+      const maps = players.map((q) => mapOf(parent, goalRow(q)));
       const base = players.map((q, i) => maps[i][cellIndex(parent.pawns[q].row, parent.pawns[q].col)]);
       let edges: Set<number>[] | null = null;
       return (child, action) => {
@@ -207,7 +214,7 @@ export function createDistanceEvaluator(weights: MinimaxEvalWeights): Evaluator 
  * wall cutting its current shortest path can cause (pawns ignored, walls that would disconnect it
  * are illegal and skipped; legality for the other player is not checked — a heuristic).
  */
-export function vulnerability(state: GameState, player: PlayerId): number {
+export function vulnerabilityReference(state: GameState, player: PlayerId): number {
   const goal = goalRow(player);
   const path = shortestPath(state, state.pawns[player], goal);
   if (!path) return 0;
@@ -222,8 +229,159 @@ export function vulnerability(state: GameState, player: PlayerId): number {
   return worst;
 }
 
+
+/**
+ * Stage 3-D implementation of vulnerability(): the same value, computed without the intermediate
+ * path / candidate-wall objects and with the faster layered extra-wall queries (rowMasks.ts).
+ * Candidate walls are exactly those of wallsCuttingPath(path), visited in the same order.
+ */
+// Scratch for vulnerabilityFast (single-threaded; not re-entered).
+const crossV = new Int32Array(9);
+const crossH = new Int32Array(9);
+const deferred = new Int32Array(256);
+
+/**
+ * True when the shortest path crosses the wall (orientation o, anchor row/col) at exactly one of
+ * its two cut edges and a three-edge detour beside that edge is open: a walk of length d + 2 then
+ * exists in the layout with the wall, so the wall lengthens the path by at most 2.
+ * crossV[r] marks the columns of path steps between rows r and r + 1, crossH[r] the columns c of
+ * steps between (r, c) and (r, c + 1).
+ */
+function cheapDetour(m: ReturnType<typeof rowMasks>, vertical: boolean, row: number, col: number): boolean {
+  if (vertical) {
+    // h wall: cuts the vertical edges at columns col and col + 1 between rows row and row + 1.
+    const usedL = (crossV[row] >> col) & 1;
+    const usedR = (crossV[row] >> (col + 1)) & 1;
+    if (usedL === usedR) return false;
+    if (usedL === 1) {
+      if (col < 1) return false;
+      const b = 1 << (col - 1);
+      return (m.east[row] & b) !== 0 && (m.south[row] & b) !== 0 && (m.east[row + 1] & b) !== 0;
+    }
+    if (col > 6) return false;
+    const e = 1 << (col + 1);
+    return (m.east[row] & e) !== 0 && (m.south[row] & (1 << (col + 2))) !== 0 && (m.east[row + 1] & e) !== 0;
+  }
+  // v wall: cuts the horizontal edges (row, col)–(row, col + 1) and (row + 1, col)–(row + 1, col + 1).
+  const usedT = (crossH[row] >> col) & 1;
+  const usedB = (crossH[row + 1] >> col) & 1;
+  if (usedT === usedB) return false;
+  const c = 1 << col;
+  const c1 = 1 << (col + 1);
+  if (usedT === 1) {
+    if (row < 1) return false;
+    return (m.south[row - 1] & c) !== 0 && (m.east[row - 1] & c) !== 0 && (m.south[row - 1] & c1) !== 0;
+  }
+  if (row > 6) return false;
+  return (m.south[row + 1] & c) !== 0 && (m.east[row + 2] & c) !== 0 && (m.south[row + 1] & c1) !== 0;
+}
+
+export function vulnerabilityFast(state: GameState, player: PlayerId): number {
+  const goal = goalRow(player);
+  const start = state.pawns[player];
+  const len = shortestPathCells(state, start, goal);
+  if (len < 0) return 0;
+  const d = len - 1;
+  let worst = 0;
+  prepareLayers(state, start, goal);
+  const masks = rowMasks(state);
+  crossV.fill(0);
+  crossH.fill(0);
+  for (let i = 1; i < len; i++) {
+    const a = pathCells[i - 1];
+    const b = pathCells[i];
+    const aRow = (a / 9) | 0;
+    const aCol = a - aRow * 9;
+    const bRow = (b / 9) | 0;
+    const bCol = b - bRow * 9;
+    if (aCol === bCol) crossV[Math.min(aRow, bRow)] |= 1 << aCol;
+    else crossH[aRow] |= 1 << Math.min(aCol, bCol);
+  }
+  let seenH0 = 0;
+  let seenH1 = 0;
+  let seenV0 = 0;
+  let seenV1 = 0;
+  // Candidates with a cheap detour (increase ≤ 2) are queried only if nothing else reached 2:
+  // packed as slot·2 + (v wall ? 1 : 0).
+  let nDeferred = 0;
+  for (let i = 1; i < len; i++) {
+    const a = pathCells[i - 1];
+    const b = pathCells[i];
+    const aRow = (a / 9) | 0;
+    const aCol = a - aRow * 9;
+    const bRow = (b / 9) | 0;
+    const bCol = b - bRow * 9;
+    const vertical = aCol === bCol;
+    for (let k = 0; k < 2; k++) {
+      // Vertical step (rows r, r+1 in one column): h walls anchored at (r, col) and (r, col − 1).
+      // Horizontal step (columns c, c+1 in one row): v walls anchored at (row, c) and (row − 1, c).
+      const row = vertical ? Math.min(aRow, bRow) : aRow - k;
+      const col = vertical ? aCol - k : Math.min(aCol, bCol);
+      if (row < 0 || row > 7 || col < 0 || col > 7) continue;
+      const slot = row * 8 + col;
+      const bit = 1 << (slot & 31);
+      let again: boolean;
+      if (vertical) {
+        again = (slot < 32 ? seenH0 & bit : seenH1 & bit) !== 0;
+        if (slot < 32) seenH0 |= bit;
+        else seenH1 |= bit;
+      } else {
+        again = (slot < 32 ? seenV0 & bit : seenV1 & bit) !== 0;
+        if (slot < 32) seenV0 |= bit;
+        else seenV1 |= bit;
+      }
+      if (again) continue;
+      const o = vertical ? 'h' : 'v';
+      if (wallConflicts(state, o, row, col)) continue;
+      if (cheapDetour(masks, vertical, row, col)) {
+        deferred[nDeferred++] = slot * 2 + (vertical ? 0 : 1);
+        continue;
+      }
+      const d2 = layeredDistanceWithExtraWall(o, row, col);
+      if (d2 - d > worst && d2 !== Infinity) worst = d2 - d;
+    }
+  }
+  for (let i = 0; i < nDeferred && worst < 2; i++) {
+    const code = deferred[i];
+    const slot = code >> 1;
+    const d2 = layeredDistanceWithExtraWall((code & 1) === 0 ? 'h' : 'v', slot >> 3, slot & 7);
+    if (d2 - d > worst && d2 !== Infinity) worst = d2 - d;
+  }
+  return worst;
+}
+
+export type VulnerabilityKernel = 'reference' | 'fast';
+let vulnerabilityKernel: VulnerabilityKernel = 'reference';
+
+export function setVulnerabilityKernel(k: VulnerabilityKernel): void {
+  vulnerabilityKernel = k;
+}
+
+/** Runs `fn` with `k` as the vulnerability implementation (synchronous code only) and restores the previous one. */
+export function withVulnerabilityKernel<T>(k: VulnerabilityKernel, fn: () => T): T {
+  const prev = vulnerabilityKernel;
+  vulnerabilityKernel = k;
+  try {
+    return fn();
+  } finally {
+    vulnerabilityKernel = prev;
+  }
+}
+
+/** Path vulnerability of `player` with the active implementation (identical values). */
+export function vulnerability(state: GameState, player: PlayerId): number {
+  return vulnerabilityKernel === 'fast' ? vulnerabilityFast(state, player) : vulnerabilityReference(state, player);
+}
+
 /** Wall layouts kept by one cache before it is cleared (memory bound, ~170 bytes per layout). */
 const VULNERABILITY_CACHE_LAYOUTS = 100_000;
+
+export interface VulnerabilityProbe {
+  /** Called for every query; `hit` is true when the value was already cached. */
+  query?(hit: boolean, layoutHit: boolean): void;
+  /** Called before a missing value is computed. */
+  miss?(state: GameState, player: PlayerId): void;
+}
 
 /**
  * Memoised vulnerability(): the value depends only on the wall layout, the player and that
@@ -231,37 +389,69 @@ const VULNERABILITY_CACHE_LAYOUTS = 100_000;
  * no collisions. A search revisits the same layout and cell often (pawn-move siblings, the other
  * player after a pawn move, transpositions, every iterative-deepening iteration).
  */
-export function createVulnerabilityCache(): (state: GameState, player: PlayerId) => number {
-  const layouts = new Map<string, Int8Array>();
-  const words = new Int32Array(4);
+interface LayoutEntry {
+  w0: number;
+  w1: number;
+  w2: number;
+  w3: number;
+  readonly values: Int8Array;
+  next: LayoutEntry | null;
+}
+
+export function createVulnerabilityCache(probe?: VulnerabilityProbe): (state: GameState, player: PlayerId) => number {
+  // Layouts are found by a 30-bit hash of their 128 wall bits; the entry keeps the four words, so a
+  // hash collision (chained) can never return another layout's values.
+  const layouts = new Map<number, LayoutEntry>();
+  let count = 0;
   let lastH: Uint8Array | null = null;
   let lastV: Uint8Array | null = null;
-  let lastEntry: Int8Array | null = null;
+  let lastEntry: LayoutEntry | null = null;
   return (state, player) => {
-    let entry: Int8Array;
-    if (state.hWalls === lastH && state.vWalls === lastV && lastEntry) entry = lastEntry;
-    else {
-      words.fill(0);
-      for (let i = 0; i < 64; i++) {
-        if (state.hWalls[i]) words[i >> 5] |= 1 << (i & 31);
-        if (state.vWalls[i]) words[2 + (i >> 5)] |= 1 << (i & 31);
+    let entry: LayoutEntry;
+    let sameArrays = false;
+    if (state.hWalls === lastH && state.vWalls === lastV && lastEntry) {
+      entry = lastEntry;
+      sameArrays = true;
+    } else {
+      let w0 = 0;
+      let w1 = 0;
+      let w2 = 0;
+      let w3 = 0;
+      const h = state.hWalls;
+      const v = state.vWalls;
+      for (let i = 0; i < 32; i++) {
+        if (h[i]) w0 |= 1 << i;
+        if (h[i + 32]) w1 |= 1 << i;
+        if (v[i]) w2 |= 1 << i;
+        if (v[i + 32]) w3 |= 1 << i;
       }
-      const key = `${words[0]},${words[1]},${words[2]},${words[3]}`;
-      let e = layouts.get(key);
+      const hash = (Math.imul(w0 ^ Math.imul(w1, 0x85ebca6b), 0xc2b2ae35) ^ Math.imul(w2 ^ Math.imul(w3, 0x27d4eb2f), 0x165667b1)) >>> 2;
+      const head = layouts.get(hash);
+      let e: LayoutEntry | null | undefined = head;
+      while (e && (e.w0 !== w0 || e.w1 !== w1 || e.w2 !== w2 || e.w3 !== w3)) e = e.next;
       if (!e) {
-        if (layouts.size >= VULNERABILITY_CACHE_LAYOUTS) layouts.clear();
-        e = new Int8Array(2 * NUM_CELLS).fill(-1);
-        layouts.set(key, e);
+        if (count >= VULNERABILITY_CACHE_LAYOUTS) {
+          layouts.clear();
+          count = 0;
+        }
+        e = { w0, w1, w2, w3, values: new Int8Array(2 * NUM_CELLS).fill(-1), next: layouts.get(hash) ?? null };
+        layouts.set(hash, e);
+        count++;
       }
       entry = e;
-      lastH = state.hWalls;
-      lastV = state.vWalls;
+      lastH = h;
+      lastV = v;
       lastEntry = e;
     }
+    const values = entry.values;
     const slot = player * NUM_CELLS + cellIndex(state.pawns[player].row, state.pawns[player].col);
-    let v = entry[slot];
-    if (v < 0) entry[slot] = v = vulnerability(state, player);
-    return v;
+    let val = values[slot];
+    if (probe) {
+      probe.query?.(val >= 0, sameArrays);
+      if (val < 0) probe.miss?.(state, player);
+    }
+    if (val < 0) values[slot] = val = vulnerability(state, player);
+    return val;
   };
 }
 
