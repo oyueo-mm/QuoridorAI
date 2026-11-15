@@ -1,0 +1,12 @@
+2026-11-15 13:55:44 stage3d pipeline start
+2026-11-15 13:55:44 on battery: waiting for AC power
+2026-11-15 14:13:49 AC power back
+2026-11-15 14:20:14 speed A/B: exit 0 (power 2)
+2026-11-15 14:20:31 profile reference: exit 0 (power 2)
+2026-11-15 14:20:44 profile fast: exit 0 (power 2)
+2026-11-15 14:22:35 tactics: exit 0
+2026-11-15 14:29:12 pilot P-D-300: exit 0
+2026-11-15 14:29:13 gate: go | pilot 37 valid pairs, pair score 0.541 (95% CI 0.445??.636), unusable pairs 3
+2026-11-15 14:44:17 SPRT T-D-300: exit 0, status accept-H1
+2026-11-15 16:02:12 confirmation C-D-300: exit 0, status accept-H1
+2026-11-15 16:02:12 stage3d pipeline done

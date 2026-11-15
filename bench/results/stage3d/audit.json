@@ -1,0 +1,759 @@
+{
+  "method": "Offline record replay for opening keys and sequential statistics; no searches or games run",
+  "source": {
+    "before": "c0492f11f76eac8cdfb152cabfe3247540ab348d",
+    "measured": "132250d44132a7f28d35871de560a58490533d79",
+    "exactFunctions": [
+      {
+        "file": "src/ai/search/evaluation.ts",
+        "oldName": "vulnerability",
+        "newName": "vulnerabilityReference",
+        "equalIgnoringCountersAndWhitespace": true
+      },
+      {
+        "file": "src/engine/rowMasks.ts",
+        "oldName": "prepareExtraWallDistances",
+        "newName": "prepareExtraWallDistances",
+        "equalIgnoringCountersAndWhitespace": true
+      },
+      {
+        "file": "src/engine/rowMasks.ts",
+        "oldName": "preparedDistanceWithExtraWall",
+        "newName": "preparedDistanceWithExtraWall",
+        "equalIgnoringCountersAndWhitespace": true
+      }
+    ],
+    "unchangedFiles": [
+      "src/ai/minimaxAgent.ts",
+      "src/ai/search/candidates.ts",
+      "src/ai/search/transposition.ts"
+    ],
+    "sharedChanges": [
+      "wall-driven row-mask construction and last-layout memo",
+      "exact vulnerability cache changed from string keys to hashed collision chains",
+      "reference extra-wall diagnostic counters"
+    ],
+    "fastOnly": [
+      "layered padded row windows",
+      "allocation-free path/candidate loop and proven cheap-detour deferral",
+      "memoised goal-row maps used by childEvaluator"
+    ],
+    "memory": {
+      "measuredRssHeapPeak": false,
+      "ttPayloadBytesPerAgent": 11010048,
+      "extraModuleScratchBytesVs3C": 8946,
+      "lazyGoalMapPayloadBytesPerLayout": 324,
+      "vulnerabilityPayloadBytesPerLayout": 162,
+      "vulnerabilityCacheLayoutLimitPerEvaluator": 100000,
+      "caveat": "Static typed-array payload counts only, not measured RSS/heap. Both kernels load the same module scratch; only fast requests shared goal maps. JS objects, collision chains, weak-map retention and GC overhead are not bounded by these figures."
+    }
+  },
+  "promotion": {
+    "eligible": false,
+    "decision": "hold; keep reference default",
+    "reason": "Original C-D-300 overlaps earlier observed openings. Removing these within the original stopping prefix does not accept H1. Post-hoc alternative filters are sensitivity analyses, not a preregistered independent confirmation."
+  },
+  "ledgerKeys": 4641,
+  "results": [
+    {
+      "id": "P-D-300",
+      "configHash": "5270e0ed4c8847fc",
+      "seed": 98001,
+      "rawRecords": 80,
+      "effectiveGames": 80,
+      "observedOpenings": 40,
+      "prefix": {
+        "nextPair": 40,
+        "validPairs": 37,
+        "excludedHalted": 3,
+        "excludedSuspect": 0
+      },
+      "sprt": null,
+      "decisivePrefixWins": null,
+      "decisivePrefixGames": null,
+      "afterDecisionValidPairs": null,
+      "power": {
+        "ac": 80
+      },
+      "rawPower": {
+        "ac": 80
+      },
+      "retries": [],
+      "discardedSuspect": [],
+      "maxDecisionMs": 339.8978000000061,
+      "maxGameDurationMs": 24876.63189999998,
+      "maxProgressGapSeconds": 28.468,
+      "sessionCommits": [
+        "132250d44132a7f28d35871de560a58490533d79"
+      ],
+      "sourceDirty": false,
+      "descriptiveAllGames": {
+        "wins": {
+          "successes": 42,
+          "trials": 77,
+          "p": 0.5454545454545454,
+          "low": 0.4347308420845273,
+          "high": 0.6518583919157952
+        },
+        "pairScore": {
+          "mean": 0.5405405405405406,
+          "low": 0.44463667251056427,
+          "high": 0.6364444085705169,
+          "n": 37,
+          "sd": 0.2976383520122845
+        },
+        "halted": {
+          "repetition": 3,
+          "max-plies": 0,
+          "time-limit": 0,
+          "user-stopped": 0
+        },
+        "agents": [
+          {
+            "label": "Alpha-Beta (300 ms) [fast eval]",
+            "wins": 42,
+            "winsAsFirst": 24,
+            "winsAsSecond": 18,
+            "decisionMsMean": 245.8669991065057,
+            "decisionMsMedian": 300.5607000000018,
+            "decisionMsP95": 303.79176999999765,
+            "decisionMsMax": 339.8978000000061,
+            "wallsUsedMean": 7.8625,
+            "nodesMean": 13661.647605432452,
+            "simulationsMean": null,
+            "depthMean": 7.708720514653324,
+            "depthMedian": 6,
+            "moves": 2798,
+            "nodesPerSecond": 55565.19441437703,
+            "simulationsPerSecond": null,
+            "ttHitRate": 0.7199561388237298,
+            "cutoffsMean": 3190.7676912080055,
+            "timedOutShare": 0.7934238741958541,
+            "decidedShare": 0.20443173695496783,
+            "topShareMean": null,
+            "entropyBitsMean": null
+          },
+          {
+            "label": "Alpha-Beta (300 ms) [reference eval]",
+            "wins": 35,
+            "winsAsFirst": 19,
+            "winsAsSecond": 16,
+            "decisionMsMean": 250.48433371510467,
+            "decisionMsMedian": 300.7666500000232,
+            "decisionMsP95": 304.6050449999777,
+            "decisionMsMax": 330.7342999999528,
+            "wallsUsedMean": 7.4125,
+            "nodesMean": 9569.792770221904,
+            "simulationsMean": null,
+            "depthMean": 7.26234788833214,
+            "depthMedian": 6,
+            "moves": 2794,
+            "nodesPerSecond": 38205.15490244741,
+            "simulationsPerSecond": null,
+            "ttHitRate": 0.7210115191438046,
+            "cutoffsMean": 2220.306012884753,
+            "timedOutShare": 0.8049391553328561,
+            "decidedShare": 0.19327129563350035,
+            "topShareMean": null,
+            "entropyBitsMean": null
+          }
+        ],
+        "cpuBusy": {
+          "mean": 0.7842807068054909,
+          "max": 0.9982393278556867
+        }
+      }
+    },
+    {
+      "id": "T-D-300",
+      "configHash": "252dde84f1bcbc08",
+      "seed": 98002,
+      "rawRecords": 199,
+      "effectiveGames": 199,
+      "observedOpenings": 100,
+      "prefix": {
+        "nextPair": 97,
+        "validPairs": 92,
+        "excludedHalted": 5,
+        "excludedSuspect": 0
+      },
+      "sprt": {
+        "status": "accept-H1",
+        "pairs": 91,
+        "counts": {
+          "ll": 9,
+          "split": 56,
+          "ww": 26
+        },
+        "llr": 3.0149092921548277,
+        "llrNormal": 3.221758481491337,
+        "lower": -2.9444389791664403,
+        "upper": 2.9444389791664403,
+        "score": 0.5934065934065934,
+        "scoreLow": 0.5323187588524365,
+        "scoreHigh": 0.6544944279607503,
+        "elo": 65.67681430238942,
+        "eloLow": 22.48872814836429,
+        "eloHigh": 110.98035912516335,
+        "config": {
+          "elo0": 0,
+          "elo1": 30,
+          "alpha": 0.05,
+          "beta": 0.05,
+          "minPairs": 30,
+          "maxPairs": 600
+        }
+      },
+      "decisivePrefixWins": 108,
+      "decisivePrefixGames": 182,
+      "afterDecisionValidPairs": 1,
+      "power": {
+        "ac": 199
+      },
+      "rawPower": {
+        "ac": 199
+      },
+      "retries": [],
+      "discardedSuspect": [],
+      "maxDecisionMs": 387.6269999999786,
+      "maxGameDurationMs": 32067.971099999995,
+      "maxProgressGapSeconds": 33.134,
+      "sessionCommits": [
+        "132250d44132a7f28d35871de560a58490533d79"
+      ],
+      "sourceDirty": false,
+      "descriptiveAllGames": {
+        "wins": {
+          "successes": 116,
+          "trials": 194,
+          "p": 0.5979381443298969,
+          "low": 0.5276874933676616,
+          "high": 0.6643854938356921
+        },
+        "pairScore": {
+          "mean": 0.5957446808510638,
+          "low": 0.5359435379533667,
+          "high": 0.6555458237487609,
+          "n": 94,
+          "sd": 0.29581849041680536
+        },
+        "halted": {
+          "repetition": 5,
+          "max-plies": 0,
+          "time-limit": 0,
+          "user-stopped": 0
+        },
+        "agents": [
+          {
+            "label": "Alpha-Beta (300 ms) [fast eval]",
+            "wins": 116,
+            "winsAsFirst": 56,
+            "winsAsSecond": 60,
+            "decisionMsMean": 246.59890564310408,
+            "decisionMsMedian": 300.8613999999943,
+            "decisionMsP95": 305.44008999993673,
+            "decisionMsMax": 387.6269999999786,
+            "wallsUsedMean": 7.527638190954774,
+            "nodesMean": 9266.507429085998,
+            "simulationsMean": null,
+            "depthMean": 7.3693531442293265,
+            "depthMedian": 6,
+            "moves": 6663,
+            "nodesPerSecond": 37577.24473642703,
+            "simulationsPerSecond": null,
+            "ttHitRate": 0.7483245809220639,
+            "cutoffsMean": 2163.57781779979,
+            "timedOutShare": 0.7891340237130422,
+            "decidedShare": 0.2075641602881585,
+            "topShareMean": null,
+            "entropyBitsMean": null
+          },
+          {
+            "label": "Alpha-Beta (300 ms) [reference eval]",
+            "wins": 78,
+            "winsAsFirst": 35,
+            "winsAsSecond": 43,
+            "decisionMsMean": 253.24178926851295,
+            "decisionMsMedian": 301.2608499999624,
+            "decisionMsP95": 308.0301549999334,
+            "decisionMsMax": 371.5320000000065,
+            "wallsUsedMean": 7.326633165829146,
+            "nodesMean": 6540.843467790488,
+            "simulationsMean": null,
+            "depthMean": 6.962372065021071,
+            "depthMedian": 6,
+            "moves": 6644,
+            "nodesPerSecond": 25828.452273551164,
+            "simulationsPerSecond": null,
+            "ttHitRate": 0.7442358019962665,
+            "cutoffsMean": 1504.6298916315473,
+            "timedOutShare": 0.8096026490066225,
+            "decidedShare": 0.18783865141481035,
+            "topShareMean": null,
+            "entropyBitsMean": null
+          }
+        ],
+        "cpuBusy": {
+          "mean": 0.6281454603294452,
+          "max": 0.9691499210368676
+        }
+      }
+    },
+    {
+      "id": "C-D-300",
+      "configHash": "523358e966c9d8e7",
+      "seed": 98003,
+      "rawRecords": 1063,
+      "effectiveGames": 1062,
+      "observedOpenings": 532,
+      "prefix": {
+        "nextPair": 521,
+        "validPairs": 498,
+        "excludedHalted": 23,
+        "excludedSuspect": 0
+      },
+      "sprt": {
+        "status": "accept-H1",
+        "pairs": 497,
+        "counts": {
+          "ll": 74,
+          "split": 315,
+          "ww": 108
+        },
+        "llr": 2.9786099563938855,
+        "llrNormal": 3.00103863325612,
+        "lower": -2.9444389791664403,
+        "upper": 2.9444389791664403,
+        "score": 0.53420523138833,
+        "scoreLow": 0.5077481619064855,
+        "scoreHigh": 0.5606623008701744,
+        "elo": 23.805412025406373,
+        "eloLow": 5.384405361625126,
+        "eloHigh": 42.361153490479246,
+        "config": {
+          "elo0": 0,
+          "elo1": 30,
+          "alpha": 0.05,
+          "beta": 0.05,
+          "minPairs": 30,
+          "maxPairs": 600
+        }
+      },
+      "decisivePrefixWins": 531,
+      "decisivePrefixGames": 994,
+      "afterDecisionValidPairs": 1,
+      "power": {
+        "ac": 1062
+      },
+      "rawPower": {
+        "ac": 1063
+      },
+      "retries": [
+        {
+          "index": 770,
+          "attempt": 2,
+          "outcome": "a-win",
+          "overBudgetMoves": 0,
+          "power": "ac"
+        }
+      ],
+      "discardedSuspect": [
+        {
+          "index": 770,
+          "attempt": 1,
+          "outcome": "b-win",
+          "durationMs": 21852.318399999756,
+          "overBudgetMoves": 1,
+          "power": "ac",
+          "maxDecisionMs": 1011.5416999999434
+        }
+      ],
+      "maxDecisionMs": 744.0848000003025,
+      "maxGameDurationMs": 31184.06000000052,
+      "maxProgressGapSeconds": 32.137,
+      "sessionCommits": [
+        "132250d44132a7f28d35871de560a58490533d79"
+      ],
+      "sourceDirty": false,
+      "descriptiveAllGames": {
+        "wins": {
+          "successes": 553,
+          "trials": 1037,
+          "p": 0.5332690453230472,
+          "low": 0.502837659775872,
+          "high": 0.563454857121141
+        },
+        "pairScore": {
+          "mean": 0.5315581854043393,
+          "low": 0.5054575535799417,
+          "high": 0.5576588172287369,
+          "n": 507,
+          "sd": 0.29985196951759063
+        },
+        "halted": {
+          "repetition": 25,
+          "max-plies": 0,
+          "time-limit": 0,
+          "user-stopped": 0
+        },
+        "agents": [
+          {
+            "label": "Alpha-Beta (300 ms) [fast eval]",
+            "wins": 553,
+            "winsAsFirst": 270,
+            "winsAsSecond": 283,
+            "decisionMsMean": 241.61590366459976,
+            "decisionMsMedian": 300.5725500000117,
+            "decisionMsP95": 303.472049999889,
+            "decisionMsMax": 737.4640000001527,
+            "wallsUsedMean": 7.630885122410546,
+            "nodesMean": 13105.920591028435,
+            "simulationsMean": null,
+            "depthMean": 7.940450254175745,
+            "depthMedian": 6,
+            "moves": 35802,
+            "nodesPerSecond": 54242.78945322026,
+            "simulationsPerSecond": null,
+            "ttHitRate": 0.7422281338134258,
+            "cutoffsMean": 3109.128372716608,
+            "timedOutShare": 0.7733925479023518,
+            "decidedShare": 0.22236187922462433,
+            "topShareMean": null,
+            "entropyBitsMean": null
+          },
+          {
+            "label": "Alpha-Beta (300 ms) [reference eval]",
+            "wins": 484,
+            "winsAsFirst": 237,
+            "winsAsSecond": 247,
+            "decisionMsMean": 247.90713796237003,
+            "decisionMsMedian": 300.82230000011623,
+            "decisionMsP95": 304.9095399999991,
+            "decisionMsMax": 744.0848000003025,
+            "wallsUsedMean": 7.249529190207157,
+            "nodesMean": 9231.400984147398,
+            "simulationsMean": null,
+            "depthMean": 7.488774568736545,
+            "depthMedian": 6,
+            "moves": 35767,
+            "nodesPerSecond": 37237.334350367266,
+            "simulationsPerSecond": null,
+            "ttHitRate": 0.745285261458152,
+            "cutoffsMean": 2147.0606145329493,
+            "timedOutShare": 0.7906170492353286,
+            "decidedShare": 0.20675482987111024,
+            "topShareMean": null,
+            "entropyBitsMean": null
+          }
+        ],
+        "cpuBusy": {
+          "mean": 0.6312647599743672,
+          "max": 0.999503282791296
+        }
+      }
+    }
+  ],
+  "overlaps": [
+    {
+      "a": "P-D-300",
+      "b": "pre-3D ledger",
+      "scope": "observed",
+      "count": 0
+    },
+    {
+      "a": "P-D-300",
+      "b": "T-D-300",
+      "scope": "observed",
+      "count": 0,
+      "keys": [],
+      "pairsA": [],
+      "pairsB": []
+    },
+    {
+      "a": "P-D-300",
+      "b": "T-D-300",
+      "scope": "full scheduled",
+      "count": 0
+    },
+    {
+      "a": "T-D-300",
+      "b": "pre-3D ledger",
+      "scope": "observed",
+      "count": 0
+    },
+    {
+      "a": "C-D-300",
+      "b": "pre-3D ledger",
+      "scope": "observed",
+      "count": 0
+    },
+    {
+      "a": "C-D-300",
+      "b": "P-D-300",
+      "scope": "observed",
+      "count": 1,
+      "keys": [
+        "1464311824658509:1396476306"
+      ],
+      "pairsA": [
+        {
+          "pair": 436,
+          "key": "1464311824658509:1396476306",
+          "score": 1
+        }
+      ],
+      "pairsB": [
+        {
+          "pair": 18,
+          "key": "1464311824658509:1396476306",
+          "score": 0.5
+        }
+      ]
+    },
+    {
+      "a": "C-D-300",
+      "b": "T-D-300",
+      "scope": "observed",
+      "count": 1,
+      "keys": [
+        "2459531624619449:2345594769"
+      ],
+      "pairsA": [
+        {
+          "pair": 492,
+          "key": "2459531624619449:2345594769",
+          "score": 0.5
+        }
+      ],
+      "pairsB": [
+        {
+          "pair": 17,
+          "key": "2459531624619449:2345594769",
+          "score": 0.5
+        }
+      ]
+    },
+    {
+      "a": "C-D-300",
+      "b": "P-D-300",
+      "scope": "full scheduled",
+      "count": 1
+    },
+    {
+      "a": "C-D-300",
+      "b": "T-D-300",
+      "scope": "full scheduled",
+      "count": 7
+    }
+  ],
+  "sensitivity": [
+    {
+      "id": "T-D-300",
+      "scope": "observed",
+      "originalStopPair": 95,
+      "excludedPairs": [],
+      "result": {
+        "status": "accept-H1",
+        "pairs": 91,
+        "counts": {
+          "ll": 9,
+          "split": 56,
+          "ww": 26
+        },
+        "llr": 3.0149092921548277,
+        "llrNormal": 3.221758481491337,
+        "lower": -2.9444389791664403,
+        "upper": 2.9444389791664403,
+        "score": 0.5934065934065934,
+        "scoreLow": 0.5323187588524365,
+        "scoreHigh": 0.6544944279607503,
+        "elo": 65.67681430238942,
+        "eloLow": 22.48872814836429,
+        "eloHigh": 110.98035912516335,
+        "config": {
+          "elo0": 0,
+          "elo1": 30,
+          "alpha": 0.05,
+          "beta": 0.05,
+          "minPairs": 30,
+          "maxPairs": 600
+        }
+      }
+    },
+    {
+      "id": "T-D-300",
+      "scope": "full scheduled",
+      "originalStopPair": 95,
+      "excludedPairs": [],
+      "result": {
+        "status": "accept-H1",
+        "pairs": 91,
+        "counts": {
+          "ll": 9,
+          "split": 56,
+          "ww": 26
+        },
+        "llr": 3.0149092921548277,
+        "llrNormal": 3.221758481491337,
+        "lower": -2.9444389791664403,
+        "upper": 2.9444389791664403,
+        "score": 0.5934065934065934,
+        "scoreLow": 0.5323187588524365,
+        "scoreHigh": 0.6544944279607503,
+        "elo": 65.67681430238942,
+        "eloLow": 22.48872814836429,
+        "eloHigh": 110.98035912516335,
+        "config": {
+          "elo0": 0,
+          "elo1": 30,
+          "alpha": 0.05,
+          "beta": 0.05,
+          "minPairs": 30,
+          "maxPairs": 600
+        }
+      }
+    },
+    {
+      "id": "C-D-300",
+      "scope": "observed",
+      "originalStopPair": 519,
+      "excludedPairs": [
+        {
+          "pair": 436,
+          "key": "1464311824658509:1396476306",
+          "score": 1
+        },
+        {
+          "pair": 492,
+          "key": "2459531624619449:2345594769",
+          "score": 0.5
+        }
+      ],
+      "result": {
+        "status": "continue",
+        "pairs": 495,
+        "counts": {
+          "ll": 74,
+          "split": 314,
+          "ww": 107
+        },
+        "llr": 2.7654810119397233,
+        "llrNormal": 2.7856567003930595,
+        "lower": -2.9444389791664403,
+        "upper": 2.9444389791664403,
+        "score": 0.5333333333333333,
+        "scoreLow": 0.5068339491160009,
+        "scoreHigh": 0.5598327175506658,
+        "elo": 23.196778791074703,
+        "eloLow": 4.749009962965363,
+        "eloHigh": 41.77620694789052,
+        "config": {
+          "elo0": 0,
+          "elo1": 30,
+          "alpha": 0.05,
+          "beta": 0.05,
+          "minPairs": 30,
+          "maxPairs": 600
+        }
+      }
+    },
+    {
+      "id": "C-D-300",
+      "scope": "full scheduled",
+      "originalStopPair": 519,
+      "excludedPairs": [
+        {
+          "pair": 40,
+          "key": "1040117250541946:991935476",
+          "score": 0.5
+        },
+        {
+          "pair": 93,
+          "key": "1781310997662041:1698790955",
+          "score": 0.5
+        },
+        {
+          "pair": 267,
+          "key": "1857716035326908:1771656522",
+          "score": 0.5
+        },
+        {
+          "pair": 309,
+          "key": "181567081145931:173155316",
+          "score": 0
+        },
+        {
+          "pair": 319,
+          "key": "4353352325095378:4151678650",
+          "score": 0.5
+        },
+        {
+          "pair": 428,
+          "key": "2484962490884470:2369846831",
+          "score": 1
+        },
+        {
+          "pair": 436,
+          "key": "1464311824658509:1396476306",
+          "score": 1
+        },
+        {
+          "pair": 492,
+          "key": "2459531624619449:2345594769",
+          "score": 0.5
+        }
+      ],
+      "result": {
+        "status": "accept-H1",
+        "pairs": 359,
+        "counts": {
+          "ll": 50,
+          "split": 231,
+          "ww": 78
+        },
+        "llr": 3.053475150652579,
+        "llrNormal": 3.0817323174635325,
+        "lower": -2.9444389791664403,
+        "upper": 2.9444389791664403,
+        "score": 0.5389972144846796,
+        "scoreLow": 0.5083354200782582,
+        "scoreHigh": 0.5696590088911011,
+        "elo": 27.153188497277053,
+        "eloLow": 5.792579769334585,
+        "eloHigh": 48.72090167687193,
+        "config": {
+          "elo0": 0,
+          "elo1": 30,
+          "alpha": 0.05,
+          "beta": 0.05,
+          "minPairs": 30,
+          "maxPairs": 600
+        }
+      }
+    }
+  ],
+  "inputSha256": {
+    "bench/results/stage3d/stage3d/P-D-300/config.json": "d7f5fd6e16ae5c6b6eaf6f5a6eda76c866c7ebddb3fa8b33bc95218b9845c07f",
+    "bench/results/stage3d/stage3d/P-D-300/games.s0of4.jsonl": "28993572479159070be399690ce53320c1da08c58ab2ffde3ef0f3661be34ab2",
+    "bench/results/stage3d/stage3d/P-D-300/games.s1of4.jsonl": "1b05a93c4c776bcda00276ab0bcec698dc44a7d8781338b421908076fbbd520d",
+    "bench/results/stage3d/stage3d/P-D-300/games.s2of4.jsonl": "01c328f61926b9ff8d0c2e777998c86f386337a3e34108e0455f5d0492c1153c",
+    "bench/results/stage3d/stage3d/P-D-300/games.s3of4.jsonl": "4b8b165f29a75b59ee3d9fb88ca7582c99ddeb3c8678c5d538e798f82bb0609b",
+    "bench/results/stage3d/stage3d/P-D-300/sessions.jsonl": "cc501919052ee71402145bd0fe8b62827e4c632ce280e3ef8b6eda6403fd1f08",
+    "bench/results/stage3d/stage3d/P-D-300/summary.json": "d195b29778400dcf4cceeea797cab27f940a865f0c41f50bf88ee2fc125b54ca",
+    "bench/results/stage3d/stage3d/T-D-300/config.json": "918a71b9b17f43389044c26c1b95422ff6d7f9d05c35d04f205c2e00a7522ae9",
+    "bench/results/stage3d/stage3d/T-D-300/games.s0of4.jsonl": "b853d8f19c5de38acf1d8e9674eed002049eaea8d29d8d39f6b12aeb36ec56e6",
+    "bench/results/stage3d/stage3d/T-D-300/games.s1of4.jsonl": "a9742c65ec368aaeb8dd0e6fdbb57d2835074911551dab1a721d3d6a8a3bbd6d",
+    "bench/results/stage3d/stage3d/T-D-300/games.s2of4.jsonl": "c3af82c0b818d82c5c11cc697eac56b37ce6347f0fcc8f77d6fc4152afcb3634",
+    "bench/results/stage3d/stage3d/T-D-300/games.s3of4.jsonl": "c1097a78d468de371bc465ba62664a8d9a5c3db5f0feac471e742c4158cb804b",
+    "bench/results/stage3d/stage3d/T-D-300/sessions.jsonl": "dc188ef8400fdc1b65f9ed2911c2a34dba53f639ab505459eeca3a97b4364c7d",
+    "bench/results/stage3d/stage3d/T-D-300/summary.json": "ad0fbd111a2a8f62674fc7d698998719708f7b47c14cba96eb40f610ba79f0ec",
+    "bench/results/stage3d/stage3d/C-D-300/config.json": "7a3e552fe12a6f258b0f34bc93739a37c7acb749ef7e4012cc6892a22f842aed",
+    "bench/results/stage3d/stage3d/C-D-300/games.s0of4.jsonl": "15302ae33742e9f627bd6f34f4a07f45235c1236f10ea500e7e6c2684aa21dcb",
+    "bench/results/stage3d/stage3d/C-D-300/games.s1of4.jsonl": "195b26075576e86616e7523a6acfd7cfd9ad450a2d99ef01445af299604d5c30",
+    "bench/results/stage3d/stage3d/C-D-300/games.s2of4.jsonl": "846f15dbd34bad88c20b78d9d36b8dc99ccc46fbdb0809c14aeacf36b42f9426",
+    "bench/results/stage3d/stage3d/C-D-300/games.s3of4.jsonl": "0e8ccfa45f566e760ec94ad22c91d3fae3f6a3782b5b65dbe7c334e38b32ec6e",
+    "bench/results/stage3d/stage3d/C-D-300/sessions.jsonl": "a445b0c3b6990db697c020de7f33551f4162197f2463a9276c5750071dcec660",
+    "bench/results/stage3d/stage3d/C-D-300/summary.json": "70a836997c9679bdb0e4919d660cee2b2e2947a74e3983a2c55dfd16b009f84b",
+    "bench/openings/ledger-1ef90bb0.txt": "afb6695e913c4d63ed108614546fb9bf0bc31a171c736f930c4133ab4ab3cc20"
+  }
+}

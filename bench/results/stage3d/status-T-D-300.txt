@@ -1,0 +1,2 @@
+accept-H1
+H1 accepted — promote · LLR 3.01 in [-2.94, 2.94] · 91 pairs (LL 9 / split 56 / WW 26) · pair score 0.593 (95% CI 0.532–0.654) · Elo +66 (+22 … +111) · H0: Elo=0 vs H1: Elo=30, α=0.05, β=0.05
