@@ -52,7 +52,7 @@ if (-not (Test-Path "$out/profile-done.txt")) {
     npx vitest run --config vitest.bench.config.ts bench/eval-profile.bench.test.ts *> "$out/profile-$k.log"
     $code = $LASTEXITCODE
     Remove-Item Env:PER_PHASE, Env:DEPTH, Env:KERNEL
-    Log "profile $k: exit $code (power $((Get-CimInstance Win32_Battery).BatteryStatus))"
+    Log "profile ${k}: exit $code (power $((Get-CimInstance Win32_Battery).BatteryStatus))"
   }
   Set-Content "$out/profile-done.txt" (Get-Date -Format s)
 }
