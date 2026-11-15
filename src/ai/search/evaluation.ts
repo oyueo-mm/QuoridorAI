@@ -351,7 +351,9 @@ export function vulnerabilityFast(state: GameState, player: PlayerId): number {
 }
 
 export type VulnerabilityKernel = 'reference' | 'fast';
-let vulnerabilityKernel: VulnerabilityKernel = 'reference';
+/** Adopted after the single disjoint Stage 3-D confirmation; reference stays available. */
+export const DEFAULT_VULNERABILITY_KERNEL: VulnerabilityKernel = 'fast';
+let vulnerabilityKernel: VulnerabilityKernel = DEFAULT_VULNERABILITY_KERNEL;
 
 export function setVulnerabilityKernel(k: VulnerabilityKernel): void {
   vulnerabilityKernel = k;

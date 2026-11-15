@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-15",
+  "branch": "stage1-benchmark",
+  "unitTests": {
+    "command": "npm test -- --maxWorkers=2",
+    "filesPassed": 50,
+    "testsPassed": 519,
+    "testsSkipped": 1
+  },
+  "typecheck": {
+    "command": "npx tsc -b",
+    "exitCode": 0
+  },
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "note": "Existing >500KB chunk warning remains on the research branch."
+  },
+  "offlineAudit": {
+    "command": "npx vitest run --config vitest.bench.config.ts bench/stage3d-independent-final.test.ts",
+    "passed": true,
+    "startsGames": false
+  },
+  "preservation": {
+    "userDirtyFilesUnchanged": 102,
+    "priorResultFilesChecked": 641,
+    "intentionalUpdatedHandoff": "bench/results/stage3d/STATUS.md",
+    "newFrozenInputsUnchanged": 35,
+    "mainCommitUnchanged": "551dd405101cbebfc7bb1b6f3751829429c8e96a",
+    "trainingModified": false,
+    "deployed": false,
+    "stage3eImplemented": false
+  }
+}

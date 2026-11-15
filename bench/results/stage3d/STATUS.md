@@ -1,8 +1,18 @@
 # Stage 3-D run status (E6 evaluation optimisation)
 
-Updated 2026-11-15 after the completed pipeline and final offline audit.
+Updated 2026-11-15 after the single replacement independent confirmation and closeout.
 
-## Final audit: adoption HOLD
+## Final: fast adopted
+
+- `C-D-300-independent-1`, seed 98004, preregistered in `d53d052` before games: **accept-H1** at 224 valid pairs / 448 games, pair score 0.546875 [0.509404, 0.584346], Elo +32.668 [6.535, 59.175], LLR 2.959744 > 2.944439.
+- Four-symmetry/exact identity preflight: 600 unique planned pairs, zero overlap with 40 prior experiments / 10,023 registered positions and all legacy ledgers. Actual games match the frozen plan and its checksum.
+- 513 raw games, all AC; 0 suspect attempts, 0 retries. The decision excludes 27 halted pairs. Extra shard results are retained separately from the original stopping decision.
+- Fast is now the module/default Minimax evaluation kernel. `evalKernel: 'reference'` remains the comparison/rollback option. E6 mathematics and C1 search are unchanged.
+- Full tests: 519 passed / 1 skipped; type check and production build passed. No new performance benchmark or extra confirmation was run.
+- [Latest report](../../../docs/stage3d-independent-report.md), [final offline audit](../stage3d-independent/final-audit.json), [pair scores](../stage3d-independent/pair-scores.csv).
+- Main/SEO/training and pre-existing dirty files preserved. No 3-E implementation. **Do not restart completed experiments.**
+
+## Historical initial audit: adoption HOLD (superseded above)
 
 - The pipeline completed at 16:02:12 KST. **Do not restart the completed benchmarks.**
 - Original T-D-300: accept-H1, 91 valid pairs, LLR 3.014909, +65.68 Elo [22.49, 110.98].

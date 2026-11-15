@@ -1,7 +1,7 @@
 import { applyActionUnchecked, formatAction } from '../engine';
 import type { GameState } from '../engine';
 import { assertCanDecide } from './common';
-import { ALPHA_BETA_EVAL, createDistanceEvaluator, isDecisive, pathsOf, pliesToResult } from './search/evaluation';
+import { ALPHA_BETA_EVAL, DEFAULT_VULNERABILITY_KERNEL, createDistanceEvaluator, isDecisive, pathsOf, pliesToResult } from './search/evaluation';
 import { runSearch } from './search/minimax';
 import { TranspositionTable } from './search/transposition';
 import type { Evaluator } from './search/evaluation';
@@ -16,6 +16,9 @@ export const DEFAULT_MINIMAX_SETTINGS: MinimaxSettings = {
   transpositionTable: true,
   wallFilter: 'opponent-path',
   evaluation: { ...ALPHA_BETA_EVAL },
+  // Stage 3-D independent confirmation: exact E6 values, lower computation cost.
+  // Override with evalKernel: 'reference' for comparison or rollback.
+  evalKernel: DEFAULT_VULNERABILITY_KERNEL,
   // Stage 3-C package C1 (docs/stage3c-search-report.md): same fixed-depth root score as the
   // original search; at 300 ms it beat it in two SPRTs on independent openings (+29 Elo, mixed
   // power; +58 Elo (+19 … +100), AC power).

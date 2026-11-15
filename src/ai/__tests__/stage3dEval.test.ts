@@ -21,8 +21,8 @@ import {
 } from '../../engine';
 import type { GameState, Orientation, PlayerId } from '../../engine';
 import { createRng } from '../rng';
-import { DEFAULT_MINIMAX_SETTINGS, ORIGINAL_SEARCH } from '../minimaxAgent';
-import { ALPHA_BETA_EVAL, createDistanceEvaluator, vulnerability, vulnerabilityFast, vulnerabilityReference, withVulnerabilityKernel } from '../search/evaluation';
+import { DEFAULT_MINIMAX_SETTINGS, ORIGINAL_SEARCH, resolveMinimaxSettings } from '../minimaxAgent';
+import { ALPHA_BETA_EVAL, DEFAULT_VULNERABILITY_KERNEL, createDistanceEvaluator, vulnerability, vulnerabilityFast, vulnerabilityReference, withVulnerabilityKernel } from '../search/evaluation';
 import { runSearch } from '../search/minimax';
 
 /** Positions from biased random play (many walls) after mixed openings; non-terminal. */
@@ -51,6 +51,19 @@ function withPawn(s: GameState, p: PlayerId, row: number, col: number): GameStat
 }
 
 describe('stage 3-D: exact E6 evaluation optimizations', () => {
+  it('uses the adopted fast default while an explicit reference rollback keeps the same search result', () => {
+    expect(DEFAULT_VULNERABILITY_KERNEL).toBe('fast');
+    const current = resolveMinimaxSettings({ maxDepth: 3, timeLimitMs: 0 });
+    const rollback = resolveMinimaxSettings({ maxDepth: 3, timeLimitMs: 0, evalKernel: 'reference' });
+    expect(current.evalKernel).toBe('fast');
+    expect(rollback.evalKernel).toBe('reference');
+    const a = runSearch(POS[40], current, createDistanceEvaluator(ALPHA_BETA_EVAL));
+    const b = runSearch(POS[40], rollback, createDistanceEvaluator(ALPHA_BETA_EVAL));
+    expect(a.score).toBe(b.score);
+    expect(a.bestAction).toEqual(b.bestAction);
+    expect(a.pv).toEqual(b.pv);
+    expect(a.stats.nodes).toBe(b.stats.nodes);
+  });
   it('shortestPathCells returns the path of shortestPathMasked / shortestPath (same tie-breaking)', () => {
     for (const s of POS) {
       for (const p of [0, 1] as const) {
