@@ -1,0 +1,5 @@
+# Project-level copy; crawlers use https://oyueo-mm.github.io/robots.txt.
+User-agent: *
+Allow: /
+
+Sitemap: https://oyueo-mm.github.io/QuoridorAI/sitemap.xml

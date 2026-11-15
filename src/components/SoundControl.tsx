@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
-import { soundEngine } from '../audio/sound';
+import { DEFAULT_SOUND_SETTINGS, soundEngine } from '../audio/sound';
 import type { ArenaSoundMode } from '../audio/sound';
 import { Segmented, buttonClass, cardClass } from './ui';
 
@@ -14,7 +14,7 @@ const ARENA_OPTIONS: readonly { value: ArenaSoundMode; label: string; title: str
  * The popover is absolutely positioned, so opening it never moves the page.
  */
 export function SoundControl() {
-  const settings = useSyncExternalStore(soundEngine.subscribe, soundEngine.getSettings);
+  const settings = useSyncExternalStore(soundEngine.subscribe, soundEngine.getSettings, () => DEFAULT_SOUND_SETTINGS);
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const silent = settings.muted || settings.volume === 0;

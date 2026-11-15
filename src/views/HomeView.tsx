@@ -8,17 +8,17 @@ import type { GameMode } from '../session/config';
 export function HomeView({ onOpen, onOpenMode, onOpenVariants }: { onOpen: (id: SectionId) => void; onOpenMode: (mode: GameMode) => void; onOpenVariants: () => void }) {
   return (
     <main className="mx-auto max-w-[1080px] px-4 pt-10 pb-16 sm:px-6 sm:pt-16">
-      <section className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:gap-14">
+      <section aria-labelledby="home-title" className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:gap-14">
         <div className="lg:-translate-y-16 xl:-translate-x-10">
           <p className="text-base font-medium tracking-wide text-muted md:text-[21px]">쿼리도 인공지능</p>
-          <h1 className="mt-2 text-5xl font-semibold tracking-tight text-ink sm:text-6xl md:text-[70px] md:leading-none">QuoridorAI</h1>
+          <h1 id="home-title" className="mt-2 text-5xl font-semibold tracking-tight text-ink sm:text-6xl md:text-[70px] md:leading-none">QuoridorAI</h1>
           <div className="mt-8 flex flex-wrap gap-2">
-            <button type="button" onClick={() => onOpen('play')} className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-card transition-colors hover:bg-accent-strong">
+            <a href="#/play" onClick={() => onOpen('play')} className="rounded-xl bg-accent px-5 py-2.5 text-sm font-medium text-card transition-colors hover:bg-accent-strong">
               바로 플레이
-            </button>
-            <button type="button" onClick={() => onOpen('arena')} className="rounded-xl border border-line bg-card px-5 py-2.5 text-sm text-ink-soft transition-colors hover:border-line-strong hover:bg-inset">
+            </a>
+            <a href="#/arena" onClick={() => onOpen('arena')} className="rounded-xl border border-line bg-card px-5 py-2.5 text-sm text-ink-soft transition-colors hover:border-line-strong hover:bg-inset">
               AI 대국 관전
-            </button>
+            </a>
           </div>
         </div>
         <HomeBoard />
@@ -50,9 +50,9 @@ export function HomeView({ onOpen, onOpenMode, onOpenVariants }: { onOpen: (id: 
 
       <section className="mt-6 grid gap-4 sm:grid-cols-2" aria-label="시작하기">
         {SECTIONS.map((s, i) => (
-          <button
+          <a
             key={s.id}
-            type="button"
+            href={`#/${s.id}`}
             onClick={() => onOpen(s.id)}
             className="group flex min-h-40 flex-col justify-between rounded-2xl border border-line-soft bg-card p-6 text-left shadow-[var(--shadow-soft)] transition-colors hover:border-line"
           >
@@ -65,7 +65,7 @@ export function HomeView({ onOpen, onOpenMode, onOpenVariants }: { onOpen: (id: 
             </div>
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">{s.description}</p>
             <span className="mt-4 text-sm text-accent transition-transform group-hover:translate-x-0.5">열기 →</span>
-          </button>
+          </a>
         ))}
       </section>
 

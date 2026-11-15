@@ -30,7 +30,7 @@ export function HomeBoard() {
   const [fading, setFading] = useState(false);
   const [reduced, setReduced] = useState(false);
   const [onScreen, setOnScreen] = useState(true);
-  const [pageVisible, setPageVisible] = useState(() => !document.hidden);
+  const [pageVisible, setPageVisible] = useState(() => typeof document === 'undefined' || !document.hidden);
 
   useEffect(() => subscribeReducedMotion(setReduced), []);
   useEffect(() => {

@@ -1,26 +1,28 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 import type { GameLine } from './match/gameRecord';
-import { SoundControl } from './components/SoundControl';
+import { SiteHeader } from './components/SiteHeader';
 import { modeOfConfig } from './session/config';
 import type { GameConfig, GameMode } from './session/config';
 import type { MultiRules } from './engine';
 import type { MultiConfig } from './session/MultiController';
 import { useGameSession } from './session/useGameSession';
 import { useMultiSession } from './session/useMultiSession';
-import { ArenaView } from './views/ArenaView';
-import { CompareView } from './views/CompareView';
 import type { ArenaIncoming } from './views/ArenaView';
 import type { CompareSource } from './views/CompareView';
-import { ExperimentsView } from './views/ExperimentsView';
-import { MultiPlayView } from './views/MultiPlayView';
 import { HomeView } from './views/HomeView';
-import { ModeBrowserView } from './views/ModeBrowserView';
 import type { RunningGame } from './views/ModeBrowserView';
 import type { PlaySetupApi } from './views/playSetup';
-import { PlayView } from './views/PlayView';
 import { SECTIONS } from './sections';
 import type { SectionId } from './sections';
+
+const ArenaView = lazy(() => import('./views/ArenaView').then((module) => ({ default: module.ArenaView })));
+const CompareView = lazy(() => import('./views/CompareView').then((module) => ({ default: module.CompareView })));
+const ExperimentsView = lazy(() => import('./views/ExperimentsView').then((module) => ({ default: module.ExperimentsView })));
+const MultiPlayView = lazy(() => import('./views/MultiPlayView').then((module) => ({ default: module.MultiPlayView })));
+const ModeBrowserView = lazy(() => import('./views/ModeBrowserView').then((module) => ({ default: module.ModeBrowserView })));
+const PlayView = lazy(() => import('./views/PlayView').then((module) => ({ default: module.PlayView })));
 
 type RouteId = 'home' | SectionId;
 
@@ -123,68 +125,50 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-paper text-ink">
-      <header className="sticky top-0 z-20 border-b border-line-soft bg-paper/90 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-[1280px] items-center justify-between gap-4 px-4 sm:px-6">
-          <button type="button" onClick={() => go('home')} className="flex items-center gap-2 text-ink" aria-label="홈으로">
-            <Logo />
-            <span className="hidden text-[15px] font-semibold tracking-tight sm:inline">QuoridorAI</span>
-          </button>
-          <div className="flex min-w-0 items-center gap-1">
-            <nav className="flex gap-0.5 overflow-x-auto" aria-label="보기 선택">
-              {SECTIONS.map((t) => (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => go(t.id)}
-                  title={t.hint}
-                  aria-current={route === t.id ? 'page' : undefined}
-                  className={`rounded-lg px-1.5 py-1.5 text-[13px] whitespace-nowrap transition-colors sm:px-3 sm:text-sm ${
-                    route === t.id ? 'bg-inset font-medium text-ink' : 'text-muted hover:text-ink'
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </nav>
-            <SoundControl />
-          </div>
-        </div>
-      </header>
+      <SiteHeader route={route} go={go} />
 
       <div hidden={route !== 'home'}>
         <HomeView onOpen={go} onOpenMode={openMode} onOpenVariants={openVariants} />
       </div>
       <div hidden={route !== 'play' || multiActive || !!browser}>
-        <PlayView session={session} setup={playSetup} onChangeMode={() => openBrowser()} onCompare={sendToCompare} onArena={sendToArena} />
+        <DeferredView active={route === 'play' && !multiActive && !browser}>
+          <PlayView session={session} setup={playSetup} onChangeMode={() => openBrowser()} onCompare={sendToCompare} onArena={sendToArena} />
+        </DeferredView>
       </div>
       <div hidden={route !== 'play' || !multiActive || !!browser}>
-        <MultiPlayView session={multi} onChangeMode={() => openBrowser()} />
+        <DeferredView active={route === 'play' && multiActive && !browser}>
+          <MultiPlayView session={multi} onChangeMode={() => openBrowser()} />
+        </DeferredView>
       </div>
       {browser && (
         <div hidden={route !== 'play'}>
-          <ModeBrowserView key={browser.at} setup={playSetup} initialMode={browser.mode} running={running} onClose={() => setBrowser(null)} />
+          <Suspense fallback={null}>
+            <ModeBrowserView key={browser.at} setup={playSetup} initialMode={browser.mode} running={running} onClose={() => setBrowser(null)} />
+          </Suspense>
         </div>
       )}
       <div hidden={route !== 'arena'}>
-        <ArenaView onCompare={sendToCompare} incoming={arenaIncoming} />
+        <DeferredView active={route === 'arena'}>
+          <ArenaView onCompare={sendToCompare} incoming={arenaIncoming} />
+        </DeferredView>
       </div>
       <div hidden={route !== 'compare'}>
-        <CompareView source={compareSource} playLine={playLine} onArena={sendToArena} />
+        <DeferredView active={route === 'compare'}>
+          <CompareView source={compareSource} playLine={playLine} onArena={sendToArena} />
+        </DeferredView>
       </div>
       <div hidden={route !== 'experiments'}>
-        <ExperimentsView />
+        <DeferredView active={route === 'experiments'}>
+          <ExperimentsView />
+        </DeferredView>
       </div>
     </div>
   );
 }
 
-function Logo() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-6 w-6" aria-hidden>
-      <rect x="1" y="1" width="22" height="22" rx="6" fill="#e7dccb" />
-      <rect x="5" y="11" width="14" height="2.4" rx="1.2" fill="#8a6a4b" />
-      <circle cx="12" cy="6.8" r="2.6" fill="#ad5646" />
-      <circle cx="12" cy="17.2" r="2.6" fill="#3c6a8a" />
-    </svg>
-  );
+/** Once visited, keep the view mounted even while its wrapper is hidden. */
+function DeferredView({ active, children }: { active: boolean; children: ReactNode }) {
+  const visited = useRef(false);
+  if (active) visited.current = true;
+  return visited.current ? <Suspense fallback={null}>{children}</Suspense> : null;
 }
