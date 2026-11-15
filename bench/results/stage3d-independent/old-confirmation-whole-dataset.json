@@ -1,0 +1,6921 @@
+{
+  "interpretation": "Descriptive full available complete pairs, including games after prefix gaps. Not a resumed SPRT or an inferential decision. Original raw records unchanged.",
+  "rows": [
+    {
+      "pair": 0,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 1,
+      "counts": [
+        0,
+        0,
+        1
+      ],
+      "allAvailableLlr": 0.08262385484497214,
+      "prefixValidPairs": 1,
+      "prefixLlr": 0.08262385484497214
+    },
+    {
+      "pair": 1,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 2,
+      "counts": [
+        1,
+        0,
+        1
+      ],
+      "allAvailableLlr": -0.007446545934434112,
+      "prefixValidPairs": 2,
+      "prefixLlr": -0.007446545934434112
+    },
+    {
+      "pair": 2,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 3,
+      "counts": [
+        1,
+        1,
+        1
+      ],
+      "allAvailableLlr": -0.01673928983855907,
+      "prefixValidPairs": 3,
+      "prefixLlr": -0.01673928983855913
+    },
+    {
+      "pair": 3,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 4,
+      "counts": [
+        1,
+        2,
+        1
+      ],
+      "allAvailableLlr": -0.029677692971677508,
+      "prefixValidPairs": 4,
+      "prefixLlr": -0.029677692971677716
+    },
+    {
+      "pair": 4,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 5,
+      "counts": [
+        1,
+        3,
+        1
+      ],
+      "allAvailableLlr": -0.04616571893170174,
+      "prefixValidPairs": 5,
+      "prefixLlr": -0.04616571893170174
+    },
+    {
+      "pair": 5,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 6,
+      "counts": [
+        2,
+        3,
+        1
+      ],
+      "allAvailableLlr": -0.21371299423341286,
+      "prefixValidPairs": 6,
+      "prefixLlr": -0.2137129942334129
+    },
+    {
+      "pair": 6,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 7,
+      "counts": [
+        2,
+        3,
+        2
+      ],
+      "allAvailableLlr": -0.04551603423729465,
+      "prefixValidPairs": 7,
+      "prefixLlr": -0.04551603423729467
+    },
+    {
+      "pair": 7,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 8,
+      "counts": [
+        2,
+        4,
+        2
+      ],
+      "allAvailableLlr": -0.0593553886012812,
+      "prefixValidPairs": 8,
+      "prefixLlr": -0.0593553886012812
+    },
+    {
+      "pair": 8,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 9,
+      "counts": [
+        2,
+        4,
+        3
+      ],
+      "allAvailableLlr": 0.09552925436810852,
+      "prefixValidPairs": 9,
+      "prefixLlr": 0.09552925436810855
+    },
+    {
+      "pair": 9,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 10,
+      "counts": [
+        3,
+        4,
+        3
+      ],
+      "allAvailableLlr": -0.061953241481365974,
+      "prefixValidPairs": 10,
+      "prefixLlr": -0.06195324148136616
+    },
+    {
+      "pair": 10,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 11,
+      "counts": [
+        4,
+        4,
+        3
+      ],
+      "allAvailableLlr": -0.19910461653563244,
+      "prefixValidPairs": 11,
+      "prefixLlr": -0.19910461653563238
+    },
+    {
+      "pair": 11,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 12,
+      "counts": [
+        5,
+        4,
+        3
+      ],
+      "allAvailableLlr": -0.32403146565771984,
+      "prefixValidPairs": 12,
+      "prefixLlr": -0.32403146565771973
+    },
+    {
+      "pair": 12,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 13,
+      "counts": [
+        5,
+        5,
+        3
+      ],
+      "allAvailableLlr": -0.35641759889433955,
+      "prefixValidPairs": 13,
+      "prefixLlr": -0.3564175988943384
+    },
+    {
+      "pair": 13,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 14,
+      "counts": [
+        5,
+        6,
+        3
+      ],
+      "allAvailableLlr": -0.3895797001691738,
+      "prefixValidPairs": 14,
+      "prefixLlr": -0.38957970016917365
+    },
+    {
+      "pair": 14,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 15,
+      "counts": [
+        5,
+        6,
+        4
+      ],
+      "allAvailableLlr": -0.23585424188637044,
+      "prefixValidPairs": 15,
+      "prefixLlr": -0.23585424188637072
+    },
+    {
+      "pair": 15,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 16,
+      "counts": [
+        5,
+        7,
+        4
+      ],
+      "allAvailableLlr": -0.2578906003378836,
+      "prefixValidPairs": 16,
+      "prefixLlr": -0.2578906003378836
+    },
+    {
+      "pair": 16,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 17,
+      "counts": [
+        5,
+        7,
+        5
+      ],
+      "allAvailableLlr": -0.10740906023305184,
+      "prefixValidPairs": 17,
+      "prefixLlr": -0.10740906023305163
+    },
+    {
+      "pair": 17,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 18,
+      "counts": [
+        5,
+        8,
+        5
+      ],
+      "allAvailableLlr": -0.12035133486233417,
+      "prefixValidPairs": 18,
+      "prefixLlr": -0.12035133486233318
+    },
+    {
+      "pair": 18,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 19,
+      "counts": [
+        5,
+        9,
+        5
+      ],
+      "allAvailableLlr": -0.1340125159970189,
+      "prefixValidPairs": 19,
+      "prefixLlr": -0.13401251599701824
+    },
+    {
+      "pair": 19,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 20,
+      "counts": [
+        5,
+        10,
+        5
+      ],
+      "allAvailableLlr": -0.14838847336599761,
+      "prefixValidPairs": 20,
+      "prefixLlr": -0.1483884733659976
+    },
+    {
+      "pair": 20,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 21,
+      "counts": [
+        5,
+        11,
+        5
+      ],
+      "allAvailableLlr": -0.16347482892182905,
+      "prefixValidPairs": 21,
+      "prefixLlr": -0.1634748289218283
+    },
+    {
+      "pair": 21,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 22,
+      "counts": [
+        5,
+        12,
+        5
+      ],
+      "allAvailableLlr": -0.179266967893845,
+      "prefixValidPairs": 22,
+      "prefixLlr": -0.1792669678938449
+    },
+    {
+      "pair": 22,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 23,
+      "counts": [
+        5,
+        12,
+        6
+      ],
+      "allAvailableLlr": 0.001498834180479247,
+      "prefixValidPairs": 23,
+      "prefixLlr": 0.0014988341804800243
+    },
+    {
+      "pair": 23,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 24,
+      "counts": [
+        5,
+        13,
+        6
+      ],
+      "allAvailableLlr": -0.006542306485156565,
+      "prefixValidPairs": 24,
+      "prefixLlr": -0.006542306485156635
+    },
+    {
+      "pair": 24,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 25,
+      "counts": [
+        5,
+        14,
+        6
+      ],
+      "allAvailableLlr": -0.015249259111772717,
+      "prefixValidPairs": 25,
+      "prefixLlr": -0.015249259111772773
+    },
+    {
+      "pair": 25,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 26,
+      "counts": [
+        6,
+        14,
+        6
+      ],
+      "allAvailableLlr": -0.20870975477226333,
+      "prefixValidPairs": 26,
+      "prefixLlr": -0.2087097547722625
+    },
+    {
+      "pair": 26,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 27,
+      "counts": [
+        6,
+        15,
+        6
+      ],
+      "allAvailableLlr": -0.22491144282102057,
+      "prefixValidPairs": 27,
+      "prefixLlr": -0.2249114428210206
+    },
+    {
+      "pair": 27,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 28,
+      "counts": [
+        6,
+        15,
+        7
+      ],
+      "allAvailableLlr": -0.03850127988292337,
+      "prefixValidPairs": 28,
+      "prefixLlr": -0.0385012798829234
+    },
+    {
+      "pair": 28,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 29,
+      "counts": [
+        6,
+        16,
+        7
+      ],
+      "allAvailableLlr": -0.04814022007521329,
+      "prefixValidPairs": 29,
+      "prefixLlr": -0.048140220075213236
+    },
+    {
+      "pair": 29,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 30,
+      "counts": [
+        6,
+        16,
+        8
+      ],
+      "allAvailableLlr": 0.13103104707387786,
+      "prefixValidPairs": 30,
+      "prefixLlr": 0.13103104707387736
+    },
+    {
+      "pair": 30,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 31,
+      "counts": [
+        6,
+        17,
+        8
+      ],
+      "allAvailableLlr": 0.12713561385711092,
+      "prefixValidPairs": 31,
+      "prefixLlr": 0.12713561385711092
+    },
+    {
+      "pair": 31,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 32,
+      "counts": [
+        6,
+        18,
+        8
+      ],
+      "allAvailableLlr": 0.12270811603816881,
+      "prefixValidPairs": 32,
+      "prefixLlr": 0.12270811603816845
+    },
+    {
+      "pair": 32,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 33,
+      "counts": [
+        6,
+        18,
+        9
+      ],
+      "allAvailableLlr": 0.30118974965298256,
+      "prefixValidPairs": 33,
+      "prefixLlr": 0.30118974965298184
+    },
+    {
+      "pair": 33,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 34,
+      "counts": [
+        6,
+        18,
+        10
+      ],
+      "allAvailableLlr": 0.4685525908414002,
+      "prefixValidPairs": 34,
+      "prefixLlr": 0.4685525908414021
+    },
+    {
+      "pair": 34,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 35,
+      "counts": [
+        7,
+        18,
+        10
+      ],
+      "allAvailableLlr": 0.2660907785184542,
+      "prefixValidPairs": 35,
+      "prefixLlr": 0.2660907785184543
+    },
+    {
+      "pair": 35,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 36,
+      "counts": [
+        7,
+        19,
+        10
+      ],
+      "allAvailableLlr": 0.2657938774607394,
+      "prefixValidPairs": 36,
+      "prefixLlr": 0.26579387746074046
+    },
+    {
+      "pair": 36,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 37,
+      "counts": [
+        7,
+        20,
+        10
+      ],
+      "allAvailableLlr": 0.2650541482750184,
+      "prefixValidPairs": 37,
+      "prefixLlr": 0.2650541482750184
+    },
+    {
+      "pair": 37,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 38,
+      "counts": [
+        8,
+        20,
+        10
+      ],
+      "allAvailableLlr": 0.06596361022247556,
+      "prefixValidPairs": 38,
+      "prefixLlr": 0.06596361022247565
+    },
+    {
+      "pair": 38,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 39,
+      "counts": [
+        8,
+        21,
+        10
+      ],
+      "allAvailableLlr": 0.05963075167892615,
+      "prefixValidPairs": 39,
+      "prefixLlr": 0.059630751678920735
+    },
+    {
+      "pair": 39,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 40,
+      "counts": [
+        8,
+        22,
+        10
+      ],
+      "allAvailableLlr": 0.05288771960433872,
+      "prefixValidPairs": 40,
+      "prefixLlr": 0.05288771960433869
+    },
+    {
+      "pair": 40,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 41,
+      "counts": [
+        8,
+        23,
+        10
+      ],
+      "allAvailableLlr": 0.04573534985332228,
+      "prefixValidPairs": 41,
+      "prefixLlr": 0.04573534985332217
+    },
+    {
+      "pair": 41,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 42,
+      "counts": [
+        8,
+        24,
+        10
+      ],
+      "allAvailableLlr": 0.03817452906022778,
+      "prefixValidPairs": 42,
+      "prefixLlr": 0.03817452906022778
+    },
+    {
+      "pair": 42,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 43,
+      "counts": [
+        8,
+        25,
+        10
+      ],
+      "allAvailableLlr": 0.0302061938081912,
+      "prefixValidPairs": 43,
+      "prefixLlr": 0.030206193808189674
+    },
+    {
+      "pair": 43,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 44,
+      "counts": [
+        8,
+        26,
+        10
+      ],
+      "allAvailableLlr": 0.02183132976409144,
+      "prefixValidPairs": 44,
+      "prefixLlr": 0.021831329764091523
+    },
+    {
+      "pair": 44,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 45,
+      "counts": [
+        9,
+        26,
+        10
+      ],
+      "allAvailableLlr": -0.19152984572852955,
+      "prefixValidPairs": 45,
+      "prefixLlr": -0.1915298457285286
+    },
+    {
+      "pair": 45,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 46,
+      "counts": [
+        9,
+        27,
+        10
+      ],
+      "allAvailableLlr": -0.20467021957102804,
+      "prefixValidPairs": 46,
+      "prefixLlr": -0.20467021957102816
+    },
+    {
+      "pair": 46,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 47,
+      "counts": [
+        9,
+        28,
+        10
+      ],
+      "allAvailableLlr": -0.21818457213048015,
+      "prefixValidPairs": 47,
+      "prefixLlr": -0.21818457213047893
+    },
+    {
+      "pair": 47,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 48,
+      "counts": [
+        9,
+        28,
+        11
+      ],
+      "allAvailableLlr": -0.0142955134067288,
+      "prefixValidPairs": 48,
+      "prefixLlr": -0.014295513406728855
+    },
+    {
+      "pair": 48,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 49,
+      "counts": [
+        10,
+        28,
+        11
+      ],
+      "allAvailableLlr": -0.22331571915901277,
+      "prefixValidPairs": 49,
+      "prefixLlr": -0.22331571915901272
+    },
+    {
+      "pair": 49,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 50,
+      "counts": [
+        10,
+        29,
+        11
+      ],
+      "allAvailableLlr": -0.23660699666351875,
+      "prefixValidPairs": 50,
+      "prefixLlr": -0.2366069966635207
+    },
+    {
+      "pair": 50,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 51,
+      "counts": [
+        10,
+        30,
+        11
+      ],
+      "allAvailableLlr": -0.2502366057504173,
+      "prefixValidPairs": 51,
+      "prefixLlr": -0.2502366057504175
+    },
+    {
+      "pair": 51,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 52,
+      "counts": [
+        10,
+        31,
+        11
+      ],
+      "allAvailableLlr": -0.26420351222143196,
+      "prefixValidPairs": 52,
+      "prefixLlr": -0.2642035122214321
+    },
+    {
+      "pair": 52,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 53,
+      "counts": [
+        10,
+        32,
+        11
+      ],
+      "allAvailableLlr": -0.27850665739321007,
+      "prefixValidPairs": 53,
+      "prefixLlr": -0.2785066573932098
+    },
+    {
+      "pair": 53,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 54,
+      "counts": [
+        10,
+        33,
+        11
+      ],
+      "allAvailableLlr": -0.29314495869027773,
+      "prefixValidPairs": 54,
+      "prefixLlr": -0.2931449586902777
+    },
+    {
+      "pair": 54,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 55,
+      "counts": [
+        10,
+        34,
+        11
+      ],
+      "allAvailableLlr": -0.30811731024352385,
+      "prefixValidPairs": 55,
+      "prefixLlr": -0.30811731024352396
+    },
+    {
+      "pair": 55,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 56,
+      "counts": [
+        10,
+        34,
+        12
+      ],
+      "allAvailableLlr": -0.09067420719946295,
+      "prefixValidPairs": 56,
+      "prefixLlr": -0.09067420719946329
+    },
+    {
+      "pair": 56,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 57,
+      "counts": [
+        10,
+        35,
+        12
+      ],
+      "allAvailableLlr": -0.10185247273919695,
+      "prefixValidPairs": 57,
+      "prefixLlr": -0.10185247273919718
+    },
+    {
+      "pair": 57,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 58,
+      "counts": [
+        10,
+        35,
+        13
+      ],
+      "allAvailableLlr": 0.10898249686834355,
+      "prefixValidPairs": 58,
+      "prefixLlr": 0.10898249686834349
+    },
+    {
+      "pair": 58,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 59,
+      "counts": [
+        10,
+        36,
+        13
+      ],
+      "allAvailableLlr": 0.10132235432869069,
+      "prefixValidPairs": 59,
+      "prefixLlr": 0.10132235432869052
+    },
+    {
+      "pair": 59,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 60,
+      "counts": [
+        10,
+        37,
+        13
+      ],
+      "allAvailableLlr": 0.0933439638026573,
+      "prefixValidPairs": 60,
+      "prefixLlr": 0.09334396380265497
+    },
+    {
+      "pair": 60,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 61,
+      "counts": [
+        10,
+        38,
+        13
+      ],
+      "allAvailableLlr": 0.08504797137076187,
+      "prefixValidPairs": 61,
+      "prefixLlr": 0.08504797137076192
+    },
+    {
+      "pair": 61,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 62,
+      "counts": [
+        10,
+        38,
+        14
+      ],
+      "allAvailableLlr": 0.29704180773359146,
+      "prefixValidPairs": 62,
+      "prefixLlr": 0.2970418077335917
+    },
+    {
+      "pair": 62,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 63,
+      "counts": [
+        10,
+        39,
+        14
+      ],
+      "allAvailableLlr": 0.29203309347826295,
+      "prefixValidPairs": 63,
+      "prefixLlr": 0.2920330934782629
+    },
+    {
+      "pair": 63,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 64,
+      "counts": [
+        10,
+        40,
+        14
+      ],
+      "allAvailableLlr": 0.28671550684388775,
+      "prefixValidPairs": 64,
+      "prefixLlr": 0.2867155068438878
+    },
+    {
+      "pair": 64,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 65,
+      "counts": [
+        10,
+        40,
+        15
+      ],
+      "allAvailableLlr": 0.49610543842588706,
+      "prefixValidPairs": 65,
+      "prefixLlr": 0.49610543842588717
+    },
+    {
+      "pair": 65,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 65,
+      "counts": [
+        10,
+        40,
+        15
+      ],
+      "allAvailableLlr": 0.49610543842588706,
+      "prefixValidPairs": 65,
+      "prefixLlr": 0.49610543842588717
+    },
+    {
+      "pair": 66,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 66,
+      "counts": [
+        10,
+        41,
+        15
+      ],
+      "allAvailableLlr": 0.4938615655989609,
+      "prefixValidPairs": 66,
+      "prefixLlr": 0.4938615655989622
+    },
+    {
+      "pair": 67,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 67,
+      "counts": [
+        11,
+        41,
+        15
+      ],
+      "allAvailableLlr": 0.24801200529341128,
+      "prefixValidPairs": 67,
+      "prefixLlr": 0.24801200529341072
+    },
+    {
+      "pair": 68,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 68,
+      "counts": [
+        11,
+        42,
+        15
+      ],
+      "allAvailableLlr": 0.2419625482136613,
+      "prefixValidPairs": 68,
+      "prefixLlr": 0.24196254821366114
+    },
+    {
+      "pair": 69,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 69,
+      "counts": [
+        11,
+        43,
+        15
+      ],
+      "allAvailableLlr": 0.23562935099957094,
+      "prefixValidPairs": 69,
+      "prefixLlr": 0.23562935099957105
+    },
+    {
+      "pair": 70,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 70,
+      "counts": [
+        11,
+        43,
+        16
+      ],
+      "allAvailableLlr": 0.4457523202526352,
+      "prefixValidPairs": 70,
+      "prefixLlr": 0.4457523202526352
+    },
+    {
+      "pair": 71,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 71,
+      "counts": [
+        12,
+        43,
+        16
+      ],
+      "allAvailableLlr": 0.20607733514306226,
+      "prefixValidPairs": 71,
+      "prefixLlr": 0.20607733514306226
+    },
+    {
+      "pair": 72,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 72,
+      "counts": [
+        12,
+        44,
+        16
+      ],
+      "allAvailableLlr": 0.1994020672518212,
+      "prefixValidPairs": 72,
+      "prefixLlr": 0.19940206725182108
+    },
+    {
+      "pair": 73,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 73,
+      "counts": [
+        13,
+        44,
+        16
+      ],
+      "allAvailableLlr": -0.031745366380777185,
+      "prefixValidPairs": 73,
+      "prefixLlr": -0.031745366380777185
+    },
+    {
+      "pair": 74,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 74,
+      "counts": [
+        13,
+        45,
+        16
+      ],
+      "allAvailableLlr": -0.041626013491526614,
+      "prefixValidPairs": 74,
+      "prefixLlr": -0.0416260134915265
+    },
+    {
+      "pair": 75,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 75,
+      "counts": [
+        13,
+        46,
+        16
+      ],
+      "allAvailableLlr": -0.051756119271921974,
+      "prefixValidPairs": 75,
+      "prefixLlr": -0.05175611927192003
+    },
+    {
+      "pair": 76,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 76,
+      "counts": [
+        14,
+        46,
+        16
+      ],
+      "allAvailableLlr": -0.277967467589874,
+      "prefixValidPairs": 76,
+      "prefixLlr": -0.2779674675898738
+    },
+    {
+      "pair": 77,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 77,
+      "counts": [
+        14,
+        46,
+        17
+      ],
+      "allAvailableLlr": -0.0682653955090401,
+      "prefixValidPairs": 77,
+      "prefixLlr": -0.06826539550903998
+    },
+    {
+      "pair": 78,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 78,
+      "counts": [
+        15,
+        46,
+        17
+      ],
+      "allAvailableLlr": -0.2857188190449643,
+      "prefixValidPairs": 78,
+      "prefixLlr": -0.28571881904496443
+    },
+    {
+      "pair": 79,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 79,
+      "counts": [
+        15,
+        47,
+        17
+      ],
+      "allAvailableLlr": -0.29845118413584826,
+      "prefixValidPairs": 79,
+      "prefixLlr": -0.29845118413584837
+    },
+    {
+      "pair": 80,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 80,
+      "counts": [
+        15,
+        48,
+        17
+      ],
+      "allAvailableLlr": -0.31140608645485623,
+      "prefixValidPairs": 80,
+      "prefixLlr": -0.3114060864548591
+    },
+    {
+      "pair": 81,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 81,
+      "counts": [
+        15,
+        49,
+        17
+      ],
+      "allAvailableLlr": -0.3245830888740734,
+      "prefixValidPairs": 81,
+      "prefixLlr": -0.3245830888740735
+    },
+    {
+      "pair": 82,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 82,
+      "counts": [
+        15,
+        50,
+        17
+      ],
+      "allAvailableLlr": -0.3379817472177711,
+      "prefixValidPairs": 82,
+      "prefixLlr": -0.33798174721777174
+    },
+    {
+      "pair": 83,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 83,
+      "counts": [
+        15,
+        51,
+        17
+      ],
+      "allAvailableLlr": -0.3516016103715327,
+      "prefixValidPairs": 83,
+      "prefixLlr": -0.3516016103715329
+    },
+    {
+      "pair": 84,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 84,
+      "counts": [
+        16,
+        51,
+        17
+      ],
+      "allAvailableLlr": -0.5723745299483421,
+      "prefixValidPairs": 84,
+      "prefixLlr": -0.572374529948342
+    },
+    {
+      "pair": 85,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 84,
+      "counts": [
+        16,
+        51,
+        17
+      ],
+      "allAvailableLlr": -0.5723745299483421,
+      "prefixValidPairs": 84,
+      "prefixLlr": -0.572374529948342
+    },
+    {
+      "pair": 86,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 85,
+      "counts": [
+        16,
+        52,
+        17
+      ],
+      "allAvailableLlr": -0.5885320435523539,
+      "prefixValidPairs": 85,
+      "prefixLlr": -0.588532043552354
+    },
+    {
+      "pair": 87,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 86,
+      "counts": [
+        16,
+        53,
+        17
+      ],
+      "allAvailableLlr": -0.6048998986186948,
+      "prefixValidPairs": 86,
+      "prefixLlr": -0.6048998986186951
+    },
+    {
+      "pair": 88,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 87,
+      "counts": [
+        16,
+        53,
+        18
+      ],
+      "allAvailableLlr": -0.384829951190652,
+      "prefixValidPairs": 87,
+      "prefixLlr": -0.38482995119065233
+    },
+    {
+      "pair": 89,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 88,
+      "counts": [
+        16,
+        54,
+        18
+      ],
+      "allAvailableLlr": -0.3987224697466789,
+      "prefixValidPairs": 88,
+      "prefixLlr": -0.39872246974668
+    },
+    {
+      "pair": 90,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 89,
+      "counts": [
+        16,
+        55,
+        18
+      ],
+      "allAvailableLlr": -0.4128223981592276,
+      "prefixValidPairs": 89,
+      "prefixLlr": -0.4128223981592276
+    },
+    {
+      "pair": 91,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 90,
+      "counts": [
+        16,
+        56,
+        18
+      ],
+      "allAvailableLlr": -0.4271293206273771,
+      "prefixValidPairs": 90,
+      "prefixLlr": -0.42712932062737696
+    },
+    {
+      "pair": 92,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 91,
+      "counts": [
+        16,
+        57,
+        18
+      ],
+      "allAvailableLlr": -0.4416428158993623,
+      "prefixValidPairs": 91,
+      "prefixLlr": -0.44164281589936216
+    },
+    {
+      "pair": 93,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 92,
+      "counts": [
+        16,
+        58,
+        18
+      ],
+      "allAvailableLlr": -0.4563624573604572,
+      "prefixValidPairs": 92,
+      "prefixLlr": -0.45636245736045744
+    },
+    {
+      "pair": 94,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 93,
+      "counts": [
+        16,
+        59,
+        18
+      ],
+      "allAvailableLlr": -0.47128781312127,
+      "prefixValidPairs": 93,
+      "prefixLlr": -0.4712878131212701
+    },
+    {
+      "pair": 95,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 94,
+      "counts": [
+        16,
+        59,
+        19
+      ],
+      "allAvailableLlr": -0.24274056202255012,
+      "prefixValidPairs": 94,
+      "prefixLlr": -0.2427405620225498
+    },
+    {
+      "pair": 96,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 95,
+      "counts": [
+        16,
+        60,
+        19
+      ],
+      "allAvailableLlr": -0.25529471263856596,
+      "prefixValidPairs": 95,
+      "prefixLlr": -0.25529471263856607
+    },
+    {
+      "pair": 97,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 96,
+      "counts": [
+        16,
+        60,
+        20
+      ],
+      "allAvailableLlr": -0.03142406621734206,
+      "prefixValidPairs": 96,
+      "prefixLlr": -0.03142406621734484
+    },
+    {
+      "pair": 98,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 97,
+      "counts": [
+        17,
+        60,
+        20
+      ],
+      "allAvailableLlr": -0.26622590209939356,
+      "prefixValidPairs": 97,
+      "prefixLlr": -0.2662259020993938
+    },
+    {
+      "pair": 99,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 98,
+      "counts": [
+        17,
+        61,
+        20
+      ],
+      "allAvailableLlr": -0.2787045903446632,
+      "prefixValidPairs": 98,
+      "prefixLlr": -0.2787045903446632
+    },
+    {
+      "pair": 100,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 99,
+      "counts": [
+        17,
+        62,
+        20
+      ],
+      "allAvailableLlr": -0.29137547541934905,
+      "prefixValidPairs": 99,
+      "prefixLlr": -0.2913754754193487
+    },
+    {
+      "pair": 101,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 99,
+      "counts": [
+        17,
+        62,
+        20
+      ],
+      "allAvailableLlr": -0.29137547541934905,
+      "prefixValidPairs": 99,
+      "prefixLlr": -0.2913754754193487
+    },
+    {
+      "pair": 102,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 100,
+      "counts": [
+        17,
+        62,
+        21
+      ],
+      "allAvailableLlr": -0.07014866543326137,
+      "prefixValidPairs": 100,
+      "prefixLlr": -0.07014866543326104
+    },
+    {
+      "pair": 103,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 101,
+      "counts": [
+        17,
+        62,
+        22
+      ],
+      "allAvailableLlr": 0.1447719498420057,
+      "prefixValidPairs": 101,
+      "prefixLlr": 0.14477194984200548
+    },
+    {
+      "pair": 104,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 102,
+      "counts": [
+        17,
+        63,
+        22
+      ],
+      "allAvailableLlr": 0.1364902456080046,
+      "prefixValidPairs": 102,
+      "prefixLlr": 0.13649024560800438
+    },
+    {
+      "pair": 105,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 103,
+      "counts": [
+        17,
+        64,
+        22
+      ],
+      "allAvailableLlr": 0.12802148719238193,
+      "prefixValidPairs": 103,
+      "prefixLlr": 0.12802148719238193
+    },
+    {
+      "pair": 106,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 104,
+      "counts": [
+        18,
+        64,
+        22
+      ],
+      "allAvailableLlr": -0.10796049798846596,
+      "prefixValidPairs": 104,
+      "prefixLlr": -0.10796049798846852
+    },
+    {
+      "pair": 107,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 105,
+      "counts": [
+        18,
+        64,
+        23
+      ],
+      "allAvailableLlr": 0.10497645221074647,
+      "prefixValidPairs": 105,
+      "prefixLlr": 0.1049764522107468
+    },
+    {
+      "pair": 108,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 106,
+      "counts": [
+        18,
+        65,
+        23
+      ],
+      "allAvailableLlr": 0.0963789259726836,
+      "prefixValidPairs": 106,
+      "prefixLlr": 0.09637892597268394
+    },
+    {
+      "pair": 109,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 107,
+      "counts": [
+        18,
+        66,
+        23
+      ],
+      "allAvailableLlr": 0.08760371937709999,
+      "prefixValidPairs": 107,
+      "prefixLlr": 0.08760371937709976
+    },
+    {
+      "pair": 110,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 108,
+      "counts": [
+        18,
+        67,
+        23
+      ],
+      "allAvailableLlr": 0.07865104781610632,
+      "prefixValidPairs": 108,
+      "prefixLlr": 0.07865104781610643
+    },
+    {
+      "pair": 111,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 109,
+      "counts": [
+        18,
+        68,
+        23
+      ],
+      "allAvailableLlr": 0.06952113055977938,
+      "prefixValidPairs": 109,
+      "prefixLlr": 0.06952113055977893
+    },
+    {
+      "pair": 112,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 110,
+      "counts": [
+        19,
+        68,
+        23
+      ],
+      "allAvailableLlr": -0.1670103796939033,
+      "prefixValidPairs": 110,
+      "prefixLlr": -0.1670103796939033
+    },
+    {
+      "pair": 113,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 111,
+      "counts": [
+        20,
+        68,
+        23
+      ],
+      "allAvailableLlr": -0.3960300087476001,
+      "prefixValidPairs": 111,
+      "prefixLlr": -0.3960300087475961
+    },
+    {
+      "pair": 114,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 112,
+      "counts": [
+        20,
+        69,
+        23
+      ],
+      "allAvailableLlr": -0.4091514208605591,
+      "prefixValidPairs": 112,
+      "prefixLlr": -0.40915142086055845
+    },
+    {
+      "pair": 115,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 113,
+      "counts": [
+        20,
+        70,
+        23
+      ],
+      "allAvailableLlr": -0.422437655728619,
+      "prefixValidPairs": 113,
+      "prefixLlr": -0.42243765572861314
+    },
+    {
+      "pair": 116,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 114,
+      "counts": [
+        20,
+        70,
+        24
+      ],
+      "allAvailableLlr": -0.20370494434309405,
+      "prefixValidPairs": 114,
+      "prefixLlr": -0.2037049443430945
+    },
+    {
+      "pair": 117,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 115,
+      "counts": [
+        21,
+        70,
+        24
+      ],
+      "allAvailableLlr": -0.429985882996915,
+      "prefixValidPairs": 115,
+      "prefixLlr": -0.429985882996915
+    },
+    {
+      "pair": 118,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 116,
+      "counts": [
+        21,
+        70,
+        25
+      ],
+      "allAvailableLlr": -0.21712059104430992,
+      "prefixValidPairs": 116,
+      "prefixLlr": -0.21712059104430992
+    },
+    {
+      "pair": 119,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 117,
+      "counts": [
+        21,
+        71,
+        25
+      ],
+      "allAvailableLlr": -0.22837487030488346,
+      "prefixValidPairs": 117,
+      "prefixLlr": -0.2283748703048838
+    },
+    {
+      "pair": 120,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 118,
+      "counts": [
+        21,
+        72,
+        25
+      ],
+      "allAvailableLlr": -0.239785215992952,
+      "prefixValidPairs": 118,
+      "prefixLlr": -0.23978521599295632
+    },
+    {
+      "pair": 121,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 119,
+      "counts": [
+        22,
+        72,
+        25
+      ],
+      "allAvailableLlr": -0.46357649864780204,
+      "prefixValidPairs": 119,
+      "prefixLlr": -0.46357649864780015
+    },
+    {
+      "pair": 122,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 120,
+      "counts": [
+        23,
+        72,
+        25
+      ],
+      "allAvailableLlr": -0.6812793253433915,
+      "prefixValidPairs": 120,
+      "prefixLlr": -0.6812793253433922
+    },
+    {
+      "pair": 123,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 121,
+      "counts": [
+        23,
+        73,
+        25
+      ],
+      "allAvailableLlr": -0.6961488895780792,
+      "prefixValidPairs": 121,
+      "prefixLlr": -0.6961488895780796
+    },
+    {
+      "pair": 124,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 122,
+      "counts": [
+        23,
+        73,
+        26
+      ],
+      "allAvailableLlr": -0.4836744533330434,
+      "prefixValidPairs": 122,
+      "prefixLlr": -0.4836744533330437
+    },
+    {
+      "pair": 125,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 123,
+      "counts": [
+        23,
+        74,
+        26
+      ],
+      "allAvailableLlr": -0.49684674567572273,
+      "prefixValidPairs": 123,
+      "prefixLlr": -0.4968467456757226
+    },
+    {
+      "pair": 126,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 124,
+      "counts": [
+        23,
+        74,
+        27
+      ],
+      "allAvailableLlr": -0.2871929147577298,
+      "prefixValidPairs": 124,
+      "prefixLlr": -0.2871929147577301
+    },
+    {
+      "pair": 127,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 125,
+      "counts": [
+        23,
+        75,
+        27
+      ],
+      "allAvailableLlr": -0.2987246753130156,
+      "prefixValidPairs": 125,
+      "prefixLlr": -0.2987246753130153
+    },
+    {
+      "pair": 128,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 126,
+      "counts": [
+        23,
+        76,
+        27
+      ],
+      "allAvailableLlr": -0.3103998764053958,
+      "prefixValidPairs": 126,
+      "prefixLlr": -0.31039987640539657
+    },
+    {
+      "pair": 129,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 127,
+      "counts": [
+        23,
+        76,
+        28
+      ],
+      "allAvailableLlr": -0.10172268538234042,
+      "prefixValidPairs": 127,
+      "prefixLlr": -0.10172268538233986
+    },
+    {
+      "pair": 130,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 128,
+      "counts": [
+        23,
+        77,
+        28
+      ],
+      "allAvailableLlr": -0.1118098572357149,
+      "prefixValidPairs": 128,
+      "prefixLlr": -0.11180985723571446
+    },
+    {
+      "pair": 131,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 129,
+      "counts": [
+        23,
+        78,
+        28
+      ],
+      "allAvailableLlr": -0.12203882922845066,
+      "prefixValidPairs": 129,
+      "prefixLlr": -0.1220388292284511
+    },
+    {
+      "pair": 132,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 130,
+      "counts": [
+        23,
+        79,
+        28
+      ],
+      "allAvailableLlr": -0.13240945171703722,
+      "prefixValidPairs": 130,
+      "prefixLlr": -0.132409451717038
+    },
+    {
+      "pair": 133,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 131,
+      "counts": [
+        23,
+        80,
+        28
+      ],
+      "allAvailableLlr": -0.14292157312285658,
+      "prefixValidPairs": 131,
+      "prefixLlr": -0.14292157312285703
+    },
+    {
+      "pair": 134,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 132,
+      "counts": [
+        23,
+        81,
+        28
+      ],
+      "allAvailableLlr": -0.1535750399481075,
+      "prefixValidPairs": 132,
+      "prefixLlr": -0.15357503994810795
+    },
+    {
+      "pair": 135,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 133,
+      "counts": [
+        23,
+        82,
+        28
+      ],
+      "allAvailableLlr": -0.16436969679170943,
+      "prefixValidPairs": 133,
+      "prefixLlr": -0.16436969679170677
+    },
+    {
+      "pair": 136,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 134,
+      "counts": [
+        24,
+        82,
+        28
+      ],
+      "allAvailableLlr": -0.3935989821550545,
+      "prefixValidPairs": 134,
+      "prefixLlr": -0.39359898215505407
+    },
+    {
+      "pair": 137,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 135,
+      "counts": [
+        24,
+        82,
+        29
+      ],
+      "allAvailableLlr": -0.17958477868627076,
+      "prefixValidPairs": 135,
+      "prefixLlr": -0.17958477868627032
+    },
+    {
+      "pair": 138,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 136,
+      "counts": [
+        24,
+        82,
+        30
+      ],
+      "allAvailableLlr": 0.030102783490472573,
+      "prefixValidPairs": 136,
+      "prefixLlr": 0.030102783490472795
+    },
+    {
+      "pair": 139,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 137,
+      "counts": [
+        24,
+        83,
+        30
+      ],
+      "allAvailableLlr": 0.020917968942334997,
+      "prefixValidPairs": 137,
+      "prefixLlr": 0.020917968942335108
+    },
+    {
+      "pair": 140,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 138,
+      "counts": [
+        24,
+        84,
+        30
+      ],
+      "allAvailableLlr": 0.011598597498641783,
+      "prefixValidPairs": 138,
+      "prefixLlr": 0.011598597498641894
+    },
+    {
+      "pair": 141,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 139,
+      "counts": [
+        25,
+        84,
+        30
+      ],
+      "allAvailableLlr": -0.21573598416119988,
+      "prefixValidPairs": 139,
+      "prefixLlr": -0.2157359841612001
+    },
+    {
+      "pair": 142,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 140,
+      "counts": [
+        25,
+        84,
+        31
+      ],
+      "allAvailableLlr": -0.007333590398704626,
+      "prefixValidPairs": 140,
+      "prefixLlr": -0.007333590398710399
+    },
+    {
+      "pair": 143,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 141,
+      "counts": [
+        25,
+        85,
+        31
+      ],
+      "allAvailableLlr": -0.016716977196612026,
+      "prefixValidPairs": 141,
+      "prefixLlr": -0.016716977196612248
+    },
+    {
+      "pair": 144,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 142,
+      "counts": [
+        26,
+        85,
+        31
+      ],
+      "allAvailableLlr": -0.24047381842947368,
+      "prefixValidPairs": 142,
+      "prefixLlr": -0.24047381842947324
+    },
+    {
+      "pair": 145,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 143,
+      "counts": [
+        26,
+        86,
+        31
+      ],
+      "allAvailableLlr": -0.25142955340112305,
+      "prefixValidPairs": 143,
+      "prefixLlr": -0.25142955340112305
+    },
+    {
+      "pair": 146,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 144,
+      "counts": [
+        26,
+        87,
+        31
+      ],
+      "allAvailableLlr": -0.26251153541730343,
+      "prefixValidPairs": 144,
+      "prefixLlr": -0.2625115354173033
+    },
+    {
+      "pair": 147,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 145,
+      "counts": [
+        26,
+        87,
+        32
+      ],
+      "allAvailableLlr": -0.05379746359314275,
+      "prefixValidPairs": 145,
+      "prefixLlr": -0.053797463593143746
+    },
+    {
+      "pair": 148,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 146,
+      "counts": [
+        27,
+        87,
+        32
+      ],
+      "allAvailableLlr": -0.2756288620282219,
+      "prefixValidPairs": 146,
+      "prefixLlr": -0.27562886202822234
+    },
+    {
+      "pair": 149,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 147,
+      "counts": [
+        27,
+        88,
+        32
+      ],
+      "allAvailableLlr": -0.28671240879535687,
+      "prefixValidPairs": 147,
+      "prefixLlr": -0.2867124087953572
+    },
+    {
+      "pair": 150,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 148,
+      "counts": [
+        27,
+        89,
+        32
+      ],
+      "allAvailableLlr": -0.29791786303169676,
+      "prefixValidPairs": 148,
+      "prefixLlr": -0.2979178630317021
+    },
+    {
+      "pair": 151,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 149,
+      "counts": [
+        27,
+        90,
+        32
+      ],
+      "allAvailableLlr": -0.30924510695512075,
+      "prefixValidPairs": 149,
+      "prefixLlr": -0.309245106955121
+    },
+    {
+      "pair": 152,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 150,
+      "counts": [
+        27,
+        91,
+        32
+      ],
+      "allAvailableLlr": -0.32069402157463767,
+      "prefixValidPairs": 150,
+      "prefixLlr": -0.32069402157463767
+    },
+    {
+      "pair": 153,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 151,
+      "counts": [
+        27,
+        92,
+        32
+      ],
+      "allAvailableLlr": -0.33226448669967157,
+      "prefixValidPairs": 151,
+      "prefixLlr": -0.3322644866996729
+    },
+    {
+      "pair": 154,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 152,
+      "counts": [
+        27,
+        93,
+        32
+      ],
+      "allAvailableLlr": -0.3439563809490045,
+      "prefixValidPairs": 152,
+      "prefixLlr": -0.34395638094900427
+    },
+    {
+      "pair": 155,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 153,
+      "counts": [
+        28,
+        93,
+        32
+      ],
+      "allAvailableLlr": -0.5689498884626358,
+      "prefixValidPairs": 153,
+      "prefixLlr": -0.5689498884626358
+    },
+    {
+      "pair": 156,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 154,
+      "counts": [
+        28,
+        94,
+        32
+      ],
+      "allAvailableLlr": -0.5820831829372342,
+      "prefixValidPairs": 154,
+      "prefixLlr": -0.5820831829372306
+    },
+    {
+      "pair": 157,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 155,
+      "counts": [
+        29,
+        94,
+        32
+      ],
+      "allAvailableLlr": -0.8035075015095006,
+      "prefixValidPairs": 155,
+      "prefixLlr": -0.8035075015094924
+    },
+    {
+      "pair": 158,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 156,
+      "counts": [
+        29,
+        94,
+        33
+      ],
+      "allAvailableLlr": -0.5894952766871926,
+      "prefixValidPairs": 156,
+      "prefixLlr": -0.5894952766871961
+    },
+    {
+      "pair": 159,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 156,
+      "counts": [
+        29,
+        94,
+        33
+      ],
+      "allAvailableLlr": -0.5894952766871926,
+      "prefixValidPairs": 156,
+      "prefixLlr": -0.5894952766871961
+    },
+    {
+      "pair": 160,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 157,
+      "counts": [
+        29,
+        95,
+        33
+      ],
+      "allAvailableLlr": -0.6025652281649054,
+      "prefixValidPairs": 157,
+      "prefixLlr": -0.602565228164905
+    },
+    {
+      "pair": 161,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 158,
+      "counts": [
+        29,
+        96,
+        33
+      ],
+      "allAvailableLlr": -0.6157497002701926,
+      "prefixValidPairs": 158,
+      "prefixLlr": -0.6157497002701922
+    },
+    {
+      "pair": 162,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 159,
+      "counts": [
+        29,
+        97,
+        33
+      ],
+      "allAvailableLlr": -0.6290485741415626,
+      "prefixValidPairs": 159,
+      "prefixLlr": -0.6290485741415628
+    },
+    {
+      "pair": 163,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 160,
+      "counts": [
+        29,
+        98,
+        33
+      ],
+      "allAvailableLlr": -0.642461729964731,
+      "prefixValidPairs": 160,
+      "prefixLlr": -0.6424617299647277
+    },
+    {
+      "pair": 164,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 161,
+      "counts": [
+        29,
+        98,
+        34
+      ],
+      "allAvailableLlr": -0.4264842919066556,
+      "prefixValidPairs": 161,
+      "prefixLlr": -0.42648429190664583
+    },
+    {
+      "pair": 165,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 162,
+      "counts": [
+        29,
+        98,
+        35
+      ],
+      "allAvailableLlr": -0.2141975336833346,
+      "prefixValidPairs": 162,
+      "prefixLlr": -0.21419753368333438
+    },
+    {
+      "pair": 166,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 163,
+      "counts": [
+        29,
+        99,
+        35
+      ],
+      "allAvailableLlr": -0.22492782113869736,
+      "prefixValidPairs": 163,
+      "prefixLlr": -0.22492782113869758
+    },
+    {
+      "pair": 167,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 164,
+      "counts": [
+        29,
+        99,
+        36
+      ],
+      "allAvailableLlr": -0.014843628920578777,
+      "prefixValidPairs": 164,
+      "prefixLlr": -0.014843628920578666
+    },
+    {
+      "pair": 168,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 165,
+      "counts": [
+        29,
+        100,
+        36
+      ],
+      "allAvailableLlr": -0.024339150342203797,
+      "prefixValidPairs": 165,
+      "prefixLlr": -0.024339150342203908
+    },
+    {
+      "pair": 169,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 166,
+      "counts": [
+        30,
+        100,
+        36
+      ],
+      "allAvailableLlr": -0.25021081688261093,
+      "prefixValidPairs": 166,
+      "prefixLlr": -0.2502108168826025
+    },
+    {
+      "pair": 170,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 167,
+      "counts": [
+        30,
+        101,
+        36
+      ],
+      "allAvailableLlr": -0.26106218271085835,
+      "prefixValidPairs": 167,
+      "prefixLlr": -0.2610621827108588
+    },
+    {
+      "pair": 171,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 168,
+      "counts": [
+        30,
+        102,
+        36
+      ],
+      "allAvailableLlr": -0.2720226195790145,
+      "prefixValidPairs": 168,
+      "prefixLlr": -0.2720226195790145
+    },
+    {
+      "pair": 172,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 169,
+      "counts": [
+        30,
+        103,
+        36
+      ],
+      "allAvailableLlr": -0.28309203389755133,
+      "prefixValidPairs": 169,
+      "prefixLlr": -0.28309203389755133
+    },
+    {
+      "pair": 173,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 170,
+      "counts": [
+        30,
+        104,
+        36
+      ],
+      "allAvailableLlr": -0.2942703312101078,
+      "prefixValidPairs": 170,
+      "prefixLlr": -0.29427033121010826
+    },
+    {
+      "pair": 174,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 171,
+      "counts": [
+        30,
+        105,
+        36
+      ],
+      "allAvailableLlr": -0.3055574161992638,
+      "prefixValidPairs": 171,
+      "prefixLlr": -0.3055574161992638
+    },
+    {
+      "pair": 175,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 172,
+      "counts": [
+        30,
+        106,
+        36
+      ],
+      "allAvailableLlr": -0.3169531926924223,
+      "prefixValidPairs": 172,
+      "prefixLlr": -0.31695319269242184
+    },
+    {
+      "pair": 176,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 172,
+      "counts": [
+        30,
+        106,
+        36
+      ],
+      "allAvailableLlr": -0.3169531926924223,
+      "prefixValidPairs": 172,
+      "prefixLlr": -0.31695319269242184
+    },
+    {
+      "pair": 177,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 173,
+      "counts": [
+        30,
+        107,
+        36
+      ],
+      "allAvailableLlr": -0.32845756366752465,
+      "prefixValidPairs": 173,
+      "prefixLlr": -0.32845756366752177
+    },
+    {
+      "pair": 178,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 174,
+      "counts": [
+        31,
+        107,
+        36
+      ],
+      "allAvailableLlr": -0.5582336811102597,
+      "prefixValidPairs": 174,
+      "prefixLlr": -0.5582336811102593
+    },
+    {
+      "pair": 179,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 174,
+      "counts": [
+        31,
+        107,
+        36
+      ],
+      "allAvailableLlr": -0.5582336811102597,
+      "prefixValidPairs": 174,
+      "prefixLlr": -0.5582336811102593
+    },
+    {
+      "pair": 180,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 175,
+      "counts": [
+        31,
+        108,
+        36
+      ],
+      "allAvailableLlr": -0.5710319990242809,
+      "prefixValidPairs": 175,
+      "prefixLlr": -0.5710319990242807
+    },
+    {
+      "pair": 181,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 176,
+      "counts": [
+        31,
+        109,
+        36
+      ],
+      "allAvailableLlr": -0.5839363309885515,
+      "prefixValidPairs": 176,
+      "prefixLlr": -0.5839363309885517
+    },
+    {
+      "pair": 182,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 177,
+      "counts": [
+        32,
+        109,
+        36
+      ],
+      "allAvailableLlr": -0.811493066958134,
+      "prefixValidPairs": 177,
+      "prefixLlr": -0.8114930669581346
+    },
+    {
+      "pair": 183,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 178,
+      "counts": [
+        32,
+        110,
+        36
+      ],
+      "allAvailableLlr": -0.8256447961246991,
+      "prefixValidPairs": 178,
+      "prefixLlr": -0.8256447961246991
+    },
+    {
+      "pair": 184,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 179,
+      "counts": [
+        32,
+        111,
+        36
+      ],
+      "allAvailableLlr": -0.8399000224896307,
+      "prefixValidPairs": 179,
+      "prefixLlr": -0.8399000224896316
+    },
+    {
+      "pair": 185,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 180,
+      "counts": [
+        32,
+        112,
+        36
+      ],
+      "allAvailableLlr": -0.8542586410765829,
+      "prefixValidPairs": 180,
+      "prefixLlr": -0.8542586410765782
+    },
+    {
+      "pair": 186,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 180,
+      "counts": [
+        32,
+        112,
+        36
+      ],
+      "allAvailableLlr": -0.8542586410765829,
+      "prefixValidPairs": 180,
+      "prefixLlr": -0.8542586410765782
+    },
+    {
+      "pair": 187,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 181,
+      "counts": [
+        32,
+        112,
+        37
+      ],
+      "allAvailableLlr": -0.6316677584903905,
+      "prefixValidPairs": 181,
+      "prefixLlr": -0.6316677584903907
+    },
+    {
+      "pair": 188,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 182,
+      "counts": [
+        32,
+        112,
+        38
+      ],
+      "allAvailableLlr": -0.4125977231368294,
+      "prefixValidPairs": 182,
+      "prefixLlr": -0.4125977231368303
+    },
+    {
+      "pair": 189,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 183,
+      "counts": [
+        32,
+        113,
+        38
+      ],
+      "allAvailableLlr": -0.42449010323944925,
+      "prefixValidPairs": 183,
+      "prefixLlr": -0.42449010323944947
+    },
+    {
+      "pair": 190,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 184,
+      "counts": [
+        32,
+        113,
+        39
+      ],
+      "allAvailableLlr": -0.20757679689073627,
+      "prefixValidPairs": 184,
+      "prefixLlr": -0.20757679689073605
+    },
+    {
+      "pair": 191,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 185,
+      "counts": [
+        32,
+        113,
+        40
+      ],
+      "allAvailableLlr": 0.006027789957123497,
+      "prefixValidPairs": 185,
+      "prefixLlr": 0.006027789957123275
+    },
+    {
+      "pair": 192,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 186,
+      "counts": [
+        32,
+        113,
+        41
+      ],
+      "allAvailableLlr": 0.2164367095670071,
+      "prefixValidPairs": 186,
+      "prefixLlr": 0.21643670956701122
+    },
+    {
+      "pair": 193,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 187,
+      "counts": [
+        32,
+        114,
+        41
+      ],
+      "allAvailableLlr": 0.2080865448662077,
+      "prefixValidPairs": 187,
+      "prefixLlr": 0.20808654486620703
+    },
+    {
+      "pair": 194,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 188,
+      "counts": [
+        32,
+        115,
+        41
+      ],
+      "allAvailableLlr": 0.19963641113657127,
+      "prefixValidPairs": 188,
+      "prefixLlr": 0.19963641113657182
+    },
+    {
+      "pair": 195,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 189,
+      "counts": [
+        32,
+        116,
+        41
+      ],
+      "allAvailableLlr": 0.19108637433600706,
+      "prefixValidPairs": 189,
+      "prefixLlr": 0.19108637433600784
+    },
+    {
+      "pair": 196,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 190,
+      "counts": [
+        33,
+        116,
+        41
+      ],
+      "allAvailableLlr": -0.04169661160006077,
+      "prefixValidPairs": 190,
+      "prefixLlr": -0.04169661160006122
+    },
+    {
+      "pair": 197,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 191,
+      "counts": [
+        33,
+        117,
+        41
+      ],
+      "allAvailableLlr": -0.05147278536767197,
+      "prefixValidPairs": 191,
+      "prefixLlr": -0.05147278536767175
+    },
+    {
+      "pair": 198,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 192,
+      "counts": [
+        33,
+        118,
+        41
+      ],
+      "allAvailableLlr": -0.06134678620214351,
+      "prefixValidPairs": 192,
+      "prefixLlr": -0.06134678620214373
+    },
+    {
+      "pair": 199,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 193,
+      "counts": [
+        33,
+        119,
+        41
+      ],
+      "allAvailableLlr": -0.0713185434148973,
+      "prefixValidPairs": 193,
+      "prefixLlr": -0.07131854341489685
+    },
+    {
+      "pair": 200,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 194,
+      "counts": [
+        33,
+        120,
+        41
+      ],
+      "allAvailableLlr": -0.0813879856812767,
+      "prefixValidPairs": 194,
+      "prefixLlr": -0.08138798568127825
+    },
+    {
+      "pair": 201,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 195,
+      "counts": [
+        33,
+        121,
+        41
+      ],
+      "allAvailableLlr": -0.09155504104388057,
+      "prefixValidPairs": 195,
+      "prefixLlr": -0.09155504104388079
+    },
+    {
+      "pair": 202,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 196,
+      "counts": [
+        33,
+        122,
+        41
+      ],
+      "allAvailableLlr": -0.10181963691634799,
+      "prefixValidPairs": 196,
+      "prefixLlr": -0.10181963691634799
+    },
+    {
+      "pair": 203,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 197,
+      "counts": [
+        33,
+        123,
+        41
+      ],
+      "allAvailableLlr": -0.11218170008685746,
+      "prefixValidPairs": 197,
+      "prefixLlr": -0.11218170008685746
+    },
+    {
+      "pair": 204,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 198,
+      "counts": [
+        33,
+        124,
+        41
+      ],
+      "allAvailableLlr": -0.12264115672179865,
+      "prefixValidPairs": 198,
+      "prefixLlr": -0.12264115672179976
+    },
+    {
+      "pair": 205,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 199,
+      "counts": [
+        33,
+        124,
+        42
+      ],
+      "allAvailableLlr": 0.09724626364349276,
+      "prefixValidPairs": 199,
+      "prefixLlr": 0.09724626364349298
+    },
+    {
+      "pair": 206,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 200,
+      "counts": [
+        33,
+        125,
+        42
+      ],
+      "allAvailableLlr": 0.0878524670805021,
+      "prefixValidPairs": 200,
+      "prefixLlr": 0.0878524670805021
+    },
+    {
+      "pair": 207,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 201,
+      "counts": [
+        34,
+        125,
+        42
+      ],
+      "allAvailableLlr": -0.15077414915801524,
+      "prefixValidPairs": 201,
+      "prefixLlr": -0.1507741491580159
+    },
+    {
+      "pair": 208,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 202,
+      "counts": [
+        35,
+        125,
+        42
+      ],
+      "allAvailableLlr": -0.3851282217164027,
+      "prefixValidPairs": 202,
+      "prefixLlr": -0.3851282217164034
+    },
+    {
+      "pair": 209,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 203,
+      "counts": [
+        35,
+        126,
+        42
+      ],
+      "allAvailableLlr": -0.39674883639116865,
+      "prefixValidPairs": 203,
+      "prefixLlr": -0.3967488363911631
+    },
+    {
+      "pair": 210,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 204,
+      "counts": [
+        36,
+        126,
+        42
+      ],
+      "allAvailableLlr": -0.6280417940989744,
+      "prefixValidPairs": 204,
+      "prefixLlr": -0.6280417940989693
+    },
+    {
+      "pair": 211,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 205,
+      "counts": [
+        36,
+        127,
+        42
+      ],
+      "allAvailableLlr": -0.6407719806056777,
+      "prefixValidPairs": 205,
+      "prefixLlr": -0.6407719806056793
+    },
+    {
+      "pair": 212,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 206,
+      "counts": [
+        36,
+        128,
+        42
+      ],
+      "allAvailableLlr": -0.6535932496854655,
+      "prefixValidPairs": 206,
+      "prefixLlr": -0.653593249685466
+    },
+    {
+      "pair": 213,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 207,
+      "counts": [
+        36,
+        129,
+        42
+      ],
+      "allAvailableLlr": -0.666505526311568,
+      "prefixValidPairs": 207,
+      "prefixLlr": -0.6665055263115676
+    },
+    {
+      "pair": 214,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 208,
+      "counts": [
+        36,
+        130,
+        42
+      ],
+      "allAvailableLlr": -0.679508734979156,
+      "prefixValidPairs": 208,
+      "prefixLlr": -0.6795087349791586
+    },
+    {
+      "pair": 215,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 209,
+      "counts": [
+        36,
+        131,
+        42
+      ],
+      "allAvailableLlr": -0.6926027997085054,
+      "prefixValidPairs": 209,
+      "prefixLlr": -0.6926027997085047
+    },
+    {
+      "pair": 216,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 210,
+      "counts": [
+        36,
+        132,
+        42
+      ],
+      "allAvailableLlr": -0.7057876440480122,
+      "prefixValidPairs": 210,
+      "prefixLlr": -0.7057876440480122
+    },
+    {
+      "pair": 217,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 211,
+      "counts": [
+        36,
+        133,
+        42
+      ],
+      "allAvailableLlr": -0.719063191077455,
+      "prefixValidPairs": 211,
+      "prefixLlr": -0.7190631910774545
+    },
+    {
+      "pair": 218,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 212,
+      "counts": [
+        36,
+        134,
+        42
+      ],
+      "allAvailableLlr": -0.7324293634110364,
+      "prefixValidPairs": 212,
+      "prefixLlr": -0.7324293634110308
+    },
+    {
+      "pair": 219,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 212,
+      "counts": [
+        36,
+        134,
+        42
+      ],
+      "allAvailableLlr": -0.7324293634110364,
+      "prefixValidPairs": 212,
+      "prefixLlr": -0.7324293634110308
+    },
+    {
+      "pair": 220,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 213,
+      "counts": [
+        37,
+        134,
+        42
+      ],
+      "allAvailableLlr": -0.9676472211638656,
+      "prefixValidPairs": 213,
+      "prefixLlr": -0.9676472211638654
+    },
+    {
+      "pair": 221,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 214,
+      "counts": [
+        37,
+        135,
+        42
+      ],
+      "allAvailableLlr": -0.9820778103123986,
+      "prefixValidPairs": 214,
+      "prefixLlr": -0.9820778103123988
+    },
+    {
+      "pair": 222,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 215,
+      "counts": [
+        37,
+        136,
+        42
+      ],
+      "allAvailableLlr": -0.9965971511808971,
+      "prefixValidPairs": 215,
+      "prefixLlr": -0.9965971511808966
+    },
+    {
+      "pair": 223,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 216,
+      "counts": [
+        37,
+        137,
+        42
+      ],
+      "allAvailableLlr": -1.0112051641359971,
+      "prefixValidPairs": 216,
+      "prefixLlr": -1.0112051641359923
+    },
+    {
+      "pair": 224,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 217,
+      "counts": [
+        37,
+        138,
+        42
+      ],
+      "allAvailableLlr": -1.025901769126849,
+      "prefixValidPairs": 217,
+      "prefixLlr": -1.0259017691268504
+    },
+    {
+      "pair": 225,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 218,
+      "counts": [
+        37,
+        138,
+        43
+      ],
+      "allAvailableLlr": -0.7947192239057053,
+      "prefixValidPairs": 218,
+      "prefixLlr": -0.794719223905707
+    },
+    {
+      "pair": 226,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 219,
+      "counts": [
+        37,
+        139,
+        43
+      ],
+      "allAvailableLlr": -0.8083838232154652,
+      "prefixValidPairs": 219,
+      "prefixLlr": -0.8083838232154648
+    },
+    {
+      "pair": 227,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 220,
+      "counts": [
+        37,
+        140,
+        43
+      ],
+      "allAvailableLlr": -0.8221364916933236,
+      "prefixValidPairs": 220,
+      "prefixLlr": -0.8221364916933229
+    },
+    {
+      "pair": 228,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 221,
+      "counts": [
+        38,
+        140,
+        43
+      ],
+      "allAvailableLlr": -1.059493966584153,
+      "prefixValidPairs": 221,
+      "prefixLlr": -1.0594939665841476
+    },
+    {
+      "pair": 229,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 222,
+      "counts": [
+        39,
+        140,
+        43
+      ],
+      "allAvailableLlr": -1.292913979125471,
+      "prefixValidPairs": 222,
+      "prefixLlr": -1.292913979125471
+    },
+    {
+      "pair": 230,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 223,
+      "counts": [
+        39,
+        141,
+        43
+      ],
+      "allAvailableLlr": -1.3086151394760641,
+      "prefixValidPairs": 223,
+      "prefixLlr": -1.3086151394760641
+    },
+    {
+      "pair": 231,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 224,
+      "counts": [
+        39,
+        142,
+        43
+      ],
+      "allAvailableLlr": -1.324400993259197,
+      "prefixValidPairs": 224,
+      "prefixLlr": -1.3244009932591965
+    },
+    {
+      "pair": 232,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 225,
+      "counts": [
+        39,
+        143,
+        43
+      ],
+      "allAvailableLlr": -1.3402714628474457,
+      "prefixValidPairs": 225,
+      "prefixLlr": -1.3402714628474452
+    },
+    {
+      "pair": 233,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 226,
+      "counts": [
+        39,
+        143,
+        44
+      ],
+      "allAvailableLlr": -1.107679752634641,
+      "prefixValidPairs": 226,
+      "prefixLlr": -1.10767975263464
+    },
+    {
+      "pair": 234,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 227,
+      "counts": [
+        39,
+        143,
+        45
+      ],
+      "allAvailableLlr": -0.8782022309419455,
+      "prefixValidPairs": 227,
+      "prefixLlr": -0.8782022309419499
+    },
+    {
+      "pair": 235,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 228,
+      "counts": [
+        39,
+        143,
+        46
+      ],
+      "allAvailableLlr": -0.6517496661857731,
+      "prefixValidPairs": 228,
+      "prefixLlr": -0.6517496661857738
+    },
+    {
+      "pair": 236,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 229,
+      "counts": [
+        39,
+        144,
+        46
+      ],
+      "allAvailableLlr": -0.6644999098315068,
+      "prefixValidPairs": 229,
+      "prefixLlr": -0.6644999098315054
+    },
+    {
+      "pair": 237,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 230,
+      "counts": [
+        39,
+        145,
+        46
+      ],
+      "allAvailableLlr": -0.6773336301403359,
+      "prefixValidPairs": 230,
+      "prefixLlr": -0.6773336301403354
+    },
+    {
+      "pair": 238,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 231,
+      "counts": [
+        39,
+        146,
+        46
+      ],
+      "allAvailableLlr": -0.6902507631996191,
+      "prefixValidPairs": 231,
+      "prefixLlr": -0.6902507631996198
+    },
+    {
+      "pair": 239,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 231,
+      "counts": [
+        39,
+        146,
+        46
+      ],
+      "allAvailableLlr": -0.6902507631996191,
+      "prefixValidPairs": 231,
+      "prefixLlr": -0.6902507631996198
+    },
+    {
+      "pair": 240,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 232,
+      "counts": [
+        39,
+        147,
+        46
+      ],
+      "allAvailableLlr": -0.7032512447320811,
+      "prefixValidPairs": 232,
+      "prefixLlr": -0.7032512447320816
+    },
+    {
+      "pair": 241,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 233,
+      "counts": [
+        40,
+        147,
+        46
+      ],
+      "allAvailableLlr": -0.9404676043086875,
+      "prefixValidPairs": 233,
+      "prefixLlr": -0.9404676043086866
+    },
+    {
+      "pair": 242,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 234,
+      "counts": [
+        40,
+        148,
+        46
+      ],
+      "allAvailableLlr": -0.95445150590478,
+      "prefixValidPairs": 234,
+      "prefixLlr": -0.9544515059047818
+    },
+    {
+      "pair": 243,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 235,
+      "counts": [
+        40,
+        149,
+        46
+      ],
+      "allAvailableLlr": -0.9685171766592426,
+      "prefixValidPairs": 235,
+      "prefixLlr": -0.9685171766592422
+    },
+    {
+      "pair": 244,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 236,
+      "counts": [
+        40,
+        150,
+        46
+      ],
+      "allAvailableLlr": -0.9826645504775589,
+      "prefixValidPairs": 236,
+      "prefixLlr": -0.9826645504775584
+    },
+    {
+      "pair": 245,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 237,
+      "counts": [
+        40,
+        151,
+        46
+      ],
+      "allAvailableLlr": -0.9968935609346747,
+      "prefixValidPairs": 237,
+      "prefixLlr": -0.9968935609346747
+    },
+    {
+      "pair": 246,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 238,
+      "counts": [
+        40,
+        152,
+        46
+      ],
+      "allAvailableLlr": -1.0112041412776502,
+      "prefixValidPairs": 238,
+      "prefixLlr": -1.011204141277652
+    },
+    {
+      "pair": 247,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 239,
+      "counts": [
+        40,
+        152,
+        47
+      ],
+      "allAvailableLlr": -0.7787938060736441,
+      "prefixValidPairs": 239,
+      "prefixLlr": -0.7787938060736437
+    },
+    {
+      "pair": 248,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 240,
+      "counts": [
+        40,
+        153,
+        47
+      ],
+      "allAvailableLlr": -0.7921588019089678,
+      "prefixValidPairs": 240,
+      "prefixLlr": -0.7921588019089629
+    },
+    {
+      "pair": 249,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 240,
+      "counts": [
+        40,
+        153,
+        47
+      ],
+      "allAvailableLlr": -0.7921588019089678,
+      "prefixValidPairs": 240,
+      "prefixLlr": -0.7921588019089629
+    },
+    {
+      "pair": 250,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 241,
+      "counts": [
+        40,
+        153,
+        48
+      ],
+      "allAvailableLlr": -0.5617167086085699,
+      "prefixValidPairs": 241,
+      "prefixLlr": -0.5617167086085697
+    },
+    {
+      "pair": 251,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 242,
+      "counts": [
+        40,
+        154,
+        48
+      ],
+      "allAvailableLlr": -0.5741535593883915,
+      "prefixValidPairs": 242,
+      "prefixLlr": -0.5741535593883924
+    },
+    {
+      "pair": 252,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 243,
+      "counts": [
+        40,
+        155,
+        48
+      ],
+      "allAvailableLlr": -0.5866711338456334,
+      "prefixValidPairs": 243,
+      "prefixLlr": -0.5866711338456341
+    },
+    {
+      "pair": 253,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 244,
+      "counts": [
+        40,
+        156,
+        48
+      ],
+      "allAvailableLlr": -0.5992693726454212,
+      "prefixValidPairs": 244,
+      "prefixLlr": -0.5992693726454217
+    },
+    {
+      "pair": 254,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 245,
+      "counts": [
+        40,
+        157,
+        48
+      ],
+      "allAvailableLlr": -0.6119482161231595,
+      "prefixValidPairs": 245,
+      "prefixLlr": -0.6119482161231602
+    },
+    {
+      "pair": 255,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 246,
+      "counts": [
+        40,
+        158,
+        48
+      ],
+      "allAvailableLlr": -0.6247076042860322,
+      "prefixValidPairs": 246,
+      "prefixLlr": -0.6247076042860282
+    },
+    {
+      "pair": 256,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 247,
+      "counts": [
+        40,
+        159,
+        48
+      ],
+      "allAvailableLlr": -0.6375474768153331,
+      "prefixValidPairs": 247,
+      "prefixLlr": -0.6375474768153335
+    },
+    {
+      "pair": 257,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 248,
+      "counts": [
+        40,
+        159,
+        49
+      ],
+      "allAvailableLlr": -0.4040642062396089,
+      "prefixValidPairs": 248,
+      "prefixLlr": -0.4040642062396085
+    },
+    {
+      "pair": 258,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 249,
+      "counts": [
+        40,
+        160,
+        49
+      ],
+      "allAvailableLlr": -0.415990872961151,
+      "prefixValidPairs": 249,
+      "prefixLlr": -0.41599087296117965
+    },
+    {
+      "pair": 259,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 250,
+      "counts": [
+        41,
+        160,
+        49
+      ],
+      "allAvailableLlr": -0.6619877144504427,
+      "prefixValidPairs": 250,
+      "prefixLlr": -0.6619877144504436
+    },
+    {
+      "pair": 260,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 251,
+      "counts": [
+        41,
+        160,
+        50
+      ],
+      "allAvailableLlr": -0.43077795997009405,
+      "prefixValidPairs": 251,
+      "prefixLlr": -0.4307779599700794
+    },
+    {
+      "pair": 261,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 251,
+      "counts": [
+        41,
+        160,
+        50
+      ],
+      "allAvailableLlr": -0.43077795997009405,
+      "prefixValidPairs": 251,
+      "prefixLlr": -0.4307779599700794
+    },
+    {
+      "pair": 262,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 252,
+      "counts": [
+        41,
+        161,
+        50
+      ],
+      "allAvailableLlr": -0.44268745450354796,
+      "prefixValidPairs": 252,
+      "prefixLlr": -0.4426874545035453
+    },
+    {
+      "pair": 263,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 253,
+      "counts": [
+        41,
+        162,
+        50
+      ],
+      "allAvailableLlr": -0.45467526209042086,
+      "prefixValidPairs": 253,
+      "prefixLlr": -0.4546752620904204
+    },
+    {
+      "pair": 264,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 254,
+      "counts": [
+        41,
+        162,
+        51
+      ],
+      "allAvailableLlr": -0.2243886106493369,
+      "prefixValidPairs": 254,
+      "prefixLlr": -0.2243886106493438
+    },
+    {
+      "pair": 265,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 255,
+      "counts": [
+        41,
+        162,
+        52
+      ],
+      "allAvailableLlr": 0.0031059632647620905,
+      "prefixValidPairs": 255,
+      "prefixLlr": 0.0031059632647618685
+    },
+    {
+      "pair": 266,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 256,
+      "counts": [
+        41,
+        163,
+        52
+      ],
+      "allAvailableLlr": -0.007063998535919769,
+      "prefixValidPairs": 256,
+      "prefixLlr": -0.007063998535921101
+    },
+    {
+      "pair": 267,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 257,
+      "counts": [
+        41,
+        164,
+        52
+      ],
+      "allAvailableLlr": -0.017311461511131387,
+      "prefixValidPairs": 257,
+      "prefixLlr": -0.017311461511129167
+    },
+    {
+      "pair": 268,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 258,
+      "counts": [
+        42,
+        164,
+        52
+      ],
+      "allAvailableLlr": -0.2638685433108381,
+      "prefixValidPairs": 258,
+      "prefixLlr": -0.26386854331083853
+    },
+    {
+      "pair": 269,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 259,
+      "counts": [
+        42,
+        165,
+        52
+      ],
+      "allAvailableLlr": -0.275055117156499,
+      "prefixValidPairs": 259,
+      "prefixLlr": -0.27505511715649966
+    },
+    {
+      "pair": 270,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 260,
+      "counts": [
+        42,
+        166,
+        52
+      ],
+      "allAvailableLlr": -0.28631787854175306,
+      "prefixValidPairs": 260,
+      "prefixLlr": -0.2863178785417535
+    },
+    {
+      "pair": 271,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 261,
+      "counts": [
+        42,
+        166,
+        53
+      ],
+      "allAvailableLlr": -0.05808740723062833,
+      "prefixValidPairs": 261,
+      "prefixLlr": -0.05808740723062833
+    },
+    {
+      "pair": 272,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 262,
+      "counts": [
+        42,
+        167,
+        53
+      ],
+      "allAvailableLlr": -0.06850478581712549,
+      "prefixValidPairs": 262,
+      "prefixLlr": -0.06850478581712593
+    },
+    {
+      "pair": 273,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 263,
+      "counts": [
+        42,
+        167,
+        54
+      ],
+      "allAvailableLlr": 0.15795843483394068,
+      "prefixValidPairs": 263,
+      "prefixLlr": 0.15795843483394023
+    },
+    {
+      "pair": 274,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 264,
+      "counts": [
+        42,
+        167,
+        55
+      ],
+      "allAvailableLlr": 0.3818009803364084,
+      "prefixValidPairs": 264,
+      "prefixLlr": 0.3818009803364113
+    },
+    {
+      "pair": 275,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 265,
+      "counts": [
+        42,
+        168,
+        55
+      ],
+      "allAvailableLlr": 0.37310650394992906,
+      "prefixValidPairs": 265,
+      "prefixLlr": 0.37310650394992884
+    },
+    {
+      "pair": 276,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 266,
+      "counts": [
+        42,
+        169,
+        55
+      ],
+      "allAvailableLlr": 0.3643370518761113,
+      "prefixValidPairs": 266,
+      "prefixLlr": 0.3643370518761113
+    },
+    {
+      "pair": 277,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 267,
+      "counts": [
+        42,
+        170,
+        55
+      ],
+      "allAvailableLlr": 0.35549266397842216,
+      "prefixValidPairs": 267,
+      "prefixLlr": 0.3554926639784295
+    },
+    {
+      "pair": 278,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 268,
+      "counts": [
+        42,
+        171,
+        55
+      ],
+      "allAvailableLlr": 0.346573380408564,
+      "prefixValidPairs": 268,
+      "prefixLlr": 0.34657338040856445
+    },
+    {
+      "pair": 279,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 269,
+      "counts": [
+        42,
+        172,
+        55
+      ],
+      "allAvailableLlr": 0.33757924160529207,
+      "prefixValidPairs": 269,
+      "prefixLlr": 0.33757924160529207
+    },
+    {
+      "pair": 280,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 270,
+      "counts": [
+        42,
+        172,
+        56
+      ],
+      "allAvailableLlr": 0.563257910726499,
+      "prefixValidPairs": 270,
+      "prefixLlr": 0.5632579107264988
+    },
+    {
+      "pair": 281,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 271,
+      "counts": [
+        42,
+        173,
+        56
+      ],
+      "allAvailableLlr": 0.5550682629443684,
+      "prefixValidPairs": 271,
+      "prefixLlr": 0.5550682629443688
+    },
+    {
+      "pair": 282,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 272,
+      "counts": [
+        42,
+        173,
+        57
+      ],
+      "allAvailableLlr": 0.7790503136229145,
+      "prefixValidPairs": 272,
+      "prefixLlr": 0.7790503136229141
+    },
+    {
+      "pair": 283,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 273,
+      "counts": [
+        42,
+        173,
+        58
+      ],
+      "allAvailableLlr": 1.000520089853827,
+      "prefixValidPairs": 273,
+      "prefixLlr": 1.0005200898538273
+    },
+    {
+      "pair": 284,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 274,
+      "counts": [
+        42,
+        174,
+        58
+      ],
+      "allAvailableLlr": 0.9939732679278255,
+      "prefixValidPairs": 274,
+      "prefixLlr": 0.9939732679278261
+    },
+    {
+      "pair": 285,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 275,
+      "counts": [
+        42,
+        175,
+        58
+      ],
+      "allAvailableLlr": 0.987352866735538,
+      "prefixValidPairs": 275,
+      "prefixLlr": 0.987352866735538
+    },
+    {
+      "pair": 286,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 276,
+      "counts": [
+        42,
+        176,
+        58
+      ],
+      "allAvailableLlr": 0.9806589186934955,
+      "prefixValidPairs": 276,
+      "prefixLlr": 0.9806589186934964
+    },
+    {
+      "pair": 287,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 277,
+      "counts": [
+        42,
+        177,
+        58
+      ],
+      "allAvailableLlr": 0.9738914565013179,
+      "prefixValidPairs": 277,
+      "prefixLlr": 0.9738914565013186
+    },
+    {
+      "pair": 288,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 278,
+      "counts": [
+        42,
+        178,
+        58
+      ],
+      "allAvailableLlr": 0.9670505131408069,
+      "prefixValidPairs": 278,
+      "prefixLlr": 0.9670505131408067
+    },
+    {
+      "pair": 289,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 279,
+      "counts": [
+        42,
+        179,
+        58
+      ],
+      "allAvailableLlr": 0.960136121874837,
+      "prefixValidPairs": 279,
+      "prefixLlr": 0.9601361218748377
+    },
+    {
+      "pair": 290,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 280,
+      "counts": [
+        42,
+        180,
+        58
+      ],
+      "allAvailableLlr": 0.9531483162465153,
+      "prefixValidPairs": 280,
+      "prefixLlr": 0.9531483162465157
+    },
+    {
+      "pair": 291,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 281,
+      "counts": [
+        42,
+        180,
+        59
+      ],
+      "allAvailableLlr": 1.1780428085715684,
+      "prefixValidPairs": 281,
+      "prefixLlr": 1.1780428085715684
+    },
+    {
+      "pair": 292,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 282,
+      "counts": [
+        42,
+        181,
+        59
+      ],
+      "allAvailableLlr": 1.1718225503521018,
+      "prefixValidPairs": 282,
+      "prefixLlr": 1.1718225503521023
+    },
+    {
+      "pair": 293,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 282,
+      "counts": [
+        42,
+        181,
+        59
+      ],
+      "allAvailableLlr": 1.1718225503521018,
+      "prefixValidPairs": 282,
+      "prefixLlr": 1.1718225503521023
+    },
+    {
+      "pair": 294,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 283,
+      "counts": [
+        42,
+        182,
+        59
+      ],
+      "allAvailableLlr": 1.1655293375989442,
+      "prefixValidPairs": 283,
+      "prefixLlr": 1.165529337598949
+    },
+    {
+      "pair": 295,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 284,
+      "counts": [
+        42,
+        182,
+        60
+      ],
+      "allAvailableLlr": 1.3895959865524856,
+      "prefixValidPairs": 284,
+      "prefixLlr": 1.3895959865524858
+    },
+    {
+      "pair": 296,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 285,
+      "counts": [
+        43,
+        182,
+        60
+      ],
+      "allAvailableLlr": 1.1300738462202964,
+      "prefixValidPairs": 285,
+      "prefixLlr": 1.1300738462202968
+    },
+    {
+      "pair": 297,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 286,
+      "counts": [
+        43,
+        183,
+        60
+      ],
+      "allAvailableLlr": 1.1236869154128877,
+      "prefixValidPairs": 286,
+      "prefixLlr": 1.1236869154128524
+    },
+    {
+      "pair": 298,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 287,
+      "counts": [
+        43,
+        184,
+        60
+      ],
+      "allAvailableLlr": 1.1172285029108264,
+      "prefixValidPairs": 287,
+      "prefixLlr": 1.1172285029108266
+    },
+    {
+      "pair": 299,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 288,
+      "counts": [
+        43,
+        185,
+        60
+      ],
+      "allAvailableLlr": 1.110698639243975,
+      "prefixValidPairs": 288,
+      "prefixLlr": 1.1106986392439744
+    },
+    {
+      "pair": 300,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 289,
+      "counts": [
+        44,
+        185,
+        60
+      ],
+      "allAvailableLlr": 0.8523698280586929,
+      "prefixValidPairs": 289,
+      "prefixLlr": 0.8523698280586931
+    },
+    {
+      "pair": 301,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 289,
+      "counts": [
+        44,
+        185,
+        60
+      ],
+      "allAvailableLlr": 0.8523698280586929,
+      "prefixValidPairs": 289,
+      "prefixLlr": 0.8523698280586931
+    },
+    {
+      "pair": 302,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 290,
+      "counts": [
+        44,
+        186,
+        60
+      ],
+      "allAvailableLlr": 0.8449415357723369,
+      "prefixValidPairs": 290,
+      "prefixLlr": 0.8449415357723336
+    },
+    {
+      "pair": 303,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 291,
+      "counts": [
+        44,
+        187,
+        60
+      ],
+      "allAvailableLlr": 0.837442848699173,
+      "prefixValidPairs": 291,
+      "prefixLlr": 0.837442848699169
+    },
+    {
+      "pair": 304,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 292,
+      "counts": [
+        44,
+        188,
+        60
+      ],
+      "allAvailableLlr": 0.8298737992341885,
+      "prefixValidPairs": 292,
+      "prefixLlr": 0.8298737992341891
+    },
+    {
+      "pair": 305,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 293,
+      "counts": [
+        44,
+        188,
+        61
+      ],
+      "allAvailableLlr": 1.0562071565983882,
+      "prefixValidPairs": 293,
+      "prefixLlr": 1.0562071565983882
+    },
+    {
+      "pair": 306,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 294,
+      "counts": [
+        44,
+        189,
+        61
+      ],
+      "allAvailableLlr": 1.049379904217995,
+      "prefixValidPairs": 294,
+      "prefixLlr": 1.0493799042179948
+    },
+    {
+      "pair": 307,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 295,
+      "counts": [
+        44,
+        190,
+        61
+      ],
+      "allAvailableLlr": 1.0424827043361227,
+      "prefixValidPairs": 295,
+      "prefixLlr": 1.0424827043361233
+    },
+    {
+      "pair": 308,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 296,
+      "counts": [
+        44,
+        190,
+        62
+      ],
+      "allAvailableLlr": 1.2680070901154836,
+      "prefixValidPairs": 296,
+      "prefixLlr": 1.2680070901154732
+    },
+    {
+      "pair": 309,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 297,
+      "counts": [
+        45,
+        190,
+        62
+      ],
+      "allAvailableLlr": 1.0090112903047135,
+      "prefixValidPairs": 297,
+      "prefixLlr": 1.0090112903047093
+    },
+    {
+      "pair": 310,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 298,
+      "counts": [
+        45,
+        191,
+        62
+      ],
+      "allAvailableLlr": 1.0020353121772725,
+      "prefixValidPairs": 298,
+      "prefixLlr": 1.0020353121772718
+    },
+    {
+      "pair": 311,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 299,
+      "counts": [
+        46,
+        191,
+        62
+      ],
+      "allAvailableLlr": 0.7457751839975324,
+      "prefixValidPairs": 299,
+      "prefixLlr": 0.745775183997532
+    },
+    {
+      "pair": 312,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 300,
+      "counts": [
+        46,
+        192,
+        62
+      ],
+      "allAvailableLlr": 0.7379397454265053,
+      "prefixValidPairs": 300,
+      "prefixLlr": 0.7379397454265053
+    },
+    {
+      "pair": 313,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 300,
+      "counts": [
+        46,
+        192,
+        62
+      ],
+      "allAvailableLlr": 0.7379397454265053,
+      "prefixValidPairs": 300,
+      "prefixLlr": 0.7379397454265053
+    },
+    {
+      "pair": 314,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 301,
+      "counts": [
+        46,
+        193,
+        62
+      ],
+      "allAvailableLlr": 0.7300366661334847,
+      "prefixValidPairs": 301,
+      "prefixLlr": 0.7300366661334934
+    },
+    {
+      "pair": 315,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 302,
+      "counts": [
+        46,
+        194,
+        62
+      ],
+      "allAvailableLlr": 0.7220659768948641,
+      "prefixValidPairs": 302,
+      "prefixLlr": 0.7220659768948643
+    },
+    {
+      "pair": 316,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 302,
+      "counts": [
+        46,
+        194,
+        62
+      ],
+      "allAvailableLlr": 0.7220659768948641,
+      "prefixValidPairs": 302,
+      "prefixLlr": 0.7220659768948643
+    },
+    {
+      "pair": 317,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 303,
+      "counts": [
+        46,
+        194,
+        63
+      ],
+      "allAvailableLlr": 0.9481650095816858,
+      "prefixValidPairs": 303,
+      "prefixLlr": 0.948165009581686
+    },
+    {
+      "pair": 318,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 304,
+      "counts": [
+        46,
+        195,
+        63
+      ],
+      "allAvailableLlr": 0.940911283519261,
+      "prefixValidPairs": 304,
+      "prefixLlr": 0.9409112835192612
+    },
+    {
+      "pair": 319,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 305,
+      "counts": [
+        46,
+        196,
+        63
+      ],
+      "allAvailableLlr": 0.9335903270983108,
+      "prefixValidPairs": 305,
+      "prefixLlr": 0.9335903270983117
+    },
+    {
+      "pair": 320,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 306,
+      "counts": [
+        47,
+        196,
+        63
+      ],
+      "allAvailableLlr": 0.6767545564410204,
+      "prefixValidPairs": 306,
+      "prefixLlr": 0.6767545564410202
+    },
+    {
+      "pair": 321,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 307,
+      "counts": [
+        47,
+        197,
+        63
+      ],
+      "allAvailableLlr": 0.6685942281432646,
+      "prefixValidPairs": 307,
+      "prefixLlr": 0.6685942281432613
+    },
+    {
+      "pair": 322,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 308,
+      "counts": [
+        47,
+        198,
+        63
+      ],
+      "allAvailableLlr": 0.6603676176875783,
+      "prefixValidPairs": 308,
+      "prefixLlr": 0.6603676176875783
+    },
+    {
+      "pair": 323,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 309,
+      "counts": [
+        47,
+        199,
+        63
+      ],
+      "allAvailableLlr": 0.6520747554768025,
+      "prefixValidPairs": 309,
+      "prefixLlr": 0.6520747554768107
+    },
+    {
+      "pair": 324,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 310,
+      "counts": [
+        47,
+        199,
+        64
+      ],
+      "allAvailableLlr": 0.8796032001804561,
+      "prefixValidPairs": 310,
+      "prefixLlr": 0.8796032001804548
+    },
+    {
+      "pair": 325,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 311,
+      "counts": [
+        47,
+        200,
+        64
+      ],
+      "allAvailableLlr": 0.8720161576300147,
+      "prefixValidPairs": 311,
+      "prefixLlr": 0.8720161576300143
+    },
+    {
+      "pair": 326,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 312,
+      "counts": [
+        47,
+        200,
+        65
+      ],
+      "allAvailableLlr": 1.0980119277032117,
+      "prefixValidPairs": 312,
+      "prefixLlr": 1.0980119277032117
+    },
+    {
+      "pair": 327,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 313,
+      "counts": [
+        47,
+        201,
+        65
+      ],
+      "allAvailableLlr": 1.091120374844274,
+      "prefixValidPairs": 313,
+      "prefixLlr": 1.091120374844273
+    },
+    {
+      "pair": 328,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 314,
+      "counts": [
+        47,
+        202,
+        65
+      ],
+      "allAvailableLlr": 1.0841632659237053,
+      "prefixValidPairs": 314,
+      "prefixLlr": 1.0841632659237046
+    },
+    {
+      "pair": 329,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 315,
+      "counts": [
+        47,
+        202,
+        66
+      ],
+      "allAvailableLlr": 1.3094061742810854,
+      "prefixValidPairs": 315,
+      "prefixLlr": 1.3094061742810847
+    },
+    {
+      "pair": 330,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 316,
+      "counts": [
+        47,
+        203,
+        66
+      ],
+      "allAvailableLlr": 1.3031347817416299,
+      "prefixValidPairs": 316,
+      "prefixLlr": 1.3031347817416332
+    },
+    {
+      "pair": 331,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 317,
+      "counts": [
+        48,
+        203,
+        66
+      ],
+      "allAvailableLlr": 1.044010840994865,
+      "prefixValidPairs": 317,
+      "prefixLlr": 1.044010840994865
+    },
+    {
+      "pair": 332,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 318,
+      "counts": [
+        48,
+        203,
+        67
+      ],
+      "allAvailableLlr": 1.2676878622954713,
+      "prefixValidPairs": 318,
+      "prefixLlr": 1.267687862295471
+    },
+    {
+      "pair": 333,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 319,
+      "counts": [
+        48,
+        204,
+        67
+      ],
+      "allAvailableLlr": 1.261332143009222,
+      "prefixValidPairs": 319,
+      "prefixLlr": 1.2613321430092217
+    },
+    {
+      "pair": 334,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 320,
+      "counts": [
+        48,
+        204,
+        68
+      ],
+      "allAvailableLlr": 1.4835720889204886,
+      "prefixValidPairs": 320,
+      "prefixLlr": 1.4835720889205053
+    },
+    {
+      "pair": 335,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 321,
+      "counts": [
+        48,
+        205,
+        68
+      ],
+      "allAvailableLlr": 1.4778810560280387,
+      "prefixValidPairs": 321,
+      "prefixLlr": 1.477881056028039
+    },
+    {
+      "pair": 336,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 322,
+      "counts": [
+        48,
+        206,
+        68
+      ],
+      "allAvailableLlr": 1.472126321314003,
+      "prefixValidPairs": 322,
+      "prefixLlr": 1.4721263213140023
+    },
+    {
+      "pair": 337,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 323,
+      "counts": [
+        48,
+        206,
+        69
+      ],
+      "allAvailableLlr": 1.6936743748361682,
+      "prefixValidPairs": 323,
+      "prefixLlr": 1.693674374836169
+    },
+    {
+      "pair": 338,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 324,
+      "counts": [
+        48,
+        207,
+        69
+      ],
+      "allAvailableLlr": 1.6885752741084261,
+      "prefixValidPairs": 324,
+      "prefixLlr": 1.6885752741084268
+    },
+    {
+      "pair": 339,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 325,
+      "counts": [
+        48,
+        207,
+        70
+      ],
+      "allAvailableLlr": 1.908728416452976,
+      "prefixValidPairs": 325,
+      "prefixLlr": 1.908728416452977
+    },
+    {
+      "pair": 340,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 326,
+      "counts": [
+        49,
+        207,
+        70
+      ],
+      "allAvailableLlr": 1.6496513647084332,
+      "prefixValidPairs": 326,
+      "prefixLlr": 1.6496513647084328
+    },
+    {
+      "pair": 341,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 327,
+      "counts": [
+        49,
+        208,
+        70
+      ],
+      "allAvailableLlr": 1.6444506839853341,
+      "prefixValidPairs": 327,
+      "prefixLlr": 1.644450683985342
+    },
+    {
+      "pair": 342,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 328,
+      "counts": [
+        49,
+        209,
+        70
+      ],
+      "allAvailableLlr": 1.6391877519936482,
+      "prefixValidPairs": 328,
+      "prefixLlr": 1.6391877519936475
+    },
+    {
+      "pair": 343,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 329,
+      "counts": [
+        49,
+        209,
+        71
+      ],
+      "allAvailableLlr": 1.858646539980032,
+      "prefixValidPairs": 329,
+      "prefixLlr": 1.8586465399800325
+    },
+    {
+      "pair": 344,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 330,
+      "counts": [
+        49,
+        210,
+        71
+      ],
+      "allAvailableLlr": 1.8540201723366385,
+      "prefixValidPairs": 330,
+      "prefixLlr": 1.8540201723366394
+    },
+    {
+      "pair": 345,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 331,
+      "counts": [
+        49,
+        210,
+        72
+      ],
+      "allAvailableLlr": 2.072143012899711,
+      "prefixValidPairs": 331,
+      "prefixLlr": 2.0721430128997156
+    },
+    {
+      "pair": 346,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 332,
+      "counts": [
+        49,
+        211,
+        72
+      ],
+      "allAvailableLlr": 2.0681444753771023,
+      "prefixValidPairs": 332,
+      "prefixLlr": 2.0681444753771014
+    },
+    {
+      "pair": 347,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 333,
+      "counts": [
+        49,
+        212,
+        72
+      ],
+      "allAvailableLlr": 2.0640843667822963,
+      "prefixValidPairs": 333,
+      "prefixLlr": 2.0640843667822963
+    },
+    {
+      "pair": 348,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 333,
+      "counts": [
+        49,
+        212,
+        72
+      ],
+      "allAvailableLlr": 2.0640843667822963,
+      "prefixValidPairs": 333,
+      "prefixLlr": 2.0640843667822963
+    },
+    {
+      "pair": 349,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 334,
+      "counts": [
+        49,
+        213,
+        72
+      ],
+      "allAvailableLlr": 2.0599627048140694,
+      "prefixValidPairs": 334,
+      "prefixLlr": 2.059962704814069
+    },
+    {
+      "pair": 350,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 335,
+      "counts": [
+        49,
+        213,
+        73
+      ],
+      "allAvailableLlr": 2.2781349911628026,
+      "prefixValidPairs": 335,
+      "prefixLlr": 2.278134991162803
+    },
+    {
+      "pair": 351,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 336,
+      "counts": [
+        49,
+        214,
+        73
+      ],
+      "allAvailableLlr": 2.2746332649429206,
+      "prefixValidPairs": 336,
+      "prefixLlr": 2.2746332649429206
+    },
+    {
+      "pair": 352,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 337,
+      "counts": [
+        49,
+        214,
+        74
+      ],
+      "allAvailableLlr": 2.4914983713704526,
+      "prefixValidPairs": 337,
+      "prefixLlr": 2.491498371370451
+    },
+    {
+      "pair": 353,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 338,
+      "counts": [
+        49,
+        215,
+        74
+      ],
+      "allAvailableLlr": 2.488608191117092,
+      "prefixValidPairs": 338,
+      "prefixLlr": 2.488608191117102
+    },
+    {
+      "pair": 354,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 338,
+      "counts": [
+        49,
+        215,
+        74
+      ],
+      "allAvailableLlr": 2.488608191117092,
+      "prefixValidPairs": 338,
+      "prefixLlr": 2.488608191117102
+    },
+    {
+      "pair": 355,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 339,
+      "counts": [
+        49,
+        216,
+        74
+      ],
+      "allAvailableLlr": 2.4856571425960077,
+      "prefixValidPairs": 339,
+      "prefixLlr": 2.4856571425960077
+    },
+    {
+      "pair": 356,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 340,
+      "counts": [
+        49,
+        217,
+        74
+      ],
+      "allAvailableLlr": 2.482645241011987,
+      "prefixValidPairs": 340,
+      "prefixLlr": 2.482645241011989
+    },
+    {
+      "pair": 357,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 340,
+      "counts": [
+        49,
+        217,
+        74
+      ],
+      "allAvailableLlr": 2.482645241011987,
+      "prefixValidPairs": 340,
+      "prefixLlr": 2.482645241011989
+    },
+    {
+      "pair": 358,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 341,
+      "counts": [
+        50,
+        217,
+        74
+      ],
+      "allAvailableLlr": 2.2193360103299145,
+      "prefixValidPairs": 341,
+      "prefixLlr": 2.219336010329915
+    },
+    {
+      "pair": 359,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 342,
+      "counts": [
+        50,
+        218,
+        74
+      ],
+      "allAvailableLlr": 2.2155297939252647,
+      "prefixValidPairs": 342,
+      "prefixLlr": 2.215529793925265
+    },
+    {
+      "pair": 360,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 342,
+      "counts": [
+        50,
+        218,
+        74
+      ],
+      "allAvailableLlr": 2.2155297939252647,
+      "prefixValidPairs": 342,
+      "prefixLlr": 2.215529793925265
+    },
+    {
+      "pair": 361,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 343,
+      "counts": [
+        50,
+        219,
+        74
+      ],
+      "allAvailableLlr": 2.2116634435883324,
+      "prefixValidPairs": 343,
+      "prefixLlr": 2.211663443588332
+    },
+    {
+      "pair": 362,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 344,
+      "counts": [
+        50,
+        220,
+        74
+      ],
+      "allAvailableLlr": 2.207736975941799,
+      "prefixValidPairs": 344,
+      "prefixLlr": 2.2077369759418133
+    },
+    {
+      "pair": 363,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 345,
+      "counts": [
+        50,
+        221,
+        74
+      ],
+      "allAvailableLlr": 2.2037504077694465,
+      "prefixValidPairs": 345,
+      "prefixLlr": 2.203750407769446
+    },
+    {
+      "pair": 364,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 346,
+      "counts": [
+        50,
+        221,
+        75
+      ],
+      "allAvailableLlr": 2.423332510149368,
+      "prefixValidPairs": 346,
+      "prefixLlr": 2.4233325101493683
+    },
+    {
+      "pair": 365,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 347,
+      "counts": [
+        50,
+        222,
+        75
+      ],
+      "allAvailableLlr": 2.4199502649270963,
+      "prefixValidPairs": 347,
+      "prefixLlr": 2.4199502649270954
+    },
+    {
+      "pair": 366,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 348,
+      "counts": [
+        50,
+        223,
+        75
+      ],
+      "allAvailableLlr": 2.416508252423649,
+      "prefixValidPairs": 348,
+      "prefixLlr": 2.4165082524236485
+    },
+    {
+      "pair": 367,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 349,
+      "counts": [
+        50,
+        224,
+        75
+      ],
+      "allAvailableLlr": 2.413006488404967,
+      "prefixValidPairs": 349,
+      "prefixLlr": 2.4130064884049673
+    },
+    {
+      "pair": 368,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 350,
+      "counts": [
+        50,
+        225,
+        75
+      ],
+      "allAvailableLlr": 2.4094449887959666,
+      "prefixValidPairs": 350,
+      "prefixLlr": 2.4094449887959666
+    },
+    {
+      "pair": 369,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 351,
+      "counts": [
+        50,
+        225,
+        76
+      ],
+      "allAvailableLlr": 2.6297004756810227,
+      "prefixValidPairs": 351,
+      "prefixLlr": 2.629700475681016
+    },
+    {
+      "pair": 370,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 352,
+      "counts": [
+        50,
+        226,
+        76
+      ],
+      "allAvailableLlr": 2.6267362821878386,
+      "prefixValidPairs": 352,
+      "prefixLlr": 2.6267362821878386
+    },
+    {
+      "pair": 371,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 353,
+      "counts": [
+        51,
+        226,
+        76
+      ],
+      "allAvailableLlr": 2.360116851597489,
+      "prefixValidPairs": 353,
+      "prefixLlr": 2.360116851597489
+    },
+    {
+      "pair": 372,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 354,
+      "counts": [
+        51,
+        227,
+        76
+      ],
+      "allAvailableLlr": 2.3563765153067937,
+      "prefixValidPairs": 354,
+      "prefixLlr": 2.356376515306801
+    },
+    {
+      "pair": 373,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 355,
+      "counts": [
+        51,
+        227,
+        77
+      ],
+      "allAvailableLlr": 2.5760004595203068,
+      "prefixValidPairs": 355,
+      "prefixLlr": 2.5760004595203068
+    },
+    {
+      "pair": 374,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 356,
+      "counts": [
+        51,
+        228,
+        77
+      ],
+      "allAvailableLlr": 2.572848997573778,
+      "prefixValidPairs": 356,
+      "prefixLlr": 2.5728489975737787
+    },
+    {
+      "pair": 375,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 357,
+      "counts": [
+        51,
+        229,
+        77
+      ],
+      "allAvailableLlr": 2.5696391087150143,
+      "prefixValidPairs": 357,
+      "prefixLlr": 2.5696391087150143
+    },
+    {
+      "pair": 376,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 358,
+      "counts": [
+        51,
+        230,
+        77
+      ],
+      "allAvailableLlr": 2.5663708076372354,
+      "prefixValidPairs": 358,
+      "prefixLlr": 2.566370807637245
+    },
+    {
+      "pair": 377,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 359,
+      "counts": [
+        51,
+        231,
+        77
+      ],
+      "allAvailableLlr": 2.563044109182665,
+      "prefixValidPairs": 359,
+      "prefixLlr": 2.5630441091826714
+    },
+    {
+      "pair": 378,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 360,
+      "counts": [
+        51,
+        232,
+        77
+      ],
+      "allAvailableLlr": 2.5596590283421303,
+      "prefixValidPairs": 360,
+      "prefixLlr": 2.5596590283421303
+    },
+    {
+      "pair": 379,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 361,
+      "counts": [
+        51,
+        233,
+        77
+      ],
+      "allAvailableLlr": 2.556215580254662,
+      "prefixValidPairs": 361,
+      "prefixLlr": 2.556215580254662
+    },
+    {
+      "pair": 380,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 362,
+      "counts": [
+        51,
+        234,
+        77
+      ],
+      "allAvailableLlr": 2.552713780207529,
+      "prefixValidPairs": 362,
+      "prefixLlr": 2.5527137802075295
+    },
+    {
+      "pair": 381,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 363,
+      "counts": [
+        51,
+        235,
+        77
+      ],
+      "allAvailableLlr": 2.549153643635517,
+      "prefixValidPairs": 363,
+      "prefixLlr": 2.549153643635517
+    },
+    {
+      "pair": 382,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 364,
+      "counts": [
+        51,
+        235,
+        78
+      ],
+      "allAvailableLlr": 2.771993340478006,
+      "prefixValidPairs": 364,
+      "prefixLlr": 2.771993340478005
+    },
+    {
+      "pair": 383,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 364,
+      "counts": [
+        51,
+        235,
+        78
+      ],
+      "allAvailableLlr": 2.771993340478006,
+      "prefixValidPairs": 364,
+      "prefixLlr": 2.771993340478005
+    },
+    {
+      "pair": 384,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 365,
+      "counts": [
+        52,
+        235,
+        78
+      ],
+      "allAvailableLlr": 2.5022027175231765,
+      "prefixValidPairs": 365,
+      "prefixLlr": 2.502202717523165
+    },
+    {
+      "pair": 385,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 366,
+      "counts": [
+        52,
+        235,
+        79
+      ],
+      "allAvailableLlr": 2.723127809893972,
+      "prefixValidPairs": 366,
+      "prefixLlr": 2.723127809893972
+    },
+    {
+      "pair": 386,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 367,
+      "counts": [
+        52,
+        236,
+        79
+      ],
+      "allAvailableLlr": 2.7200825145022254,
+      "prefixValidPairs": 367,
+      "prefixLlr": 2.7200825145022254
+    },
+    {
+      "pair": 387,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 368,
+      "counts": [
+        53,
+        236,
+        79
+      ],
+      "allAvailableLlr": 2.452739732448874,
+      "prefixValidPairs": 368,
+      "prefixLlr": 2.452739732448874
+    },
+    {
+      "pair": 388,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 369,
+      "counts": [
+        53,
+        236,
+        80
+      ],
+      "allAvailableLlr": 2.672424642914656,
+      "prefixValidPairs": 369,
+      "prefixLlr": 2.672424642914656
+    },
+    {
+      "pair": 389,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 370,
+      "counts": [
+        53,
+        237,
+        80
+      ],
+      "allAvailableLlr": 2.6692566276144505,
+      "prefixValidPairs": 370,
+      "prefixLlr": 2.6692566276144394
+    },
+    {
+      "pair": 390,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 371,
+      "counts": [
+        54,
+        237,
+        80
+      ],
+      "allAvailableLlr": 2.404276480113828,
+      "prefixValidPairs": 371,
+      "prefixLlr": 2.404276480113838
+    },
+    {
+      "pair": 391,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 372,
+      "counts": [
+        54,
+        238,
+        80
+      ],
+      "allAvailableLlr": 2.4003750027391266,
+      "prefixValidPairs": 372,
+      "prefixLlr": 2.4003750027391337
+    },
+    {
+      "pair": 392,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 373,
+      "counts": [
+        54,
+        239,
+        80
+      ],
+      "allAvailableLlr": 2.396417903023684,
+      "prefixValidPairs": 373,
+      "prefixLlr": 2.396417903023684
+    },
+    {
+      "pair": 393,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 374,
+      "counts": [
+        55,
+        239,
+        80
+      ],
+      "allAvailableLlr": 2.133060995976127,
+      "prefixValidPairs": 374,
+      "prefixLlr": 2.133060995976127
+    },
+    {
+      "pair": 394,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 375,
+      "counts": [
+        55,
+        240,
+        80
+      ],
+      "allAvailableLlr": 2.1283842763213867,
+      "prefixValidPairs": 375,
+      "prefixLlr": 2.1283842763213876
+    },
+    {
+      "pair": 395,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 376,
+      "counts": [
+        56,
+        240,
+        80
+      ],
+      "allAvailableLlr": 1.8672715307152885,
+      "prefixValidPairs": 376,
+      "prefixLlr": 1.8672715307152963
+    },
+    {
+      "pair": 396,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 377,
+      "counts": [
+        56,
+        241,
+        80
+      ],
+      "allAvailableLlr": 1.8618880452759436,
+      "prefixValidPairs": 377,
+      "prefixLlr": 1.8618880452759434
+    },
+    {
+      "pair": 397,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 378,
+      "counts": [
+        56,
+        242,
+        80
+      ],
+      "allAvailableLlr": 1.8564501420416406,
+      "prefixValidPairs": 378,
+      "prefixLlr": 1.8564501420416413
+    },
+    {
+      "pair": 398,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 379,
+      "counts": [
+        56,
+        243,
+        80
+      ],
+      "allAvailableLlr": 1.8509578371101096,
+      "prefixValidPairs": 379,
+      "prefixLlr": 1.8509578371101174
+    },
+    {
+      "pair": 399,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 379,
+      "counts": [
+        56,
+        243,
+        80
+      ],
+      "allAvailableLlr": 1.8509578371101096,
+      "prefixValidPairs": 379,
+      "prefixLlr": 1.8509578371101174
+    },
+    {
+      "pair": 400,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 380,
+      "counts": [
+        56,
+        244,
+        80
+      ],
+      "allAvailableLlr": 1.845411146695365,
+      "prefixValidPairs": 380,
+      "prefixLlr": 1.8454111466953833
+    },
+    {
+      "pair": 401,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 381,
+      "counts": [
+        56,
+        245,
+        80
+      ],
+      "allAvailableLlr": 1.839810087127793,
+      "prefixValidPairs": 381,
+      "prefixLlr": 1.8398100871277911
+    },
+    {
+      "pair": 402,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 382,
+      "counts": [
+        56,
+        246,
+        80
+      ],
+      "allAvailableLlr": 1.834154674853894,
+      "prefixValidPairs": 382,
+      "prefixLlr": 1.8341546748538953
+    },
+    {
+      "pair": 403,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 383,
+      "counts": [
+        56,
+        247,
+        80
+      ],
+      "allAvailableLlr": 1.828444926435586,
+      "prefixValidPairs": 383,
+      "prefixLlr": 1.828444926435587
+    },
+    {
+      "pair": 404,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 384,
+      "counts": [
+        56,
+        248,
+        80
+      ],
+      "allAvailableLlr": 1.8226808585504541,
+      "prefixValidPairs": 384,
+      "prefixLlr": 1.8226808585504557
+    },
+    {
+      "pair": 405,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 385,
+      "counts": [
+        56,
+        249,
+        80
+      ],
+      "allAvailableLlr": 1.816862487991074,
+      "prefixValidPairs": 385,
+      "prefixLlr": 1.8168624879910737
+    },
+    {
+      "pair": 406,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 386,
+      "counts": [
+        56,
+        249,
+        81
+      ],
+      "allAvailableLlr": 2.04266647464312,
+      "prefixValidPairs": 386,
+      "prefixLlr": 2.04266647464312
+    },
+    {
+      "pair": 407,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 387,
+      "counts": [
+        56,
+        250,
+        81
+      ],
+      "allAvailableLlr": 2.037408094814988,
+      "prefixValidPairs": 387,
+      "prefixLlr": 2.037408094814989
+    },
+    {
+      "pair": 408,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 387,
+      "counts": [
+        56,
+        250,
+        81
+      ],
+      "allAvailableLlr": 2.037408094814988,
+      "prefixValidPairs": 387,
+      "prefixLlr": 2.037408094814989
+    },
+    {
+      "pair": 409,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 388,
+      "counts": [
+        57,
+        250,
+        81
+      ],
+      "allAvailableLlr": 1.7726892961909635,
+      "prefixValidPairs": 388,
+      "prefixLlr": 1.7726892961909648
+    },
+    {
+      "pair": 410,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 389,
+      "counts": [
+        57,
+        251,
+        81
+      ],
+      "allAvailableLlr": 1.7667405064869208,
+      "prefixValidPairs": 389,
+      "prefixLlr": 1.7667405064868618
+    },
+    {
+      "pair": 411,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 390,
+      "counts": [
+        57,
+        252,
+        81
+      ],
+      "allAvailableLlr": 1.7607382510768088,
+      "prefixValidPairs": 390,
+      "prefixLlr": 1.760738251076809
+    },
+    {
+      "pair": 412,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 391,
+      "counts": [
+        58,
+        252,
+        81
+      ],
+      "allAvailableLlr": 1.497618692348118,
+      "prefixValidPairs": 391,
+      "prefixLlr": 1.4976186923481158
+    },
+    {
+      "pair": 413,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 392,
+      "counts": [
+        59,
+        252,
+        81
+      ],
+      "allAvailableLlr": 1.237295437858449,
+      "prefixValidPairs": 392,
+      "prefixLlr": 1.2372954378584495
+    },
+    {
+      "pair": 414,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 393,
+      "counts": [
+        59,
+        253,
+        81
+      ],
+      "allAvailableLlr": 1.2300015847153931,
+      "prefixValidPairs": 393,
+      "prefixLlr": 1.2300015847153922
+    },
+    {
+      "pair": 415,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 394,
+      "counts": [
+        59,
+        253,
+        82
+      ],
+      "allAvailableLlr": 1.456202665031763,
+      "prefixValidPairs": 394,
+      "prefixLlr": 1.4562026650317712
+    },
+    {
+      "pair": 416,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 395,
+      "counts": [
+        59,
+        254,
+        82
+      ],
+      "allAvailableLlr": 1.4494597098701807,
+      "prefixValidPairs": 395,
+      "prefixLlr": 1.4494597098701796
+    },
+    {
+      "pair": 417,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 396,
+      "counts": [
+        59,
+        254,
+        83
+      ],
+      "allAvailableLlr": 1.6744609030707371,
+      "prefixValidPairs": 396,
+      "prefixLlr": 1.674460903070738
+    },
+    {
+      "pair": 418,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 397,
+      "counts": [
+        60,
+        254,
+        83
+      ],
+      "allAvailableLlr": 1.4154876339988518,
+      "prefixValidPairs": 397,
+      "prefixLlr": 1.4154876339988505
+    },
+    {
+      "pair": 419,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 398,
+      "counts": [
+        60,
+        255,
+        83
+      ],
+      "allAvailableLlr": 1.4086835485300098,
+      "prefixValidPairs": 398,
+      "prefixLlr": 1.4086835485300107
+    },
+    {
+      "pair": 420,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 399,
+      "counts": [
+        60,
+        256,
+        83
+      ],
+      "allAvailableLlr": 1.401828088756751,
+      "prefixValidPairs": 399,
+      "prefixLlr": 1.4018280887567478
+    },
+    {
+      "pair": 421,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 400,
+      "counts": [
+        60,
+        257,
+        83
+      ],
+      "allAvailableLlr": 1.3949212710205576,
+      "prefixValidPairs": 400,
+      "prefixLlr": 1.3949212710205536
+    },
+    {
+      "pair": 422,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 401,
+      "counts": [
+        60,
+        257,
+        84
+      ],
+      "allAvailableLlr": 1.6198560996672695,
+      "prefixValidPairs": 401,
+      "prefixLlr": 1.619856099667281
+    },
+    {
+      "pair": 423,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 402,
+      "counts": [
+        60,
+        258,
+        84
+      ],
+      "allAvailableLlr": 1.6134869849985463,
+      "prefixValidPairs": 402,
+      "prefixLlr": 1.613486984998545
+    },
+    {
+      "pair": 424,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 403,
+      "counts": [
+        60,
+        259,
+        84
+      ],
+      "allAvailableLlr": 1.6070667376203016,
+      "prefixValidPairs": 403,
+      "prefixLlr": 1.6070667376203005
+    },
+    {
+      "pair": 425,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 404,
+      "counts": [
+        60,
+        260,
+        84
+      ],
+      "allAvailableLlr": 1.6005953731738585,
+      "prefixValidPairs": 404,
+      "prefixLlr": 1.60059537317386
+    },
+    {
+      "pair": 426,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 405,
+      "counts": [
+        60,
+        261,
+        84
+      ],
+      "allAvailableLlr": 1.5940729073955753,
+      "prefixValidPairs": 405,
+      "prefixLlr": 1.5940729073955744
+    },
+    {
+      "pair": 427,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 406,
+      "counts": [
+        60,
+        262,
+        84
+      ],
+      "allAvailableLlr": 1.5874993561163635,
+      "prefixValidPairs": 406,
+      "prefixLlr": 1.5874993561163642
+    },
+    {
+      "pair": 428,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 407,
+      "counts": [
+        60,
+        262,
+        85
+      ],
+      "allAvailableLlr": 1.813602722477239,
+      "prefixValidPairs": 407,
+      "prefixLlr": 1.8136027224772384
+    },
+    {
+      "pair": 429,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 408,
+      "counts": [
+        60,
+        263,
+        85
+      ],
+      "allAvailableLlr": 1.8075616126746865,
+      "prefixValidPairs": 408,
+      "prefixLlr": 1.8075616126746858
+    },
+    {
+      "pair": 430,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 409,
+      "counts": [
+        61,
+        263,
+        85
+      ],
+      "allAvailableLlr": 1.5457328668046373,
+      "prefixValidPairs": 409,
+      "prefixLlr": 1.545732866804638
+    },
+    {
+      "pair": 431,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 410,
+      "counts": [
+        62,
+        263,
+        85
+      ],
+      "allAvailableLlr": 1.286545929480518,
+      "prefixValidPairs": 410,
+      "prefixLlr": 1.2865459294805284
+    },
+    {
+      "pair": 432,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 411,
+      "counts": [
+        62,
+        263,
+        86
+      ],
+      "allAvailableLlr": 1.511349781254124,
+      "prefixValidPairs": 411,
+      "prefixLlr": 1.5113497812541254
+    },
+    {
+      "pair": 433,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 412,
+      "counts": [
+        62,
+        263,
+        87
+      ],
+      "allAvailableLlr": 1.7344570649504405,
+      "prefixValidPairs": 412,
+      "prefixLlr": 1.7344570649504405
+    },
+    {
+      "pair": 434,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 413,
+      "counts": [
+        62,
+        263,
+        88
+      ],
+      "allAvailableLlr": 1.9558957881013928,
+      "prefixValidPairs": 413,
+      "prefixLlr": 1.9558957881013939
+    },
+    {
+      "pair": 435,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 414,
+      "counts": [
+        62,
+        264,
+        88
+      ],
+      "allAvailableLlr": 1.950329887405605,
+      "prefixValidPairs": 414,
+      "prefixLlr": 1.950329887405605
+    },
+    {
+      "pair": 436,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 414,
+      "counts": [
+        62,
+        264,
+        88
+      ],
+      "allAvailableLlr": 1.950329887405605,
+      "prefixValidPairs": 414,
+      "prefixLlr": 1.950329887405605
+    },
+    {
+      "pair": 437,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 415,
+      "counts": [
+        62,
+        265,
+        88
+      ],
+      "allAvailableLlr": 1.9447146899324554,
+      "prefixValidPairs": 415,
+      "prefixLlr": 1.9447146899324572
+    },
+    {
+      "pair": 438,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 416,
+      "counts": [
+        62,
+        265,
+        89
+      ],
+      "allAvailableLlr": 2.1656247757811413,
+      "prefixValidPairs": 416,
+      "prefixLlr": 2.1656247757811506
+    },
+    {
+      "pair": 439,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 417,
+      "counts": [
+        62,
+        266,
+        89
+      ],
+      "allAvailableLlr": 2.160516823779062,
+      "prefixValidPairs": 417,
+      "prefixLlr": 2.1605168237790124
+    },
+    {
+      "pair": 440,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 418,
+      "counts": [
+        62,
+        267,
+        89
+      ],
+      "allAvailableLlr": 2.1553597910266307,
+      "prefixValidPairs": 418,
+      "prefixLlr": 2.15535979102663
+    },
+    {
+      "pair": 441,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 419,
+      "counts": [
+        62,
+        268,
+        89
+      ],
+      "allAvailableLlr": 2.1501536902178584,
+      "prefixValidPairs": 419,
+      "prefixLlr": 2.1501536902178593
+    },
+    {
+      "pair": 442,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 420,
+      "counts": [
+        62,
+        269,
+        89
+      ],
+      "allAvailableLlr": 2.1448985341326834,
+      "prefixValidPairs": 420,
+      "prefixLlr": 2.1448985341326825
+    },
+    {
+      "pair": 443,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 421,
+      "counts": [
+        62,
+        270,
+        89
+      ],
+      "allAvailableLlr": 2.139594335636838,
+      "prefixValidPairs": 421,
+      "prefixLlr": 2.139594335636854
+    },
+    {
+      "pair": 444,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 422,
+      "counts": [
+        62,
+        271,
+        89
+      ],
+      "allAvailableLlr": 2.1342411076816625,
+      "prefixValidPairs": 422,
+      "prefixLlr": 2.134241107681664
+    },
+    {
+      "pair": 445,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 423,
+      "counts": [
+        62,
+        271,
+        90
+      ],
+      "allAvailableLlr": 2.356831620096837,
+      "prefixValidPairs": 423,
+      "prefixLlr": 2.3568316200968376
+    },
+    {
+      "pair": 446,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 424,
+      "counts": [
+        62,
+        272,
+        90
+      ],
+      "allAvailableLlr": 2.351981127792601,
+      "prefixValidPairs": 424,
+      "prefixLlr": 2.3519811277926017
+    },
+    {
+      "pair": 447,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 425,
+      "counts": [
+        63,
+        272,
+        90
+      ],
+      "allAvailableLlr": 2.089871175395417,
+      "prefixValidPairs": 425,
+      "prefixLlr": 2.089871175395416
+    },
+    {
+      "pair": 448,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 426,
+      "counts": [
+        63,
+        273,
+        90
+      ],
+      "allAvailableLlr": 2.0843939802837506,
+      "prefixValidPairs": 426,
+      "prefixLlr": 2.0843939802837497
+    },
+    {
+      "pair": 449,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 427,
+      "counts": [
+        63,
+        273,
+        91
+      ],
+      "allAvailableLlr": 2.306413717943396,
+      "prefixValidPairs": 427,
+      "prefixLlr": 2.306413717943407
+    },
+    {
+      "pair": 450,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 428,
+      "counts": [
+        64,
+        273,
+        91
+      ],
+      "allAvailableLlr": 2.0462275987914342,
+      "prefixValidPairs": 428,
+      "prefixLlr": 2.0462275987914467
+    },
+    {
+      "pair": 451,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 429,
+      "counts": [
+        64,
+        274,
+        91
+      ],
+      "allAvailableLlr": 2.0406774031056423,
+      "prefixValidPairs": 429,
+      "prefixLlr": 2.04067740310564
+    },
+    {
+      "pair": 452,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 430,
+      "counts": [
+        64,
+        275,
+        91
+      ],
+      "allAvailableLlr": 2.0350794982943423,
+      "prefixValidPairs": 430,
+      "prefixLlr": 2.0350794982943476
+    },
+    {
+      "pair": 453,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 431,
+      "counts": [
+        65,
+        275,
+        91
+      ],
+      "allAvailableLlr": 1.7762422153477786,
+      "prefixValidPairs": 431,
+      "prefixLlr": 1.7762422153477786
+    },
+    {
+      "pair": 454,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 432,
+      "counts": [
+        65,
+        276,
+        91
+      ],
+      "allAvailableLlr": 1.7700364354878937,
+      "prefixValidPairs": 432,
+      "prefixLlr": 1.7700364354878921
+    },
+    {
+      "pair": 455,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 433,
+      "counts": [
+        65,
+        276,
+        92
+      ],
+      "allAvailableLlr": 1.9919922354122974,
+      "prefixValidPairs": 433,
+      "prefixLlr": 1.9919922354122974
+    },
+    {
+      "pair": 456,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 434,
+      "counts": [
+        65,
+        276,
+        93
+      ],
+      "allAvailableLlr": 2.2123747634759496,
+      "prefixValidPairs": 434,
+      "prefixLlr": 2.2123747634759496
+    },
+    {
+      "pair": 457,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 435,
+      "counts": [
+        65,
+        277,
+        93
+      ],
+      "allAvailableLlr": 2.207191336577827,
+      "prefixValidPairs": 435,
+      "prefixLlr": 2.2071913365778286
+    },
+    {
+      "pair": 458,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 436,
+      "counts": [
+        66,
+        277,
+        93
+      ],
+      "allAvailableLlr": 1.9495795646061038,
+      "prefixValidPairs": 436,
+      "prefixLlr": 1.9495795646061005
+    },
+    {
+      "pair": 459,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 437,
+      "counts": [
+        66,
+        277,
+        94
+      ],
+      "allAvailableLlr": 2.1689074822166257,
+      "prefixValidPairs": 437,
+      "prefixLlr": 2.1689074822166248
+    },
+    {
+      "pair": 460,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 438,
+      "counts": [
+        66,
+        278,
+        94
+      ],
+      "allAvailableLlr": 2.163649576988802,
+      "prefixValidPairs": 438,
+      "prefixLlr": 2.163649576988803
+    },
+    {
+      "pair": 461,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 439,
+      "counts": [
+        66,
+        279,
+        94
+      ],
+      "allAvailableLlr": 2.158345382004967,
+      "prefixValidPairs": 439,
+      "prefixLlr": 2.158345382004967
+    },
+    {
+      "pair": 462,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 440,
+      "counts": [
+        66,
+        280,
+        94
+      ],
+      "allAvailableLlr": 2.152994908617158,
+      "prefixValidPairs": 440,
+      "prefixLlr": 2.15299490861716
+    },
+    {
+      "pair": 463,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 441,
+      "counts": [
+        66,
+        281,
+        94
+      ],
+      "allAvailableLlr": 2.147598168249636,
+      "prefixValidPairs": 441,
+      "prefixLlr": 2.147598168249637
+    },
+    {
+      "pair": 464,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 442,
+      "counts": [
+        66,
+        282,
+        94
+      ],
+      "allAvailableLlr": 2.1421551723983825,
+      "prefixValidPairs": 442,
+      "prefixLlr": 2.1421551723983825
+    },
+    {
+      "pair": 465,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 443,
+      "counts": [
+        67,
+        282,
+        94
+      ],
+      "allAvailableLlr": 1.8841405916929748,
+      "prefixValidPairs": 443,
+      "prefixLlr": 1.8841405916929759
+    },
+    {
+      "pair": 466,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 444,
+      "counts": [
+        68,
+        282,
+        94
+      ],
+      "allAvailableLlr": 1.628469626358487,
+      "prefixValidPairs": 444,
+      "prefixLlr": 1.6284696263584983
+    },
+    {
+      "pair": 467,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 445,
+      "counts": [
+        69,
+        282,
+        94
+      ],
+      "allAvailableLlr": 1.3750899407459007,
+      "prefixValidPairs": 445,
+      "prefixLlr": 1.3750899407459016
+    },
+    {
+      "pair": 468,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 446,
+      "counts": [
+        69,
+        282,
+        95
+      ],
+      "allAvailableLlr": 1.595357301919405,
+      "prefixValidPairs": 446,
+      "prefixLlr": 1.5953573019194032
+    },
+    {
+      "pair": 469,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 447,
+      "counts": [
+        70,
+        282,
+        95
+      ],
+      "allAvailableLlr": 1.344148909552411,
+      "prefixValidPairs": 447,
+      "prefixLlr": 1.3441489095524126
+    },
+    {
+      "pair": 470,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 448,
+      "counts": [
+        70,
+        283,
+        95
+      ],
+      "allAvailableLlr": 1.3370466620150108,
+      "prefixValidPairs": 448,
+      "prefixLlr": 1.337046662015009
+    },
+    {
+      "pair": 471,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 449,
+      "counts": [
+        70,
+        284,
+        95
+      ],
+      "allAvailableLlr": 1.3298999402932115,
+      "prefixValidPairs": 449,
+      "prefixLlr": 1.329899940293224
+    },
+    {
+      "pair": 472,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 449,
+      "counts": [
+        70,
+        284,
+        95
+      ],
+      "allAvailableLlr": 1.3298999402932115,
+      "prefixValidPairs": 449,
+      "prefixLlr": 1.329899940293224
+    },
+    {
+      "pair": 473,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 450,
+      "counts": [
+        70,
+        285,
+        95
+      ],
+      "allAvailableLlr": 1.3227087566703264,
+      "prefixValidPairs": 450,
+      "prefixLlr": 1.3227087566703268
+    },
+    {
+      "pair": 474,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 451,
+      "counts": [
+        70,
+        286,
+        95
+      ],
+      "allAvailableLlr": 1.3154731234916825,
+      "prefixValidPairs": 451,
+      "prefixLlr": 1.3154731234916817
+    },
+    {
+      "pair": 475,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 452,
+      "counts": [
+        70,
+        287,
+        95
+      ],
+      "allAvailableLlr": 1.308193053164624,
+      "prefixValidPairs": 452,
+      "prefixLlr": 1.3081930531646258
+    },
+    {
+      "pair": 476,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 453,
+      "counts": [
+        70,
+        288,
+        95
+      ],
+      "allAvailableLlr": 1.3008685581586281,
+      "prefixValidPairs": 453,
+      "prefixLlr": 1.3008685581586263
+    },
+    {
+      "pair": 477,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 454,
+      "counts": [
+        70,
+        288,
+        96
+      ],
+      "allAvailableLlr": 1.522663298273294,
+      "prefixValidPairs": 454,
+      "prefixLlr": 1.5226632982732937
+    },
+    {
+      "pair": 478,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 455,
+      "counts": [
+        70,
+        288,
+        97
+      ],
+      "allAvailableLlr": 1.7429747306521168,
+      "prefixValidPairs": 455,
+      "prefixLlr": 1.7429747306521186
+    },
+    {
+      "pair": 479,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 456,
+      "counts": [
+        70,
+        289,
+        97
+      ],
+      "allAvailableLlr": 1.7366260145327432,
+      "prefixValidPairs": 456,
+      "prefixLlr": 1.736626014532689
+    },
+    {
+      "pair": 480,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 457,
+      "counts": [
+        70,
+        290,
+        97
+      ],
+      "allAvailableLlr": 1.7302331882964361,
+      "prefixValidPairs": 457,
+      "prefixLlr": 1.7302331882964523
+    },
+    {
+      "pair": 481,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 458,
+      "counts": [
+        71,
+        290,
+        97
+      ],
+      "allAvailableLlr": 1.4769578813990312,
+      "prefixValidPairs": 458,
+      "prefixLlr": 1.4769578813990307
+    },
+    {
+      "pair": 482,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 459,
+      "counts": [
+        71,
+        291,
+        97
+      ],
+      "allAvailableLlr": 1.4700071259450644,
+      "prefixValidPairs": 459,
+      "prefixLlr": 1.4700071259450773
+    },
+    {
+      "pair": 483,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 460,
+      "counts": [
+        71,
+        291,
+        98
+      ],
+      "allAvailableLlr": 1.690310051438168,
+      "prefixValidPairs": 460,
+      "prefixLlr": 1.6903100514381677
+    },
+    {
+      "pair": 484,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 461,
+      "counts": [
+        71,
+        292,
+        98
+      ],
+      "allAvailableLlr": 1.6838177149041706,
+      "prefixValidPairs": 461,
+      "prefixLlr": 1.683817714904169
+    },
+    {
+      "pair": 485,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 462,
+      "counts": [
+        71,
+        293,
+        98
+      ],
+      "allAvailableLlr": 1.6772818217144496,
+      "prefixValidPairs": 462,
+      "prefixLlr": 1.6772818217144376
+    },
+    {
+      "pair": 486,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 463,
+      "counts": [
+        71,
+        293,
+        99
+      ],
+      "allAvailableLlr": 1.8971359593819337,
+      "prefixValidPairs": 463,
+      "prefixLlr": 1.897135959381945
+    },
+    {
+      "pair": 487,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 464,
+      "counts": [
+        71,
+        293,
+        100
+      ],
+      "allAvailableLlr": 2.1155580274408585,
+      "prefixValidPairs": 464,
+      "prefixLlr": 2.1155580274408585
+    },
+    {
+      "pair": 488,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 465,
+      "counts": [
+        71,
+        293,
+        101
+      ],
+      "allAvailableLlr": 2.332568764142518,
+      "prefixValidPairs": 465,
+      "prefixLlr": 2.3325687641425183
+    },
+    {
+      "pair": 489,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 466,
+      "counts": [
+        71,
+        294,
+        101
+      ],
+      "allAvailableLlr": 2.327468257587065,
+      "prefixValidPairs": 466,
+      "prefixLlr": 2.327468257587064
+    },
+    {
+      "pair": 490,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 467,
+      "counts": [
+        72,
+        294,
+        101
+      ],
+      "allAvailableLlr": 2.0741307072940396,
+      "prefixValidPairs": 467,
+      "prefixLlr": 2.0741307072940316
+    },
+    {
+      "pair": 491,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 468,
+      "counts": [
+        72,
+        295,
+        101
+      ],
+      "allAvailableLlr": 2.068477780510598,
+      "prefixValidPairs": 468,
+      "prefixLlr": 2.068477780510598
+    },
+    {
+      "pair": 492,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 468,
+      "counts": [
+        72,
+        295,
+        101
+      ],
+      "allAvailableLlr": 2.068477780510598,
+      "prefixValidPairs": 468,
+      "prefixLlr": 2.068477780510598
+    },
+    {
+      "pair": 493,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 469,
+      "counts": [
+        72,
+        296,
+        101
+      ],
+      "allAvailableLlr": 2.062782119674105,
+      "prefixValidPairs": 469,
+      "prefixLlr": 2.062782119674104
+    },
+    {
+      "pair": 494,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 470,
+      "counts": [
+        72,
+        297,
+        101
+      ],
+      "allAvailableLlr": 2.0570437347132087,
+      "prefixValidPairs": 470,
+      "prefixLlr": 2.057043734713208
+    },
+    {
+      "pair": 495,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 471,
+      "counts": [
+        73,
+        297,
+        101
+      ],
+      "allAvailableLlr": 1.8043185120856882,
+      "prefixValidPairs": 471,
+      "prefixLlr": 1.8043185120856897
+    },
+    {
+      "pair": 496,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 472,
+      "counts": [
+        73,
+        297,
+        102
+      ],
+      "allAvailableLlr": 2.0218039500046543,
+      "prefixValidPairs": 472,
+      "prefixLlr": 2.0218039500046636
+    },
+    {
+      "pair": 497,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 473,
+      "counts": [
+        73,
+        298,
+        102
+      ],
+      "allAvailableLlr": 2.0160039342065783,
+      "prefixValidPairs": 473,
+      "prefixLlr": 2.0160039342065943
+    },
+    {
+      "pair": 498,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 474,
+      "counts": [
+        73,
+        298,
+        103
+      ],
+      "allAvailableLlr": 2.2325975850286124,
+      "prefixValidPairs": 474,
+      "prefixLlr": 2.232597585028607
+    },
+    {
+      "pair": 499,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 475,
+      "counts": [
+        73,
+        299,
+        103
+      ],
+      "allAvailableLlr": 2.2272334804646436,
+      "prefixValidPairs": 475,
+      "prefixLlr": 2.227233480464644
+    },
+    {
+      "pair": 500,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 476,
+      "counts": [
+        73,
+        300,
+        103
+      ],
+      "allAvailableLlr": 2.221827310294871,
+      "prefixValidPairs": 476,
+      "prefixLlr": 2.22182731029487
+    },
+    {
+      "pair": 501,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 477,
+      "counts": [
+        73,
+        301,
+        103
+      ],
+      "allAvailableLlr": 2.216379083852005,
+      "prefixValidPairs": 477,
+      "prefixLlr": 2.2163790838520043
+    },
+    {
+      "pair": 502,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 478,
+      "counts": [
+        73,
+        301,
+        104
+      ],
+      "allAvailableLlr": 2.433039537319326,
+      "prefixValidPairs": 478,
+      "prefixLlr": 2.4330395373193276
+    },
+    {
+      "pair": 503,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 479,
+      "counts": [
+        73,
+        302,
+        104
+      ],
+      "allAvailableLlr": 2.428023426071298,
+      "prefixValidPairs": 479,
+      "prefixLlr": 2.4280234260712987
+    },
+    {
+      "pair": 504,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 480,
+      "counts": [
+        73,
+        303,
+        104
+      ],
+      "allAvailableLlr": 2.4229654181806817,
+      "prefixValidPairs": 480,
+      "prefixLlr": 2.422965418180681
+    },
+    {
+      "pair": 505,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 481,
+      "counts": [
+        73,
+        304,
+        104
+      ],
+      "allAvailableLlr": 2.4178655226141097,
+      "prefixValidPairs": 481,
+      "prefixLlr": 2.417865522614111
+    },
+    {
+      "pair": 506,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 482,
+      "counts": [
+        74,
+        304,
+        104
+      ],
+      "allAvailableLlr": 2.163642587784938,
+      "prefixValidPairs": 482,
+      "prefixLlr": 2.1636425877849383
+    },
+    {
+      "pair": 507,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 483,
+      "counts": [
+        74,
+        304,
+        105
+      ],
+      "allAvailableLlr": 2.3803372577974535,
+      "prefixValidPairs": 483,
+      "prefixLlr": 2.3803372577974358
+    },
+    {
+      "pair": 508,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 484,
+      "counts": [
+        74,
+        305,
+        105
+      ],
+      "allAvailableLlr": 2.3751698273015696,
+      "prefixValidPairs": 484,
+      "prefixLlr": 2.375169827301569
+    },
+    {
+      "pair": 509,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 485,
+      "counts": [
+        74,
+        306,
+        105
+      ],
+      "allAvailableLlr": 2.3699609977813685,
+      "prefixValidPairs": 485,
+      "prefixLlr": 2.3699609977813623
+    },
+    {
+      "pair": 510,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 486,
+      "counts": [
+        74,
+        307,
+        105
+      ],
+      "allAvailableLlr": 2.364710778117632,
+      "prefixValidPairs": 486,
+      "prefixLlr": 2.364710778117633
+    },
+    {
+      "pair": 511,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 487,
+      "counts": [
+        74,
+        308,
+        105
+      ],
+      "allAvailableLlr": 2.3594191772432564,
+      "prefixValidPairs": 487,
+      "prefixLlr": 2.3594191772432573
+    },
+    {
+      "pair": 512,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 488,
+      "counts": [
+        74,
+        309,
+        105
+      ],
+      "allAvailableLlr": 2.3540862041425656,
+      "prefixValidPairs": 488,
+      "prefixLlr": 2.3540862041425648
+    },
+    {
+      "pair": 513,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 489,
+      "counts": [
+        74,
+        310,
+        105
+      ],
+      "allAvailableLlr": 2.3487118678515975,
+      "prefixValidPairs": 489,
+      "prefixLlr": 2.3487118678515984
+    },
+    {
+      "pair": 514,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 490,
+      "counts": [
+        74,
+        311,
+        105
+      ],
+      "allAvailableLlr": 2.3432961774580408,
+      "prefixValidPairs": 490,
+      "prefixLlr": 2.34329617745804
+    },
+    {
+      "pair": 515,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 491,
+      "counts": [
+        74,
+        312,
+        105
+      ],
+      "allAvailableLlr": 2.3378391421009455,
+      "prefixValidPairs": 491,
+      "prefixLlr": 2.3378391421009326
+    },
+    {
+      "pair": 516,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 492,
+      "counts": [
+        74,
+        312,
+        106
+      ],
+      "allAvailableLlr": 2.5569250577086393,
+      "prefixValidPairs": 492,
+      "prefixLlr": 2.5569250577086393
+    },
+    {
+      "pair": 517,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 493,
+      "counts": [
+        74,
+        313,
+        106
+      ],
+      "allAvailableLlr": 2.551892919365706,
+      "prefixValidPairs": 493,
+      "prefixLlr": 2.5518929193657094
+    },
+    {
+      "pair": 518,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 494,
+      "counts": [
+        74,
+        314,
+        106
+      ],
+      "allAvailableLlr": 2.5468195892776686,
+      "prefixValidPairs": 494,
+      "prefixLlr": 2.5468195892776713
+    },
+    {
+      "pair": 519,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 495,
+      "counts": [
+        74,
+        314,
+        107
+      ],
+      "allAvailableLlr": 2.765481011939723,
+      "prefixValidPairs": 495,
+      "prefixLlr": 2.7654810119397233
+    },
+    {
+      "pair": 520,
+      "inConsecutivePrefix": true,
+      "allAvailableValidPairs": 496,
+      "counts": [
+        74,
+        315,
+        107
+      ],
+      "allAvailableLlr": 2.7608288291624565,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 522,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 497,
+      "counts": [
+        74,
+        316,
+        107
+      ],
+      "allAvailableLlr": 2.7561356081349393,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 523,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 498,
+      "counts": [
+        75,
+        316,
+        107
+      ],
+      "allAvailableLlr": 2.498032059558496,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 524,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 499,
+      "counts": [
+        75,
+        317,
+        107
+      ],
+      "allAvailableLlr": 2.4928105847814166,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 526,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 500,
+      "counts": [
+        75,
+        318,
+        107
+      ],
+      "allAvailableLlr": 2.487548408479112,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 527,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 501,
+      "counts": [
+        75,
+        319,
+        107
+      ],
+      "allAvailableLlr": 2.482245539404955,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 528,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 502,
+      "counts": [
+        75,
+        320,
+        107
+      ],
+      "allAvailableLlr": 2.4769019863616055,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 530,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 503,
+      "counts": [
+        76,
+        320,
+        107
+      ],
+      "allAvailableLlr": 2.2189569075758477,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 531,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 504,
+      "counts": [
+        76,
+        321,
+        107
+      ],
+      "allAvailableLlr": 2.21309305757097,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 532,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 504,
+      "counts": [
+        76,
+        321,
+        107
+      ],
+      "allAvailableLlr": 2.21309305757097,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 534,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 505,
+      "counts": [
+        76,
+        322,
+        107
+      ],
+      "allAvailableLlr": 2.207188858853227,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    },
+    {
+      "pair": 538,
+      "inConsecutivePrefix": false,
+      "allAvailableValidPairs": 505,
+      "counts": [
+        76,
+        322,
+        107
+      ],
+      "allAvailableLlr": 2.207188858853227,
+      "prefixValidPairs": 496,
+      "prefixLlr": 2.760828829162456
+    }
+  ]
+}

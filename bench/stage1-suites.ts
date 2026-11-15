@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import type { AgentSpec } from '../src/arena/agentSpec';
 import { DEFAULT_SPRT } from '../src/arena/sprt';
 import type { TournamentConfig } from '../src/arena/tournament';
@@ -72,6 +73,13 @@ const timed = (a: AgentSpec, b: AgentSpec, timeMs: number, pairs: number, seed: 
 });
 
 export const SUITES: Record<string, { description: string; maxGames: number; matchups: Matchup[] }> = {
+  'stage3d-independent': {
+    description: 'One preregistered independent confirmation only. Full exact/symmetry history preflight is mandatory.',
+    maxGames: 1200,
+    matchups: [{ id: 'C-D-300-independent-1', question: 'Single replacement independent confirmation: E6+C1 fast vs reference, 300 ms, no further attempt regardless of result',
+      config: JSON.parse(readFileSync('bench/results/stage3d-independent/frozen-config.json', 'utf8')) as TournamentConfig,
+      sprt: { ...DEFAULT_SPRT } }],
+  },
   /** Deterministic, machine-independent (fixed work per move). Safe to shard across cores. */
   'stage1-fixed': {
     description: 'Fixed search budget (depth / simulations), no time limit. Results are machine-independent.',

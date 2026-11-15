@@ -30,6 +30,7 @@ import { openingState, playScheduledGame, schedule, summarize } from '../../src/
 import type { ScheduledGame, TournamentConfig, TournamentGame, TournamentSummary } from '../../src/arena/tournament';
 import { collectProvenance, hashOf, powerSource } from './provenance';
 import type { Provenance } from './provenance';
+import { loadIndependentSchedule } from './openingRegistry';
 
 export interface Matchup {
   id: string;
@@ -54,6 +55,8 @@ export interface RecordedGame extends TournamentGame {
   cpuBusy?: number;
   /** Power source checked before (and after) an equal-time game; 'mixed' if it changed. */
   power?: 'ac' | 'battery' | 'mixed' | 'unknown';
+  /** New independent experiments bind every attempt to the preflight-verified opening plan. */
+  openingPlanSha256?: string;
 }
 
 /**
@@ -64,6 +67,7 @@ export interface RecordedGame extends TournamentGame {
  */
 export const isSuspect = (g: RecordedGame) =>
   g.overBudgetMoves > 0 ||
+  (g.openingPlanSha256 !== undefined && g.power !== 'ac') ||
   // Only records written with the power guard (they carry `power`): finished experiments keep
   // their original classification, so their recorded decisions do not change.
   (g.outcome === 'halted-time-limit' && g.power !== undefined);
@@ -81,6 +85,7 @@ export function loadOpeningLedger(path: string): Set<string> {
 
 /** schedule() with the config's excluded-openings ledger applied (bench runs only). */
 export function scheduleFor(config: TournamentConfig, maxGames: number) {
+  if (config.independentOpeningPlan) return loadIndependentSchedule(config, maxGames);
   return schedule(config, maxGames, config.excludeOpeningsFile ? loadOpeningLedger(config.excludeOpeningsFile) : undefined);
 }
 const attemptOf = (g: RecordedGame) => g.attempt ?? 1;
@@ -190,6 +195,9 @@ export interface RunOptions {
 /** Runs (or resumes) one matchup's games for this shard. Returns the number of new games. */
 export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> {
   const dir = join(opts.root, m.id);
+  if (m.sprt && !existsSync(join(dir, 'config.json')) && !m.config.independentOpeningPlan) {
+    throw new Error(`${m.id}: a NEW SPRT requires a checksum-pinned independent opening plan; legacy results are read-only/resumable`);
+  }
   mkdirSync(dir, { recursive: true });
   const configHash = hashOf(m.config);
   const scheduled = scheduleFor(m.config, opts.maxGames);
@@ -244,6 +252,13 @@ export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> 
     let power: RecordedGame['power'];
     if (budgetMs !== null) {
       power = powerSource();
+      if (m.config.independentOpeningPlan) {
+        while (power !== 'ac') {
+          opts.log?.(`[${m.id}] power ${power}: independent confirmation waits for verified AC`);
+          await new Promise((r) => setTimeout(r, 60_000));
+          power = powerSource();
+        }
+      }
       if (power === 'battery' && !process.env.ALLOW_BATTERY) {
         opts.log?.(`[${m.id}] on battery: waiting for AC power before game ${g.index}`);
         while (powerSource() === 'battery') await new Promise((r) => setTimeout(r, 60_000));
@@ -263,7 +278,7 @@ export async function runMatchup(m: Matchup, opts: RunOptions): Promise<number> 
       const after = powerSource();
       if (after !== power) power = 'mixed';
     }
-    const rec: RecordedGame = { ...result, configHash, session, analysis, overBudgetMoves, attempt, cpuBusy, ...(power ? { power } : {}) };
+    const rec: RecordedGame = { ...result, configHash, session, analysis, overBudgetMoves, attempt, cpuBusy, ...(power ? { power } : {}), ...(m.config.independentOpeningPlan ? { openingPlanSha256: m.config.independentOpeningPlan.sha256 } : {}) };
     appendFileSync(file, JSON.stringify(rec) + '\n');
     played++;
     opts.log?.(

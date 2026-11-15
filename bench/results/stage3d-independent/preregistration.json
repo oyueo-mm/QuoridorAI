@@ -1,0 +1,25 @@
+{
+  "id": "C-D-300-independent-1",
+  "timestamp": "2026-11-15T07:43:15.005Z",
+  "configHash": "cba0fa36592dbd6b",
+  "planSha256": "b3bb7ebbedd35450dcc6530d7ad54c870fb4c066bbeac0273c20e5763083d8b5",
+  "registrySha256": "971e1be336808fa1306fb85233da600382111817924d2eb3199c1366278d9208",
+  "source": "9c2d530 engine; only batch scheduling/preflight changes before measurement",
+  "hypotheses": {
+    "elo0": 0,
+    "elo1": 30,
+    "alpha": 0.05,
+    "beta": 0.05,
+    "minPairs": 30,
+    "maxPairs": 600
+  },
+  "pairedTimeMs": 300,
+  "shards": 4,
+  "power": "AC only",
+  "candidate": "E6+C1+fast",
+  "control": "E6+C1+reference",
+  "draws": 856,
+  "schedulePairs": 600,
+  "decision": "First GSPRT boundary crossing in consecutive valid pairs, capped at 600 scheduled pairs. Accept H1 => adopt if correctness passes. H0 or inconclusive => keep reference. No retry of confirmation, no pooling with old C, no seed selection by outcome.",
+  "exclusions": "Existing repetition/game-time/suspect/retry rules unchanged. New run additionally refuses non-AC/unknown before every game; mixed/unknown outcomes quarantined and retried by the same 3-attempt limit."
+}

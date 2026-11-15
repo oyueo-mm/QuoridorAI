@@ -1,0 +1,1914 @@
+{
+  "identity": "quoridor-2p-goal-preserving-v1",
+  "experiments": 40,
+  "canonicalKeys": 10023,
+  "legacyMirrorKeys": 10023,
+  "overlaps": [
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,1;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,1;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:65,1;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F0-bfs-vs-random/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "count": 10,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:65,1;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "count": 11,
+      "keys": [
+        "h:11;v:;p:67,12;w:10,9;t:0;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,1;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "count": 7,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:0;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:73,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 10,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:0;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,1;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,1;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 9,
+      "keys": [
+        "h:16;v:;p:77,14;w:10,9;t:0;win:-",
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,1;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:73,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 10,
+      "keys": [
+        "h:;v:0;p:74,3;w:9,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:65,1;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F1-ab2-vs-bfs/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:2;v:;p:67,4;w:10,9;t:0;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "count": 7,
+      "keys": [
+        "h:;v:16;p:67,12;w:10,9;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:15;p:76,5;w:9,10;t:0;win:-",
+        "h:;v:16;p:69,6;w:10,9;t:0;win:-",
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "count": 5,
+      "keys": [
+        "h:26;v:;p:74,13;w:9,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 8,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:0;win:-",
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,1;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:10;p:76,3;w:9,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 9,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:65,1;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F2-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:19;v:;p:75,14;w:10,9;t:0;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,21;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "count": 7,
+      "keys": [
+        "h:24;v:;p:74,5;w:9,10;t:1;win:-",
+        "h:;v:;p:57,21;w:10,10;t:0;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,21;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,1;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:27;p:66,3;w:9,10;t:1;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 8,
+      "keys": [
+        "h:;v:;p:49,11;w:10,10;t:1;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 8,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 8,
+      "keys": [
+        "h:;v:25;p:73,4;w:10,9;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,1;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F3-ab4-vs-ab3/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:14;p:77,12;w:10,9;t:1;win:-",
+        "h:;v:;p:57,21;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,21;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:73,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,1;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 10,
+      "keys": [
+        "h:;v:25;p:76,13;w:9,10;t:1;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:57,1;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,1;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:73,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,1;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,15;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:1;v:;p:76,11;w:9,10;t:0;win:-",
+        "h:2;v:;p:77,4;w:10,9;t:1;win:-",
+        "h:;v:;p:57,15;w:10,10;t:0;win:-",
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage3a/stage3a/V1-sprt-ab3-vs-ab2/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:16;p:78,13;w:9,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage3a/stage3a/V1b-sprt-ab3-vs-ab2-repeat/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:16;p:78,13;w:9,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F4-ab5-vs-ab4/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:2;v:;p:77,4;w:10,9;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "count": 5,
+      "keys": [
+        "h:2;v:;p:75,4;w:10,9;t:0;win:-",
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,21;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:3;p:75,4;w:10,9;t:1;win:-",
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,7;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,23;w:10,10;t:0;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:57,7;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F5-ab4-vs-guided3000/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 3,
+      "keys": [
+        "h:27;v:;p:67,14;w:10,9;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:73,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,1;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,1;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F6-guided3000-vs-pure1000/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:11;p:76,13;w:9,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-fixed/F7-minimax3-vs-ab3/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:57,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T2000-ab-vs-guided/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:0;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-bfs/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:14;v:;p:67,12;w:10,9;t:0;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:73,7;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:11;p:75,2;w:10,9;t:0;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:1;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:1;win:-",
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,1;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-guided/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:1;p:75,4;w:10,9;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:27;v:;p:76,21;w:9,10;t:1;win:-",
+        "h:;v:3;p:75,14;w:10,9;t:0;win:-",
+        "h:;v:;p:57,1;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:15;p:66,5;w:9,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:73,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:73,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:73,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:57,5;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage1/stage1-time/T300-ab-vs-pure/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "b": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:65,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,1;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:14;v:;p:75,22;w:10,9;t:0;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:;p:57,15;w:10,10;t:1;win:-",
+        "h:;v:;p:65,1;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S1-masked-vs-reference-300/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:;v:;p:65,11;w:10,10;t:0;win:-",
+        "h:;v:;p:65,13;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "b": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "count": 10,
+      "keys": [
+        "h:16;v:;p:76,23;w:9,10;t:1;win:-",
+        "h:17;v:;p:66,3;w:9,10;t:1;win:-",
+        "h:;v:27;p:68,13;w:9,10;t:1;win:-",
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:73,5;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 8,
+      "keys": [
+        "h:17;v:;p:66,3;w:9,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:57,7;w:10,10;t:1;win:-",
+        "h:;v:;p:65,3;w:10,10;t:0;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S2-defense-vs-path-300/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "b": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:73,5;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 6,
+      "keys": [
+        "h:;v:;p:57,13;w:10,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,3;w:10,10;t:0;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:17;v:;p:66,3;w:9,10;t:1;win:-",
+        "h:27;v:;p:76,13;w:9,10;t:1;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:65,5;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:73,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S3-defense-vs-path-d4/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "b": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2/S4-new-vs-stage1-300/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "b": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "count": 7,
+      "keys": [
+        "h:;v:;p:57,11;w:10,10;t:1;win:-",
+        "h:;v:;p:57,15;w:10,10;t:0;win:-",
+        "h:;v:;p:57,3;w:10,10;t:1;win:-",
+        "h:;v:;p:67,13;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2b/S6-defense3-vs-path-300/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage2/stage2b/S7-masked-vs-guided-300/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:2;v:;p:77,4;w:10,9;t:1;win:-",
+        "h:;v:;p:65,15;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:0;win:-",
+        "h:;v:;p:67,3;w:10,10;t:1;win:-",
+        "h:;v:;p:75,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3a/stage3a/V1-sprt-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage3a/stage3a/V1b-sprt-ab3-vs-ab2-repeat/config.json",
+      "count": 59,
+      "keys": [
+        "h:0,29;v:41;p:66,13;w:8,9;t:0;win:-",
+        "h:0;v:15;p:66,4;w:8,10;t:1;win:-",
+        "h:0;v:;p:67,5;w:10,9;t:0;win:-",
+        "h:0;v:;p:77,14;w:10,9;t:0;win:-",
+        "h:1,33;v:;p:65,5;w:9,9;t:0;win:-",
+        "h:1,48;v:0,39;p:68,4;w:9,7;t:1;win:-",
+        "h:1,52,60;v:43;p:78,6;w:8,8;t:0;win:-",
+        "h:1,58;v:;p:76,2;w:8,10;t:1;win:-",
+        "h:10,24;v:40;p:78,4;w:9,8;t:0;win:-",
+        "h:10;v:;p:76,3;w:10,9;t:1;win:-",
+        "h:11,26,44;v:;p:76,3;w:8,9;t:1;win:-",
+        "h:11;v:;p:75,16;w:9,10;t:0;win:-",
+        "h:11;v:;p:75,6;w:9,10;t:1;win:-",
+        "h:14,24;v:1,49,50;p:75,4;w:9,6;t:0;win:-",
+        "h:14,42;v:;p:75,4;w:9,9;t:0;win:-",
+        "h:14;v:15,46;p:74,13;w:8,9;t:1;win:-",
+        "h:14;v:;p:74,2;w:10,9;t:0;win:-",
+        "h:16;v:0;p:69,13;w:9,9;t:1;win:-",
+        "h:17;v:;p:75,12;w:10,9;t:1;win:-",
+        "h:18;v:;p:75,14;w:9,10;t:0;win:-",
+        "h:18;v:;p:77,23;w:10,9;t:0;win:-",
+        "h:19;v:4;p:67,3;w:10,8;t:0;win:-",
+        "h:19;v:;p:67,14;w:10,9;t:1;win:-",
+        "h:19;v:;p:75,3;w:10,9;t:1;win:-",
+        "h:19;v:;p:76,14;w:10,9;t:0;win:-",
+        "h:2,20,28;v:;p:67,6;w:8,9;t:0;win:-",
+        "h:24;v:36;p:78,4;w:10,8;t:0;win:-",
+        "h:25;v:61;p:77,13;w:8,10;t:0;win:-",
+        "h:25;v:;p:76,12;w:10,9;t:1;win:-",
+        "h:26;v:;p:67,22;w:9,10;t:0;win:-",
+        "h:27;v:;p:73,13;w:9,10;t:1;win:-",
+        "h:2;v:3;p:77,15;w:8,10;t:0;win:-",
+        "h:2;v:41;p:77,5;w:9,9;t:1;win:-",
+        "h:3;v:26;p:75,3;w:9,9;t:0;win:-",
+        "h:3;v:;p:66,15;w:10,9;t:0;win:-",
+        "h:3;v:;p:68,5;w:10,9;t:0;win:-",
+        "h:3;v:;p:75,3;w:10,9;t:0;win:-",
+        "h:;v:0,12;p:67,13;w:9,9;t:0;win:-",
+        "h:;v:0,20;p:76,5;w:10,8;t:0;win:-",
+        "h:;v:11,48;p:75,3;w:9,9;t:0;win:-",
+        "h:;v:11;p:67,14;w:9,10;t:1;win:-",
+        "h:;v:11;p:75,13;w:9,10;t:0;win:-",
+        "h:;v:14,59;p:77,5;w:8,10;t:1;win:-",
+        "h:;v:14;p:74,4;w:10,9;t:0;win:-",
+        "h:;v:15;p:75,15;w:9,10;t:1;win:-",
+        "h:;v:16,41;p:66,3;w:9,9;t:0;win:-",
+        "h:;v:16,43;p:66,3;w:9,9;t:1;win:-",
+        "h:;v:16;p:78,13;w:9,10;t:1;win:-",
+        "h:;v:1;p:78,14;w:10,9;t:1;win:-",
+        "h:;v:24;p:77,14;w:9,10;t:1;win:-",
+        "h:;v:25;p:77,22;w:9,10;t:0;win:-",
+        "h:;v:26;p:67,6;w:9,10;t:1;win:-",
+        "h:;v:3,14;p:68,13;w:9,9;t:0;win:-",
+        "h:;v:;p:58,2;w:10,10;t:0;win:-",
+        "h:;v:;p:64,11;w:10,10;t:1;win:-",
+        "h:;v:;p:65,4;w:10,10;t:1;win:-",
+        "h:;v:;p:66,4;w:10,10;t:1;win:-",
+        "h:;v:;p:67,4;w:10,10;t:1;win:-",
+        "h:;v:;p:75,4;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3a/stage3a/V1-sprt-ab3-vs-ab2/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:24;p:77,14;w:9,10;t:1;win:-",
+        "h:;v:;p:65,4;w:10,10;t:1;win:-",
+        "h:;v:;p:66,4;w:10,10;t:1;win:-",
+        "h:;v:;p:67,4;w:10,10;t:1;win:-",
+        "h:;v:;p:75,4;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3a/stage3a/V1b-sprt-ab3-vs-ab2-repeat/config.json",
+      "b": "bench/results/stage3a/stage3a/V2-sprt-null-ab-vs-ab-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:;v:24;p:77,14;w:9,10;t:1;win:-",
+        "h:;v:;p:65,4;w:10,10;t:1;win:-",
+        "h:;v:;p:66,4;w:10,10;t:1;win:-",
+        "h:;v:;p:67,4;w:10,10;t:1;win:-",
+        "h:;v:;p:75,4;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E2-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-fixed/F-E3-d4/config.json",
+      "count": 3,
+      "keys": [
+        "h:0;v:;p:75,3;w:10,9;t:1;win:-",
+        "h:;v:1;p:68,3;w:10,9;t:0;win:-",
+        "h:;v:24;p:58,5;w:9,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E2-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-fixed/F-E4-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:58,2;w:10,10;t:1;win:-",
+        "h:;v:;p:67,2;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E2-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-fixed/F-E5-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:0;v:;p:67,12;w:9,10;t:1;win:-",
+        "h:;v:;p:67,2;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E3-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-fixed/F-E4-d4/config.json",
+      "count": 2,
+      "keys": [
+        "h:;v:;p:58,11;w:10,10;t:0;win:-",
+        "h:;v:;p:74,5;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E3-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-fixed/F-E5-d4/config.json",
+      "count": 3,
+      "keys": [
+        "h:;v:0;p:77,4;w:9,10;t:0;win:-",
+        "h:;v:;p:56,15;w:10,10;t:1;win:-",
+        "h:;v:;p:58,22;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E3-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-time/T-E4-300/config.json",
+      "count": 5,
+      "keys": [
+        "h:15;v:;p:75,13;w:10,9;t:1;win:-",
+        "h:19;v:;p:66,5;w:10,9;t:1;win:-",
+        "h:26;v:;p:75,2;w:9,10;t:0;win:-",
+        "h:;v:24;p:68,3;w:10,9;t:1;win:-",
+        "h:;v:;p:57,22;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E3-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-time/T-E5-300/config.json",
+      "count": 4,
+      "keys": [
+        "h:0;v:;p:75,4;w:9,10;t:0;win:-",
+        "h:;v:14;p:66,5;w:10,9;t:1;win:-",
+        "h:;v:;p:66,3;w:10,10;t:1;win:-",
+        "h:;v:;p:74,3;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E4-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-fixed/F-E5-d4/config.json",
+      "count": 3,
+      "keys": [
+        "h:19;v:;p:75,12;w:9,10;t:0;win:-",
+        "h:27;v:;p:75,14;w:9,10;t:1;win:-",
+        "h:;v:;p:67,2;w:10,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E4-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-time/T-E4-300/config.json",
+      "count": 2,
+      "keys": [
+        "h:26;v:;p:77,14;w:9,10;t:0;win:-",
+        "h:;v:0;p:76,13;w:10,9;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-fixed/F-E5-d4/config.json",
+      "b": "bench/results/stage3b/stage3b-time/T-E4-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:;p:67,4;w:10,10;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3b/stage3b-next/G-E5-vs-guided-300/config.json",
+      "b": "bench/results/stage3b/stage3b-next/P-E6-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:16;p:76,5;w:9,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3c/stage3c/G-E6-vs-guided-300/config.json",
+      "b": "bench/results/stage3c/stage3c/T-C1-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:15;p:76,5;w:10,9;t:0;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3d/stage3d/C-D-300/config.json",
+      "b": "bench/results/stage3d/stage3d/P-D-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:19;v:;p:77,4;w:9,10;t:1;win:-"
+      ]
+    },
+    {
+      "a": "bench/results/stage3d/stage3d/C-D-300/config.json",
+      "b": "bench/results/stage3d/stage3d/T-D-300/config.json",
+      "count": 1,
+      "keys": [
+        "h:;v:11;p:66,13;w:10,9;t:0;win:-"
+      ]
+    }
+  ]
+}

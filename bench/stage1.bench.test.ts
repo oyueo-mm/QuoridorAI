@@ -39,6 +39,11 @@ it('stage-1 suite', async () => {
   };
 
   if (process.env.REPORT !== 'only') {
+    for (const m of matchups) {
+      if (suiteId !== 'smoke' && !existsSync(join(root, m.id, 'config.json')) && !m.config.independentOpeningPlan) {
+        throw new Error(`${m.id}: new research runs require an independent opening plan before recording games`);
+      }
+    }
     for (const m of matchups) await runMatchup(m, { root, shard, maxGames: suite.maxGames, limit, log });
   }
   const md = [`# ${suiteId}`, '', suite.description, ''];

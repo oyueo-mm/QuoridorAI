@@ -60,6 +60,8 @@ export interface TournamentConfig {
    * keys to `schedule`; the name (with its content hash) is part of the config hash.
    */
   excludeOpeningsFile?: string;
+  /** Batch-only: immutable, checksum-pinned schedule and historical opening registry. */
+  independentOpeningPlan?: { file: string; sha256: string };
 }
 
 export type OpeningMode = 'pawn' | 'mixed' | 'book';
